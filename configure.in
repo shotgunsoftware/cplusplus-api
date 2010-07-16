@@ -1,0 +1,68 @@
+dnl 
+dnl Process this file with autoconf to produce a configure script.
+dnl 
+
+
+minimum_xmlrpc_lib_version=1.06.38
+
+
+AC_INIT(Shotgun, 0.0.0)
+AC_CONFIG_AUX_DIR(config)
+AM_INIT_AUTOMAKE()
+AC_LANG(C++)
+AC_PROG_INSTALL
+AC_PROG_CXX
+
+SHARED_VERSION_INFO="0:0:0"
+AC_DISABLE_SHARED()
+AC_PROG_LIBTOOL()
+
+
+# -------------------------------
+# BEGIN Check for xmlrpc libs
+#
+
+AC_CHECK_PROGS([XMLRPC_C_CONFIG], [xmlrpc-c-config], "missing")
+if test "$XMLRPC_C_CONFIG" = "missing"; then
+    AC_MSG_ERROR("Could not find xmlrpc-c-config.  Make sure it's in your path.")
+fi
+
+xmlrpc_version=`$XMLRPC_C_CONFIG --version`
+AC_MSG_RESULT([xmlrpc-c library version: $xmlrpc_version])
+AS_VERSION_COMPARE([$xmlrpc_version], [$minimum_xmlrpc_lib_version],
+    [AC_MSG_ERROR([Sorry, you need xmlrpc-c version $minimum_xmlrpc_lib_version or greater.])])
+
+xmlrpc_cflags=`$XMLRPC_C_CONFIG --cflags`
+AC_MSG_RESULT([xmlrpc-c library cflags: $xmlrpc_cflags])
+CPPFLAGS="$CPPFLAGS $xmlrpc_cflags"
+
+xmlrpc_ldadd=`$XMLRPC_C_CONFIG --ldadd`
+AC_MSG_RESULT([xmlrpc-c library ldadd: $xmlrpc_ldadd])
+LDADD="$LDADD $xmlrpc_ldadd"
+
+xmlrpc_ldflags=`$XMLRPC_C_CONFIG --ldflags`
+AC_MSG_RESULT([xmlrpc-c library ldflags: $xmlrpc_ldflags])
+LDFLAGS="$LDFLAGS $xmlrpc_ldflags"
+
+#
+# END Check for xmlrpc libs
+# -------------------------------
+
+# -------------------------------
+# BEGIN Check for pcre libs
+#
+PKG_CHECK_MODULES([pcre], [libpcre >= 7.7])
+PKG_CHECK_MODULES([pcrecpp], [libpcrecpp >= 7.7])
+
+CPPFLAGS="$CPPFLAGS $pcre_CFLAGS $pcrecpp_CFLAGS"
+LDFLAGS="$LDFLAGS $pcre_LDFLAGS $pcrecpp_LDFLAGS"
+#
+# END Check for pcre libs
+# -------------------------------
+
+
+AC_CONFIG_FILES([Makefile
+                 lib/Makefile
+                 lib/Shotgun/Makefile
+                ])
+AC_OUTPUT
