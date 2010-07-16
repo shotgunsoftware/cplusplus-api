@@ -28,6 +28,31 @@ libShotgun_la_SOURCES = Asset.cpp               \
                         User.cpp                \
                         utils.cpp
 
+include_HEADERS = Asset.h                       \
+                  Daily.h                       \
+                  Delivery.h                    \
+                  DeliveryItem.h                \
+                  Element.h                     \
+                  Entity.h                      \
+                  Group.h                       \
+                  Method.h                      \
+                  Note.h                        \
+                  NoteMixin.h                   \
+                  Playlist.h                    \
+                  PublishEvent.h                \
+                  Reference.h                   \
+                  Review.h                      \
+                  ReviewItem.h                  \
+                  Sequence.h                    \
+                  Shotgun.h                     \
+                  Shot.h                        \
+                  Show.h                        \
+                  Task.h                        \
+                  TaskMixin.h                   \
+                  Type.h                        \
+                  User.h                        \
+                  utils.h
+
 
 libShotgun_la_LIBS = @LIBS@
 
