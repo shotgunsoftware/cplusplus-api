@@ -24,11 +24,18 @@ subprocess.call(sipcmd)
 # Create the Makefile.
 makefile = sipconfig.SIPModuleMakefile(config, build_file, dir="src")
 
-# Add the library we are wrapping.  The name doesn't include any platform
-# specific prefixes or extensions (e.g. the "lib" prefix on UNIX, or the
-# ".dll" extension on Windows).
-makefile.extra_libs = ["Shotgun"]
+xmlrpc_cppflags = subprocess.Popen(["xmlrpc-c-config", "c++2", "client", "--cflags"], 
+                                    stdout=subprocess.PIPE).communicate()[0].strip()
+xmlrpc_ldflags = subprocess.Popen(["xmlrpc-c-config", "c++2", "client", "--ldflags"], 
+                                   stdout=subprocess.PIPE).communicate()[0].strip()
+xmlrpc_ldadd = subprocess.Popen(["xmlrpc-c-config", "c++2", "client", "--ldadd"], 
+                                  stdout=subprocess.PIPE).communicate()[0].strip()
+
+makefile.extra_cxxflags = [xmlrpc_cppflags]
+makefile.extra_lflags = ["-lShotgun", xmlrpc_ldadd, "-lstdc++"]
+
 makefile.extra_include_dirs = ["../../../lib"]
 makefile.extra_lib_dirs = ["../../../lib/Shotgun/.libs"]
+
 # Generate the Makefile itself.
 makefile.generate()

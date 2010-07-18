@@ -39,7 +39,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Shotgun.h>
 #include <Shotgun/Shot.h>
 #include <Shotgun/Sequence.h>
-#include <Shotgun/Show.h>
+#include <Shotgun/Project.h>
 
 namespace Shotgun {
 

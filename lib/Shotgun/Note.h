@@ -53,7 +53,7 @@ protected:
     Note(Shotgun *sg, const xmlrpc_c::value &attrs);
 
     static Note create(Shotgun *sg, 
-                       const std::string &showCode,
+                       const std::string &projectCode,
                        const std::string &noteFromUserName,
                        const Strings &noteToUserNames = Strings(),
                        const Strings &noteCcUserNames = Strings(),

@@ -21,7 +21,7 @@ libShotgun_la_SOURCES = Asset.cpp               \
                         Sequence.cpp            \
                         Shot.cpp                \
                         Shotgun.cpp             \
-                        Show.cpp                \
+                        Project.cpp             \
                         Task.cpp                \
                         TaskMixin.cpp           \
                         Type.cpp                \
@@ -46,7 +46,7 @@ include_HEADERS = Asset.h                       \
                   Sequence.h                    \
                   Shotgun.h                     \
                   Shot.h                        \
-                  Show.h                        \
+                  Project.h                     \
                   Task.h                        \
                   TaskMixin.h                   \
                   Type.h                        \

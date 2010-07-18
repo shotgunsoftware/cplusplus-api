@@ -35,7 +35,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <time.h>
 
 #include <Shotgun/Type.h>
-#include <Shotgun/Show.h>
+#include <Shotgun/Project.h>
 #include <Shotgun/Sequence.h>
 #include <Shotgun/Shot.h>
 #include <Shotgun/Daily.h>
@@ -87,10 +87,11 @@ std::string xmlrpcValueTypeStr(const xmlrpc_c::value::type_t xmlrpcType)
 }
 
 // *****************************************************************************
+#warning REMOVE THIS
 std::string tipEntityType(const std::string &sgEntityType)
 {
     if (sgEntityType == "Project")
-        return std::string("Show");
+        return std::string("Project");
     else if (sgEntityType == "Version")
         return std::string("Daily");
     else if (sgEntityType == "HumanUser")
@@ -104,9 +105,10 @@ std::string tipEntityType(const std::string &sgEntityType)
 }
 
 // *****************************************************************************
+#warning REMOVE THIS
 std::string sgEntityType(const std::string &tipEntityType)
 {
-    if (tipEntityType == "Show")
+    if (tipEntityType == "Project")
         return std::string("Project");
     else if (tipEntityType == "Daily")
         return std::string("Version");
@@ -374,25 +376,25 @@ std::string toStdString(const MethodSignatures &sigs)
 }
 
 // *****************************************************************************
-std::string toStdString(const Show &show)
+std::string toStdString(const Project &project)
 {
-    return toStdString(show.attrs());
+    return toStdString(project.attrs());
 }
 
 // *****************************************************************************
-std::string toStdString(const Shows &shows)
+std::string toStdString(const Projects &projects)
 {
 #if 0
     std::string output = "\n[";
 
-    if (shows.size() > 0)
+    if (projects.size() > 0)
     {
-        for (size_t i = 0; i < shows.size()-1; i++)
+        for (size_t i = 0; i < projects.size()-1; i++)
         {
-            output += toStdString(shows[i].attrs()) + ",\n";
+            output += toStdString(projects[i].attrs()) + ",\n";
         }
 
-        output += toStdString(shows[shows.size()-1].attrs());
+        output += toStdString(projects[projects.size()-1].attrs());
     }
 
     output += "\n]\n";
@@ -402,9 +404,9 @@ std::string toStdString(const Shows &shows)
     // The std::string of xmlrpc_c::value type has been formatted very well.
     // So convert it to xmlrpc_c::value first.
     SgArray array;
-    for (size_t i = 0; i < shows.size(); i++)
+    for (size_t i = 0; i < projects.size(); i++)
     {
-        array.push_back(shows[i].attrs());
+        array.push_back(projects[i].attrs());
     }
     
     return toStdString(toXmlrpcValue(array));
@@ -735,16 +737,16 @@ std::ostream &operator<<(std::ostream& output, const MethodSignatures &sigs)
 }
 
 // *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const Show &show)
+std::ostream &operator<<(std::ostream& output, const Project &project)
 {
-    output << toStdString(show);
+    output << toStdString(project);
     return output;
 }
 
 // *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const Shows &shows)
+std::ostream &operator<<(std::ostream& output, const Projects &projects)
 {
-    output << toStdString(shows);
+    output << toStdString(projects);
     return output;
 }
 

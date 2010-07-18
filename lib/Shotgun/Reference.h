@@ -55,7 +55,7 @@ protected:
     Reference(Shotgun *sg, const xmlrpc_c::value &attrs);
 
     static Reference create(Shotgun *sg, 
-                            const std::string &showCode,
+                            const std::string &projectCode,
                             const std::string &referencePath,
                             const std::string &referencePurpose = "",
                             const Strings &linkAssets = Strings(),

@@ -45,7 +45,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace Shotgun {
 
 class Entity;
-class Show;
+class Project;
 class Sequence;
 class Shot;
 class Daily;
@@ -70,7 +70,7 @@ typedef std::vector<Strings> MethodSignatures;
 typedef std::map<std::string, xmlrpc_c::value> SgMap;
 typedef std::vector<xmlrpc_c::value> SgArray;
 typedef std::vector<Entity *> EntityPtrs; // Only (Entity *) can be dynamic_casted, not (Entity)
-typedef std::vector<Show> Shows;
+typedef std::vector<Project> Projects;
 typedef std::vector<Sequence> Sequences;
 typedef std::vector<Shot> Shots;
 typedef std::vector<Daily> Dailies;
@@ -113,8 +113,8 @@ std::string toStdString(const SgArray &array);
 std::string toStdString(const Strings &strs);
 //std::string toStdString(const MethodSignature &sig); // same as Strings
 std::string toStdString(const MethodSignatures &sigs);
-std::string toStdString(const Show &show);
-std::string toStdString(const Shows &shows);
+std::string toStdString(const Project &project);
+std::string toStdString(const Projects &projects);
 std::string toStdString(const Sequence &sequence);
 std::string toStdString(const Sequences &sequences);
 std::string toStdString(const Shot &shot);
@@ -155,8 +155,8 @@ std::ostream &operator<<(std::ostream& output, const SgArray &array);
 std::ostream &operator<<(std::ostream& output, const Strings &strs);
 //std::ostream &operator<<(std::ostream& output, const MethodSignature &sig); // same as Strings
 std::ostream &operator<<(std::ostream& output, const MethodSignatures &sigs);
-std::ostream &operator<<(std::ostream& output, const Show &show);
-std::ostream &operator<<(std::ostream& output, const Shows &shows);
+std::ostream &operator<<(std::ostream& output, const Project &project);
+std::ostream &operator<<(std::ostream& output, const Projects &projects);
 std::ostream &operator<<(std::ostream& output, const Sequence &sequence);
 std::ostream &operator<<(std::ostream& output, const Sequences &sequences);
 std::ostream &operator<<(std::ostream& output, const Shot &shot);

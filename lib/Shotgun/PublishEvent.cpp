@@ -34,7 +34,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Entity.h>
 #include <Shotgun/Shotgun.h>
 #include <Shotgun/PublishEvent.h>
-#include <Shotgun/Show.h>
+#include <Shotgun/Project.h>
 
 namespace Shotgun {
 
@@ -70,7 +70,7 @@ PublishEvent::~PublishEvent()
 
 // *****************************************************************************
 PublishEvent PublishEvent::create(Shotgun *sg, 
-                                  const std::string &showCode,
+                                  const std::string &projectCode,
                                   const std::string &publishEventName,
                                   const std::string &publishEventSource,
                                   const std::string &publishEventType,
@@ -80,17 +80,17 @@ PublishEvent PublishEvent::create(Shotgun *sg,
     // Check if the publishEvent already exists
     try
     {
-        PublishEvent publishEvent = sg->findPublishEventByName(showCode, publishEventName);
+        PublishEvent publishEvent = sg->findPublishEventByName(projectCode, publishEventName);
 
         std::string err = "PublishEvent \"" + publishEventName + "\" already exists.";
         throw SgEntityCreateError(err);
     }
     catch (SgEntityNotFoundError)
     {
-        Show show = sg->findShowByCode(showCode);
+        Project project = sg->findProjectByCode(projectCode);
 
         SgMap attrsMap;
-        attrsMap["project"] = toXmlrpcValue(show.asLink());
+        attrsMap["project"] = toXmlrpcValue(project.asLink());
         attrsMap["code"] = toXmlrpcValue(publishEventName);
         attrsMap["sg_file"] = toXmlrpcValue(publishEventSource);
         attrsMap["sg_type"] = toXmlrpcValue(publishEventType);

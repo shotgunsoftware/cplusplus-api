@@ -55,8 +55,8 @@ libShotgun_la_LIBADD =
 am_libShotgun_la_OBJECTS = Asset.lo Daily.lo Delivery.lo \
 	DeliveryItem.lo Element.lo Entity.lo Group.lo Method.lo \
 	Note.lo NoteMixin.lo Playlist.lo PublishEvent.lo Reference.lo \
-	Review.lo ReviewItem.lo Sequence.lo Shot.lo Shotgun.lo Show.lo \
-	Task.lo TaskMixin.lo Type.lo User.lo utils.lo
+	Review.lo ReviewItem.lo Sequence.lo Shot.lo Shotgun.lo \
+	Project.lo Task.lo TaskMixin.lo Type.lo User.lo utils.lo
 libShotgun_la_OBJECTS = $(am_libShotgun_la_OBJECTS)
 DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
@@ -126,7 +126,6 @@ PACKAGE_STRING = @PACKAGE_STRING@
 PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
-PKG_CONFIG = @PKG_CONFIG@
 PYTHON = @PYTHON@
 PYTHON_EXEC_PREFIX = @PYTHON_EXEC_PREFIX@
 PYTHON_PLATFORM = @PYTHON_PLATFORM@
@@ -181,10 +180,6 @@ mandir = @mandir@
 minimum_xmlrpc_lib_version = @minimum_xmlrpc_lib_version@
 mkdir_p = @mkdir_p@
 oldincludedir = @oldincludedir@
-pcre_CFLAGS = @pcre_CFLAGS@
-pcre_LIBS = @pcre_LIBS@
-pcrecpp_CFLAGS = @pcrecpp_CFLAGS@
-pcrecpp_LIBS = @pcrecpp_LIBS@
 pdfdir = @pdfdir@
 pkgpyexecdir = @pkgpyexecdir@
 pkgpythondir = @pkgpythondir@
@@ -220,7 +215,7 @@ libShotgun_la_SOURCES = Asset.cpp               \
                         Sequence.cpp            \
                         Shot.cpp                \
                         Shotgun.cpp             \
-                        Show.cpp                \
+                        Project.cpp             \
                         Task.cpp                \
                         TaskMixin.cpp           \
                         Type.cpp                \
@@ -245,7 +240,7 @@ include_HEADERS = Asset.h                       \
                   Sequence.h                    \
                   Shotgun.h                     \
                   Shot.h                        \
-                  Show.h                        \
+                  Project.h                     \
                   Task.h                        \
                   TaskMixin.h                   \
                   Type.h                        \
@@ -333,6 +328,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Note.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NoteMixin.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Playlist.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Project.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/PublishEvent.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Reference.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Review.Plo@am__quote@
@@ -340,7 +336,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Sequence.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Shot.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Shotgun.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Show.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Task.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/TaskMixin.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Type.Plo@am__quote@

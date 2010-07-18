@@ -37,7 +37,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <Shotgun/Type.h>
 #include <Shotgun/Method.h>
-#include <Shotgun/Show.h>
+#include <Shotgun/Project.h>
 #include <Shotgun/Sequence.h>
 #include <Shotgun/Shot.h>
 #include <Shotgun/Daily.h>
@@ -79,20 +79,20 @@ public:
         { return new Method(this, methodName); }
 
     //-----------------------------------------------------------------------
-    // Show Entity
-    Show createShow(const std::string &showName, const std::string &showCode) 
-        { return Show::create(this, showName, showCode); }
-    Show findShowByCode(const std::string &showCode);
-    Show findShowByName(const std::string &showName);
-    Shows findShowsByStatus(const std::string &showStatus);
-    bool deleteShowById(const int id) { return Entity::deleteEntity(this, "Project", id); }
+    // Project Entity
+    Project createProject(const std::string &projectName, const std::string &projectCode) 
+        { return Project::create(this, projectName, projectCode); }
+    Project findProjectByCode(const std::string &projectCode);
+    Project findProjectByName(const std::string &projectName);
+    Projects findProjectsByStatus(const std::string &projectStatus);
+    bool deleteProjectById(const int id) { return Entity::deleteEntity(this, "Project", id); }
 
     //------------------------------------------------------------------------
     // Sequence Entity
-    Sequence createSequence(const std::string &showCode, const std::string &sequenceName) 
-        { return Sequence::create(this, showCode, sequenceName); }
-    Sequence findSequenceByName(const std::string &showCode, const std::string &sequenceName);
-    Sequences findSequencesByShow(const std::string &showCode, const int limit = 0);
+    Sequence createSequence(const std::string &projectCode, const std::string &sequenceName) 
+        { return Sequence::create(this, projectCode, sequenceName); }
+    Sequence findSequenceByName(const std::string &projectCode, const std::string &sequenceName);
+    Sequences findSequencesByProject(const std::string &projectCode, const int limit = 0);
     bool deleteSequenceById(const int id) { return Entity::deleteEntity(this, "Sequence", id); }
 
     //------------------------------------------------------------------------
@@ -100,7 +100,7 @@ public:
     Shot createShot(const std::string &shotName, const std::string &shotType = "") 
         { return Shot::create(this, shotName, shotType); }
     Shot findShotByName(const std::string &shotName);
-    Shots findShotsByShow(const std::string &showCode, const int limit = 0);
+    Shots findShotsByProject(const std::string &projectCode, const int limit = 0);
     bool deleteShotById(const int id) { return Entity::deleteEntity(this, "Shot", id); }
 
     //------------------------------------------------------------------------
@@ -108,11 +108,11 @@ public:
     Daily createDaily(const std::string &dailyName) 
         { return Daily::create(this, dailyName); }
     Daily findDailyByName(const std::string &dailyName);
-    Dailies findDailiesByShow(const std::string &showCode, const int limit = 0);
-    Dailies findDailiesByShot(const std::string &showCode, 
+    Dailies findDailiesByProject(const std::string &projectCode, const int limit = 0);
+    Dailies findDailiesByShot(const std::string &projectCode, 
                               const std::string &shotName, 
                               const int limit = 0);
-    Dailies findDailiesByReviewStatus(const std::string &showCode, 
+    Dailies findDailiesByReviewStatus(const std::string &projectCode, 
                                       const std::string &reviewStatus,
                                       const int limit = 0);
     bool deleteDailyById(const int id) { return Entity::deleteEntity(this, "Version", id); }
@@ -131,114 +131,114 @@ public:
 
     //------------------------------------------------------------------------
     // Element Entity
-    Element createElement(const std::string &showCode,
+    Element createElement(const std::string &projectCode,
                           const std::string &elementName, 
                           const std::string &elementType) 
-        { return Element::create(this, showCode, elementName, elementType); }
-    Element findElementByName(const std::string &showCode, const std::string &elementName);
-    Elements findElementsByShow(const std::string &showCode, 
+        { return Element::create(this, projectCode, elementName, elementType); }
+    Element findElementByName(const std::string &projectCode, const std::string &elementName);
+    Elements findElementsByProject(const std::string &projectCode, 
                                 const std::string &elementType = "",
                                 const int limit = 0);
     bool deleteElementById(const int id) { return Entity::deleteEntity(this, "Element", id); }
 
     //------------------------------------------------------------------------
     // Asset Entity
-    Asset createAsset(const std::string &showCode,
+    Asset createAsset(const std::string &projectCode,
                       const std::string &assetName, 
                       const std::string &assetType,
                       const std::string &assetSource = "") 
-        { return Asset::create(this, showCode, assetName, assetType, assetSource); }
-    Asset findAssetByName(const std::string &showCode, const std::string &assetName);
-    Assets findAssetsByShow(const std::string &showCode, 
+        { return Asset::create(this, projectCode, assetName, assetType, assetSource); }
+    Asset findAssetByName(const std::string &projectCode, const std::string &assetName);
+    Assets findAssetsByProject(const std::string &projectCode, 
                             const std::string &assetType = "",
                             const int limit = 0);
     bool deleteAssetById(const int id) { return Entity::deleteEntity(this, "Asset", id); }
 
     //------------------------------------------------------------------------
     // Delivery Entity
-    Delivery createDelivery(const std::string &showCode, const std::string &deliveryName) 
-        { return Delivery::create(this, showCode, deliveryName); }
-    Delivery findDeliveryByName(const std::string &showCode, const std::string &deliveryName);
+    Delivery createDelivery(const std::string &projectCode, const std::string &deliveryName) 
+        { return Delivery::create(this, projectCode, deliveryName); }
+    Delivery findDeliveryByName(const std::string &projectCode, const std::string &deliveryName);
     Delivery findDeliveryById(const int &deliveryId);
-    Deliveries findDeliveriesByShow(const std::string &showCode, 
+    Deliveries findDeliveriesByProject(const std::string &projectCode, 
                                     const std::string &deliveryStatus = "",
                                     const int limit = 0);
     bool deleteDeliveryById(const int id) { return Entity::deleteEntity(this, "Delivery", id); }
 
     //------------------------------------------------------------------------
     // DeliveryItem Entity
-    DeliveryItem createDeliveryItem(const std::string &showCode,
+    DeliveryItem createDeliveryItem(const std::string &projectCode,
                                     const std::string &deliveryItemName,
                                     const SgMap &deliveryLink = SgMap()) 
-        { return DeliveryItem::create(this, showCode, deliveryItemName, deliveryLink); }
-    DeliveryItem findDeliveryItemByName(const std::string &showCode, 
+        { return DeliveryItem::create(this, projectCode, deliveryItemName, deliveryLink); }
+    DeliveryItem findDeliveryItemByName(const std::string &projectCode, 
                                         const std::string &deliveryItemName);
     DeliveryItem findDeliveryItemById(const int &deliveryItemId);
-    DeliveryItems findDeliveryItemsByShow(const std::string &showCode, 
+    DeliveryItems findDeliveryItemsByProject(const std::string &projectCode, 
                                           const int limit = 0);
     bool deleteDeliveryItemById(const int id) { return Entity::deleteEntity(this, "CustomEntity01", id); }
 
     //------------------------------------------------------------------------
     // PublishEvent Entity
-    PublishEvent createPublishEvent(const std::string &showCode,
+    PublishEvent createPublishEvent(const std::string &projectCode,
                                     const std::string &publishEventName, 
                                     const std::string &publishEventSource,
                                     const std::string &publishEventType = "",
                                     const int publishEventVersion = TIPSHOTGUN_INVALID_VERSION_NUM,
                                     const std::string &publishEventResolution = "")
         { return PublishEvent::create(this, 
-                                      showCode, 
+                                      projectCode, 
                                       publishEventName, 
                                       publishEventSource, 
                                       publishEventType,
                                       publishEventVersion,
                                       publishEventResolution); }
-    PublishEvent findPublishEventByName(const std::string &showCode, 
+    PublishEvent findPublishEventByName(const std::string &projectCode, 
                                         const std::string &publishEventName);
-    PublishEvents findPublishEventsByShow(const std::string &showCode, 
+    PublishEvents findPublishEventsByProject(const std::string &projectCode, 
                                           const std::string &publishEventType = "",
                                           const int limit = 0);
     bool deletePublishEventById(const int id) { return Entity::deleteEntity(this, "PublishEvent", id); }
 
     //------------------------------------------------------------------------
     // Review Entity
-    Review createReview(const std::string &showCode,
+    Review createReview(const std::string &projectCode,
                         const std::string &reviewName, 
                         const std::string &reviewType) 
-        { return Review::create(this, showCode, reviewName, reviewType); }
-    Review findReviewByName(const std::string &showCode, 
+        { return Review::create(this, projectCode, reviewName, reviewType); }
+    Review findReviewByName(const std::string &projectCode, 
                             const std::string &reviewName,
                             const std::string &dateSent = "");
     Review findReviewById(const int &reviewId);
-    Reviews findReviewsByShow(const std::string &showCode, 
+    Reviews findReviewsByProject(const std::string &projectCode, 
                               const std::string &reviewType = "",
                               const int limit = 0);
     bool deleteReviewById(const int id) { return Entity::deleteEntity(this, "Review", id); }
 
     //------------------------------------------------------------------------
     // ReviewItem Entity
-    ReviewItem createReviewItem(const std::string &showCode,
+    ReviewItem createReviewItem(const std::string &projectCode,
                                 const SgMap &reviewItemShotLink,
                                 const SgMap &reviewItemDailyLink,
                                 const SgMap &reviewItemReviewLink,
                                 const std::string &reviewItemPurpose = "",
                                 const int reviewItemOrder = TIPSHOTGUN_INVALID_ORDER_NUM) 
         { return ReviewItem::create(this, 
-                                    showCode,
+                                    projectCode,
                                     reviewItemShotLink,
                                     reviewItemDailyLink,
                                     reviewItemReviewLink,
                                     reviewItemPurpose,
                                     reviewItemOrder); }
-    ReviewItem findReviewItemByName(const std::string &showCode, const std::string &reviewItemName);
+    ReviewItem findReviewItemByName(const std::string &projectCode, const std::string &reviewItemName);
     ReviewItem findReviewItemById(const int &reviewItemId);
-    ReviewItems findReviewItemsByShow(const std::string &showCode, 
+    ReviewItems findReviewItemsByProject(const std::string &projectCode, 
                                       const int limit = 0);
     bool deleteReviewItemById(const int id) { return Entity::deleteEntity(this, "ReviewItem", id); }
 
     //------------------------------------------------------------------------
     // Task
-    Task createTask(const std::string &showCode,
+    Task createTask(const std::string &projectCode,
                     const std::string &taskName,
                     const std::string &taskType,
                     const int taskViewOrder = TIPSHOTGUN_INVALID_ORDER_NUM,
@@ -250,7 +250,7 @@ public:
                     const bool taskMilestone = false,
                     const SgMap &taskEntityLink = SgMap())
         { return Task::create(this, 
-                              showCode,
+                              projectCode,
                               taskName,
                               taskType,
                               taskViewOrder,
@@ -261,18 +261,18 @@ public:
                               taskColor,
                               taskMilestone,
                               taskEntityLink); }
-    Task findTaskByName(const std::string &showCode, const std::string &taskName);
-    Tasks findTasksByType(const std::string &showCode,
+    Task findTaskByName(const std::string &projectCode, const std::string &taskName);
+    Tasks findTasksByType(const std::string &projectCode,
                           const std::string &taskType,
                           const std::string &linkEntityType = "",
                           const int limit = 0);
-    Tasks findTasksByLinkEntity(const std::string &showCode,
+    Tasks findTasksByLinkEntity(const std::string &projectCode,
                                 const SgMap &linkEntity,
                                 const int limit = 0);
-    Tasks findTasksByMilestone(const std::string &showCode,
+    Tasks findTasksByMilestone(const std::string &projectCode,
                                const std::string &shotName,
                                const int limit = 0);
-    Tasks findTasksByShow(const std::string &showCode,
+    Tasks findTasksByProject(const std::string &projectCode,
                           const int limit = 0);
     bool deleteTaskById(const int id) { return Entity::deleteEntity(this, "Task", id); }
 
@@ -286,7 +286,7 @@ public:
 
     //------------------------------------------------------------------------
     // Note
-    Note createNote(const std::string &showCode,
+    Note createNote(const std::string &projectCode,
                     const std::string &noteFromUserName,
                     const Strings &noteToUserNames = Strings(),
                     const Strings &noteCcUserNames = Strings(),
@@ -296,7 +296,7 @@ public:
                     const SgArray &noteLinks = SgArray(),
                     const std::string &noteOrigin = "")
         { return Note::create(this, 
-                              showCode,
+                              projectCode,
                               noteFromUserName,
                               noteToUserNames,
                               noteCcUserNames,
@@ -306,20 +306,20 @@ public:
                               noteLinks,
                               noteOrigin); }
     Notes findNotesByType(const std::string &noteType,
-                          const std::string &showCode = "",
+                          const std::string &projectCode = "",
                           const int limit = 0);
     Notes findNotesByAuthor(const std::string &userName,
-                            const std::string &showCode = "",
+                            const std::string &projectCode = "",
                             const int limit = 0);
     Notes findNotesByLinks(const SgArray &noteLinks = SgArray(),
                            const std::string &noteType = "",
-                           const std::string &showCode = "",
+                           const std::string &projectCode = "",
                            const int limit = 0);
     bool deleteNoteById(const int id) { return Entity::deleteEntity(this, "Note", id); }
 
     //------------------------------------------------------------------------
     // Reference Entity
-    Reference createReference(const std::string &showCode,
+    Reference createReference(const std::string &projectCode,
                               const std::string &referencePath,
                               const std::string &referencePurpose = "",
                               const Strings &linkAssets = Strings(),
@@ -327,25 +327,25 @@ public:
                               const Strings &linkShots = Strings(),
                               const Strings &tags = Strings()) 
         { return Reference::create(this, 
-                                   showCode,
+                                   projectCode,
                                    referencePath,
                                    referencePurpose,
                                    linkAssets,
                                    linkSequences,
                                    linkShots,
                                    tags); }
-    Reference findReferenceByPath(const std::string &showCode, const std::string &referencePath);
-    Reference findReferenceByName(const std::string &showCode, const std::string &referenceName);
-    References findReferencesByShow(const std::string &showCode, const int limit = 0);
+    Reference findReferenceByPath(const std::string &projectCode, const std::string &referencePath);
+    Reference findReferenceByName(const std::string &projectCode, const std::string &referenceName);
+    References findReferencesByProject(const std::string &projectCode, const int limit = 0);
     bool deleteReferenceById(const int id) { return Entity::deleteEntity(this, "CustomEntity02", id); }
 
     //------------------------------------------------------------------------
     // Playlist Entity
-    Playlist createPlaylist(const std::string &showCode,
+    Playlist createPlaylist(const std::string &projectCode,
                             const std::string &playlistName)
-        { return Playlist::create(this, showCode, playlistName); }
-    Playlist findPlaylistByName(const std::string &showCode, const std::string &playlistName);
-    Playlists findPlaylistsByShow(const std::string &showCode, const int limit = 0);
+        { return Playlist::create(this, projectCode, playlistName); }
+    Playlist findPlaylistByName(const std::string &projectCode, const std::string &playlistName);
+    Playlists findPlaylistsByProject(const std::string &projectCode, const int limit = 0);
     bool deletePlaylistById(const int id) { return Entity::deleteEntity(this, "Playlist", id); }
 
     //------------------------------------------------------------------------
@@ -354,7 +354,7 @@ public:
 
     //------------------------------------------------------------------------
     // Generic entity search functions with user-constructable findMap 
-    Shows findShows(SgMap &findMap) { return Show::find(this, findMap); }
+    Projects findProjects(SgMap &findMap) { return Project::find(this, findMap); }
     Sequences findSequences(SgMap &findMap) { return Sequence::find(this, findMap); }
     Shots findShots(SgMap &findMap) { return Shot::find(this, findMap); }
     Dailies findDailies(SgMap &findMap) { return Daily::find(this, findMap); }

@@ -39,7 +39,13 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Type.h>
 #include <Shotgun/Method.h>
 
+#warning Remove this
 #define TIPSHOTGUN_ATTACHMENT_URL "http://shotgunattach"
+
+
+#define INT_ATTR(METHOD, ATTR) const int METHOD() const \
+                                { return getAttrValueAsInt(ATTR); }
+
 
 namespace Shotgun {
 
@@ -60,13 +66,17 @@ public:
         INVALID_ATTR_USE_DEFAULT
     };
 
+    INT_ATTR(sgId, "id");
+
+
+
     // These are the generic entity attributes shared by all entities
-    const int sgId() const { return getAttrValueAsInt("id"); }
+//    const int sgId() const { return getAttrValueAsInt("id"); }
     const time_t sgDateCreated() const { return getAttrValueAsDatetime("created_at"); }
     const time_t sgDateUpdated() const { return getAttrValueAsDatetime("updated_at"); }
-    // These two have to be overridden for Show entity
-    virtual const std::string sgShowName() const { return getShowName(); }
-    virtual const std::string sgShowCode() const { return getShowCode(); }
+    // These two have to be overridden for Project entity
+    virtual const std::string sgProjectName() const { return getProjectName(); }
+    virtual const std::string sgProjectCode() const { return getProjectCode(); }
     // Has to define a virtual sgName() here since it's called within sgLink().
     virtual const std::string sgName() const { return std::string(""); }
 
@@ -195,7 +205,7 @@ public:
     // Build a findMap with no condition - this is a convenience function
     static SgMap buildFindMapWithNoFilter(Shotgun *sg,
                                           const std::string &entityType,
-                                          const std::string &showCode = "",
+                                          const std::string &projectCode = "",
                                           const int limit = 0,
                                           const SgArray &extraReturnFields = SgArray(),
                                           const bool retiredOnly = false);
@@ -206,7 +216,7 @@ public:
                                               const std::string &filterName,
                                               const std::string &filterOp,
                                               const xmlrpc_c::value &filterValue,
-                                              const std::string &showCode = "",
+                                              const std::string &projectCode = "",
                                               const int limit = 0,
                                               const SgArray &extraReturnFields = SgArray(),
                                               const bool retiredOnly = false);
@@ -280,7 +290,7 @@ protected:
                                                        const std::string &filterName = "",
                                                        const std::string &filterOp = "",
                                                        const xmlrpc_c::value &filterValue = xmlrpc_c::value_nil(), 
-                                                       const std::string &showCode = "",
+                                                       const std::string &projectCode = "",
                                                        const SgArray &extraReturnFields = SgArray(),
                                                        const bool retiredOnly = false);
 
@@ -306,8 +316,8 @@ protected:
     static void validateLink(const SgMap &link);
     static void validateLink(const xmlrpc_c::value &link);
 
-    const std::string getShowName() const;
-    const std::string getShowCode() const;
+    const std::string getProjectName() const;
+    const std::string getProjectCode() const;
 
 public:
     virtual ~Entity();

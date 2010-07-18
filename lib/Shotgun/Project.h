@@ -30,37 +30,36 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __SHOW_H__
-#define __SHOW_H__
+#ifndef __PROJECT_H__
+#define __PROJECT_H__
 
 #include <Shotgun/Entity.h>
-// #include <TipUtil/text.h>
 
-#define TIPSHOTGUN_SHOW_DEFAULT_HANDLE_DURATION 8
-#define TIPSHOTGUN_SHOW_DEFAULT_START_FRAME 101
+#define TIPSHOTGUN_PROJECT_DEFAULT_HANDLE_DURATION 8
+#define TIPSHOTGUN_PROJECT_DEFAULT_START_FRAME 101
 
 namespace Shotgun {
 
 class Shotgun;
 
 // *****************************************************************************
-class Show : public Entity
+class Project : public Entity
 {
     friend class Shotgun;
-    friend class Entity; // So that the base Entity class can call Show::find(..)
+    friend class Entity; // So that the base Entity class can call Project::find(..)
  
 protected:
-    Show(Shotgun *sg, const xmlrpc_c::value &attrs);
+    Project(Shotgun *sg, const xmlrpc_c::value &attrs);
 
-    static Show create(Shotgun *sg, 
-                       const std::string &showName, 
-                       const std::string &showCode);
-    static Shows find(Shotgun *sg, SgMap &findMap);
+    static Project create(Shotgun *sg, 
+                       const std::string &projectName, 
+                       const std::string &projectCode);
+    static Projects find(Shotgun *sg, SgMap &findMap);
     
 public:
-    Show();
-    Show(const Show &ref);
-    virtual ~Show();
+    Project();
+    Project(const Project &ref);
+    virtual ~Project();
 
     const std::string sgName() const { return getAttrValueAsString("name"); }
     const std::string sgCode() const { return getAttrValueAsString("code"); }
@@ -72,15 +71,13 @@ public:
     const bool sgPolishShotNotifications() const { return getAttrValueAsBool("sg_polish_shot_notifications"); }
     const bool sgReportStorageInformation() const { return getAttrValueAsBool("sg_report_storage_information"); }
     const int sgDefaultStartFrame() const { return getAttrValueAsInt("sg_default_start_frame"); }
-    //TODO: check this attr's type
-    //const std::string sgMSProjectSchedule() const { return getAttrValueAsString("sg_ms_project_schedule"); }
 
     // Overrides for base entity methods that don't work correctly 
     // for this entity type
-    const std::string sgShowName() const { return sgName(); }
-    const std::string sgShowCode() const { return sgCode(); }
+    virtual const std::string sgProjectName() const { return sgName(); }
+    virtual const std::string sgProjectCode() const { return sgCode(); }
 
-    Show &operator=(const Show &that)
+    Project &operator=(const Project &that)
     {
         Entity::operator=(that);
         return *this;
@@ -89,4 +86,4 @@ public:
 
 } // End namespace Shotgun
 
-#endif    // End #ifdef __SHOW_H__
+#endif    // End #ifdef __PROJECT_H__

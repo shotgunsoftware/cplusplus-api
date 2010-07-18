@@ -51,7 +51,7 @@ Notes NoteMixin::getNotes(const int limit)
 
         return entity->sg()->findNotesByLinks(noteLinks, 
                                               "", // noteType
-                                              "", // showCode - unnecessary in this case
+                                              "", // projectCode - unnecessary in this case
                                               limit);
     }
     else
@@ -136,7 +136,7 @@ Note NoteMixin::addNote(const std::string &noteFromUserName,
             links.push_back(toXmlrpcValue(entity->asLink()));
         }
 
-        return entity->sg()->createNote(entity->sgShowCode(),
+        return entity->sg()->createNote(entity->sgProjectCode(),
                                         noteFromUserName,
                                         noteToUserNames,
                                         noteCcUserNames,

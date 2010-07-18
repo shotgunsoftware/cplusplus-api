@@ -8,7 +8,7 @@
 %Include Method.sip
 %Include Shotgun.sip
 %Include Entity.sip
-%Include Show.sip
+%Include Project.sip
 %Include Sequence.sip
 %Include Shot.sip
 %Include Daily.sip

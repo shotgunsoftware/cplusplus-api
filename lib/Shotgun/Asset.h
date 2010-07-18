@@ -57,7 +57,7 @@ protected:
     Asset(Shotgun *sg, const xmlrpc_c::value &attrs);
 
     static Asset create(Shotgun *sg, 
-                        const std::string &showCode,
+                        const std::string &projectCode,
                         const std::string &assetName,
                         const std::string &assetType,
                         const std::string &assetSource = "");

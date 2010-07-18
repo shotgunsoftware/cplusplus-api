@@ -34,7 +34,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Entity.h>
 #include <Shotgun/Shotgun.h>
 #include <Shotgun/ReviewItem.h>
-#include <Shotgun/Show.h>
+#include <Shotgun/Project.h>
 
 namespace Shotgun {
 
@@ -70,7 +70,7 @@ ReviewItem::~ReviewItem()
 
 // *****************************************************************************
 ReviewItem ReviewItem::create(Shotgun *sg, 
-                              const std::string &showCode,
+                              const std::string &projectCode,
                               //const std::string &reviewItemName, // read-only
                               const SgMap &reviewItemShotLink,
                               const SgMap &reviewItemDailyLink,
@@ -82,17 +82,17 @@ ReviewItem ReviewItem::create(Shotgun *sg,
     try
     {
         std::string reviewItemName = getAttrValueAsString("name", reviewItemDailyLink);
-        ReviewItem reviewItem = sg->findReviewItemByName(showCode, reviewItemName);
+        ReviewItem reviewItem = sg->findReviewItemByName(projectCode, reviewItemName);
 
         std::string err = "ReviewItem \"" + reviewItemName + "\" already exists.";
         throw SgEntityCreateError(err);
     }
     catch (SgEntityNotFoundError)
     {
-        Show show = sg->findShowByCode(showCode);
+        Project project = sg->findProjectByCode(projectCode);
 
         SgMap attrsMap;
-        attrsMap["project"] = toXmlrpcValue(show.asLink());
+        attrsMap["project"] = toXmlrpcValue(project.asLink());
         // Attribute "code" is read-only, I think it's filled in automatically 
         // based on the "sg_version" link.
         //attrsMap["code"] = toXmlrpcValue(reviewItemName); 

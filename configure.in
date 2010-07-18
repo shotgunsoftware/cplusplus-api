@@ -79,18 +79,6 @@ LDFLAGS="$LDFLAGS $xmlrpc_ldflags"
 # END Check for xmlrpc libs
 # -------------------------------
 
-# -------------------------------
-# BEGIN Check for pcre libs
-#
-PKG_CHECK_MODULES([pcre], [libpcre >= 7.7])
-PKG_CHECK_MODULES([pcrecpp], [libpcrecpp >= 7.7])
-
-CPPFLAGS="$CPPFLAGS $pcre_CFLAGS $pcrecpp_CFLAGS"
-LDFLAGS="$LDFLAGS $pcre_LDFLAGS $pcrecpp_LDFLAGS"
-#
-# END Check for pcre libs
-# -------------------------------
-
 
 # -------------------------------
 # BEGIN Check for python/sip

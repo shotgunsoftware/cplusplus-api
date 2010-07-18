@@ -53,7 +53,7 @@ protected:
     Delivery(Shotgun *sg, const xmlrpc_c::value &attrs);
 
     static Delivery create(Shotgun *sg, 
-                           const std::string &showCode,
+                           const std::string &projectCode,
                            const std::string &deliveryName);
     static Deliveries find(Shotgun *sg, SgMap &findMap);
     

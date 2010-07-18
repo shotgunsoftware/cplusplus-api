@@ -36,7 +36,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Entity.h>
 #include <Shotgun/Shotgun.h>
 #include <Shotgun/Review.h>
-#include <Shotgun/Show.h>
+#include <Shotgun/Project.h>
 
 namespace Shotgun {
 
@@ -72,24 +72,24 @@ Review::~Review()
 
 // *****************************************************************************
 Review Review::create(Shotgun *sg, 
-                      const std::string &showCode,
+                      const std::string &projectCode,
                       const std::string &reviewName,
                       const std::string &reviewType)
 {
     // Check if the review already exists
     try
     {
-        Review review = sg->findReviewByName(showCode, reviewName);
+        Review review = sg->findReviewByName(projectCode, reviewName);
 
         std::string err = "Review \"" + reviewName + "\" already exists.";
         throw SgEntityCreateError(err);
     }
     catch (SgEntityNotFoundError)
     {
-        Show show = sg->findShowByCode(showCode);
+        Project project = sg->findProjectByCode(projectCode);
 
         SgMap attrsMap;
-        attrsMap["project"] = toXmlrpcValue(show.asLink());
+        attrsMap["project"] = toXmlrpcValue(project.asLink());
         attrsMap["code"] = toXmlrpcValue(reviewName);
         attrsMap["sg_review_type"] = toXmlrpcValue(reviewType);
 

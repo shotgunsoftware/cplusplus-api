@@ -34,7 +34,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Entity.h>
 #include <Shotgun/Shotgun.h>
 #include <Shotgun/Element.h>
-#include <Shotgun/Show.h>
+#include <Shotgun/Project.h>
 
 namespace Shotgun {
 
@@ -70,24 +70,24 @@ Element::~Element()
 
 // *****************************************************************************
 Element Element::create(Shotgun *sg, 
-                        const std::string &showCode,
+                        const std::string &projectCode,
                         const std::string &elementName,
                         const std::string &elementType)
 {
     // Check if the element already exists
     try
     {
-        Element element = sg->findElementByName(showCode, elementName);
+        Element element = sg->findElementByName(projectCode, elementName);
 
         std::string err = "Element \"" + elementName + "\" already exists.";
         throw SgEntityCreateError(err);
     }
     catch (SgEntityNotFoundError)
     {
-        Show show = sg->findShowByCode(showCode);
+        Project project = sg->findProjectByCode(projectCode);
 
         SgMap attrsMap;
-        attrsMap["project"] = toXmlrpcValue(show.asLink());
+        attrsMap["project"] = toXmlrpcValue(project.asLink());
         attrsMap["code"] = toXmlrpcValue(elementName);
         attrsMap["sg_element_type"] = toXmlrpcValue(elementType);
 

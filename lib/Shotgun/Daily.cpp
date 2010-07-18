@@ -39,7 +39,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Daily.h>
 #include <Shotgun/Shot.h>
 #include <Shotgun/Sequence.h>
-#include <Shotgun/Show.h>
+#include <Shotgun/Project.h>
 
 namespace Shotgun {
 
@@ -125,7 +125,7 @@ Dailies Daily::find(Shotgun *sg, SgMap &findMap)
 const Shot Daily::sgShot() const
 {
 #warning Implement in non-Tippett way
-//     std::string theShotName = TipUtil::ShotName(sgShowCode(), sgShotName()).shot(true, true);
+//     std::string theShotName = TipUtil::ShotName(sgProjectCode(), sgShotName()).shot(true, true);
 // 
 //     return m_sg->findShotByName(theShotName);
 }
@@ -133,7 +133,7 @@ const Shot Daily::sgShot() const
 // *****************************************************************************
 const Sequence Daily::sgSequence() const
 {
-    return m_sg->findSequenceByName(sgShowCode(), sgSequenceName());
+    return m_sg->findSequenceByName(sgProjectCode(), sgSequenceName());
 }
 
 } // End namespace Shotgun

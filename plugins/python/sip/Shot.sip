@@ -62,7 +62,7 @@ public:
     const std::string sgProdVFX() const throw(Shotgun::SgAttrError);
     const Shotgun::Sequence sgSequence() throw(Shotgun::SgAttrError, Shotgun::SgEntityError);
     const std::string sgShotNotifications() const throw(Shotgun::SgAttrError);
-    const std::string sgShow() const throw(Shotgun::SgAttrError);
+    const std::string sgProject() const throw(Shotgun::SgAttrError);
     const std::string sgStatus() const throw(Shotgun::SgAttrError);
     const bool sgTurnover() const throw(Shotgun::SgAttrError);
     const std::string sgType() const throw(Shotgun::SgAttrError);

@@ -88,7 +88,7 @@ public:
     const std::string sgProdVFX() const { return getAttrValueAsString("sg_prod_vfx__"); }
     const Sequence sgSequence() const { return Sequence(m_sg, getAttrValueAsEntityAttrMap("sg_sequence")); } 
     const std::string sgShotNotifications() const { return getAttrValueAsString("sg_shot_notifications"); } 
-    const std::string sgShow() const { return sgShowName(); }
+    const std::string sgProject() const { return sgProjectName(); }
     const std::string sgStatus() const { return getAttrValueAsString("sg_status_list"); } 
     const bool sgTurnover() const { return getAttrValueAsBool("sg_turnover_"); }
     const std::string sgType() const { return getAttrValueAsString("sg_type"); }

@@ -55,7 +55,7 @@ protected:
     ReviewItem(Shotgun *sg, const xmlrpc_c::value &attrs);
 
     static ReviewItem create(Shotgun *sg, 
-                             const std::string &showCode,
+                             const std::string &projectCode,
                              //const std::string &reviewItemName, // read-only 
                              const SgMap &reviewItemShotLink,
                              const SgMap &reviewItemDailyLink,

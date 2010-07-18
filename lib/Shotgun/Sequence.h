@@ -55,7 +55,7 @@ protected:
     Sequence(Shotgun *sg, const xmlrpc_c::value &attrs);
 
     static Sequence create(Shotgun *sg, 
-                           const std::string &showCode,
+                           const std::string &projectCode,
                            const std::string &sequenceName);
     static Sequences find(Shotgun *sg, SgMap &findMap);
     

@@ -54,7 +54,7 @@ protected:
     Element(Shotgun *sg, const xmlrpc_c::value &attrs);
 
     static Element create(Shotgun *sg, 
-                          const std::string &showCode,
+                          const std::string &projectCode,
                           const std::string &elementName,
                           const std::string &elementType);
     static Elements find(Shotgun *sg, SgMap &findMap);

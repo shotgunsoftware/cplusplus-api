@@ -709,14 +709,14 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 };
 
 // ************************************************************************
-//  std::vector<Shotgun::Show> 
+//  std::vector<Shotgun::Project> 
 // ************************************************************************
 
-%MappedType std::vector<Shotgun::Show>
+%MappedType std::vector<Shotgun::Project>
 {
 %TypeHeaderCode
 #include <vector>
-#include <Shotgun/Show.h>
+#include <Shotgun/Project.h>
 %End
 
 %ConvertFromTypeCode
@@ -727,11 +727,11 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
     for (SIP_SSIZE_T i = 0; i < SIP_SSIZE_T(sipCpp->size()); ++i)
     {
-        Shotgun::Show *t = new Shotgun::Show((*sipCpp)[i]);
+        Shotgun::Project *t = new Shotgun::Project((*sipCpp)[i]);
         
         PyObject *pObj;
 
-        if ((pObj = sipConvertFromNewType(t, sipType_Shotgun_Show, sipTransferObj)) == NULL)
+        if ((pObj = sipConvertFromNewType(t, sipType_Shotgun_Project, sipTransferObj)) == NULL)
         {
             Py_DECREF(pList);
             delete t;
@@ -757,7 +757,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         {
             PyObject *itm = PySequence_ITEM(sipPy, i);
             bool ok = (itm &&
-                       sipCanConvertToType(itm, sipType_Shotgun_Show, SIP_NOT_NONE));
+                       sipCanConvertToType(itm, sipType_Shotgun_Project, SIP_NOT_NONE));
 
             Py_XDECREF(itm);
 
@@ -768,16 +768,16 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         return 1;
     }
 
-    std::vector<Shotgun::Show> *stdVector = new std::vector<Shotgun::Show>;
+    std::vector<Shotgun::Project> *stdVector = new std::vector<Shotgun::Project>;
     len = PySequence_Size(sipPy);
 
     for (SIP_SSIZE_T i = 0; i < len; ++i)
     {
         PyObject *itm = PySequence_ITEM(sipPy, i);
         int state;
-        Shotgun::Show *t = reinterpret_cast<Shotgun::Show *>(
+        Shotgun::Project *t = reinterpret_cast<Shotgun::Project *>(
                                  sipConvertToType( itm,
-                                                   sipType_Shotgun_Show,
+                                                   sipType_Shotgun_Project,
                                                    sipTransferObj,
                                                    SIP_NOT_NONE,
                                                    &state,
@@ -787,7 +787,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
         if (*sipIsErr)
         {
-            sipReleaseType(t, sipType_Shotgun_Show, state);
+            sipReleaseType(t, sipType_Shotgun_Project, state);
 
             delete stdVector;
 
@@ -2556,7 +2556,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //    - SgMap
 //
 //    - EntityPtrs
-//    - Shows
+//    - Projects
 //    - Sequences
 //    - Shots
 //    - Dailies
@@ -2584,7 +2584,7 @@ typedef std::vector< std::vector<std::string> > MethodSignatures;
 typedef std::vector<xmlrpc_c::value> SgArray;
 typedef std::map<std::string, xmlrpc_c::value> SgMap;
 typedef std::vector<Shotgun::Entity *> EntityPtrs;
-typedef std::vector<Shotgun::Show> Shows;
+typedef std::vector<Shotgun::Project> Projects;
 typedef std::vector<Shotgun::Sequence> Sequences;
 typedef std::vector<Shotgun::Shot> Shots;
 typedef std::vector<Shotgun::Daily> Dailies;

@@ -34,7 +34,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Entity.h>
 #include <Shotgun/Shotgun.h>
 #include <Shotgun/Asset.h>
-#include <Shotgun/Show.h>
+#include <Shotgun/Project.h>
 
 namespace Shotgun {
 
@@ -70,7 +70,7 @@ Asset::~Asset()
 
 // *****************************************************************************
 Asset Asset::create(Shotgun *sg, 
-                    const std::string &showCode,
+                    const std::string &projectCode,
                     const std::string &assetName,
                     const std::string &assetType,
                     const std::string &assetSource)
@@ -78,17 +78,17 @@ Asset Asset::create(Shotgun *sg,
     // Check if the asset already exists
     try
     {
-        Asset asset = sg->findAssetByName(showCode, assetName);
+        Asset asset = sg->findAssetByName(projectCode, assetName);
 
         std::string err = "Asset \"" + assetName + "\" already exists.";
         throw SgEntityCreateError(err);
     }
     catch (SgEntityNotFoundError)
     {
-        Show show = sg->findShowByCode(showCode);
+        Project project = sg->findProjectByCode(projectCode);
 
         SgMap attrsMap;
-        attrsMap["project"] = toXmlrpcValue(show.asLink());
+        attrsMap["project"] = toXmlrpcValue(project.asLink());
         attrsMap["code"] = toXmlrpcValue(assetName);
         attrsMap["sg_asset_type"] = toXmlrpcValue(assetType);
 

@@ -34,7 +34,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Entity.h>
 #include <Shotgun/Shotgun.h>
 #include <Shotgun/Note.h>
-#include <Shotgun/Show.h>
+#include <Shotgun/Project.h>
 #include <Shotgun/Review.h>
 #include <Shotgun/Shot.h>
 #include <Shotgun/Daily.h>
@@ -73,7 +73,7 @@ Note::~Note()
 
 // *****************************************************************************
 Note Note::create(Shotgun *sg, 
-                  const std::string &showCode,
+                  const std::string &projectCode,
                   const std::string &noteFromUserName,
                   const Strings &noteToUserNames,
                   const Strings &noteCcUserNames,
@@ -83,11 +83,11 @@ Note Note::create(Shotgun *sg,
                   const SgArray &noteLinks,
                   const std::string &noteOrigin)
 {
-    Show show = sg->findShowByCode(showCode);
+    Project project = sg->findProjectByCode(projectCode);
     User user = sg->findUserByLogin(noteFromUserName);
 
     SgMap attrsMap;
-    attrsMap["project"] = toXmlrpcValue(show.asLink());
+    attrsMap["project"] = toXmlrpcValue(project.asLink());
     attrsMap["user"] = toXmlrpcValue(user.asLink());
     attrsMap["subject"] = toXmlrpcValue(noteSubject);
     attrsMap["content"] = toXmlrpcValue(noteBody);

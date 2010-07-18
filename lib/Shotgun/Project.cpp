@@ -36,12 +36,12 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Method.h>
 #include <Shotgun/Entity.h>
 #include <Shotgun/Shotgun.h>
-#include <Shotgun/Show.h>
+#include <Shotgun/Project.h>
 
 namespace Shotgun {
 
 // *****************************************************************************
-Show::Show(Shotgun *sg, const xmlrpc_c::value &attrs)
+Project::Project(Shotgun *sg, const xmlrpc_c::value &attrs)
     : Entity(sg)
 {
     m_type = "Project";
@@ -49,7 +49,7 @@ Show::Show(Shotgun *sg, const xmlrpc_c::value &attrs)
 }
 
 // *****************************************************************************
-Show::Show()
+Project::Project()
     : Entity(NULL)
 {
     m_type = "Project";
@@ -57,63 +57,63 @@ Show::Show()
 }
 
 // *****************************************************************************
-Show::Show(const Show &ref)
+Project::Project(const Project &ref)
     : Entity(ref.m_sg)
 {
-    m_type = "Show";
+    m_type = "Project";
     m_attrs = new xmlrpc_c::value(*ref.m_attrs);
 }
 
 // *****************************************************************************
-Show::~Show()
+Project::~Project()
 {
     // Nothing
 }
 
 // *****************************************************************************
-Show Show::create(Shotgun *sg, 
-                  const std::string &showName,
-                  const std::string &showCode)
+Project Project::create(Shotgun *sg, 
+                  const std::string &projectName,
+                  const std::string &projectCode)
 {
-    // Check if the show already exists
+    // Check if the project already exists
     try
     {
-        Show show = sg->findShowByCode(showCode);
+        Project project = sg->findProjectByCode(projectCode);
 
-        std::string err = "Show \"" + showCode + "\" already exists.";
+        std::string err = "Project \"" + projectCode + "\" already exists.";
         throw SgEntityCreateError(err);
     }
     catch (SgEntityNotFoundError)
     {
         SgMap attrsMap;
 
-        attrsMap["code"] = toXmlrpcValue(showCode);
-        attrsMap["name"] = toXmlrpcValue(showName);
+        attrsMap["code"] = toXmlrpcValue(projectCode);
+        attrsMap["name"] = toXmlrpcValue(projectName);
         attrsMap["sg_status"] = toXmlrpcValue("Active");
-        attrsMap["sg_handle_duration"] = toXmlrpcValue(TIPSHOTGUN_SHOW_DEFAULT_HANDLE_DURATION);
-        attrsMap["sg_default_start_frame"] = toXmlrpcValue(TIPSHOTGUN_SHOW_DEFAULT_START_FRAME);
+        attrsMap["sg_handle_duration"] = toXmlrpcValue(TIPSHOTGUN_PROJECT_DEFAULT_HANDLE_DURATION);
+        attrsMap["sg_default_start_frame"] = toXmlrpcValue(TIPSHOTGUN_PROJECT_DEFAULT_START_FRAME);
 
         // Call the base class function to create an entity
-        return Show(sg, createEntity(sg, "Project", attrsMap));
+        return Project(sg, createEntity(sg, "Project", attrsMap));
     }
 }
 
 // *****************************************************************************
-Shows Show::find(Shotgun *sg, SgMap &findMap)
+Projects Project::find(Shotgun *sg, SgMap &findMap)
 {
-    // Find the entities that match the findMap and create an Show for each of them
-    Shows shows;
+    // Find the entities that match the findMap and create an Project for each of them
+    Projects projects;
 
     SgArray result = Entity::findEntities(sg, findMap);
     if (result.size() > 0)
     {
         for (size_t i = 0; i < result.size(); i++)
         {
-            shows.push_back(Show(sg, result[i]));
+            projects.push_back(Project(sg, result[i]));
         }
     }
 
-    return shows;
+    return projects;
 }
 
 } // End namespace Shotgun

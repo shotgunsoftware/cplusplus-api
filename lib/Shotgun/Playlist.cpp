@@ -71,23 +71,23 @@ Playlist::~Playlist()
 
 // *****************************************************************************
 Playlist Playlist::create(Shotgun *sg, 
-                          const std::string &showCode,
+                          const std::string &projectCode,
                           const std::string &playlistName)
 {
     // Check if the playlist already exists
     try
     {
-        Playlist playlist = sg->findPlaylistByName(showCode, playlistName);
+        Playlist playlist = sg->findPlaylistByName(projectCode, playlistName);
 
         std::string err = "Playlist \"" + playlistName + "\" already exists.";
         throw SgEntityCreateError(err);
     }
     catch (SgEntityNotFoundError)
     {
-        Show show = sg->findShowByCode(showCode);
+        Project project = sg->findProjectByCode(projectCode);
 
         SgMap attrsMap;
-        attrsMap["project"] = toXmlrpcValue(show.asLink());
+        attrsMap["project"] = toXmlrpcValue(project.asLink());
         attrsMap["code"] = toXmlrpcValue(playlistName);
 
         // Call the base class function to create an entity

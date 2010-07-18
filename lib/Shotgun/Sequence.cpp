@@ -34,7 +34,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Entity.h>
 #include <Shotgun/Shotgun.h>
 #include <Shotgun/Sequence.h>
-#include <Shotgun/Show.h>
+#include <Shotgun/Project.h>
 #include <Shotgun/utils.h>
 
 namespace Shotgun {
@@ -71,7 +71,7 @@ Sequence::~Sequence()
 
 // *****************************************************************************
 Sequence Sequence::create(Shotgun *sg, 
-                          const std::string &showCode,
+                          const std::string &projectCode,
                           const std::string &sequenceName)
 {
     // By convention, the sequence name is in uppercase
@@ -80,17 +80,17 @@ Sequence Sequence::create(Shotgun *sg,
     // Check if the sequence already exists
     try
     {
-        Sequence seq = sg->findSequenceByName(showCode, sequenceNameUpper);
+        Sequence seq = sg->findSequenceByName(projectCode, sequenceNameUpper);
 
-        std::string err = "Sequence \"" + sequenceNameUpper + "\" already exists for show \"" + showCode + "\"";
+        std::string err = "Sequence \"" + sequenceNameUpper + "\" already exists for project \"" + projectCode + "\"";
         throw SgEntityCreateError(err);
     }
     catch (SgEntityNotFoundError)
     {
-        Show show = sg->findShowByCode(showCode);
+        Project project = sg->findProjectByCode(projectCode);
 
         SgMap attrsMap;
-        attrsMap["project"] = toXmlrpcValue(show.asLink());
+        attrsMap["project"] = toXmlrpcValue(project.asLink());
         attrsMap["code"] = toXmlrpcValue(sequenceNameUpper);
 
         // Call the base class function to create an entity

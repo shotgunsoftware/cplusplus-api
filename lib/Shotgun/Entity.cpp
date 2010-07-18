@@ -33,8 +33,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <iostream>
 #include <stdexcept>
 
-#include <pcrecpp.h>
-
 #include <Shotgun/Type.h>
 #include <Shotgun/Method.h>
 #include <Shotgun/Entity.h>
@@ -257,7 +255,7 @@ void Entity::addOneConditionToFindMap(SgMap &findMap,
 // *****************************************************************************
 SgMap Entity::buildFindMapWithNoFilter(Shotgun *sg,
                                        const std::string &entityType,
-                                       const std::string &showCode,
+                                       const std::string &projectCode,
                                        const int limit,
                                        const SgArray &extraReturnFields,
                                        const bool retiredOnly)
@@ -266,20 +264,20 @@ SgMap Entity::buildFindMapWithNoFilter(Shotgun *sg,
     // "conditions"
     SgArray conditions;
     
-    if (showCode != "")
+    if (projectCode != "")
     {
-        Show show = sg->findShowByCode(showCode);
+        Project project = sg->findProjectByCode(projectCode);
 
         // Both ways work, but the second one seems much faster. From my
         // observation, searching by filterOp, "is", is MUCH faster than 
         // "name_contains".
 #if 0
         SgArray projValues;
-        projValues.push_back(toXmlrpcValue(show.sgName()));
+        projValues.push_back(toXmlrpcValue(project.sgName()));
         Entity::addOneConditionToList(conditions, Entity::condition("project", "name_contains", toXmlrpcValue(projValues)));
 #else
         SgArray projValues;
-        projValues.push_back(toXmlrpcValue(show.asLink()));
+        projValues.push_back(toXmlrpcValue(project.asLink()));
         Entity::addOneConditionToList(conditions, "project", "is", toXmlrpcValue(projValues));
 #endif
     }
@@ -302,7 +300,7 @@ SgMap Entity::buildFindMapWithSingleFilter(Shotgun *sg,
                                            const std::string &filterName,
                                            const std::string &filterOp,
                                            const xmlrpc_c::value &filterValue, 
-                                           const std::string &showCode,
+                                           const std::string &projectCode,
                                            const int limit,
                                            const SgArray &extraReturnFields,
                                            const bool retiredOnly)
@@ -311,12 +309,12 @@ SgMap Entity::buildFindMapWithSingleFilter(Shotgun *sg,
     // "conditions"
     SgArray conditions;
 
-    if (showCode != "")
+    if (projectCode != "")
     {
-        Show show = sg->findShowByCode(showCode);
+        Project project = sg->findProjectByCode(projectCode);
 
         SgArray projValues;
-        projValues.push_back(toXmlrpcValue(show.asLink()));
+        projValues.push_back(toXmlrpcValue(project.asLink()));
         Entity::addOneConditionToList(conditions, "project", "is", toXmlrpcValue(projValues));
     }
 
@@ -345,7 +343,7 @@ xmlrpc_c::value Entity::findOneEntityBySingleFilter(Shotgun *sg,
                                                     const std::string &filterName,
                                                     const std::string &filterOp,
                                                     const xmlrpc_c::value &filterValue, 
-                                                    const std::string &showCode,
+                                                    const std::string &projectCode,
                                                     const SgArray &extraReturnFields,
                                                     const bool retiredOnly)
 {
@@ -354,7 +352,7 @@ xmlrpc_c::value Entity::findOneEntityBySingleFilter(Shotgun *sg,
                                                  filterName,
                                                  filterOp,
                                                  filterValue,
-                                                 showCode,
+                                                 projectCode,
                                                  0,
                                                  extraReturnFields,
                                                  retiredOnly);
@@ -436,25 +434,25 @@ void Entity::validateLink(const xmlrpc_c::value &link)
 }
 
 // *****************************************************************************
-const std::string Entity::getShowName() const
+const std::string Entity::getProjectName() const
 {
     SgMap project = getAttrValueAsMap("project");
-    std::string showName = getAttrValueAsString("name", project);
+    std::string projectName = getAttrValueAsString("name", project);
 
-    return showName;
+    return projectName;
 }
 
 // *****************************************************************************
-const std::string Entity::getShowCode() const
+const std::string Entity::getProjectCode() const
 {
-    SgMap project = getAttrValueAsMap("project");
-    std::string showName = getAttrValueAsString("name", project);
+    SgMap projectMap = getAttrValueAsMap("project");
+    std::string projectName = getAttrValueAsString("name", projectMap);
 
-    Show show = Show(m_sg, findOneEntityBySingleFilter(m_sg, 
+    Project project = Project(m_sg, findOneEntityBySingleFilter(m_sg, 
                                                        "Project", 
-                                                       "name", "is", toXmlrpcValue(showName)));
+                                                       "name", "is", toXmlrpcValue(projectName)));
 
-    return show.sgCode();
+    return project.sgCode();
 }
 
 // *****************************************************************************
@@ -522,7 +520,7 @@ SgMap Entity::buildCreateMap(const std::string &entityType,
 
     // Add entity-specific return fields here
     std::string sgEntityTypeStr = sgEntityType(entityType);
-    if (sgEntityTypeStr == "Project") // Show
+    if (sgEntityTypeStr == "Project")
     {
         returnFields.push_back(toXmlrpcValue("name"));
         returnFields.push_back(toXmlrpcValue("code"));
@@ -856,7 +854,7 @@ SgMap Entity::buildFindMap(const std::string &entityType,
 
     // Add entity-specific return fields here
     std::string sgEntityTypeStr = sgEntityType(entityType);
-    if (sgEntityTypeStr == "Project") // Show
+    if (sgEntityTypeStr == "Project")
     {
         returnFields.push_back(toXmlrpcValue("name"));
         returnFields.push_back(toXmlrpcValue("code"));
@@ -1947,6 +1945,7 @@ const SgArray Entity::getAttrValueAsMultiEntityAttrMap(Shotgun *sg,
 
 // *****************************************************************************
 // static helper function
+#warning possible tippett crap here
 Entity *Entity::entityAttrMapToEntityPtr(Shotgun *sg,
                                          const xmlrpc_c::value &entityAttrMap)
 {
@@ -1956,9 +1955,9 @@ Entity *Entity::entityAttrMapToEntityPtr(Shotgun *sg,
     std::string tipType = tipEntityType(type);
 
     // IMPORTANT: user is responsible to delete them in C++ app.
-    if (tipType == "Show")
+    if (tipType == "Project")
     {
-        return new Show(sg, entityAttrMap);
+        return new Project(sg, entityAttrMap);
     }
     else if (tipType == "Sequence")
     {
@@ -2134,11 +2133,12 @@ const std::string Entity::getAttrValueAsQtPath(const std::string &attrName) cons
 {
     std::string result = getAttrValueAsQtURL(attrName);
 
-    pcrecpp::RE urlRE(TIPSHOTGUN_ATTACHMENT_URL);
-    if (urlRE.PartialMatch(result))
-    {
-        pcrecpp::RE(TIPSHOTGUN_ATTACHMENT_URL).Replace("", &result);
-    }
+#warning Figure out what this is and fix it
+//     pcrecpp::RE urlRE(TIPSHOTGUN_ATTACHMENT_URL);
+//     if (urlRE.PartialMatch(result))
+//     {
+//         pcrecpp::RE(TIPSHOTGUN_ATTACHMENT_URL).Replace("", &result);
+//     }
 
     return result;
 }
@@ -2150,11 +2150,12 @@ const std::string Entity::getAttrValueAsQtPath(const std::string &attrName,
 {
     std::string result = getAttrValueAsQtURL(attrName, attrsMap);
 
-    pcrecpp::RE urlRE(TIPSHOTGUN_ATTACHMENT_URL);
-    if (urlRE.PartialMatch(result))
-    {
-        pcrecpp::RE(TIPSHOTGUN_ATTACHMENT_URL).Replace("", &result);
-    }
+#warning Figure out what this is and fix it
+//     pcrecpp::RE urlRE(TIPSHOTGUN_ATTACHMENT_URL);
+//     if (urlRE.PartialMatch(result))
+//     {
+//         pcrecpp::RE(TIPSHOTGUN_ATTACHMENT_URL).Replace("", &result);
+//     }
 
     return result;
 }

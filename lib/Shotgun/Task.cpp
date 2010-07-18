@@ -34,7 +34,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Entity.h>
 #include <Shotgun/Shotgun.h>
 #include <Shotgun/Task.h>
-#include <Shotgun/Show.h>
+#include <Shotgun/Project.h>
 
 namespace Shotgun {
 
@@ -70,7 +70,7 @@ Task::~Task()
 
 // *****************************************************************************
 Task Task::create(Shotgun *sg, 
-                  const std::string &showCode,
+                  const std::string &projectCode,
                   const std::string &taskName,
                   const std::string &taskType,
                   const int taskViewOrder,
@@ -82,10 +82,10 @@ Task Task::create(Shotgun *sg,
                   const bool taskMilestone,
                   const SgMap &taskEntityLink)
 {
-    Show show = sg->findShowByCode(showCode);
+    Project project = sg->findProjectByCode(projectCode);
 
     SgMap attrsMap;
-    attrsMap["project"] = toXmlrpcValue(show.asLink());
+    attrsMap["project"] = toXmlrpcValue(project.asLink());
     attrsMap["content"] = toXmlrpcValue(taskName);
     attrsMap["sg_system_task_type"] = toXmlrpcValue(taskType);
     attrsMap["milestone"] = toXmlrpcValue(taskMilestone);

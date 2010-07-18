@@ -62,8 +62,8 @@ public:
     const int sgId() const;
     const time_t sgDateCreated() const;
     const time_t sgDateUpdated() const;
-    virtual const std::string sgShowName() const;
-    virtual const std::string sgShowCode() const;
+    virtual const std::string sgProjectName() const;
+    virtual const std::string sgProjectCode() const;
     virtual const std::string sgName() const;
     
     // Can't use both version. Otherwise it will complain something like this:
@@ -150,7 +150,7 @@ public:
     // Build a findMap with no condition - this is a convenience function
     static Shotgun::SgMap buildFindMapWithNoFilter(Shotgun::Shotgun *sg,
                                                       const std::string &entityType,
-                                                      const std::string &showCode = "",
+                                                      const std::string &projectCode = "",
                                                       const int limit = 0,
                                                       const Shotgun::SgArray &extraReturnFields = Shotgun::SgArray(),
                                                       const bool retiredOnly = false) throw(Shotgun::SgEntityError, Shotgun::SgAttrError);
@@ -161,7 +161,7 @@ public:
                                                           const std::string &filterName,
                                                           const std::string &filterOp,
                                                           const xmlrpc_c::value &filterValue,
-                                                          const std::string &showCode = "",
+                                                          const std::string &projectCode = "",
                                                           const int limit = 0,
                                                           const Shotgun::SgArray &extraReturnFields = Shotgun::SgArray(),
                                                           const bool retiredOnly = false) throw(Shotgun::SgEntityError, Shotgun::SgAttrError);

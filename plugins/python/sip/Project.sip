@@ -33,19 +33,19 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace Shotgun {
 
 // *****************************************************************************
-class Show : Shotgun::Entity
+class Project : Shotgun::Entity
 {
 %TypeHeaderCode
-    #include <Shotgun/Show.h>
+    #include <Shotgun/Project.h>
 %End
 
 protected:
-    Show(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
+    Project(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
 
 public:
-    Show();
-    Show(const Shotgun::Show &ref);
-    virtual ~Show();
+    Project();
+    Project(const Shotgun::Project &ref);
+    virtual ~Project();
 
     const std::string sgName() const throw(Shotgun::SgAttrError);
     const std::string sgCode() const throw(Shotgun::SgAttrError);
@@ -57,13 +57,11 @@ public:
     const bool sgPolishShotNotifications() const throw(Shotgun::SgAttrError);
     const bool sgReportStorageInformation() const throw(Shotgun::SgAttrError);
     const int sgDefaultStartFrame() const throw(Shotgun::SgAttrError);
-    //TODO: check this attr's type
-    //const std::string sgMSProjectSchedule() const throw(Shotgun::SgAttrError);
 
     // Overrides for base entity methods that don't work correctly 
     // for this entity type
-    const std::string sgShowName() const throw(Shotgun::SgAttrError);
-    const std::string sgShowCode() const throw(Shotgun::SgAttrError);
+    virtual const std::string sgProjectName() const throw(Shotgun::SgAttrError);
+    virtual const std::string sgProjectCode() const throw(Shotgun::SgAttrError);
 };
 
 }; // End namespace Shotgun - IMPORTANT: has to have the semi-colon

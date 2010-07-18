@@ -34,7 +34,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Entity.h>
 #include <Shotgun/Shotgun.h>
 #include <Shotgun/Delivery.h>
-#include <Shotgun/Show.h>
+#include <Shotgun/Project.h>
 
 namespace Shotgun {
 
@@ -70,24 +70,24 @@ Delivery::~Delivery()
 
 // *****************************************************************************
 Delivery Delivery::create(Shotgun *sg, 
-                          const std::string &showCode,
+                          const std::string &projectCode,
                           const std::string &deliveryName)
 {
     // Check if the delivery already exists
     try
     {
-        Delivery delivery = sg->findDeliveryByName(showCode, deliveryName);
+        Delivery delivery = sg->findDeliveryByName(projectCode, deliveryName);
 
         std::string err = "Delivery \"" + deliveryName + "\" already exists.";
         throw SgEntityCreateError(err);
     }
     catch (SgEntityNotFoundError)
     {
-        Show show = sg->findShowByCode(showCode);
+        Project project = sg->findProjectByCode(projectCode);
         User user = sg->findUserByLogin(std::string(getenv("USER")));
 
         SgMap attrsMap;
-        attrsMap["project"] = toXmlrpcValue(show.asLink());
+        attrsMap["project"] = toXmlrpcValue(project.asLink());
         attrsMap["title"] = toXmlrpcValue(deliveryName);
         attrsMap["sg_wrangler"] = toXmlrpcValue(user.asLink());
 

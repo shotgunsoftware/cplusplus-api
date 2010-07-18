@@ -37,7 +37,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Asset.h>
 #include <Shotgun/Sequence.h>
 #include <Shotgun/Shot.h>
-#include <Shotgun/Show.h>
+#include <Shotgun/Project.h>
 
 namespace Shotgun {
 
@@ -73,7 +73,7 @@ Reference::~Reference()
 
 // *****************************************************************************
 Reference Reference::create(Shotgun *sg, 
-                            const std::string &showCode,
+                            const std::string &projectCode,
                             const std::string &referencePath,
                             const std::string &referencePurpose,
                             const Strings &linkAssetNames,
@@ -84,17 +84,17 @@ Reference Reference::create(Shotgun *sg,
     // Check if the reference already exists. 
     try
     {
-        Reference reference = sg->findReferenceByName(showCode, referencePath);
+        Reference reference = sg->findReferenceByName(projectCode, referencePath);
 
         std::string err = "Reference \"" + referencePath + "\" already exists.";
         throw SgEntityCreateError(err);
     }
     catch (SgEntityNotFoundError)
     {
-        Show show = sg->findShowByCode(showCode);
+        Project project = sg->findProjectByCode(projectCode);
 
         SgMap attrsMap;
-        attrsMap["project"] = toXmlrpcValue(show.asLink());
+        attrsMap["project"] = toXmlrpcValue(project.asLink());
         attrsMap["code"] = toXmlrpcValue(referencePath);
         attrsMap["sg_purpose"] = toXmlrpcValue(referencePurpose);
 
@@ -103,7 +103,7 @@ Reference Reference::create(Shotgun *sg,
         {
             try
             {
-                Asset asset = sg->findAssetByName(showCode, linkAssetNames[0]);
+                Asset asset = sg->findAssetByName(projectCode, linkAssetNames[0]);
                 
                 attrsMap["sg_asset"] = toXmlrpcValue(asset.asLink());
             }
@@ -118,7 +118,7 @@ Reference Reference::create(Shotgun *sg,
         {
             try
             {
-                Sequence sequence = sg->findSequenceByName(showCode, linkSequenceNames[0]);
+                Sequence sequence = sg->findSequenceByName(projectCode, linkSequenceNames[0]);
                 
                 attrsMap["sg_sequence"] = toXmlrpcValue(sequence.asLink());
             }

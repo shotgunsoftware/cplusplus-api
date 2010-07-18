@@ -69,36 +69,36 @@ Shotgun::~Shotgun()
 }
 
 // *****************************************************************************
-Show Shotgun::findShowByCode(const std::string &showCode)
+Project Shotgun::findProjectByCode(const std::string &projectCode)
 {
-    return Show(this, 
+    return Project(this, 
                 Entity::findOneEntityBySingleFilter(this,
                                                     "Project",
-                                                    "code", "is", toXmlrpcValue(showCode)));
+                                                    "code", "is", toXmlrpcValue(projectCode)));
 }
     
 // *****************************************************************************
-Show Shotgun::findShowByName(const std::string &showName)
+Project Shotgun::findProjectByName(const std::string &projectName)
 {
-    return Show(this, 
+    return Project(this, 
                 Entity::findOneEntityBySingleFilter(this,
                                                     "Project",
-                                                    "name", "is", toXmlrpcValue(showName)));
+                                                    "name", "is", toXmlrpcValue(projectName)));
 }
     
     
 // *****************************************************************************
-Shows Shotgun::findShowsByStatus(const std::string &showStatus)
+Projects Shotgun::findProjectsByStatus(const std::string &projectStatus)
 {
     SgMap findMap = Entity::buildFindMapWithSingleFilter(this,
                                                          "Project",
-                                                         "sg_status", "is", toXmlrpcValue(showStatus));
+                                                         "sg_status", "is", toXmlrpcValue(projectStatus));
 
-    return findShows(findMap);
+    return findProjects(findMap);
 }
     
 // *****************************************************************************
-Sequence Shotgun::findSequenceByName(const std::string &showCode,
+Sequence Shotgun::findSequenceByName(const std::string &projectCode,
                                      const std::string &sequenceName)
 {
     std::string sequenceNameUpper = toupper(sequenceName);
@@ -107,16 +107,16 @@ Sequence Shotgun::findSequenceByName(const std::string &showCode,
                     Entity::findOneEntityBySingleFilter(this,
                                                        "Sequence",
                                                        "code", "is", toXmlrpcValue(sequenceNameUpper),
-                                                       showCode));
+                                                       projectCode));
 }
     
 // *****************************************************************************
-Sequences Shotgun::findSequencesByShow(const std::string &showCode, const int limit)
+Sequences Shotgun::findSequencesByProject(const std::string &projectCode, const int limit)
 {
     SgMap findMap = Entity::buildFindMapWithSingleFilter(this,
                                                          "Sequence",
                                                          "", "", xmlrpc_c::value_nil(),
-                                                         showCode,
+                                                         projectCode,
                                                          limit);
     return findSequences(findMap);
 }
@@ -131,15 +131,15 @@ Shot Shotgun::findShotByName(const std::string &shotName)
 //                 Entity::findOneEntityBySingleFilter(this,
 //                                                     "Shot",
 //                                                     "code", "is", toXmlrpcValue(sn.shot(true, true)),
-//                                                     sn.show()));
+//                                                     sn.project()));
 }
     
 // *****************************************************************************
-Shots Shotgun::findShotsByShow(const std::string &showCode, const int limit)
+Shots Shotgun::findShotsByProject(const std::string &projectCode, const int limit)
 {
     SgMap findMap = Entity::buildFindMapWithNoFilter(this,
                                                      "Shot",
-                                                     showCode,
+                                                     projectCode,
                                                      limit);
     return findShots(findMap);
 }
@@ -154,45 +154,45 @@ Daily Shotgun::findDailyByName(const std::string &dailyName)
 //                  Entity::findOneEntityBySingleFilter(this,
 //                                                      "Version",
 //                                                      "code", "is", toXmlrpcValue(dailyName),
-//                                                      dn.show()));
+//                                                      dn.project()));
 }
     
 // *****************************************************************************
-Dailies Shotgun::findDailiesByShow(const std::string &showCode, const int limit)
+Dailies Shotgun::findDailiesByProject(const std::string &projectCode, const int limit)
 {
     SgMap findMap = Entity::buildFindMapWithNoFilter(this,
                                                      "Version",
-                                                     showCode,
+                                                     projectCode,
                                                      limit);
 
     return findDailies(findMap);
 }
     
 // *****************************************************************************
-Dailies Shotgun::findDailiesByShot(const std::string &showCode,
+Dailies Shotgun::findDailiesByShot(const std::string &projectCode,
                                    const std::string &shotName, 
                                    const int limit)
 {
     // Both ways work, but the second one seems much faster. From my observation, 
     // searching by filterOp, "is", is MUCH faster than "name_contains".
 #if 0
-    std::string theShotName = TipUtil::ShotName(showCode, shotName).shot();
+    std::string theShotName = TipUtil::ShotName(projectCode, shotName).shot();
 
     SgMap findMap = Entity::buildFindMapWithSingleFilter(this,
                                                          "Version",
                                                          "entity", "name_contains", toXmlrpcValue(theShotName),
-                                                         showCode,
+                                                         projectCode,
                                                          limit);
 #else 
 #warning TODO: Implement in a non-Tippett way
-//     std::string theShotName = TipUtil::ShotName(showCode, shotName).shot(true, true);
+//     std::string theShotName = TipUtil::ShotName(projectCode, shotName).shot(true, true);
 // 
 //     Shot shot = findShotByName(theShotName);
 //  
 //     SgMap findMap = Entity::buildFindMapWithSingleFilter(this,
 //                                                          "Version",
 //                                                          "entity", "is", toXmlrpcValue(shot.asLink()),
-//                                                          showCode,
+//                                                          projectCode,
 //                                                          limit);
 #endif
 
@@ -202,14 +202,14 @@ Dailies Shotgun::findDailiesByShot(const std::string &showCode,
 }
 
 // *****************************************************************************
-Dailies Shotgun::findDailiesByReviewStatus(const std::string &showCode,
+Dailies Shotgun::findDailiesByReviewStatus(const std::string &projectCode,
                                            const std::string &reviewStatus, 
                                            const int limit)
 {
     SgMap findMap = Entity::buildFindMapWithSingleFilter(this,
                                                          "Version",
                                                          "sg_status", "is", toXmlrpcValue(reviewStatus),
-                                                         showCode,
+                                                         projectCode,
                                                          limit);
 
     return findDailies(findMap);
@@ -240,24 +240,24 @@ User Shotgun::findRetiredUser(const std::string &userLogin)
                 Entity::findOneEntityBySingleFilter(this, 
                                                     "HumanUser",
                                                     "login", "is", toXmlrpcValue(userLogin),
-                                                    "", // showCode
+                                                    "", // projectCode
                                                     SgArray(), // extraReturnFields
                                                     true)); // retiredOnly
 }
 
 // *****************************************************************************
-Element Shotgun::findElementByName(const std::string &showCode,
+Element Shotgun::findElementByName(const std::string &projectCode,
                                    const std::string &elementName)
 {
     return Element(this, 
                    Entity::findOneEntityBySingleFilter(this, 
                                                        "Element",
                                                        "code", "is", toXmlrpcValue(elementName),
-                                                       showCode));
+                                                       projectCode));
 }
     
 // *****************************************************************************
-Elements Shotgun::findElementsByShow(const std::string &showCode, 
+Elements Shotgun::findElementsByProject(const std::string &projectCode, 
                                      const std::string &elementType,
                                      const int limit)
 {
@@ -267,14 +267,14 @@ Elements Shotgun::findElementsByShow(const std::string &showCode,
         findMap = Entity::buildFindMapWithSingleFilter(this,
                                                        "Element",
                                                        "sg_element_type", "is", toXmlrpcValue(elementType),
-                                                       showCode,
+                                                       projectCode,
                                                        limit);
     }
     else
     {
         findMap = Entity::buildFindMapWithNoFilter(this,
                                                    "Element",
-                                                   showCode,
+                                                   projectCode,
                                                    limit);
     }
 
@@ -282,18 +282,18 @@ Elements Shotgun::findElementsByShow(const std::string &showCode,
 }
     
 // *****************************************************************************
-Asset Shotgun::findAssetByName(const std::string &showCode,
+Asset Shotgun::findAssetByName(const std::string &projectCode,
                                const std::string &assetName)
 {
     return Asset(this, 
                  Entity::findOneEntityBySingleFilter(this, 
                                                      "Asset",
                                                      "code", "is", toXmlrpcValue(assetName),
-                                                     showCode));
+                                                     projectCode));
 }
     
 // *****************************************************************************
-Assets Shotgun::findAssetsByShow(const std::string &showCode, 
+Assets Shotgun::findAssetsByProject(const std::string &projectCode, 
                                  const std::string &assetType,
                                  const int limit)
 {
@@ -303,14 +303,14 @@ Assets Shotgun::findAssetsByShow(const std::string &showCode,
         findMap = Entity::buildFindMapWithSingleFilter(this,
                                                        "Asset",
                                                        "sg_asset_type", "is", toXmlrpcValue(assetType),
-                                                       showCode,
+                                                       projectCode,
                                                        limit);
     }
     else
     {
         findMap = Entity::buildFindMapWithNoFilter(this,
                                                    "Asset",
-                                                   showCode,
+                                                   projectCode,
                                                    limit);
 
     }
@@ -319,14 +319,14 @@ Assets Shotgun::findAssetsByShow(const std::string &showCode,
 }
     
 // *****************************************************************************
-Delivery Shotgun::findDeliveryByName(const std::string &showCode,
+Delivery Shotgun::findDeliveryByName(const std::string &projectCode,
                                      const std::string &deliveryName)
 {
     return Delivery(this, 
                     Entity::findOneEntityBySingleFilter(this, 
                                                         "Delivery",
                                                         "title", "is", toXmlrpcValue(deliveryName),
-                                                        showCode));
+                                                        projectCode));
 }
     
 // *****************************************************************************
@@ -339,7 +339,7 @@ Delivery Shotgun::findDeliveryById(const int &deliveryId)
 }
     
 // *****************************************************************************
-Deliveries Shotgun::findDeliveriesByShow(const std::string &showCode, 
+Deliveries Shotgun::findDeliveriesByProject(const std::string &projectCode, 
                                          const std::string &deliveryStatus,
                                          const int limit)
 {
@@ -349,14 +349,14 @@ Deliveries Shotgun::findDeliveriesByShow(const std::string &showCode,
         findMap = Entity::buildFindMapWithSingleFilter(this,
                                                        "Delivery",
                                                        "sg_delivery_status", "is", toXmlrpcValue(deliveryStatus),
-                                                       showCode,
+                                                       projectCode,
                                                        limit);
     }
     else
     {
         findMap = Entity::buildFindMapWithNoFilter(this,
                                                    "Delivery",
-                                                   showCode,
+                                                   projectCode,
                                                    limit);
     }
 
@@ -364,14 +364,14 @@ Deliveries Shotgun::findDeliveriesByShow(const std::string &showCode,
 }
     
 // *****************************************************************************
-DeliveryItem Shotgun::findDeliveryItemByName(const std::string &showCode,
+DeliveryItem Shotgun::findDeliveryItemByName(const std::string &projectCode,
                                              const std::string &deliveryItemName)
 {
     return DeliveryItem(this, 
                         Entity::findOneEntityBySingleFilter(this, 
                                                             "CustomEntity01",
                                                             "code", "is", toXmlrpcValue(deliveryItemName),
-                                                            showCode));
+                                                            projectCode));
 }
     
 // *****************************************************************************
@@ -384,29 +384,29 @@ DeliveryItem Shotgun::findDeliveryItemById(const int &deliveryItemId)
 }
     
 // *****************************************************************************
-DeliveryItems Shotgun::findDeliveryItemsByShow(const std::string &showCode, 
+DeliveryItems Shotgun::findDeliveryItemsByProject(const std::string &projectCode, 
                                                const int limit)
 {
     SgMap findMap = Entity::buildFindMapWithNoFilter(this,
                                                      "CustomEntity01",
-                                                     showCode,
+                                                     projectCode,
                                                      limit);
     return findDeliveryItems(findMap);
 }
 
 // *****************************************************************************
-PublishEvent Shotgun::findPublishEventByName(const std::string &showCode,
+PublishEvent Shotgun::findPublishEventByName(const std::string &projectCode,
                                              const std::string &publishEventName)
 {
     return PublishEvent(this, 
                         Entity::findOneEntityBySingleFilter(this, 
                                                             "PublishEvent",
                                                             "code", "is", toXmlrpcValue(publishEventName),
-                                                            showCode));
+                                                            projectCode));
 }
     
 // *****************************************************************************
-PublishEvents Shotgun::findPublishEventsByShow(const std::string &showCode, 
+PublishEvents Shotgun::findPublishEventsByProject(const std::string &projectCode, 
                                                const std::string &publishEventType,
                                                const int limit)
 {
@@ -416,14 +416,14 @@ PublishEvents Shotgun::findPublishEventsByShow(const std::string &showCode,
         findMap = Entity::buildFindMapWithSingleFilter(this,
                                                        "PublishEvent",
                                                        "sg_type", "is", toXmlrpcValue(publishEventType),
-                                                       showCode,
+                                                       projectCode,
                                                        limit);
     }
     else
     {
         findMap = Entity::buildFindMapWithNoFilter(this,
                                                    "PublishEvent",
-                                                   showCode,
+                                                   projectCode,
                                                    limit);
     }
 
@@ -431,14 +431,14 @@ PublishEvents Shotgun::findPublishEventsByShow(const std::string &showCode,
 }
     
 // *****************************************************************************
-Review Shotgun::findReviewByName(const std::string &showCode,
+Review Shotgun::findReviewByName(const std::string &projectCode,
                                  const std::string &reviewName,
                                  const std::string &dateSent)
 {
     SgMap findMap = Entity::buildFindMapWithSingleFilter(this,
                                                         "Review",
                                                         "code", "is", toXmlrpcValue(reviewName),
-                                                        showCode,
+                                                        projectCode,
                                                         1);
     if (dateSent != "")
     {
@@ -467,7 +467,7 @@ Review Shotgun::findReviewById(const int &reviewId)
 }
     
 // *****************************************************************************
-Reviews Shotgun::findReviewsByShow(const std::string &showCode, 
+Reviews Shotgun::findReviewsByProject(const std::string &projectCode, 
                                    const std::string &reviewType,
                                    const int limit)
 {
@@ -477,14 +477,14 @@ Reviews Shotgun::findReviewsByShow(const std::string &showCode,
         findMap = Entity::buildFindMapWithSingleFilter(this,
                                                        "Review",
                                                        "sg_review_type", "is", toXmlrpcValue(reviewType),
-                                                       showCode,
+                                                       projectCode,
                                                        limit);
     }
     else
     {
         findMap = Entity::buildFindMapWithNoFilter(this,
                                                    "Review",
-                                                   showCode,
+                                                   projectCode,
                                                    limit);
     }
 
@@ -492,7 +492,7 @@ Reviews Shotgun::findReviewsByShow(const std::string &showCode,
 }
     
 // *****************************************************************************
-ReviewItem Shotgun::findReviewItemByName(const std::string &showCode,
+ReviewItem Shotgun::findReviewItemByName(const std::string &projectCode,
                                          const std::string &reviewItemName)
 {
     // There could be multiple ReviewItems that share the same name.
@@ -502,7 +502,7 @@ ReviewItem Shotgun::findReviewItemByName(const std::string &showCode,
                       Entity::findOneEntityBySingleFilter(this, 
                                                           "ReviewItem",
                                                           "code", "is", toXmlrpcValue(reviewItemName),
-                                                          showCode));
+                                                          projectCode));
 }
     
 // *****************************************************************************
@@ -515,30 +515,30 @@ ReviewItem Shotgun::findReviewItemById(const int &reviewItemId)
 }
     
 // *****************************************************************************
-ReviewItems Shotgun::findReviewItemsByShow(const std::string &showCode, 
+ReviewItems Shotgun::findReviewItemsByProject(const std::string &projectCode, 
                                            const int limit)
 {
     SgMap findMap = Entity::buildFindMapWithNoFilter(this,
                                                      "ReviewItem",
-                                                     showCode,
+                                                     projectCode,
                                                      limit);
 
     return findReviewItems(findMap);
 }
 
 // *****************************************************************************
-Task Shotgun::findTaskByName(const std::string &showCode,
+Task Shotgun::findTaskByName(const std::string &projectCode,
                                  const std::string &taskName)
 {
     return Task(this, 
                 Entity::findOneEntityBySingleFilter(this, 
                                                     "Task",
                                                     "content", "is", toXmlrpcValue(taskName),
-                                                    showCode));
+                                                    projectCode));
 }
     
 // *****************************************************************************
-Tasks Shotgun::findTasksByType(const std::string &showCode,
+Tasks Shotgun::findTasksByType(const std::string &projectCode,
                                const std::string &taskType,
                                const std::string &linkEntityType,
                                const int limit)
@@ -546,7 +546,7 @@ Tasks Shotgun::findTasksByType(const std::string &showCode,
     SgMap findMap = Entity::buildFindMapWithSingleFilter(this,
                                                          "Task",
                                                          "sg_system_task_type", "is", toXmlrpcValue(taskType),
-                                                         showCode,
+                                                         projectCode,
                                                          limit);
 
     if (linkEntityType != "")
@@ -559,21 +559,21 @@ Tasks Shotgun::findTasksByType(const std::string &showCode,
 }
 
 // *****************************************************************************
-Tasks Shotgun::findTasksByLinkEntity(const std::string &showCode,
+Tasks Shotgun::findTasksByLinkEntity(const std::string &projectCode,
                                      const SgMap &linkEntity,
                                      const int limit)
 {
     SgMap findMap = Entity::buildFindMapWithSingleFilter(this,
                                                          "Task",
                                                          "entity", "is", toXmlrpcValue(linkEntity),
-                                                         showCode,
+                                                         projectCode,
                                                          limit);
 
     return findTasks(findMap);
 }
 
 // *****************************************************************************
-Tasks Shotgun::findTasksByMilestone(const std::string &showCode,
+Tasks Shotgun::findTasksByMilestone(const std::string &projectCode,
                                     const std::string &shotName,
                                     const int limit)
 {
@@ -582,7 +582,7 @@ Tasks Shotgun::findTasksByMilestone(const std::string &showCode,
     SgMap findMap = Entity::buildFindMapWithSingleFilter(this,
                                                          "Task",
                                                          "entity", "is", toXmlrpcValue(shot.asLink()),
-                                                         showCode,
+                                                         projectCode,
                                                          limit);
     Entity::addOneConditionToFindMap(findMap, 
                                      "milestone", "is", toXmlrpcValue(true));
@@ -592,12 +592,12 @@ Tasks Shotgun::findTasksByMilestone(const std::string &showCode,
     
 
 // *****************************************************************************
-Tasks Shotgun::findTasksByShow(const std::string &showCode,
+Tasks Shotgun::findTasksByProject(const std::string &projectCode,
                                const int limit)
 {
     SgMap findMap = Entity::buildFindMapWithNoFilter(this,
                                                      "Task",
-                                                     showCode,
+                                                     projectCode,
                                                      limit);
 
     return findTasks(findMap);
@@ -623,13 +623,13 @@ Group Shotgun::findGroupById(const int &groupId)
     
 // *****************************************************************************
 Notes Shotgun::findNotesByType(const std::string &noteType,
-                               const std::string &showCode,
+                               const std::string &projectCode,
                                const int limit)
 {
     SgMap findMap = Entity::buildFindMapWithSingleFilter(this,
                                                          "Note",
                                                          "sg_note_type", "is", toXmlrpcValue(noteType),
-                                                         showCode,
+                                                         projectCode,
                                                          limit);
 
     return findNotes(findMap);
@@ -638,7 +638,7 @@ Notes Shotgun::findNotesByType(const std::string &noteType,
 
 // *****************************************************************************
 Notes Shotgun::findNotesByAuthor(const std::string &userName,
-                                 const std::string &showCode,
+                                 const std::string &projectCode,
                                  const int limit)
 {
     User user = findUserByLogin(userName);
@@ -646,7 +646,7 @@ Notes Shotgun::findNotesByAuthor(const std::string &userName,
     SgMap findMap = Entity::buildFindMapWithSingleFilter(this,
                                                          "Note",
                                                          "user", "is", toXmlrpcValue(user.asLink()),
-                                                         showCode,
+                                                         projectCode,
                                                          limit);
 
     return findNotes(findMap);
@@ -655,12 +655,12 @@ Notes Shotgun::findNotesByAuthor(const std::string &userName,
 // *****************************************************************************
 Notes Shotgun::findNotesByLinks(const SgArray &noteLinks,
                                 const std::string &noteType,
-                                const std::string &showCode,
+                                const std::string &projectCode,
                                 const int limit)
 {
     SgMap findMap = Entity::buildFindMapWithNoFilter(this,
                                                      "Note",
-                                                     showCode,
+                                                     projectCode,
                                                      limit);
 
 #if 1
@@ -708,53 +708,53 @@ Notes Shotgun::findNotesByLinks(const SgArray &noteLinks,
 }
     
 // *****************************************************************************
-Reference Shotgun::findReferenceByPath(const std::string &showCode,
+Reference Shotgun::findReferenceByPath(const std::string &projectCode,
                                        const std::string &referencePath)
 {
     return Reference(this, 
                      Entity::findOneEntityBySingleFilter(this, 
                                                          "CustomEntity02",
                                                          "code", "is", toXmlrpcValue(referencePath),
-                                                         showCode));
+                                                         projectCode));
 }
     
 // *****************************************************************************
-Reference Shotgun::findReferenceByName(const std::string &showCode,
+Reference Shotgun::findReferenceByName(const std::string &projectCode,
                                        const std::string &referenceName)
 {
-    return findReferenceByPath(showCode, referenceName);
+    return findReferenceByPath(projectCode, referenceName);
 }
     
 // *****************************************************************************
-References Shotgun::findReferencesByShow(const std::string &showCode, 
+References Shotgun::findReferencesByProject(const std::string &projectCode, 
                                          const int limit)
 {
     SgMap findMap = Entity::buildFindMapWithNoFilter(this,
                                                      "CustomEntity02",
-                                                     showCode,
+                                                     projectCode,
                                                      limit);
 
     return findReferences(findMap);
 }
     
 // *****************************************************************************
-Playlist Shotgun::findPlaylistByName(const std::string &showCode,
+Playlist Shotgun::findPlaylistByName(const std::string &projectCode,
                                      const std::string &playlistName)
 {
     return Playlist(this, 
                     Entity::findOneEntityBySingleFilter(this, 
                                                         "Playlist",
                                                         "code", "is", toXmlrpcValue(playlistName),
-                                                        showCode));
+                                                        projectCode));
 }
     
 // *****************************************************************************
-Playlists Shotgun::findPlaylistsByShow(const std::string &showCode, 
+Playlists Shotgun::findPlaylistsByProject(const std::string &projectCode, 
                                        const int limit)
 {
     SgMap findMap = Entity::buildFindMapWithNoFilter(this,
                                                      "Playlist",
-                                                     showCode,
+                                                     projectCode,
                                                      limit);
 
     return findPlaylists(findMap);
@@ -769,9 +769,9 @@ Entity *Shotgun::findEntityById(const std::string &entityType, const int &id)
     std::string tipType = tipEntityType(entityType);
 
     // IMPORTANT: user is responsible to delete them in C++ app.
-    if (tipType == "Show")
+    if (tipType == "Project")
     {
-        return new Show(this, entity);
+        return new Project(this, entity);
     }
     else if (tipType == "Sequence")
     {

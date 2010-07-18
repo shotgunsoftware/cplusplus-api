@@ -49,7 +49,7 @@ protected:
     Playlist(Shotgun *sg, const xmlrpc_c::value &attrs);
 
     static Playlist create(Shotgun *sg,
-                           const std::string &showCode,
+                           const std::string &projectCode,
                            const std::string &playlistName);
 
     static Playlists find(Shotgun *sg, SgMap &findMap);

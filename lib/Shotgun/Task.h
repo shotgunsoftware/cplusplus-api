@@ -52,7 +52,7 @@ protected:
     Task(Shotgun *sg, const xmlrpc_c::value &attrs);
 
     static Task create(Shotgun *sg, 
-                       const std::string &showCode,
+                       const std::string &projectCode,
                        const std::string &taskName,
                        const std::string &taskType,
                        const int taskViewOrder = TIPSHOTGUN_INVALID_ORDER_NUM,

@@ -52,7 +52,7 @@ protected:
     PublishEvent(Shotgun *sg, const xmlrpc_c::value &attrs);
 
     static PublishEvent create(Shotgun *sg, 
-                               const std::string &showCode,
+                               const std::string &projectCode,
                                const std::string &publishEventName,
                                const std::string &publishEventSource,
                                const std::string &publishEventType = "",

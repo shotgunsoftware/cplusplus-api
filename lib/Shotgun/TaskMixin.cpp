@@ -35,7 +35,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/TaskMixin.h>
 #include <Shotgun/Shotgun.h>
 #include <Shotgun/Entity.h>
-#include <Shotgun/Show.h>
 #include <Shotgun/User.h>
 #include <Shotgun/Group.h>
 
@@ -48,7 +47,7 @@ Tasks TaskMixin::getTasks(const int limit)
     // derived class.
     if (Entity *entity = dynamic_cast<Entity *>(this))
     {
-        return entity->sg()->findTasksByLinkEntity(entity->sgShowCode(), 
+        return entity->sg()->findTasksByLinkEntity(entity->sgProjectCode(), 
                                                    entity->asLink(),
                                                    limit);
     }
@@ -65,7 +64,7 @@ Task TaskMixin::getTaskByName(const std::string &taskName)
     {
         SgMap findMap = Entity::buildFindMapWithNoFilter(entity->sg(),
                                                          "Task",
-                                                         entity->sgShowCode(),
+                                                         entity->sgProjectCode(),
                                                          1);
 
         Entity::addOneConditionToFindMap(findMap, "content", "is", toXmlrpcValue(taskName)); 
@@ -94,7 +93,7 @@ Tasks TaskMixin::getMilestoneTasks(const int limit)
     {
         SgMap findMap = Entity::buildFindMapWithNoFilter(entity->sg(),
                                                          "Task",
-                                                         entity->sgShowCode(),
+                                                         entity->sgProjectCode(),
                                                          limit);
 
         Entity::addOneConditionToFindMap(findMap, "entity", "is", toXmlrpcValue(entity->asLink()));
@@ -160,7 +159,7 @@ Task TaskMixin::addTask(const std::string &taskName,
     {
         if (Entity *entity = dynamic_cast<Entity *>(this))
         {
-            return entity->sg()->createTask(entity->sgShowCode(),
+            return entity->sg()->createTask(entity->sgProjectCode(),
                                             taskName,
                                             taskType,
                                             taskViewOrder,

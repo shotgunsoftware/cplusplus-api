@@ -54,7 +54,7 @@ protected:
     Review(Shotgun *sg, const xmlrpc_c::value &attrs);
 
     static Review create(Shotgun *sg, 
-                         const std::string &showCode,
+                         const std::string &projectCode,
                          const std::string &reviewName,
                          const std::string &reviewType);
     static Reviews find(Shotgun *sg, SgMap &findMap);
