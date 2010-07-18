@@ -928,12 +928,25 @@ F77
 FFLAGS
 ac_ct_F77
 LIBTOOL
+BUILD_PYTHON_TRUE
+BUILD_PYTHON_FALSE
+minimum_xmlrpc_lib_version
 XMLRPC_C_CONFIG
 PKG_CONFIG
 pcre_CFLAGS
 pcre_LIBS
 pcrecpp_CFLAGS
 pcrecpp_LIBS
+PYTHON
+PYTHON_VERSION
+PYTHON_PREFIX
+PYTHON_EXEC_PREFIX
+PYTHON_PLATFORM
+pythondir
+pkgpythondir
+pyexecdir
+pkgpyexecdir
+SIP
 LIBOBJS
 LTLIBOBJS'
 ac_subst_files=''
@@ -1543,6 +1556,7 @@ Optional Features:
   --enable-fast-install[=PKGS]
                           optimize for fast installation [default=yes]
   --disable-libtool-lock  avoid locking (might break parallel builds)
+  --enable-python         Build Shotgun plugin for Python (default=no)
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -4965,7 +4979,7 @@ ia64-*-hpux*)
   ;;
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '#line 4968 "configure"' > conftest.$ac_ext
+  echo '#line 4982 "configure"' > conftest.$ac_ext
   if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -7231,11 +7245,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:7234: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:7248: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:7238: \$? = $ac_status" >&5
+   echo "$as_me:7252: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -7521,11 +7535,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:7524: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:7538: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:7528: \$? = $ac_status" >&5
+   echo "$as_me:7542: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -7625,11 +7639,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:7628: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:7642: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:7632: \$? = $ac_status" >&5
+   echo "$as_me:7646: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -9976,7 +9990,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 9979 "configure"
+#line 9993 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -10076,7 +10090,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 10079 "configure"
+#line 10093 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -12496,11 +12510,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:12499: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:12513: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:12503: \$? = $ac_status" >&5
+   echo "$as_me:12517: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -12600,11 +12614,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:12603: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:12617: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:12607: \$? = $ac_status" >&5
+   echo "$as_me:12621: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -14164,11 +14178,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:14167: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:14181: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:14171: \$? = $ac_status" >&5
+   echo "$as_me:14185: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -14268,11 +14282,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:14271: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:14285: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:14275: \$? = $ac_status" >&5
+   echo "$as_me:14289: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -16457,11 +16471,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:16460: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:16474: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:16464: \$? = $ac_status" >&5
+   echo "$as_me:16478: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -16747,11 +16761,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:16750: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:16764: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:16754: \$? = $ac_status" >&5
+   echo "$as_me:16768: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -16851,11 +16865,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:16854: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:16868: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:16858: \$? = $ac_status" >&5
+   echo "$as_me:16872: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -19506,10 +19520,34 @@ LIBTOOL='$(SHELL) $(top_builddir)/libtool'
 
 
 
+# Check whether --enable-python was given.
+if test "${enable_python+set}" = set; then
+  enableval=$enable_python; sg_build_python=$enableval
+else
+  sg_build_python=no
+fi
+
+ if test "x$sg_build_python" != "xno"; then
+  BUILD_PYTHON_TRUE=
+  BUILD_PYTHON_FALSE='#'
+else
+  BUILD_PYTHON_TRUE='#'
+  BUILD_PYTHON_FALSE=
+fi
+
+
 
 # -------------------------------
 # BEGIN Check for xmlrpc libs
 #
+#
+# Note: This is the version we've tested.  If someone can confirm
+# that this works with an earlier version of xmlrpc, please update
+# accordingly.
+#
+minimum_xmlrpc_lib_version="1.06.38"
+
+
 
 for ac_prog in xmlrpc-c-config
 do
@@ -19563,8 +19601,8 @@ fi
 xmlrpc_version=`$XMLRPC_C_CONFIG --version`
 { echo "$as_me:$LINENO: result: xmlrpc-c library version: $xmlrpc_version" >&5
 echo "${ECHO_T}xmlrpc-c library version: $xmlrpc_version" >&6; }
-as_arg_v1=$xmlrpc_version
-as_arg_v2=$minimum_xmlrpc_lib_version
+as_arg_v1="$xmlrpc_version"
+as_arg_v2="$minimum_xmlrpc_lib_version"
 awk "$as_awk_strverscmp" v1="$as_arg_v1" v2="$as_arg_v2" /dev/null
 case $? in
 1) { { echo "$as_me:$LINENO: error: Sorry, you need xmlrpc-c version $minimum_xmlrpc_lib_version or greater." >&5
@@ -19946,6 +19984,190 @@ LDFLAGS="$LDFLAGS $pcre_LDFLAGS $pcrecpp_LDFLAGS"
 # -------------------------------
 
 
+# -------------------------------
+# BEGIN Check for python/sip
+#
+if test "x$sg_build_python" != "xno"; then
+
+
+
+
+        # Find any Python interpreter.
+    if test -z "$PYTHON"; then
+      for ac_prog in python python2 python2.5 python2.4 python2.3 python2.2 python2.1 python2.0 python1.6 python1.5
+do
+  # Extract the first word of "$ac_prog", so it can be a program name with args.
+set dummy $ac_prog; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_path_PYTHON+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  case $PYTHON in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_PYTHON="$PYTHON" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_path_PYTHON="$as_dir/$ac_word$ac_exec_ext"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+PYTHON=$ac_cv_path_PYTHON
+if test -n "$PYTHON"; then
+  { echo "$as_me:$LINENO: result: $PYTHON" >&5
+echo "${ECHO_T}$PYTHON" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+
+  test -n "$PYTHON" && break
+done
+test -n "$PYTHON" || PYTHON=":"
+
+    fi
+    am_display_PYTHON=python
+
+
+  if test "$PYTHON" = :; then
+      :
+  else
+
+
+  { echo "$as_me:$LINENO: checking for $am_display_PYTHON version" >&5
+echo $ECHO_N "checking for $am_display_PYTHON version... $ECHO_C" >&6; }
+if test "${am_cv_python_version+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  am_cv_python_version=`$PYTHON -c "import sys; print sys.version[:3]"`
+fi
+{ echo "$as_me:$LINENO: result: $am_cv_python_version" >&5
+echo "${ECHO_T}$am_cv_python_version" >&6; }
+  PYTHON_VERSION=$am_cv_python_version
+
+
+
+  PYTHON_PREFIX='${prefix}'
+
+  PYTHON_EXEC_PREFIX='${exec_prefix}'
+
+
+
+  { echo "$as_me:$LINENO: checking for $am_display_PYTHON platform" >&5
+echo $ECHO_N "checking for $am_display_PYTHON platform... $ECHO_C" >&6; }
+if test "${am_cv_python_platform+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  am_cv_python_platform=`$PYTHON -c "import sys; print sys.platform"`
+fi
+{ echo "$as_me:$LINENO: result: $am_cv_python_platform" >&5
+echo "${ECHO_T}$am_cv_python_platform" >&6; }
+  PYTHON_PLATFORM=$am_cv_python_platform
+
+
+
+
+                { echo "$as_me:$LINENO: checking for $am_display_PYTHON script directory" >&5
+echo $ECHO_N "checking for $am_display_PYTHON script directory... $ECHO_C" >&6; }
+if test "${am_cv_python_pythondir+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  am_cv_python_pythondir=`$PYTHON -c "from distutils import sysconfig; print sysconfig.get_python_lib(0,0,prefix='$PYTHON_PREFIX')" 2>/dev/null ||
+     echo "$PYTHON_PREFIX/lib/python$PYTHON_VERSION/site-packages"`
+fi
+{ echo "$as_me:$LINENO: result: $am_cv_python_pythondir" >&5
+echo "${ECHO_T}$am_cv_python_pythondir" >&6; }
+  pythondir=$am_cv_python_pythondir
+
+
+
+  pkgpythondir=\${pythondir}/$PACKAGE
+
+
+            { echo "$as_me:$LINENO: checking for $am_display_PYTHON extension module directory" >&5
+echo $ECHO_N "checking for $am_display_PYTHON extension module directory... $ECHO_C" >&6; }
+if test "${am_cv_python_pyexecdir+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  am_cv_python_pyexecdir=`$PYTHON -c "from distutils import sysconfig; print sysconfig.get_python_lib(1,0,prefix='$PYTHON_EXEC_PREFIX')" 2>/dev/null ||
+     echo "${PYTHON_EXEC_PREFIX}/lib/python${PYTHON_VERSION}/site-packages"`
+fi
+{ echo "$as_me:$LINENO: result: $am_cv_python_pyexecdir" >&5
+echo "${ECHO_T}$am_cv_python_pyexecdir" >&6; }
+  pyexecdir=$am_cv_python_pyexecdir
+
+
+
+  pkgpyexecdir=\${pyexecdir}/$PACKAGE
+
+
+
+  fi
+
+
+# Extract the first word of "sip", so it can be a program name with args.
+set dummy sip; ac_word=$2
+{ echo "$as_me:$LINENO: checking for $ac_word" >&5
+echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6; }
+if test "${ac_cv_prog_SIP+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if test -n "$SIP"; then
+  ac_cv_prog_SIP="$SIP" # Let the user override the test.
+else
+as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  test -z "$as_dir" && as_dir=.
+  for ac_exec_ext in '' $ac_executable_extensions; do
+  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+    ac_cv_prog_SIP="sip"
+    echo "$as_me:$LINENO: found $as_dir/$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+done
+IFS=$as_save_IFS
+
+fi
+fi
+SIP=$ac_cv_prog_SIP
+if test -n "$SIP"; then
+  { echo "$as_me:$LINENO: result: $SIP" >&5
+echo "${ECHO_T}$SIP" >&6; }
+else
+  { echo "$as_me:$LINENO: result: no" >&5
+echo "${ECHO_T}no" >&6; }
+fi
+
+
+if test "x$SIP" = "x"; then
+    { { echo "$as_me:$LINENO: error: \"sip is required for building the Python plugin.\"" >&5
+echo "$as_me: error: \"sip is required for building the Python plugin.\"" >&2;}
+   { (exit 1); exit 1; }; }
+fi
+fi
+#
+# END Check for python/sip
+# -------------------------------
+
+
 ac_config_files="$ac_config_files Makefile lib/Makefile lib/Shotgun/Makefile plugins/Makefile plugins/python/Makefile"
 
 cat >confcache <<\_ACEOF
@@ -20092,6 +20314,13 @@ if test -z "${am__fastdepCC_TRUE}" && test -z "${am__fastdepCC_FALSE}"; then
   { { echo "$as_me:$LINENO: error: conditional \"am__fastdepCC\" was never defined.
 Usually this means the macro was only invoked conditionally." >&5
 echo "$as_me: error: conditional \"am__fastdepCC\" was never defined.
+Usually this means the macro was only invoked conditionally." >&2;}
+   { (exit 1); exit 1; }; }
+fi
+if test -z "${BUILD_PYTHON_TRUE}" && test -z "${BUILD_PYTHON_FALSE}"; then
+  { { echo "$as_me:$LINENO: error: conditional \"BUILD_PYTHON\" was never defined.
+Usually this means the macro was only invoked conditionally." >&5
+echo "$as_me: error: conditional \"BUILD_PYTHON\" was never defined.
 Usually this means the macro was only invoked conditionally." >&2;}
    { (exit 1); exit 1; }; }
 fi
@@ -20757,17 +20986,30 @@ F77!$F77$ac_delim
 FFLAGS!$FFLAGS$ac_delim
 ac_ct_F77!$ac_ct_F77$ac_delim
 LIBTOOL!$LIBTOOL$ac_delim
+BUILD_PYTHON_TRUE!$BUILD_PYTHON_TRUE$ac_delim
+BUILD_PYTHON_FALSE!$BUILD_PYTHON_FALSE$ac_delim
+minimum_xmlrpc_lib_version!$minimum_xmlrpc_lib_version$ac_delim
 XMLRPC_C_CONFIG!$XMLRPC_C_CONFIG$ac_delim
 PKG_CONFIG!$PKG_CONFIG$ac_delim
 pcre_CFLAGS!$pcre_CFLAGS$ac_delim
 pcre_LIBS!$pcre_LIBS$ac_delim
 pcrecpp_CFLAGS!$pcrecpp_CFLAGS$ac_delim
 pcrecpp_LIBS!$pcrecpp_LIBS$ac_delim
+PYTHON!$PYTHON$ac_delim
+PYTHON_VERSION!$PYTHON_VERSION$ac_delim
+PYTHON_PREFIX!$PYTHON_PREFIX$ac_delim
+PYTHON_EXEC_PREFIX!$PYTHON_EXEC_PREFIX$ac_delim
+PYTHON_PLATFORM!$PYTHON_PLATFORM$ac_delim
+pythondir!$pythondir$ac_delim
+pkgpythondir!$pkgpythondir$ac_delim
+pyexecdir!$pyexecdir$ac_delim
+pkgpyexecdir!$pkgpyexecdir$ac_delim
+SIP!$SIP$ac_delim
 LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 13; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 26; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5

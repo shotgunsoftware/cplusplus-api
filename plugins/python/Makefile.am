@@ -26,9 +26,7 @@ EXTRA_DIST = configure.py               \
              sip/Task.sip               \
              sip/User.sip
 
-
 BUILT_SOURCES = _shotgun.so
-CLEANFILES = _shotgun.so src/*.o
 
 _shotgun.so: 
 	mkdir -p src
@@ -36,6 +34,9 @@ _shotgun.so:
 	make -C src
 	mv src/_shotgun.so .
 
+CLEANFILES = _shotgun.so src/*.o
 
 maintainer-clean:
-	rm -rf src
+	rm -rf src _shotgun.so Makefile
+
+
