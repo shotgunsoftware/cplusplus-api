@@ -1538,7 +1538,7 @@ Optional Features:
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
   --disable-dependency-tracking  speeds up one-time build
   --enable-dependency-tracking   do not reject slow dependency extractors
-  --enable-shared[=PKGS]  build shared libraries [default=no]
+  --enable-shared[=PKGS]  build shared libraries [default=yes]
   --enable-static[=PKGS]  build static libraries [default=yes]
   --enable-fast-install[=PKGS]
                           optimize for fast installation [default=yes]
@@ -3351,7 +3351,28 @@ fi
 
 
 
+# This is the version info according to the libtool versioning system.
+# It does *not* correspond to the release number, and has a technical
+# meaning (CURRENT:REVISION:AGE) that indicates the compatibility of
+# different library versions (see the libtool manual):
+#
+# Here are a set of rules to help you update your library version information:
+#
+#    1. Start with version information of '0:0:0' for each libtool library.
+#    2. Update the version information only immediately before a public release of
+#       your software. More frequent updates are unnecessary, and only guarantee
+#       that the current interface number gets larger faster.
+#    3. If the library source code has changed at all since the last update, then
+#       increment revision ('c:r:a' becomes 'c:r+1:a').
+#    4. If any interfaces have been added, removed, or changed since the last
+#       update, increment current, and set revision to 0.
+#    5. If any interfaces have been added since the last public release, then
+#       increment age.
+#    6. If any interfaces have been removed or changed since the last public
+#       release, then set age to 0.
+#
 SHARED_VERSION_INFO="0:0:0"
+
 # Check whether --enable-shared was given.
 if test "${enable_shared+set}" = set; then
   enableval=$enable_shared; p=${PACKAGE-default}
@@ -3372,9 +3393,8 @@ if test "${enable_shared+set}" = set; then
       ;;
     esac
 else
-  enable_shared=no
+  enable_shared=yes
 fi
-
 
 
 # Check whether --enable-static was given.
@@ -4945,7 +4965,7 @@ ia64-*-hpux*)
   ;;
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '#line 4948 "configure"' > conftest.$ac_ext
+  echo '#line 4968 "configure"' > conftest.$ac_ext
   if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -7211,11 +7231,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:7214: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:7234: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:7218: \$? = $ac_status" >&5
+   echo "$as_me:7238: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -7501,11 +7521,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:7504: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:7524: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:7508: \$? = $ac_status" >&5
+   echo "$as_me:7528: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -7605,11 +7625,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:7608: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:7628: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:7612: \$? = $ac_status" >&5
+   echo "$as_me:7632: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -9956,7 +9976,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 9959 "configure"
+#line 9979 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -10056,7 +10076,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 10059 "configure"
+#line 10079 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -12476,11 +12496,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:12479: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:12499: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:12483: \$? = $ac_status" >&5
+   echo "$as_me:12503: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -12580,11 +12600,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:12583: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:12603: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:12587: \$? = $ac_status" >&5
+   echo "$as_me:12607: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -14144,11 +14164,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:14147: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:14167: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:14151: \$? = $ac_status" >&5
+   echo "$as_me:14171: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -14248,11 +14268,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:14251: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:14271: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:14255: \$? = $ac_status" >&5
+   echo "$as_me:14275: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -16437,11 +16457,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:16440: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:16460: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:16444: \$? = $ac_status" >&5
+   echo "$as_me:16464: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -16727,11 +16747,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:16730: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:16750: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:16734: \$? = $ac_status" >&5
+   echo "$as_me:16754: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -16831,11 +16851,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:16834: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:16854: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:16838: \$? = $ac_status" >&5
+   echo "$as_me:16858: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -19926,7 +19946,7 @@ LDFLAGS="$LDFLAGS $pcre_LDFLAGS $pcrecpp_LDFLAGS"
 # -------------------------------
 
 
-ac_config_files="$ac_config_files Makefile lib/Makefile lib/Shotgun/Makefile"
+ac_config_files="$ac_config_files Makefile lib/Makefile lib/Shotgun/Makefile plugins/Makefile plugins/python/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -20531,6 +20551,8 @@ do
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "lib/Makefile") CONFIG_FILES="$CONFIG_FILES lib/Makefile" ;;
     "lib/Shotgun/Makefile") CONFIG_FILES="$CONFIG_FILES lib/Shotgun/Makefile" ;;
+    "plugins/Makefile") CONFIG_FILES="$CONFIG_FILES plugins/Makefile" ;;
+    "plugins/python/Makefile") CONFIG_FILES="$CONFIG_FILES plugins/python/Makefile" ;;
 
   *) { { echo "$as_me:$LINENO: error: invalid argument: $ac_config_target" >&5
 echo "$as_me: error: invalid argument: $ac_config_target" >&2;}
