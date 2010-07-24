@@ -131,7 +131,10 @@ SHELL = @SHELL@
 SIP = @SIP@
 STRIP = @STRIP@
 VERSION = @VERSION@
+XMLRPC_CFLAGS = @XMLRPC_CFLAGS@
 XMLRPC_C_CONFIG = @XMLRPC_C_CONFIG@
+XMLRPC_LDADD = @XMLRPC_LDADD@
+XMLRPC_LDFLAGS = @XMLRPC_LDFLAGS@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
@@ -188,7 +191,7 @@ sysconfdir = @sysconfdir@
 target_alias = @target_alias@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-SUBDIRS = lib plugins
+SUBDIRS = lib plugins test
 all: all-recursive
 
 .SUFFIXES:

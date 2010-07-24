@@ -28,6 +28,11 @@ EXTRA_DIST = configure.py               \
 
 BUILT_SOURCES = _shotgun.so
 
+# Export these so they can be picked up by ./configure.py
+export XMLRPC_CFLAGS
+export XMLRPC_LDFLAGS
+export XMLRPC_LDADD
+
 _shotgun.so: 
 	mkdir -p src
 	./configure.py

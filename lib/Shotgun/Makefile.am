@@ -54,5 +54,5 @@ include_HEADERS = Asset.h                       \
                   utils.h
 
 
-libShotgun_la_LIBS = @LIBS@
+libShotgun_la_LIBADD = @XMLRPC_LDADD@ @XMLRPC_LDFLAGS@
 

@@ -67,7 +67,7 @@ class Shotgun
     friend class NoteMixin;
 
 public:
-    Shotgun(const std::string &serverURL);
+    Shotgun(const std::string &serverURL=SG_DEFAULT_URL);
     virtual ~Shotgun();
 
     xmlrpc_c::client_xml *client() const { return m_client; }

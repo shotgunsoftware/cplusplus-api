@@ -932,6 +932,9 @@ BUILD_PYTHON_TRUE
 BUILD_PYTHON_FALSE
 minimum_xmlrpc_lib_version
 XMLRPC_C_CONFIG
+XMLRPC_CFLAGS
+XMLRPC_LDADD
+XMLRPC_LDFLAGS
 PYTHON
 PYTHON_VERSION
 PYTHON_PREFIX
@@ -1555,6 +1558,7 @@ Optional Packages:
   --with-pic              try to use only PIC/non-PIC objects [default=use
                           both]
   --with-tags[=TAGS]      include additional configurations [automatic]
+  --with-default-url=URL  Specify a default Shotgun URL
 
 Some influential environment variables:
   CXX         C++ compiler command
@@ -4962,7 +4966,7 @@ ia64-*-hpux*)
   ;;
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '#line 4965 "configure"' > conftest.$ac_ext
+  echo '#line 4969 "configure"' > conftest.$ac_ext
   if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -7228,11 +7232,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:7231: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:7235: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:7235: \$? = $ac_status" >&5
+   echo "$as_me:7239: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -7518,11 +7522,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:7521: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:7525: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:7525: \$? = $ac_status" >&5
+   echo "$as_me:7529: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -7622,11 +7626,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:7625: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:7629: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:7629: \$? = $ac_status" >&5
+   echo "$as_me:7633: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -9973,7 +9977,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 9976 "configure"
+#line 9980 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -10073,7 +10077,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<EOF
-#line 10076 "configure"
+#line 10080 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -12493,11 +12497,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:12496: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:12500: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:12500: \$? = $ac_status" >&5
+   echo "$as_me:12504: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -12597,11 +12601,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:12600: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:12604: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:12604: \$? = $ac_status" >&5
+   echo "$as_me:12608: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -14161,11 +14165,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:14164: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:14168: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:14168: \$? = $ac_status" >&5
+   echo "$as_me:14172: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -14265,11 +14269,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:14268: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:14272: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:14272: \$? = $ac_status" >&5
+   echo "$as_me:14276: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -16454,11 +16458,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:16457: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:16461: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:16461: \$? = $ac_status" >&5
+   echo "$as_me:16465: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -16744,11 +16748,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:16747: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:16751: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:16751: \$? = $ac_status" >&5
+   echo "$as_me:16755: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -16848,11 +16852,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:16851: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:16855: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:16855: \$? = $ac_status" >&5
+   echo "$as_me:16859: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -19528,7 +19532,7 @@ fi
 # that this works with an earlier version of xmlrpc, please update
 # accordingly.
 #
-minimum_xmlrpc_lib_version="1.06.38"
+minimum_xmlrpc_lib_version="1.06.31"
 
 
 
@@ -19595,20 +19599,20 @@ echo "$as_me: error: Sorry, you need xmlrpc-c version $minimum_xmlrpc_lib_versio
 2) ;;
 esac
 
-xmlrpc_cflags=`$XMLRPC_C_CONFIG --cflags`
-{ echo "$as_me:$LINENO: result: xmlrpc-c library cflags: $xmlrpc_cflags" >&5
-echo "${ECHO_T}xmlrpc-c library cflags: $xmlrpc_cflags" >&6; }
-CPPFLAGS="$CPPFLAGS $xmlrpc_cflags"
+XMLRPC_CFLAGS=`$XMLRPC_C_CONFIG c++2 client --cflags`
+{ echo "$as_me:$LINENO: result: xmlrpc-c library cflags: $XMLRPC_CFLAGS" >&5
+echo "${ECHO_T}xmlrpc-c library cflags: $XMLRPC_CFLAGS" >&6; }
 
-xmlrpc_ldadd=`$XMLRPC_C_CONFIG --ldadd`
-{ echo "$as_me:$LINENO: result: xmlrpc-c library ldadd: $xmlrpc_ldadd" >&5
-echo "${ECHO_T}xmlrpc-c library ldadd: $xmlrpc_ldadd" >&6; }
-LDADD="$LDADD $xmlrpc_ldadd"
 
-xmlrpc_ldflags=`$XMLRPC_C_CONFIG --ldflags`
-{ echo "$as_me:$LINENO: result: xmlrpc-c library ldflags: $xmlrpc_ldflags" >&5
-echo "${ECHO_T}xmlrpc-c library ldflags: $xmlrpc_ldflags" >&6; }
-LDFLAGS="$LDFLAGS $xmlrpc_ldflags"
+XMLRPC_LDADD=`$XMLRPC_C_CONFIG c++2 client --ldadd`
+{ echo "$as_me:$LINENO: result: xmlrpc-c library ldadd: $XMLRPC_LDADD" >&5
+echo "${ECHO_T}xmlrpc-c library ldadd: $XMLRPC_LDADD" >&6; }
+
+
+XMLRPC_LDFLAGS=`$XMLRPC_C_CONFIG c++2 client --ldflags`
+{ echo "$as_me:$LINENO: result: xmlrpc-c library ldflags: $XMLRPC_LDFLAGS" >&5
+echo "${ECHO_T}xmlrpc-c library ldflags: $XMLRPC_LDFLAGS" >&6; }
+
 
 #
 # END Check for xmlrpc libs
@@ -19799,7 +19803,32 @@ fi
 # -------------------------------
 
 
-ac_config_files="$ac_config_files Makefile lib/Makefile lib/Shotgun/Makefile plugins/Makefile plugins/python/Makefile"
+# Check whether --with-default-url was given.
+if test "${with_default_url+set}" = set; then
+  withval=$with_default_url;
+    if test "$withval" = "yes" ; then
+      { { echo "$as_me:$LINENO: error: --with-default-url requires an argument." >&5
+echo "$as_me: error: --with-default-url requires an argument." >&2;}
+   { (exit 1); exit 1; }; }
+    else
+      SG_DEFAULT_URL=$withval
+    fi
+
+else
+
+SG_DEFAULT_URL=""
+
+
+fi
+
+
+cat >>confdefs.h <<_ACEOF
+#define SG_DEFAULT_URL "$SG_DEFAULT_URL"
+_ACEOF
+
+
+
+ac_config_files="$ac_config_files Makefile lib/Makefile lib/Shotgun/Makefile plugins/Makefile plugins/python/Makefile test/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -20413,6 +20442,7 @@ do
     "lib/Shotgun/Makefile") CONFIG_FILES="$CONFIG_FILES lib/Shotgun/Makefile" ;;
     "plugins/Makefile") CONFIG_FILES="$CONFIG_FILES plugins/Makefile" ;;
     "plugins/python/Makefile") CONFIG_FILES="$CONFIG_FILES plugins/python/Makefile" ;;
+    "test/Makefile") CONFIG_FILES="$CONFIG_FILES test/Makefile" ;;
 
   *) { { echo "$as_me:$LINENO: error: invalid argument: $ac_config_target" >&5
 echo "$as_me: error: invalid argument: $ac_config_target" >&2;}
@@ -20621,6 +20651,9 @@ BUILD_PYTHON_TRUE!$BUILD_PYTHON_TRUE$ac_delim
 BUILD_PYTHON_FALSE!$BUILD_PYTHON_FALSE$ac_delim
 minimum_xmlrpc_lib_version!$minimum_xmlrpc_lib_version$ac_delim
 XMLRPC_C_CONFIG!$XMLRPC_C_CONFIG$ac_delim
+XMLRPC_CFLAGS!$XMLRPC_CFLAGS$ac_delim
+XMLRPC_LDADD!$XMLRPC_LDADD$ac_delim
+XMLRPC_LDFLAGS!$XMLRPC_LDFLAGS$ac_delim
 PYTHON!$PYTHON$ac_delim
 PYTHON_VERSION!$PYTHON_VERSION$ac_delim
 PYTHON_PREFIX!$PYTHON_PREFIX$ac_delim
@@ -20635,7 +20668,7 @@ LIBOBJS!$LIBOBJS$ac_delim
 LTLIBOBJS!$LTLIBOBJS$ac_delim
 _ACEOF
 
-  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 21; then
+  if test `sed -n "s/.*$ac_delim\$/X/p" conf$$subs.sed | grep -c X` = 24; then
     break
   elif $ac_last_try; then
     { { echo "$as_me:$LINENO: error: could not make $CONFIG_STATUS" >&5

@@ -49,7 +49,7 @@ AM_CONDITIONAL([BUILD_PYTHON], [test "x$sg_build_python" != "xno"])
 # that this works with an earlier version of xmlrpc, please update
 # accordingly.
 #
-minimum_xmlrpc_lib_version="1.06.38"
+minimum_xmlrpc_lib_version="1.06.31"
 AC_SUBST(minimum_xmlrpc_lib_version)
 
 
@@ -63,17 +63,17 @@ AC_MSG_RESULT([xmlrpc-c library version: $xmlrpc_version])
 AS_VERSION_COMPARE("$xmlrpc_version", "$minimum_xmlrpc_lib_version",
     [AC_MSG_ERROR([Sorry, you need xmlrpc-c version $minimum_xmlrpc_lib_version or greater.])])
 
-xmlrpc_cflags=`$XMLRPC_C_CONFIG --cflags`
-AC_MSG_RESULT([xmlrpc-c library cflags: $xmlrpc_cflags])
-CPPFLAGS="$CPPFLAGS $xmlrpc_cflags"
+XMLRPC_CFLAGS=`$XMLRPC_C_CONFIG c++2 client --cflags`
+AC_MSG_RESULT([xmlrpc-c library cflags: $XMLRPC_CFLAGS])
+AC_SUBST(XMLRPC_CFLAGS)
 
-xmlrpc_ldadd=`$XMLRPC_C_CONFIG --ldadd`
-AC_MSG_RESULT([xmlrpc-c library ldadd: $xmlrpc_ldadd])
-LDADD="$LDADD $xmlrpc_ldadd"
+XMLRPC_LDADD=`$XMLRPC_C_CONFIG c++2 client --ldadd`
+AC_MSG_RESULT([xmlrpc-c library ldadd: $XMLRPC_LDADD])
+AC_SUBST(XMLRPC_LDADD)
 
-xmlrpc_ldflags=`$XMLRPC_C_CONFIG --ldflags`
-AC_MSG_RESULT([xmlrpc-c library ldflags: $xmlrpc_ldflags])
-LDFLAGS="$LDFLAGS $xmlrpc_ldflags"
+XMLRPC_LDFLAGS=`$XMLRPC_C_CONFIG c++2 client --ldflags`
+AC_MSG_RESULT([xmlrpc-c library ldflags: $XMLRPC_LDFLAGS])
+AC_SUBST(XMLRPC_LDFLAGS)
 
 #
 # END Check for xmlrpc libs
@@ -94,11 +94,29 @@ fi
 # END Check for python/sip
 # -------------------------------
 
+AC_ARG_WITH(default-url,
+AS_HELP_STRING([--with-default-url=URL],
+               [Specify a default Shotgun URL]),
+[
+    if test "$withval" = "yes" ; then
+      AC_MSG_ERROR([--with-default-url requires an argument.])
+    else
+      SG_DEFAULT_URL=$withval
+    fi
+],
+[
+SG_DEFAULT_URL=""
+]
+)
+AC_DEFINE_UNQUOTED(SG_DEFAULT_URL, "$SG_DEFAULT_URL",
+                     [The default Shotgun URL])
+
 
 AC_CONFIG_FILES([Makefile
                  lib/Makefile
                  lib/Shotgun/Makefile
                  plugins/Makefile
                  plugins/python/Makefile
+                 test/Makefile
                 ])
 AC_OUTPUT

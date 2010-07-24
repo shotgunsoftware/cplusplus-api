@@ -149,6 +149,7 @@ std::string toStdString(const Playlist &playlist);
 std::string toStdString(const Playlists &playlists);
 
 // *****************************************************************************
+#warning Move these operator<< guys out of the Shotgun namespace
 std::ostream &operator<<(std::ostream& output, const xmlrpc_c::value &value);
 std::ostream &operator<<(std::ostream& output, const SgMap &map);
 std::ostream &operator<<(std::ostream& output, const SgArray &array);

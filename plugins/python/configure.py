@@ -24,15 +24,18 @@ subprocess.call(sipcmd)
 # Create the Makefile.
 makefile = sipconfig.SIPModuleMakefile(config, build_file, dir="src")
 
-xmlrpc_cppflags = subprocess.Popen(["xmlrpc-c-config", "c++2", "client", "--cflags"], 
-                                    stdout=subprocess.PIPE).communicate()[0].strip()
-xmlrpc_ldflags = subprocess.Popen(["xmlrpc-c-config", "c++2", "client", "--ldflags"], 
-                                   stdout=subprocess.PIPE).communicate()[0].strip()
-xmlrpc_ldadd = subprocess.Popen(["xmlrpc-c-config", "c++2", "client", "--ldadd"], 
-                                  stdout=subprocess.PIPE).communicate()[0].strip()
+xmlrpc_cppflags = os.environ.get("XMLRPC_CFLAGS", None)
+xmlrpc_ldflags = os.environ.get("XMLRPC_LDFLAGS", None)
+xmlrpc_ldadd = os.environ.get("XMLRPC_LDADD", None)
+
+if (xmlrpc_cppflags is None
+    or xmlrpc_ldflags is None
+    or xmlrpc_ldadd is None):
+    print "./configure.py is intended to be run by make."
 
 makefile.extra_cxxflags = [xmlrpc_cppflags]
-makefile.extra_lflags = ["-lShotgun", xmlrpc_ldadd, "-lstdc++"]
+makefile.extra_lflags = ["-Wl,-Bstatic", "-lShotgun", "-Wl,-Bdynamic",
+                          xmlrpc_ldflags, xmlrpc_ldadd, "-lstdc++"]
 
 makefile.extra_include_dirs = ["../../../lib"]
 makefile.extra_lib_dirs = ["../../../lib/Shotgun/.libs"]

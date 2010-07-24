@@ -1,5 +1,5 @@
 
-SUBDIRS = lib plugins
+SUBDIRS = lib plugins test
 
 #
 # Auto-generate ChangeLog from the git log
