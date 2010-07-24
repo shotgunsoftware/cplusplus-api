@@ -35,7 +35,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Shotgun.h>
 #include <Shotgun/Playlist.h>
 #include <Shotgun/Note.h>
-#include <Shotgun/Daily.h>
 
 namespace Shotgun {
 
@@ -128,17 +127,17 @@ const Notes Playlist::sgNotes() const
 }
 
 // *****************************************************************************
-const Dailies Playlist::sgDailies() const
+const Versions Playlist::sgVersions() const
 {
-    Dailies dailies;
+    Versions versions;
 
     SgArray entities = getAttrValueAsMultiEntityAttrMap("versions");
     for (size_t i = 0; i < entities.size(); i++)
     {
-        dailies.push_back(Daily(m_sg, entities[i]));
+        versions.push_back(Version(m_sg, entities[i]));
     }
 
-    return dailies;
+    return versions;
 }
 
 // *****************************************************************************
@@ -173,20 +172,20 @@ void Playlist::sgNotes(const SgArray &val)
 }
 
 // *****************************************************************************
-void Playlist::sgDailies(const Dailies &val)
+void Playlist::sgVersions(const Versions &val)
 {
-    SgArray dailyLinkArray;
+    SgArray versionLinkArray;
 
     for (size_t i = 0; i < val.size(); i++)
     {
-        dailyLinkArray.push_back(toXmlrpcValue(val[i].asLink()));
+        versionLinkArray.push_back(toXmlrpcValue(val[i].asLink()));
     }
 
-    setAttrValue("versions", toXmlrpcValue(dailyLinkArray));
+    setAttrValue("versions", toXmlrpcValue(versionLinkArray));
 }
 
 // *****************************************************************************
-void Playlist::sgDailies(const SgArray &val)
+void Playlist::sgVersions(const SgArray &val)
 {
     for (size_t i = 0; i < val.size(); i++)
     {

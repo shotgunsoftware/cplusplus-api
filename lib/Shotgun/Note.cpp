@@ -37,7 +37,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Project.h>
 #include <Shotgun/Review.h>
 #include <Shotgun/Shot.h>
-#include <Shotgun/Daily.h>
 
 namespace Shotgun {
 
@@ -200,26 +199,26 @@ const Shot Note::getLinkedShot() const
     throw SgEntityNotFoundError("Shot");
 }
 
-// *****************************************************************************
-const Daily Note::getLinkedDaily() const
-{
-    SgArray links = sgLinks();
-
-    for (size_t i = 0; i < links.size(); i++)
-    {
-        SgMap linkAsMap = SgMap(xmlrpc_c::value_struct(links[i]));
-
-        int id = Entity::getAttrValueAsInt("id", linkAsMap);
-        std::string type = Entity::getAttrValueAsString("type", linkAsMap);
-
-        if (type == "Version")
-        {
-            return Daily(m_sg, 
-                         findOneEntityBySingleFilter(m_sg, type, "id", "is", toXmlrpcValue(id)));
-        }
-    }
-
-    throw SgEntityNotFoundError("Version");
-}
+// // *****************************************************************************
+// const Daily Note::getLinkedDaily() const
+// {
+//     SgArray links = sgLinks();
+// 
+//     for (size_t i = 0; i < links.size(); i++)
+//     {
+//         SgMap linkAsMap = SgMap(xmlrpc_c::value_struct(links[i]));
+// 
+//         int id = Entity::getAttrValueAsInt("id", linkAsMap);
+//         std::string type = Entity::getAttrValueAsString("type", linkAsMap);
+// 
+//         if (type == "Version")
+//         {
+//             return Daily(m_sg, 
+//                          findOneEntityBySingleFilter(m_sg, type, "id", "is", toXmlrpcValue(id)));
+//         }
+//     }
+// 
+//     throw SgEntityNotFoundError("Version");
+// }
 
 } // End namespace Shotgun

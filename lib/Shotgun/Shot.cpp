@@ -131,36 +131,6 @@ Shots Shot::find(Shotgun *sg, SgMap &findMap)
 }
 
 // *****************************************************************************
-void Shot::sgFinalDaily(const SgMap &val)
-{
-    try
-    {
-        Entity::validateLink(val);
-    }
-    catch (SgAttrLinkError &error)
-    {
-        throw SgAttrSetValueError("sg_final_daily", error.what());
-    }
-
-    setAttrValue("sg_final_daily", toXmlrpcValue(val));
-}
-
-// *****************************************************************************
-void Shot::sgLatestDaily(const SgMap &val)
-{
-    try
-    {
-        Entity::validateLink(val);
-    }
-    catch (SgAttrLinkError &error)
-    {
-        throw SgAttrSetValueError("sg_latest_daily", error.what());
-    }
-
-    setAttrValue("sg_latest_daily", toXmlrpcValue(val));
-}
-
-// *****************************************************************************
 void Shot::sgSequence(const SgMap &val)
 {
     try

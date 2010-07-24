@@ -30,8 +30,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __DAILY_H__
-#define __DAILY_H__
+#ifndef __VERSION_H__
+#define __VERSION_H__
 
 #include <string>
 
@@ -44,7 +44,7 @@ namespace Shotgun {
 class Shotgun;
 
 // *****************************************************************************
-class Daily : public Entity, public NoteMixin
+class Version : public Entity, public NoteMixin
 {
     friend class Shotgun;
     friend class Shot;
@@ -54,9 +54,9 @@ class Daily : public Entity, public NoteMixin
     friend class Entity;
     
 public:
-//     Daily();
-    Daily(const Daily &ref);
-    virtual ~Daily();
+//     Version();
+    Version(const Version &ref);
+    virtual ~Version();
 
     // Get an attribute's value
     const std::string sgName() const { return getAttrValueAsString("code"); }
@@ -77,20 +77,20 @@ public:
     Entity *sgLink() { return getAttrValueAsEntityPtr("entity"); } 
     const std::string sgLinkEntityType() const { return linkEntityType("entity"); }
 
-    Daily &operator=(const Daily &that)
+    Version &operator=(const Version &that)
     {
         Entity::operator=(that);
         return *this;
     }
 
 protected:
-    Daily(Shotgun *sg, const xmlrpc_c::value &attrs);
+    Version(Shotgun *sg, const xmlrpc_c::value &attrs);
 
-    static Daily create(Shotgun *sg, const std::string &dailyName);
-    static Dailies find(Shotgun *sg, SgMap &findMap);
+    static Version create(Shotgun *sg, const std::string &versionName);
+    static Versions find(Shotgun *sg, SgMap &findMap);
 
 };
 
 } // End namespace Shotgun
 
-#endif    // End #ifdef __DAILY_H__
+#endif    // End #ifdef __VERSION_H__

@@ -483,7 +483,7 @@ const std::string Entity::linkEntityType(const std::string &linkName) const
 }
 
 // *****************************************************************************
-#warning FIX THIS CRAP
+#warning FIX THIS 
 SgMap Entity::buildCreateMap(const std::string &entityType,
                              const SgMap &data,
                              const SgArray &extraReturnFields)
@@ -1946,7 +1946,7 @@ const SgArray Entity::getAttrValueAsMultiEntityAttrMap(Shotgun *sg,
 
 // *****************************************************************************
 // static helper function
-#warning FIX THIS CRAP
+#warning FIX THIS 
 Entity *Entity::entityAttrMapToEntityPtr(Shotgun *sg,
                                          const xmlrpc_c::value &entityAttrMap)
 {
@@ -1968,9 +1968,9 @@ Entity *Entity::entityAttrMapToEntityPtr(Shotgun *sg,
     {
         return new Shot(sg, entityAttrMap);
     }
-    else if (tipType == "Daily")
+    else if (tipType == "Version")
     {
-        return new Daily(sg, entityAttrMap);
+        return new Version(sg, entityAttrMap);
     }
     else if (tipType == "User")
     {

@@ -40,7 +40,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Project.h>
 #include <Shotgun/Sequence.h>
 #include <Shotgun/Shot.h>
-#include <Shotgun/Daily.h>
+#include <Shotgun/Version.h>
 #include <Shotgun/User.h>
 #include <Shotgun/Element.h>
 #include <Shotgun/Asset.h>
@@ -103,18 +103,18 @@ public:
     bool deleteShotById(const int id) { return Entity::deleteEntity(this, "Shot", id); }
 
     //------------------------------------------------------------------------
-    // Daily Entity
-    Daily createDaily(const std::string &dailyName) 
-        { return Daily::create(this, dailyName); }
-    Daily findDailyByName(const std::string &dailyName);
-    Dailies findDailiesByProject(const std::string &projectCode, const int limit = 0);
-    Dailies findDailiesByShot(const std::string &projectCode, 
+    // Version Entity
+    Version createVersion(const std::string &versionName) 
+        { return Version::create(this, versionName); }
+    Version findVersionByName(const std::string &versionName);
+    Versions findVersionsByProject(const std::string &projectCode, const int limit = 0);
+    Versions findVersionsByShot(const std::string &projectCode, 
                               const std::string &shotName, 
                               const int limit = 0);
-    Dailies findDailiesByReviewStatus(const std::string &projectCode, 
+    Versions findVersionsByReviewStatus(const std::string &projectCode, 
                                       const std::string &reviewStatus,
                                       const int limit = 0);
-    bool deleteDailyById(const int id) { return Entity::deleteEntity(this, "Version", id); }
+    bool deleteVersionById(const int id) { return Entity::deleteEntity(this, "Version", id); }
 
     //-----------------------------------------------------------------------
     // User Entity
@@ -344,7 +344,7 @@ public:
     Projects findProjects(SgMap &findMap) { return Project::find(this, findMap); }
     Sequences findSequences(SgMap &findMap) { return Sequence::find(this, findMap); }
     Shots findShots(SgMap &findMap) { return Shot::find(this, findMap); }
-    Dailies findDailies(SgMap &findMap) { return Daily::find(this, findMap); }
+    Versions findVersions(SgMap &findMap) { return Version::find(this, findMap); }
     Users findUsers(SgMap &findMap) { return User::find(this, findMap); }
     Elements findElements(SgMap &findMap) { return Element::find(this, findMap); }
     Assets findAssets(SgMap &findMap) { return Asset::find(this, findMap); }

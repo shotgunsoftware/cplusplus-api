@@ -52,11 +52,11 @@ am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(includedir)"
 libLTLIBRARIES_INSTALL = $(INSTALL)
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libShotgun_la_DEPENDENCIES =
-am_libShotgun_la_OBJECTS = Asset.lo Daily.lo Delivery.lo Element.lo \
-	Entity.lo Group.lo Method.lo Note.lo NoteMixin.lo Playlist.lo \
+am_libShotgun_la_OBJECTS = Asset.lo Delivery.lo Element.lo Entity.lo \
+	Group.lo Method.lo Note.lo NoteMixin.lo Playlist.lo \
 	PublishEvent.lo Reference.lo Review.lo ReviewItem.lo \
 	Sequence.lo Shot.lo Shotgun.lo Project.lo Task.lo TaskMixin.lo \
-	Type.lo User.lo utils.lo
+	Type.lo User.lo Version.lo utils.lo
 libShotgun_la_OBJECTS = $(am_libShotgun_la_OBJECTS)
 DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
@@ -201,7 +201,6 @@ top_srcdir = @top_srcdir@
 AM_CPPFLAGS = -I$(top_srcdir)/lib
 lib_LTLIBRARIES = libShotgun.la
 libShotgun_la_SOURCES = Asset.cpp               \
-                        Daily.cpp               \
                         Delivery.cpp            \
                         Element.cpp             \
                         Entity.cpp              \
@@ -222,10 +221,10 @@ libShotgun_la_SOURCES = Asset.cpp               \
                         TaskMixin.cpp           \
                         Type.cpp                \
                         User.cpp                \
+                        Version.cpp             \
                         utils.cpp
 
 include_HEADERS = Asset.h                       \
-                  Daily.h                       \
                   Delivery.h                    \
                   Element.h                     \
                   Entity.h                      \
@@ -246,6 +245,7 @@ include_HEADERS = Asset.h                       \
                   TaskMixin.h                   \
                   Type.h                        \
                   User.h                        \
+                  Version.h                     \
                   utils.h
 
 libShotgun_la_LIBADD = @XMLRPC_LDADD@ @XMLRPC_LDFLAGS@
@@ -319,7 +319,6 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Asset.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Daily.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Delivery.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Element.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Entity.Plo@am__quote@
@@ -340,6 +339,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/TaskMixin.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Type.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/User.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Version.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utils.Plo@am__quote@
 
 .cpp.o:

@@ -78,7 +78,8 @@ public:
     const std::string sgType() const { return getAttrValueAsString("sg_note_type"); } 
     const Review getLinkedReview() const;
     const Shot getLinkedShot() const;
-    const Daily getLinkedDaily() const;
+//    const Daily getLinkedDaily() const;
+
     // Both sgCc() and sgTo() could be a mixed list of User and Group entities.
     // sgLinks() is a list of mixed types of entities. If we want to these 
     // functions to return a list of entities instead of a list of mini maps, 

@@ -34,6 +34,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define __PLAYLIST_H__
 
 #include <Shotgun/Entity.h>
+#include <Shotgun/Version.h>
 
 namespace Shotgun {
 
@@ -66,7 +67,7 @@ public:
     const std::string sgThumbnail() const { return getAttrValueAsString("image"); }
     const Strings sgTags() const { return getAttrValueAsTags("tag_list"); }
     const Notes sgNotes() const;
-    const Dailies sgDailies() const;
+    const Versions sgVersions() const;
 
     // Set an attribute's value
     void sgName(const std::string &val) { setAttrValue("code", toXmlrpcValue(val)); }
@@ -75,8 +76,8 @@ public:
     void sgTags(const Strings &val) { setAttrValue("tag_list", toXmlrpcValue(val)); }
     void sgNotes(const Notes &val);  // An array of Note entities
     void sgNotes(const SgArray &val);  // An array of entity links
-    void sgDailies(const Dailies &val);  // An array of Daily entities
-    void sgDailies(const SgArray &val);  // An array of entity links
+    void sgVersions(const Versions &val);  // An array of Version entities
+    void sgVersions(const SgArray &val);  // An array of entity links
 
     Playlist &operator=(const Playlist &that)
     {

@@ -37,7 +37,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <Shotgun/Type.h>
 #include <Shotgun/Entity.h>
-#include <Shotgun/Daily.h>
+#include <Shotgun/Version.h>
 #include <Shotgun/Sequence.h>
 #include <Shotgun/Element.h>
 #include <Shotgun/TaskMixin.h>
@@ -51,7 +51,7 @@ class Shotgun;
 class Shot : public Entity, public TaskMixin, public NoteMixin
 {
     friend class Shotgun;
-    friend class Daily;
+    friend class Version;
     friend class Element;
     friend class ReviewItem;
     friend class Reference;
@@ -79,8 +79,6 @@ public:
     const std::string sgDescription() const { return getAttrValueAsString("description"); } 
     const Elements sgElements() const;
     const int sgEstimatedFrameRenderHours() const { return getAttrValueAsInt("sg_estimated_frame_render_hours"); }
-    const Daily sgFinalDaily() const { return Daily(m_sg, getAttrValueAsEntityAttrMap("sg_final_daily")); } 
-    const Daily sgLatestDaily() const { return Daily(m_sg, getAttrValueAsEntityAttrMap("sg_latest_daily")); } 
     const int sgLens() const { return getAttrValueAsInt("sg_lens"); }
     const bool sgOmit() const { return getAttrValueAsBool("sg_omit_"); } 
     const bool sgOnHold() const { return getAttrValueAsBool("sg_on_hold_"); } 
@@ -116,10 +114,6 @@ public:
 
     // Set an attribute's value
     void sgCbb(const bool val) { setAttrValue("sg_cbb_", toXmlrpcValue(val)); }
-    void sgFinalDaily(const Daily &val) { setAttrValue("sg_final_daily", toXmlrpcValue(val.asLink())); }
-    void sgFinalDaily(const SgMap &val);
-    void sgLatestDaily(const Daily &val) { setAttrValue("sg_latest_daily", toXmlrpcValue(val.asLink())); }
-    void sgLatestDaily(const SgMap &val);
     void sgOmit(const bool val) { setAttrValue("sg_omit_", toXmlrpcValue(val)); }
     void sgOnHold(const bool val) { setAttrValue("sg_on_hold_", toXmlrpcValue(val)); }
     void sgSequence(const Sequence &val) { setAttrValue("sg_sequence", toXmlrpcValue(val.asLink())); }

@@ -40,6 +40,12 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 int main( int argc, char **argv )
 {
+    if(std::string(SG_DEFAULT_URL) == "")
+    {
+        std::cerr << "No default Shotgun URL specified to configure.  Skipping test."
+                  << std::endl;
+        exit(0);
+    }
     try
     {
         Shotgun::Shotgun sg;

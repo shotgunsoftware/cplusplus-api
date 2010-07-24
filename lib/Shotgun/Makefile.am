@@ -4,7 +4,6 @@ AM_CPPFLAGS = -I$(top_srcdir)/lib
 lib_LTLIBRARIES = libShotgun.la
 
 libShotgun_la_SOURCES = Asset.cpp               \
-                        Daily.cpp               \
                         Delivery.cpp            \
                         Element.cpp             \
                         Entity.cpp              \
@@ -25,10 +24,10 @@ libShotgun_la_SOURCES = Asset.cpp               \
                         TaskMixin.cpp           \
                         Type.cpp                \
                         User.cpp                \
+                        Version.cpp             \
                         utils.cpp
 
 include_HEADERS = Asset.h                       \
-                  Daily.h                       \
                   Delivery.h                    \
                   Element.h                     \
                   Entity.h                      \
@@ -49,6 +48,7 @@ include_HEADERS = Asset.h                       \
                   TaskMixin.h                   \
                   Type.h                        \
                   User.h                        \
+                  Version.h                     \
                   utils.h
 
 

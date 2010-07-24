@@ -37,7 +37,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <Shotgun/Type.h>
 #include <Shotgun/Entity.h>
-#include <Shotgun/Daily.h>
+#include <Shotgun/Version.h>
 #include <Shotgun/Shot.h>
 #include <Shotgun/Review.h>
 
@@ -71,7 +71,6 @@ public:
 
     // Get an attribute's value
     const std::string sgName() const { return getAttrValueAsString("code"); } 
-    const Daily sgDaily() const { return Daily(m_sg, getAttrValueAsEntityAttrMap("sg_version")); }
     const Review sgReview() const { return Review(m_sg, getAttrValueAsEntityAttrMap("sg_review")); }
     const std::string sgPurpose() const { return getAttrValueAsString("sg_purpose"); }
     const int sgOrder() const { return getAttrValueAsInt("sg_order"); }

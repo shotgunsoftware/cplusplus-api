@@ -145,7 +145,7 @@ Shots Shotgun::findShotsByProject(const std::string &projectCode, const int limi
 }
     
 // *****************************************************************************
-Daily Shotgun::findDailyByName(const std::string &dailyName)
+Version Shotgun::findVersionByName(const std::string &versionName)
 {
 #warning TODO: Implement in a non-Tippett way
 //     TipUtil::DailyName dn = TipUtil::DailyName(dailyName);
@@ -158,18 +158,18 @@ Daily Shotgun::findDailyByName(const std::string &dailyName)
 }
     
 // *****************************************************************************
-Dailies Shotgun::findDailiesByProject(const std::string &projectCode, const int limit)
+Versions Shotgun::findVersionsByProject(const std::string &projectCode, const int limit)
 {
     SgMap findMap = Entity::buildFindMapWithNoFilter(this,
                                                      "Version",
                                                      projectCode,
                                                      limit);
 
-    return findDailies(findMap);
+    return findVersions(findMap);
 }
     
 // *****************************************************************************
-Dailies Shotgun::findDailiesByShot(const std::string &projectCode,
+Versions Shotgun::findVersionsByShot(const std::string &projectCode,
                                    const std::string &shotName, 
                                    const int limit)
 {
@@ -196,13 +196,13 @@ Dailies Shotgun::findDailiesByShot(const std::string &projectCode,
 //                                                          limit);
 #endif
 
-//     Dailies dailies = findDailies(findMap);
+//     Versions versions = findVersions(findMap);
 // 
-//     return dailies;
+//     return versions;
 }
 
 // *****************************************************************************
-Dailies Shotgun::findDailiesByReviewStatus(const std::string &projectCode,
+Versions Shotgun::findVersionsByReviewStatus(const std::string &projectCode,
                                            const std::string &reviewStatus, 
                                            const int limit)
 {
@@ -212,7 +212,7 @@ Dailies Shotgun::findDailiesByReviewStatus(const std::string &projectCode,
                                                          projectCode,
                                                          limit);
 
-    return findDailies(findMap);
+    return findVersions(findMap);
 }
     
 // *****************************************************************************
@@ -750,9 +750,9 @@ Entity *Shotgun::findEntityById(const std::string &entityType, const int &id)
     {
         return new Shot(this, entity);
     }
-    else if (tipType == "Daily")
+    else if (tipType == "Version")
     {
-        return new Daily(this, entity);
+        return new Version(this, entity);
     }
     else if (tipType == "User")
     {

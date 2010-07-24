@@ -30,13 +30,10 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-// #include <TipUtil/text.h>
-// #include <TipUtil/DailyName.h>
-
 #include <Shotgun/Method.h>
 #include <Shotgun/Entity.h>
 #include <Shotgun/Shotgun.h>
-#include <Shotgun/Daily.h>
+#include <Shotgun/Version.h>
 #include <Shotgun/Shot.h>
 #include <Shotgun/Sequence.h>
 #include <Shotgun/Project.h>
@@ -44,7 +41,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace Shotgun {
 
 // *****************************************************************************
-Daily::Daily(Shotgun *sg, const xmlrpc_c::value &attrs)
+Version::Version(Shotgun *sg, const xmlrpc_c::value &attrs)
     : Entity(sg), NoteMixin()
 {
     m_type = "Version";
@@ -52,7 +49,7 @@ Daily::Daily(Shotgun *sg, const xmlrpc_c::value &attrs)
 }
 
 // *****************************************************************************
-// Daily::Daily()
+// Version::Version()
 //     : Entity(NULL)
 // {
 //     m_type = "Version";
@@ -60,7 +57,7 @@ Daily::Daily(Shotgun *sg, const xmlrpc_c::value &attrs)
 // }
 
 // *****************************************************************************
-Daily::Daily(const Daily &ref)
+Version::Version(const Version &ref)
     : Entity(ref.m_sg)
 {
     m_type = "Version";
@@ -68,61 +65,61 @@ Daily::Daily(const Daily &ref)
 }
 
 // *****************************************************************************
-Daily::~Daily()
+Version::~Version()
 {
     // Nothing
 }
 
 // *****************************************************************************
-Daily Daily::create(Shotgun *sg, const std::string &dailyName)
+Version Version::create(Shotgun *sg, const std::string &versionName)
 {
-    // Check if the daily already exists
+    // Check if the version already exists
     try
     {
-        Daily daily = sg->findDailyByName(dailyName);
+        Version version = sg->findVersionByName(versionName);
 
-        std::string err = "Daily \"" + dailyName + "\" already exists.";
+        std::string err = "Version \"" + versionName + "\" already exists.";
         throw SgEntityCreateError(err);
     }
     catch (SgEntityNotFoundError)
     {
 #warning Implement in non-Tippett way
-//         TipUtil::DailyName dn = TipUtil::DailyName(dailyName);
+//         TipUtil::VersionName dn = TipUtil::VersionName(versionName);
 //         Show show = sg->findShowByCode(dn.show());
 // 
-//         // Create a very basic Daily entity with most of its attributes 
+//         // Create a very basic Version entity with most of its attributes 
 //         // be filled later from the Python side.
 //         SgMap attrsMap;
 //         attrsMap["project"] = toXmlrpcValue(show.asLink());
-//         attrsMap["code"] = toXmlrpcValue(dailyName);
+//         attrsMap["code"] = toXmlrpcValue(versionName);
 //         attrsMap["sg_sequence"] = toXmlrpcValue(dn.sequence());
 //         attrsMap["sg_rev"] = toXmlrpcValue(dn.versionStr());
 // 
 //         // Call the base class function to create an entity
-//         return Daily(sg, createEntity(sg, "Version", attrsMap));
+//         return Version(sg, createEntity(sg, "Version", attrsMap));
     }
 }
 
 // *****************************************************************************
-Dailies Daily::find(Shotgun *sg, SgMap &findMap)
+Versions Version::find(Shotgun *sg, SgMap &findMap)
 {
-    // Find the entities that match the findMap and create an Daily for each of them
-    Dailies dailies;
+    // Find the entities that match the findMap and create an Version for each of them
+    Versions versions;
 
     SgArray result = Entity::findEntities(sg, findMap);
     if (result.size() > 0)
     {
         for (size_t i = 0; i < result.size(); i++)
         {
-            dailies.push_back(Daily(sg, result[i]));
+            versions.push_back(Version(sg, result[i]));
         }
     }
 
-    return dailies;
+    return versions;
 }
 
 // *****************************************************************************
-const Shot Daily::sgShot() const
+const Shot Version::sgShot() const
 {
 #warning Implement in non-Tippett way
 //     std::string theShotName = TipUtil::ShotName(sgProjectCode(), sgShotName()).shot(true, true);

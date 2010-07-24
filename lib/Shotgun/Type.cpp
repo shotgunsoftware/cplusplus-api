@@ -38,7 +38,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Project.h>
 #include <Shotgun/Sequence.h>
 #include <Shotgun/Shot.h>
-#include <Shotgun/Daily.h>
+#include <Shotgun/Version.h>
 #include <Shotgun/User.h>
 #include <Shotgun/Element.h>
 #include <Shotgun/Asset.h>
@@ -92,7 +92,7 @@ std::string tipEntityType(const std::string &sgEntityType)
     if (sgEntityType == "Project")
         return std::string("Project");
     else if (sgEntityType == "Version")
-        return std::string("Daily");
+        return std::string("Version");
     else if (sgEntityType == "HumanUser")
         return std::string("User");
     else if (sgEntityType == "CustomEntity02")
@@ -107,7 +107,7 @@ std::string sgEntityType(const std::string &tipEntityType)
 {
     if (tipEntityType == "Project")
         return std::string("Project");
-    else if (tipEntityType == "Daily")
+    else if (tipEntityType == "Version")
         return std::string("Version");
     else if (tipEntityType == "User")
         return std::string("HumanUser");
@@ -445,18 +445,18 @@ std::string toStdString(const Shots &shots)
 }
 
 // *****************************************************************************
-std::string toStdString(const Daily &daily)
+std::string toStdString(const Version &version)
 {
-    return toStdString(daily.attrs());
+    return toStdString(version.attrs());
 }
 
 // *****************************************************************************
-std::string toStdString(const Dailies &dailies)
+std::string toStdString(const Versions &versions)
 {
     SgArray array;
-    for (size_t i = 0; i < dailies.size(); i++)
+    for (size_t i = 0; i < versions.size(); i++)
     {
-        array.push_back(dailies[i].attrs());
+        array.push_back(versions[i].attrs());
     }
     
     return toStdString(toXmlrpcValue(array));
@@ -756,16 +756,16 @@ std::ostream &operator<<(std::ostream& output, const Shots &shots)
 }
 
 // *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const Daily &daily)
+std::ostream &operator<<(std::ostream& output, const Version &version)
 {
-    output << toStdString(daily);
+    output << toStdString(version);
     return output;
 }
 
 // *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const Dailies &dailies)
+std::ostream &operator<<(std::ostream& output, const Versions &versions)
 {
-    output << toStdString(dailies);
+    output << toStdString(versions);
     return output;
 }
 

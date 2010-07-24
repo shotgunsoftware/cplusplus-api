@@ -112,29 +112,30 @@ Note NoteMixin::addNote(const std::string &noteFromUserName,
     {
         // Add extra entity-specific note links
         SgArray links = noteLinks;
-        if (entity->entityType() == "Version") // Daily
-        {
-            if (Daily *daily = dynamic_cast<Daily *>(this))
-            {
-                try
-                {
-                    Shot shot = daily->sgShot();
-                    links.push_back(toXmlrpcValue(shot.asLink()));
-                }
-                catch (SgEntityNotFoundError)
-                {
-                    // Do nothing
-                }
-            }
-            else
-            {
-                throw SgEntityDynamicCastError("Daily");
-            }
-        }
-        else if (entity->entityType() == "Asset")
-        {
-            links.push_back(toXmlrpcValue(entity->asLink()));
-        }
+#warning TODO: FIX THIS
+//         if (entity->entityType() == "Version") // Daily
+//         {
+//             if (Daily *daily = dynamic_cast<Daily *>(this))
+//             {
+//                 try
+//                 {
+//                     Shot shot = daily->sgShot();
+//                     links.push_back(toXmlrpcValue(shot.asLink()));
+//                 }
+//                 catch (SgEntityNotFoundError)
+//                 {
+//                     // Do nothing
+//                 }
+//             }
+//             else
+//             {
+//                 throw SgEntityDynamicCastError("Daily");
+//             }
+//         }
+//         else if (entity->entityType() == "Asset")
+//         {
+//             links.push_back(toXmlrpcValue(entity->asLink()));
+//         }
 
         return entity->sg()->createNote(entity->sgProjectCode(),
                                         noteFromUserName,
