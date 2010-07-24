@@ -35,6 +35,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <Shotgun/Entity.h>
 
+#warning Remove these
 #define TIPSHOTGUN_PROJECT_DEFAULT_HANDLE_DURATION 8
 #define TIPSHOTGUN_PROJECT_DEFAULT_START_FRAME 101
 
@@ -48,29 +49,13 @@ class Project : public Entity
     friend class Shotgun;
     friend class Entity; // So that the base Entity class can call Project::find(..)
  
-protected:
-    Project(Shotgun *sg, const xmlrpc_c::value &attrs);
-
-    static Project create(Shotgun *sg, 
-                       const std::string &projectName, 
-                       const std::string &projectCode);
-    static Projects find(Shotgun *sg, SgMap &findMap);
-    
 public:
     Project();
     Project(const Project &ref);
     virtual ~Project();
 
-    const std::string sgName() const { return getAttrValueAsString("name"); }
-    const std::string sgCode() const { return getAttrValueAsString("code"); }
-    const std::string sgStatus() const { return getAttrValueAsString("sg_status"); }
-    const bool sgArchiveWatcher() const { return getAttrValueAsBool("sg_archive_watcher"); }
-    const bool sgPubStillsWatcher() const { return getAttrValueAsBool("sg_pub_stills_watcher"); }
-    const bool sgGenerateShotAliases() const { return getAttrValueAsBool("sg_generate_shot_aliases"); }
-    const bool sgSendDailiesNotices() const { return getAttrValueAsBool("sg_send_dailies_notices"); }
-    const bool sgPolishShotNotifications() const { return getAttrValueAsBool("sg_polish_shot_notifications"); }
-    const bool sgReportStorageInformation() const { return getAttrValueAsBool("sg_report_storage_information"); }
-    const int sgDefaultStartFrame() const { return getAttrValueAsInt("sg_default_start_frame"); }
+    virtual const std::string sgName() const { return getAttrValueAsString("name"); }
+    virtual const std::string sgCode() const { return getAttrValueAsString("code"); }
 
     // Overrides for base entity methods that don't work correctly 
     // for this entity type
@@ -82,6 +67,16 @@ public:
         Entity::operator=(that);
         return *this;
     }
+
+protected:
+    Project(Shotgun *sg, const xmlrpc_c::value &attrs);
+
+    static Project create(Shotgun *sg, 
+                       const std::string &projectName, 
+                       const std::string &projectCode);
+    static Projects find(Shotgun *sg, SgMap &findMap);
+
+
 };
 
 } // End namespace Shotgun

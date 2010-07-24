@@ -47,7 +47,6 @@ class Sequence : public Entity
 {
     friend class Shotgun;
     friend class Shot;
-    friend class DeliveryItem;
     friend class Reference;
     friend class Entity;
  

@@ -52,12 +52,12 @@ Daily::Daily(Shotgun *sg, const xmlrpc_c::value &attrs)
 }
 
 // *****************************************************************************
-Daily::Daily()
-    : Entity(NULL)
-{
-    m_type = "Version";
-    m_attrs = NULL;
-}
+// Daily::Daily()
+//     : Entity(NULL)
+// {
+//     m_type = "Version";
+//     m_attrs = NULL;
+// }
 
 // *****************************************************************************
 Daily::Daily(const Daily &ref)
@@ -128,12 +128,6 @@ const Shot Daily::sgShot() const
 //     std::string theShotName = TipUtil::ShotName(sgProjectCode(), sgShotName()).shot(true, true);
 // 
 //     return m_sg->findShotByName(theShotName);
-}
-
-// *****************************************************************************
-const Sequence Daily::sgSequence() const
-{
-    return m_sg->findSequenceByName(sgProjectCode(), sgSequenceName());
 }
 
 } // End namespace Shotgun

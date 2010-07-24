@@ -43,7 +43,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Element.h>
 #include <Shotgun/Asset.h>
 #include <Shotgun/Delivery.h>
-#include <Shotgun/DeliveryItem.h>
 #include <Shotgun/PublishEvent.h>
 #include <Shotgun/Review.h>
 #include <Shotgun/ReviewItem.h>
@@ -96,8 +95,6 @@ std::string tipEntityType(const std::string &sgEntityType)
         return std::string("Daily");
     else if (sgEntityType == "HumanUser")
         return std::string("User");
-    else if (sgEntityType == "CustomEntity01")
-        return std::string("DeliveryItem");
     else if (sgEntityType == "CustomEntity02")
         return std::string("Reference");
     else
@@ -114,8 +111,6 @@ std::string sgEntityType(const std::string &tipEntityType)
         return std::string("Version");
     else if (tipEntityType == "User")
         return std::string("HumanUser");
-    else if (tipEntityType == "DeliveryItem")
-        return std::string("CustomEntity01");
     else if (tipEntityType == "Reference")
         return std::string("CustomEntity02");
     else
@@ -540,24 +535,6 @@ std::string toStdString(const Deliveries &deliveries)
 }
 
 // *****************************************************************************
-std::string toStdString(const DeliveryItem &deliveryItem)
-{
-    return toStdString(deliveryItem.attrs());
-}
-
-// *****************************************************************************
-std::string toStdString(const DeliveryItems &deliveryItems)
-{
-    SgArray array;
-    for (size_t i = 0; i < deliveryItems.size(); i++)
-    {
-        array.push_back(deliveryItems[i].attrs());
-    }
-    
-    return toStdString(toXmlrpcValue(array));
-}
-
-// *****************************************************************************
 std::string toStdString(const PublishEvent &publishEvent)
 {
     return toStdString(publishEvent.attrs());
@@ -845,20 +822,6 @@ std::ostream &operator<<(std::ostream& output, const Delivery &delivery)
 std::ostream &operator<<(std::ostream& output, const Deliveries &deliveries)
 {
     output << toStdString(deliveries);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const DeliveryItem &deliveryItem)
-{
-    output << toStdString(deliveryItem);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const DeliveryItems &deliveryItems)
-{
-    output << toStdString(deliveryItems);
     return output;
 }
 

@@ -39,14 +39,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Type.h>
 #include <Shotgun/Method.h>
 
-#warning Remove this
-#define TIPSHOTGUN_ATTACHMENT_URL "http://shotgunattach"
-
-
-#define INT_ATTR(METHOD, ATTR) const int METHOD() const \
-                                { return getAttrValueAsInt(ATTR); }
-
-
 namespace Shotgun {
 
 class Shotgun;
@@ -66,14 +58,12 @@ public:
         INVALID_ATTR_USE_DEFAULT
     };
 
-    INT_ATTR(sgId, "id");
-
-
-
+#warning This needs to be re-done.  There are NO attributes that are common to ALL entities!
     // These are the generic entity attributes shared by all entities
-//    const int sgId() const { return getAttrValueAsInt("id"); }
-    const time_t sgDateCreated() const { return getAttrValueAsDatetime("created_at"); }
-    const time_t sgDateUpdated() const { return getAttrValueAsDatetime("updated_at"); }
+    virtual const int sgId() const { return getAttrValueAsInt("id"); }
+    virtual const time_t sgDateCreated() const { return getAttrValueAsDatetime("created_at"); }
+    virtual const time_t sgDateUpdated() const { return getAttrValueAsDatetime("updated_at"); }
+
     // These two have to be overridden for Project entity
     virtual const std::string sgProjectName() const { return getProjectName(); }
     virtual const std::string sgProjectCode() const { return getProjectCode(); }
@@ -182,14 +172,6 @@ public:
                                                      const std::string &attrName,
                                                      const SgMap &attrsMap);
 
-    const std::string getAttrValueAsQtURL(const std::string &attrName) const;
-    static const std::string getAttrValueAsQtURL(const std::string &attrName,
-                                                 const SgMap &attrsMap);
-
-    const std::string getAttrValueAsQtPath(const std::string &attrName) const;
-    static const std::string getAttrValueAsQtPath(const std::string &attrName,
-                                                  const SgMap &attrsMap);
-
     // Set a attribute's value - Omitted the optional "parent_entity" for now
     void setAttrValue(const std::string &attrName, 
                       const xmlrpc_c::value &attrValue,
@@ -221,6 +203,7 @@ public:
                                               const SgArray &extraReturnFields = SgArray(),
                                               const bool retiredOnly = false);
 
+    // TODO: Explore making this operator overload virtual
     Entity &operator=(const Entity &that)
     {
         if (this != &that)

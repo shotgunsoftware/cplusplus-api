@@ -6,7 +6,6 @@ lib_LTLIBRARIES = libShotgun.la
 libShotgun_la_SOURCES = Asset.cpp               \
                         Daily.cpp               \
                         Delivery.cpp            \
-                        DeliveryItem.cpp        \
                         Element.cpp             \
                         Entity.cpp              \
                         Group.cpp               \
@@ -31,7 +30,6 @@ libShotgun_la_SOURCES = Asset.cpp               \
 include_HEADERS = Asset.h                       \
                   Daily.h                       \
                   Delivery.h                    \
-                  DeliveryItem.h                \
                   Element.h                     \
                   Entity.h                      \
                   Group.h                       \

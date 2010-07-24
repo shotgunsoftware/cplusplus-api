@@ -124,30 +124,4 @@ PublishEvents PublishEvent::find(Shotgun *sg, SgMap &findMap)
     return publishEvents;
 }
 
-// *****************************************************************************
-void PublishEvent::sgPreviewHDQT(const std::string &val)
-{
-    SgMap qtLink;
- 
-    qtLink["content_type"] = toXmlrpcValue("video/quicktime");
-    qtLink["url"] = toXmlrpcValue(TIPSHOTGUN_ATTACHMENT_URL + val);
-    // TODO: If "name" is omitted, it'll be defaulted to the same as the "url".
-    //qtLink["name"] = ; 
-
-    setAttrValue("sg_preview_hd_qt", toXmlrpcValue(qtLink));
-}
-
-// *****************************************************************************
-void PublishEvent::sgPreviewQT(const std::string &val)
-{
-    SgMap qtLink;
- 
-    qtLink["content_type"] = toXmlrpcValue("video/quicktime");
-    qtLink["url"] = toXmlrpcValue(TIPSHOTGUN_ATTACHMENT_URL + val);
-    // TODO: If "name" is omitted, it'll be defaulted to the same as the "url".
-    //qtLink["name"] = ; 
-
-    setAttrValue("sg_preview_qt", toXmlrpcValue(qtLink));
-}
-
 } // End namespace Shotgun

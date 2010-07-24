@@ -46,7 +46,6 @@ class Shotgun;
 class Delivery : public Entity
 {
     friend class Shotgun;
-    friend class DeliveryItem;
     friend class Entity;
  
 protected:

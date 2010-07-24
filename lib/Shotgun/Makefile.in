@@ -52,11 +52,11 @@ am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(includedir)"
 libLTLIBRARIES_INSTALL = $(INSTALL)
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libShotgun_la_DEPENDENCIES =
-am_libShotgun_la_OBJECTS = Asset.lo Daily.lo Delivery.lo \
-	DeliveryItem.lo Element.lo Entity.lo Group.lo Method.lo \
-	Note.lo NoteMixin.lo Playlist.lo PublishEvent.lo Reference.lo \
-	Review.lo ReviewItem.lo Sequence.lo Shot.lo Shotgun.lo \
-	Project.lo Task.lo TaskMixin.lo Type.lo User.lo utils.lo
+am_libShotgun_la_OBJECTS = Asset.lo Daily.lo Delivery.lo Element.lo \
+	Entity.lo Group.lo Method.lo Note.lo NoteMixin.lo Playlist.lo \
+	PublishEvent.lo Reference.lo Review.lo ReviewItem.lo \
+	Sequence.lo Shot.lo Shotgun.lo Project.lo Task.lo TaskMixin.lo \
+	Type.lo User.lo utils.lo
 libShotgun_la_OBJECTS = $(am_libShotgun_la_OBJECTS)
 DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
@@ -203,7 +203,6 @@ lib_LTLIBRARIES = libShotgun.la
 libShotgun_la_SOURCES = Asset.cpp               \
                         Daily.cpp               \
                         Delivery.cpp            \
-                        DeliveryItem.cpp        \
                         Element.cpp             \
                         Entity.cpp              \
                         Group.cpp               \
@@ -228,7 +227,6 @@ libShotgun_la_SOURCES = Asset.cpp               \
 include_HEADERS = Asset.h                       \
                   Daily.h                       \
                   Delivery.h                    \
-                  DeliveryItem.h                \
                   Element.h                     \
                   Entity.h                      \
                   Group.h                       \
@@ -323,7 +321,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Asset.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Daily.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Delivery.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/DeliveryItem.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Element.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Entity.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Group.Plo@am__quote@

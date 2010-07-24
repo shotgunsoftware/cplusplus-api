@@ -49,10 +49,27 @@ class Asset : public Entity, public TaskMixin, public NoteMixin
 {
     friend class Shotgun;
     friend class Element;
-    friend class DeliveryItem;
     friend class Reference;
     friend class Entity;
  
+public:
+//     Asset();
+    Asset(const Asset &ref);
+    virtual ~Asset();
+
+    // Get an attribute's value
+    virtual const std::string sgCode() const { return getAttrValueAsString("code"); }
+    virtual const SgArray sgParents() const { return getAttrValueAsArray("parents"); }
+    virtual const Elements sgElements() const;
+    virtual const Assets sgAssets() const;
+    virtual const Shots sgShots() const;
+
+    Asset &operator=(const Asset &that)
+    {
+        Entity::operator=(that);
+        return *this;
+    }
+
 protected:
     Asset(Shotgun *sg, const xmlrpc_c::value &attrs);
 
@@ -62,28 +79,6 @@ protected:
                         const std::string &assetType,
                         const std::string &assetSource = "");
     static Assets find(Shotgun *sg, SgMap &findMap);
-    
-public:
-    Asset();
-    Asset(const Asset &ref);
-    virtual ~Asset();
-
-    // Get an attribute's value
-    const std::string sgName() const { return getAttrValueAsString("code"); }
-    const std::string sgType() const { return getAttrValueAsString("sg_asset_type"); }
-    const std::string sgStatus() const { return getAttrValueAsString("sg_status_list"); }
-    const std::string sgPreviewQt() const { return getAttrValueAsString("sg_asset_preview_qt"); }
-    const std::string sgSource() const { return getAttrValueAsString("sg_asset_source"); }
-    const SgArray sgParents() const { return getAttrValueAsArray("parents"); }
-    const Elements sgElements() const;
-    const Assets sgAssets() const;
-    const Shots sgShots() const;
-
-    Asset &operator=(const Asset &that)
-    {
-        Entity::operator=(that);
-        return *this;
-    }
 };
 
 } // End namespace Shotgun

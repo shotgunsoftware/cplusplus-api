@@ -483,6 +483,7 @@ const std::string Entity::linkEntityType(const std::string &linkName) const
 }
 
 // *****************************************************************************
+#warning FIX THIS CRAP
 SgMap Entity::buildCreateMap(const std::string &entityType,
                              const SgMap &data,
                              const SgArray &extraReturnFields)
@@ -1945,7 +1946,7 @@ const SgArray Entity::getAttrValueAsMultiEntityAttrMap(Shotgun *sg,
 
 // *****************************************************************************
 // static helper function
-#warning possible tippett crap here
+#warning FIX THIS CRAP
 Entity *Entity::entityAttrMapToEntityPtr(Shotgun *sg,
                                          const xmlrpc_c::value &entityAttrMap)
 {
@@ -1986,10 +1987,6 @@ Entity *Entity::entityAttrMapToEntityPtr(Shotgun *sg,
     else if (tipType == "Delivery")
     {
         return new Delivery(sg, entityAttrMap);
-    }
-    else if (tipType == "DeliveryItem")
-    {
-        return new DeliveryItem(sg, entityAttrMap);
     }
     else if (tipType == "PublishEvent")
     {
@@ -2098,67 +2095,6 @@ const std::string Entity::getAttrValueAsUserLogin(Shotgun *sg,
     return user.sgLogin();
 }
 
-// *****************************************************************************
-const std::string Entity::getAttrValueAsQtURL(const std::string &attrName) const 
-{
-    SgMap qtAttrs = getAttrValueAsMap(attrName);
-    std::string result;
-
-    if (!qtAttrs.empty())
-    {
-        result = getAttrValueAsString("url", qtAttrs);
-    }
-
-    return result;
-}
-
-// *****************************************************************************
-// static
-const std::string Entity::getAttrValueAsQtURL(const std::string &attrName,
-                                              const SgMap &attrsMap) 
-{
-    SgMap qtAttrs = getAttrValueAsMap(attrName, attrsMap);
-    std::string result;
-
-    if (!qtAttrs.empty())
-    {
-        result = getAttrValueAsString("url", qtAttrs);
-    }
-
-    return result;
-}
-
-// *****************************************************************************
-const std::string Entity::getAttrValueAsQtPath(const std::string &attrName) const 
-{
-    std::string result = getAttrValueAsQtURL(attrName);
-
-#warning Figure out what this is and fix it
-//     pcrecpp::RE urlRE(TIPSHOTGUN_ATTACHMENT_URL);
-//     if (urlRE.PartialMatch(result))
-//     {
-//         pcrecpp::RE(TIPSHOTGUN_ATTACHMENT_URL).Replace("", &result);
-//     }
-
-    return result;
-}
-
-// *****************************************************************************
-// static
-const std::string Entity::getAttrValueAsQtPath(const std::string &attrName,
-                                               const SgMap &attrsMap) 
-{
-    std::string result = getAttrValueAsQtURL(attrName, attrsMap);
-
-#warning Figure out what this is and fix it
-//     pcrecpp::RE urlRE(TIPSHOTGUN_ATTACHMENT_URL);
-//     if (urlRE.PartialMatch(result))
-//     {
-//         pcrecpp::RE(TIPSHOTGUN_ATTACHMENT_URL).Replace("", &result);
-//     }
-
-    return result;
-}
 
 // *****************************************************************************
 void Entity::printAttrs() const

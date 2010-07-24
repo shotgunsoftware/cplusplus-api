@@ -364,37 +364,6 @@ Deliveries Shotgun::findDeliveriesByProject(const std::string &projectCode,
 }
     
 // *****************************************************************************
-DeliveryItem Shotgun::findDeliveryItemByName(const std::string &projectCode,
-                                             const std::string &deliveryItemName)
-{
-    return DeliveryItem(this, 
-                        Entity::findOneEntityBySingleFilter(this, 
-                                                            "CustomEntity01",
-                                                            "code", "is", toXmlrpcValue(deliveryItemName),
-                                                            projectCode));
-}
-    
-// *****************************************************************************
-DeliveryItem Shotgun::findDeliveryItemById(const int &deliveryItemId)
-{
-    return DeliveryItem(this, 
-                        Entity::findOneEntityBySingleFilter(this, 
-                                                            "CustomEntity01",
-                                                            "id", "is", toXmlrpcValue(deliveryItemId)));
-}
-    
-// *****************************************************************************
-DeliveryItems Shotgun::findDeliveryItemsByProject(const std::string &projectCode, 
-                                               const int limit)
-{
-    SgMap findMap = Entity::buildFindMapWithNoFilter(this,
-                                                     "CustomEntity01",
-                                                     projectCode,
-                                                     limit);
-    return findDeliveryItems(findMap);
-}
-
-// *****************************************************************************
 PublishEvent Shotgun::findPublishEventByName(const std::string &projectCode,
                                              const std::string &publishEventName)
 {
@@ -800,10 +769,6 @@ Entity *Shotgun::findEntityById(const std::string &entityType, const int &id)
     else if (tipType == "Delivery")
     {
         return new Delivery(this, entity);
-    }
-    else if (tipType == "DeliveryItem")
-    {
-        return new DeliveryItem(this, entity);
     }
     else if (tipType == "PublishEvent")
     {

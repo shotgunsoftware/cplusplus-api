@@ -69,8 +69,6 @@ public:
     const std::string sgName() const { return getAttrValueAsString("code"); }
     const std::string sgFile() const { return getAttrValueAsString("sg_file"); } 
     //const std::string sgFormat() const { return getAttrValueAsString("sg_format"); } 
-    const std::string sgPreviewHDQT() const { return getAttrValueAsQtPath("sg_preview_hd_qt"); } 
-    const std::string sgPreviewQT() const { return getAttrValueAsQtPath("sg_preview_qt"); } 
     const int sgRev() const { return getAttrValueAsInt("sg_rev"); } 
     const std::string sgResolution() const { return getAttrValueAsString("sg_resolution"); } 
     const std::string sgType() const { return getAttrValueAsString("sg_type"); } 
@@ -78,8 +76,6 @@ public:
     // Set an attribute's value
     void sgFile(const std::string &val) { setAttrValue("sg_file", toXmlrpcValue(val)); }
     //void sgFormat(const std::string &val) { setAttrValue("sg_format", toXmlrpcValue(val)); }
-    void sgPreviewHDQT(const std::string &val);
-    void sgPreviewQT(const std::string &val);
     void sgRev(const int val) { setAttrValue("sg_rev", toXmlrpcValue(val)); }
     void sgResolution(const std::string &val) { setAttrValue("sg_resolution", toXmlrpcValue(val)); }
     void sgType(const std::string &val) { setAttrValue("sg_type", toXmlrpcValue(val)); }

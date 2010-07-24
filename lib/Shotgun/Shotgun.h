@@ -45,7 +45,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Element.h>
 #include <Shotgun/Asset.h>
 #include <Shotgun/Delivery.h>
-#include <Shotgun/DeliveryItem.h>
 #include <Shotgun/PublishEvent.h>
 #include <Shotgun/Review.h>
 #include <Shotgun/ReviewItem.h>
@@ -165,18 +164,6 @@ public:
                                     const int limit = 0);
     bool deleteDeliveryById(const int id) { return Entity::deleteEntity(this, "Delivery", id); }
 
-    //------------------------------------------------------------------------
-    // DeliveryItem Entity
-    DeliveryItem createDeliveryItem(const std::string &projectCode,
-                                    const std::string &deliveryItemName,
-                                    const SgMap &deliveryLink = SgMap()) 
-        { return DeliveryItem::create(this, projectCode, deliveryItemName, deliveryLink); }
-    DeliveryItem findDeliveryItemByName(const std::string &projectCode, 
-                                        const std::string &deliveryItemName);
-    DeliveryItem findDeliveryItemById(const int &deliveryItemId);
-    DeliveryItems findDeliveryItemsByProject(const std::string &projectCode, 
-                                          const int limit = 0);
-    bool deleteDeliveryItemById(const int id) { return Entity::deleteEntity(this, "CustomEntity01", id); }
 
     //------------------------------------------------------------------------
     // PublishEvent Entity
@@ -362,7 +349,6 @@ public:
     Elements findElements(SgMap &findMap) { return Element::find(this, findMap); }
     Assets findAssets(SgMap &findMap) { return Asset::find(this, findMap); }
     Deliveries findDeliveries(SgMap &findMap) { return Delivery::find(this, findMap); }
-    DeliveryItems findDeliveryItems(SgMap &findMap) { return DeliveryItem::find(this, findMap); }
     PublishEvents findPublishEvents(SgMap &findMap) { return PublishEvent::find(this, findMap); }
     Reviews findReviews(SgMap &findMap) { return Review::find(this, findMap); }
     ReviewItems findReviewItems(SgMap &findMap) { return ReviewItem::find(this, findMap); }

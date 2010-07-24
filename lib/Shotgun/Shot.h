@@ -53,7 +53,6 @@ class Shot : public Entity, public TaskMixin, public NoteMixin
     friend class Shotgun;
     friend class Daily;
     friend class Element;
-    friend class DeliveryItem;
     friend class ReviewItem;
     friend class Reference;
     friend class Note;
