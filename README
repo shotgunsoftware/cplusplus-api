@@ -20,22 +20,32 @@ Background
 
     Tippett Studio has been using Shotgun in production for several years. 
 During that time, we've developed a number of tools and processes that work with
-data in Shotgun, almost all of which are written in Python.  Most of these   The
-original API offered by Shotgun Software was quite simple
+data in Shotgun, almost all of which are written in Python.  
 
-    
+We wanted an object-oriented framework for adding "business logic" to Shotgun. 
+That is, we wanted to work with Shotgun's entities in an object-oriented
+fashion, and extend them add useful behavior that was meaningful to our shop. 
+From this desire, an extensive Python library grew.  
 
-    Easy to use
-    Easy to extend
-    Where possible, don't allow creation of invalid objects
+Thought it was a very successful first-gen API, unfortunately, there wasn't a
+good separation between the object/entity interface, and a lot of
+Tippett-specific attributes and behavior crept into our original API.  It didn't
+provide a C++ interface either.
 
+This library is a ground-up rewrite, with the following design goals:
 
+    - C++ core and a thin Python wrapper, posible to extend to other languages.
 
-* Why don't you just auto-generate the whole API via xmlrpc introspection?
+    - Clean separation between the object/entity representation and any
+      business logic.
 
-    API stability issues across versions
-    Difficult to write
-    Error-prone
+    - Easy to use.  Don't expose the underlying transport.  Users don't need
+      to know about the underlying xmlrpc transport.
+
+    - Easy to extend.  Using this library as a core, studios can derive
+      site-specific classes to add business logic and manage dynamic
+      attributes.
+
 
 
 Building
