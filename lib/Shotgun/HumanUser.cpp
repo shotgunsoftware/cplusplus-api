@@ -33,53 +33,45 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Method.h>
 #include <Shotgun/Entity.h>
 #include <Shotgun/Shotgun.h>
-#include <Shotgun/User.h>
+#include <Shotgun/HumanUser.h>
 
 namespace Shotgun {
 
 // *****************************************************************************
-User::User(Shotgun *sg, const xmlrpc_c::value &attrs)
+HumanUser::HumanUser(Shotgun *sg, const xmlrpc_c::value &attrs)
     : Entity(sg)
 {
-    m_type = "HumanUser";
+    m_type = "HumanHumanUser";
     m_attrs = new xmlrpc_c::value(attrs);
 }
 
-// *****************************************************************************
-User::User()
-    : Entity(NULL)
-{
-    m_type = "HumanUser";
-    m_attrs = NULL;
-}
 
 // *****************************************************************************
-User::User(const User &ref)
+HumanUser::HumanUser(const HumanUser &ref)
     : Entity(ref.m_sg)
 {
-    m_type = "HumanUser";
+    m_type = "HumanHumanUser";
     m_attrs = new xmlrpc_c::value(*ref.m_attrs);
 }
 
 // *****************************************************************************
-User::~User()
+HumanUser::~HumanUser()
 {
     // Nothing
 }
 
 // *****************************************************************************
-User User::create(Shotgun *sg, 
+HumanUser HumanUser::create(Shotgun *sg, 
                   const std::string &userName,
                   const std::string &userLogin,
-                  const std::string &userEmail,
-                  const std::string &userDept)
+                  const std::string &userEmail)
 {
     // Check if the user already exists
     try
     {
-        User user = sg->findUserByLogin(userLogin);
+        HumanUser user = sg->findHumanUserByLogin(userLogin);
 
-        std::string err = "User \"" + userLogin + "\" already exists.";
+        std::string err = "HumanUser \"" + userLogin + "\" already exists.";
         throw SgEntityCreateError(err);
     }
     catch (SgEntityNotFoundError)
@@ -87,7 +79,7 @@ User User::create(Shotgun *sg,
         // Check if there is a retired user with the same name
         try
         {
-            User retiredUser = sg->findRetiredUser(userLogin);
+            HumanUser retiredHumanUser = sg->findRetiredHumanUser(userLogin);
             
             // TODO: need to reset the retired user's login
            
@@ -101,26 +93,25 @@ User User::create(Shotgun *sg,
             attrsMap["name"] = toXmlrpcValue(userName);
             attrsMap["login"] = toXmlrpcValue(userLogin);
             attrsMap["email"] = toXmlrpcValue(userEmail);
-            attrsMap["sg_department"] = toXmlrpcValue(userDept);
 
             // Call the base class function to create an entity
-            return User(sg, createEntity(sg, "HumanUser", attrsMap));
+            return HumanUser(sg, createEntity(sg, "HumanHumanUser", attrsMap));
         }
     }
 }
 
 // *****************************************************************************
-Users User::find(Shotgun *sg, SgMap &findMap)
+HumanUsers HumanUser::find(Shotgun *sg, SgMap &findMap)
 {
-    // Find the entities that match the findMap and create an User for each of them
-    Users users;
+    // Find the entities that match the findMap and create an HumanUser for each of them
+    HumanUsers users;
 
     SgArray result = Entity::findEntities(sg, findMap);
     if (result.size() > 0)
     {
         for (size_t i = 0; i < result.size(); i++)
         {
-            users.push_back(User(sg, result[i]));
+            users.push_back(HumanUser(sg, result[i]));
         }
     }
 

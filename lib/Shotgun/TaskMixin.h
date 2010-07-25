@@ -43,9 +43,6 @@ namespace Shotgun {
 // *****************************************************************************
 class TaskMixin
 {
-protected:
-    TaskMixin() {}
-
 public:
     virtual ~TaskMixin() {};
 
@@ -56,7 +53,6 @@ public:
 
     Task addTask(const std::string &taskName,
                  const std::string &taskType,
-                 const int taskViewOrder = TIPSHOTGUN_INVALID_ORDER_NUM,
                  const std::string &taskAssignee = "",
                  const std::string &taskStartDate = "",
                  const std::string &taskEndDate = "",
@@ -65,7 +61,6 @@ public:
                  const bool taskMilestone = false);
 
     Task updateTask(const std::string &taskName,
-                    const int taskViewOrder = TIPSHOTGUN_INVALID_ORDER_NUM,
                     const std::string &taskAssignee = "",
                     const std::string &taskStartDate = "",
                     const std::string &taskEndDate = "",
@@ -74,6 +69,9 @@ public:
                     const bool taskMilestone = false);
 
     bool removeTask(const std::string &taskName);
+
+protected:
+    TaskMixin() {}
 };
 
 } // End namespace Shotgun

@@ -47,14 +47,6 @@ Element::Element(Shotgun *sg, const xmlrpc_c::value &attrs)
 }
 
 // *****************************************************************************
-Element::Element()
-    : Entity(NULL)
-{
-    m_type = "Element";
-    m_attrs = NULL;
-}
-
-// *****************************************************************************
 Element::Element(const Element &ref)
     : Entity(ref.m_sg)
 {

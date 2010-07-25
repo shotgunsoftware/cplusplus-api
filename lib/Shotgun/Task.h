@@ -47,26 +47,8 @@ class Task : public Entity
 {
     friend class Shotgun;
     friend class Entity;
- 
-protected:
-    Task(Shotgun *sg, const xmlrpc_c::value &attrs);
-
-    static Task create(Shotgun *sg, 
-                       const std::string &projectCode,
-                       const std::string &taskName,
-                       const std::string &taskType,
-                       const int taskViewOrder = TIPSHOTGUN_INVALID_ORDER_NUM,
-                       const std::string &taskAssignee = "",
-                       const std::string &taskStartDate = "",
-                       const std::string &taskEndDate = "",
-                       const std::string &taskStatus = "",
-                       const std::string &taskColor = "",
-                       const bool taskMilestone = false,
-                       const SgMap &taskEntityLink = SgMap());
-    static Tasks find(Shotgun *sg, SgMap &findMap);
     
 public:
-    Task();
     Task(const Task &ref);
     virtual ~Task();
 
@@ -79,8 +61,6 @@ public:
     const std::string sgStartDate() const { return getAttrValueAsString("start_date"); } 
     const std::string sgStatus() const { return getAttrValueAsString("sg_status_list"); } 
     const std::string sgType() const { return getAttrValueAsString("sg_system_task_type"); } 
-    const int sgViewOrder() const { return getAttrValueAsInt("sg_view_order"); } 
-    const std::string sgDueDate() const { return sgEndDate(); } 
     
     // ------------------------------------------------------------------------
     // IMPORTANT: 
@@ -89,13 +69,12 @@ public:
     //     /Factory/ annotation.
     // ------------------------------------------------------------------------
     Entity *sgLink() { return getAttrValueAsEntityPtr("entity"); }
-    // The return value is a mixed list of Users & Groups
+    // The return value is a mixed list of HumanUsers & Groups
     const EntityPtrs sgAssignees() const; 
     const std::string sgLinkEntityType() const { return linkEntityType("entity"); }
 
     // Set an attribute's value
     void sgStatus(const std::string &val) { setAttrValue("sg_status_list", toXmlrpcValue(val)); }
-    void sgViewOrder(const int val) { setAttrValue("sg_view_order", toXmlrpcValue(val)); }
     void sgAssignees(const Strings &val);
 
     Task &operator=(const Task &that)
@@ -103,6 +82,23 @@ public:
         Entity::operator=(that);
         return *this;
     }
+
+protected:
+    Task(Shotgun *sg, const xmlrpc_c::value &attrs);
+
+    static Task create(Shotgun *sg, 
+                       const std::string &projectCode,
+                       const std::string &taskName,
+                       const std::string &taskType,
+                       const std::string &taskAssignee = "",
+                       const std::string &taskStartDate = "",
+                       const std::string &taskEndDate = "",
+                       const std::string &taskStatus = "",
+                       const std::string &taskColor = "",
+                       const bool taskMilestone = false,
+                       const SgMap &taskEntityLink = SgMap());
+    static Tasks find(Shotgun *sg, SgMap &findMap);
+
 };
 
 } // End namespace Shotgun

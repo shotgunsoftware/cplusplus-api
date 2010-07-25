@@ -47,44 +47,27 @@ class PublishEvent : public Entity
 {
     friend class Shotgun;
     friend class Entity;
- 
-protected:
-    PublishEvent(Shotgun *sg, const xmlrpc_c::value &attrs);
-
-    static PublishEvent create(Shotgun *sg, 
-                               const std::string &projectCode,
-                               const std::string &publishEventName,
-                               const std::string &publishEventSource,
-                               const std::string &publishEventType = "",
-                               const int publishEventVersion = TIPSHOTGUN_INVALID_VERSION_NUM,
-                               const std::string &publishEventResolution = "");
-    static PublishEvents find(Shotgun *sg, SgMap &findMap);
-    
+     
 public:
-    PublishEvent();
     PublishEvent(const PublishEvent &ref);
     virtual ~PublishEvent();
 
     // Get an attribute's value
     const std::string sgName() const { return getAttrValueAsString("code"); }
-    const std::string sgFile() const { return getAttrValueAsString("sg_file"); } 
-    //const std::string sgFormat() const { return getAttrValueAsString("sg_format"); } 
-    const int sgRev() const { return getAttrValueAsInt("sg_rev"); } 
-    const std::string sgResolution() const { return getAttrValueAsString("sg_resolution"); } 
-    const std::string sgType() const { return getAttrValueAsString("sg_type"); } 
-
-    // Set an attribute's value
-    void sgFile(const std::string &val) { setAttrValue("sg_file", toXmlrpcValue(val)); }
-    //void sgFormat(const std::string &val) { setAttrValue("sg_format", toXmlrpcValue(val)); }
-    void sgRev(const int val) { setAttrValue("sg_rev", toXmlrpcValue(val)); }
-    void sgResolution(const std::string &val) { setAttrValue("sg_resolution", toXmlrpcValue(val)); }
-    void sgType(const std::string &val) { setAttrValue("sg_type", toXmlrpcValue(val)); }
 
     PublishEvent &operator=(const PublishEvent &that)
     {
         Entity::operator=(that);
         return *this;
     }
+
+protected:
+    PublishEvent(Shotgun *sg, const xmlrpc_c::value &attrs);
+
+    static PublishEvent create(Shotgun *sg, 
+                               const std::string &projectCode,
+                               const std::string &publishEventName);
+    static PublishEvents find(Shotgun *sg, SgMap &findMap);
 };
 
 } // End namespace Shotgun

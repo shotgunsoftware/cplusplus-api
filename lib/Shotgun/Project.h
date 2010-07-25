@@ -35,9 +35,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <Shotgun/Entity.h>
 
-#warning Remove these
-#define TIPSHOTGUN_PROJECT_DEFAULT_HANDLE_DURATION 8
-#define TIPSHOTGUN_PROJECT_DEFAULT_START_FRAME 101
 
 namespace Shotgun {
 
@@ -50,7 +47,6 @@ class Project : public Entity
     friend class Entity; // So that the base Entity class can call Project::find(..)
  
 public:
-    Project();
     Project(const Project &ref);
     virtual ~Project();
 

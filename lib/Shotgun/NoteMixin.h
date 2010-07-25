@@ -43,9 +43,6 @@ namespace Shotgun {
 // *****************************************************************************
 class NoteMixin
 {
-protected:
-    NoteMixin() {}
-
 public:
     virtual ~NoteMixin() {};
 
@@ -61,6 +58,10 @@ public:
                  const std::string &noteType = "",
                  const SgArray &noteLinks = SgArray(),
                  const std::string &noteOrigin = "");
+
+protected:
+    NoteMixin() {}
+
 };
 
 } // End namespace Shotgun

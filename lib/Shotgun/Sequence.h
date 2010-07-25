@@ -50,16 +50,7 @@ class Sequence : public Entity
     friend class Reference;
     friend class Entity;
  
-protected:
-    Sequence(Shotgun *sg, const xmlrpc_c::value &attrs);
-
-    static Sequence create(Shotgun *sg, 
-                           const std::string &projectCode,
-                           const std::string &sequenceName);
-    static Sequences find(Shotgun *sg, SgMap &findMap);
-    
 public:
-    Sequence();
     Sequence(const Sequence &ref);
     virtual ~Sequence();
 
@@ -74,6 +65,14 @@ public:
         Entity::operator=(that);
         return *this;
     }
+
+protected:
+    Sequence(Shotgun *sg, const xmlrpc_c::value &attrs);
+
+    static Sequence create(Shotgun *sg, 
+                           const std::string &projectCode,
+                           const std::string &sequenceName);
+    static Sequences find(Shotgun *sg, SgMap &findMap);
 };
 
 } // End namespace Shotgun

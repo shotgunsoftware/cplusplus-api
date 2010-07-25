@@ -47,14 +47,6 @@ ReviewItem::ReviewItem(Shotgun *sg, const xmlrpc_c::value &attrs)
 }
 
 // *****************************************************************************
-ReviewItem::ReviewItem()
-    : Entity(NULL)
-{
-    m_type = "ReviewItem";
-    m_attrs = NULL;
-}
-
-// *****************************************************************************
 ReviewItem::ReviewItem(const ReviewItem &ref)
     : Entity(ref.m_sg)
 {
@@ -71,17 +63,11 @@ ReviewItem::~ReviewItem()
 // *****************************************************************************
 ReviewItem ReviewItem::create(Shotgun *sg, 
                               const std::string &projectCode,
-                              //const std::string &reviewItemName, // read-only
-                              const SgMap &reviewItemShotLink,
-                              const SgMap &reviewItemDailyLink,
-                              const SgMap &reviewItemReviewLink,
-                              const std::string &reviewItemPurpose,
-                              const int reviewItemOrder)
+                              const std::string &reviewItemName)
 {
     // Check if the reviewItem already exists
     try
     {
-        std::string reviewItemName = getAttrValueAsString("name", reviewItemDailyLink);
         ReviewItem reviewItem = sg->findReviewItemByName(projectCode, reviewItemName);
 
         std::string err = "ReviewItem \"" + reviewItemName + "\" already exists.";
@@ -93,18 +79,7 @@ ReviewItem ReviewItem::create(Shotgun *sg,
 
         SgMap attrsMap;
         attrsMap["project"] = toXmlrpcValue(project.asLink());
-        // Attribute "code" is read-only, I think it's filled in automatically 
-        // based on the "sg_version" link.
-        //attrsMap["code"] = toXmlrpcValue(reviewItemName); 
-        attrsMap["sg_link"] = toXmlrpcValue(reviewItemShotLink);
-        attrsMap["sg_version"] = toXmlrpcValue(reviewItemDailyLink);
-        attrsMap["sg_review"] = toXmlrpcValue(reviewItemReviewLink);
-        attrsMap["sg_purpose"] = toXmlrpcValue(reviewItemPurpose);
-
-        if (reviewItemOrder != TIPSHOTGUN_INVALID_ORDER_NUM)
-        {
-            attrsMap["sg_order"] = toXmlrpcValue(reviewItemOrder);
-        }
+        attrsMap["code"] = toXmlrpcValue(reviewItemName); 
 
         // Call the base class function to create an entity
         return ReviewItem(sg, createEntity(sg, "ReviewItem", attrsMap));

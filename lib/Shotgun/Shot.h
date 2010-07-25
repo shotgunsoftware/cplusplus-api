@@ -59,45 +59,17 @@ class Shot : public Entity, public TaskMixin, public NoteMixin
     friend class Asset;
     friend class Entity;
  
-protected:
-    Shot(Shotgun *sg, const xmlrpc_c::value &attrs);
-
-    static Shot create(Shotgun *sg, 
-                       const std::string &shotName,
-                       const std::string &shotType = "");
-    static Shots find(Shotgun *sg, SgMap &findMap);
-    
 public:
-    Shot();
     Shot(const Shot &ref);
     virtual ~Shot();
 
     // Set an attribute's value
     const std::string sgName() const { return getAttrValueAsString("code"); }
-    const bool sgCbb() const { return getAttrValueAsBool("sg_cbb_"); } 
-    const int sgContinuity() const { return getAttrValueAsInt("sg_continuity"); }
     const std::string sgDescription() const { return getAttrValueAsString("description"); } 
     const Elements sgElements() const;
-    const int sgEstimatedFrameRenderHours() const { return getAttrValueAsInt("sg_estimated_frame_render_hours"); }
-    const int sgLens() const { return getAttrValueAsInt("sg_lens"); }
-    const bool sgOmit() const { return getAttrValueAsBool("sg_omit_"); } 
-    const bool sgOnHold() const { return getAttrValueAsBool("sg_on_hold_"); } 
-    const std::string sgProdVFX() const { return getAttrValueAsString("sg_prod_vfx__"); }
     const Sequence sgSequence() const { return Sequence(m_sg, getAttrValueAsEntityAttrMap("sg_sequence")); } 
-    const std::string sgShotNotifications() const { return getAttrValueAsString("sg_shot_notifications"); } 
     const std::string sgProject() const { return sgProjectName(); }
     const std::string sgStatus() const { return getAttrValueAsString("sg_status_list"); } 
-    const bool sgTurnover() const { return getAttrValueAsBool("sg_turnover_"); }
-    const std::string sgType() const { return getAttrValueAsString("sg_type"); }
-    const std::string sgActualPlateResolution() const { return getAttrValueAsString("sg_actual_plate_resolution"); }
-    // TODO: const std::string sgActualPlateImageFormat() const { return getActualPlateImageFormat(); } 
-    const std::string sgStorageTier() const { return getAttrValueAsString("sg_storage___tier"); } 
-    const std::string sgStorageFilesystem() const { return getAttrValueAsString("sg_storage___filesystem"); } 
-    const std::string sgStorageFilesystemUsedPercentage() const { return getAttrValueAsString("sg_storage___filesystem_used_percentage"); } 
-    const int sgStorageSizeGb() const { return getAttrValueAsInt("sg_storage___size_gb"); } 
-    const double sgPixelAspect() const { return getAttrValueAsDouble("sg_pixel_aspect"); }
-    const std::string sgSlateBurninInfo() const { return getAttrValueAsString("sg_slate_burnin_info"); }
-    const std::string sgSlateHeaderInfo() const { return getAttrValueAsString("sg_slate_header_info"); }
     const int sgCutDuration() const { return getAttrValueAsInt("smart_cut_duration"); }
     const int sgCutIn() const { return getAttrValueAsInt("smart_cut_in"); }
     const int sgCutOut() const { return getAttrValueAsInt("smart_cut_out"); }
@@ -110,20 +82,9 @@ public:
     const int sgTailIn() const { return getAttrValueAsInt("smart_tail_in"); }
     const int sgTailOut() const { return getAttrValueAsInt("smart_tail_out"); }
     const int sgWorkingDuration() const { return getAttrValueAsInt("smart_working_duration"); }
-    const std::string sgTippettWorkingLength() const { return getTippettWorkingLength(); }
 
     // Set an attribute's value
-    void sgCbb(const bool val) { setAttrValue("sg_cbb_", toXmlrpcValue(val)); }
-    void sgOmit(const bool val) { setAttrValue("sg_omit_", toXmlrpcValue(val)); }
-    void sgOnHold(const bool val) { setAttrValue("sg_on_hold_", toXmlrpcValue(val)); }
-    void sgSequence(const Sequence &val) { setAttrValue("sg_sequence", toXmlrpcValue(val.asLink())); }
     void sgSequence(const SgMap &val);
-    void sgShotNotifications(const std::string &val) { setAttrValue("sg_shot_notifications", toXmlrpcValue(val)); }
-    void sgStatus(const std::string &val) { setAttrValue("sg_status_list", toXmlrpcValue(val)); }
-    void sgStorageTier(const std::string &val) { setAttrValue("sg_storage___tier", toXmlrpcValue(val)); }
-    void sgStorageFilesystem(const std::string &val) { setAttrValue("sg_storage___filesystem", toXmlrpcValue(val)); }
-    void sgStorageFilesystemUsedPercentage(const std::string &val) { setAttrValue("sg_storage___filesystem_used_percentage", toXmlrpcValue(val)); }
-    void sgStorageSizeGb(const int val) { setAttrValue("sg_storage___size_gb", toXmlrpcValue(val)); }
     void sgElements(const Elements &val); // An array of Element entities
     void sgElements(const SgArray &val); // An array of entity links
 
@@ -134,8 +95,13 @@ public:
     }
 
 protected:
-    // TODO: const std::string getActualPlateImageFormat() const; // need to search the studio database
-    const std::string getTippettWorkingLength() const;
+    Shot(Shotgun *sg, const xmlrpc_c::value &attrs);
+
+    static Shot create(Shotgun *sg, 
+                       const std::string &projectName,
+                       const std::string &shotName,
+                       const std::string &sequenceName="");
+    static Shots find(Shotgun *sg, SgMap &findMap);
 };
 
 } // End namespace Shotgun

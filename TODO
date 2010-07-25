@@ -1,0 +1,31 @@
+
+* An entity type registration system.
+
+  Instead of big block blocks of 'if (type=="Foo") return Foo(...)' and similar,
+  make a system whereby classes handle more of their own stuff. It should be
+  possible for any Entity-derived class to register as a handler for a named
+  type.  This also allows the core library to automatically return instances of
+  a user-created class to handle any entity.
+
+  Classes should also tell the core (and anyone else who wants to know) which
+  attributes they manage--it shouldn't be in a giant if block.
+  
+  This would also make it possible to register handler classes for custom 
+  entities without having to modify the core.
+  
+  The core, and also entity classes, would not need so much hard-coded knowledge
+  about each other.
+
+* Clarify 'name' vs. 'code' vs. 'title' attributes/methods.  Very confusing as
+  it is.
+
+* Make all attribute getters/setters virtual
+
+* Make classes for other entities
+
+* The classes are too 'friendly'.
+
+* Add getter/setter methods for all shotgun built-in attributes.
+
+* There are probably several places where incorrect assumptions were made,
+  resulting in code that is not generic enough or lacks features.

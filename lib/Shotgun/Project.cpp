@@ -49,14 +49,6 @@ Project::Project(Shotgun *sg, const xmlrpc_c::value &attrs)
 }
 
 // *****************************************************************************
-Project::Project()
-    : Entity(NULL)
-{
-    m_type = "Project";
-    m_attrs = NULL;
-}
-
-// *****************************************************************************
 Project::Project(const Project &ref)
     : Entity(ref.m_sg)
 {
@@ -89,9 +81,6 @@ Project Project::create(Shotgun *sg,
 
         attrsMap["code"] = toXmlrpcValue(projectCode);
         attrsMap["name"] = toXmlrpcValue(projectName);
-        attrsMap["sg_status"] = toXmlrpcValue("Active");
-        attrsMap["sg_handle_duration"] = toXmlrpcValue(TIPSHOTGUN_PROJECT_DEFAULT_HANDLE_DURATION);
-        attrsMap["sg_default_start_frame"] = toXmlrpcValue(TIPSHOTGUN_PROJECT_DEFAULT_START_FRAME);
 
         // Call the base class function to create an entity
         return Project(sg, createEntity(sg, "Project", attrsMap));

@@ -46,14 +46,6 @@ Group::Group(Shotgun *sg, const xmlrpc_c::value &attrs)
 }
 
 // *****************************************************************************
-Group::Group()
-    : Entity(NULL)
-{
-    m_type = "Group";
-    m_attrs = NULL;
-}
-
-// *****************************************************************************
 Group::Group(const Group &ref)
     : Entity(ref.m_sg)
 {

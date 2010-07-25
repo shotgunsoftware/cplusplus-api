@@ -35,7 +35,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/TaskMixin.h>
 #include <Shotgun/Shotgun.h>
 #include <Shotgun/Entity.h>
-#include <Shotgun/User.h>
+#include <Shotgun/HumanUser.h>
 #include <Shotgun/Group.h>
 
 namespace Shotgun {
@@ -141,7 +141,6 @@ Task TaskMixin::getNextIncompleteMilestoneTask()
 // *****************************************************************************
 Task TaskMixin::addTask(const std::string &taskName,
                         const std::string &taskType,
-                        const int taskViewOrder,
                         const std::string &taskAssignee,
                         const std::string &taskStartDate,
                         const std::string &taskEndDate,
@@ -162,7 +161,6 @@ Task TaskMixin::addTask(const std::string &taskName,
             return entity->sg()->createTask(entity->sgProjectCode(),
                                             taskName,
                                             taskType,
-                                            taskViewOrder,
                                             taskAssignee,
                                             taskStartDate,
                                             taskEndDate,
@@ -180,7 +178,6 @@ Task TaskMixin::addTask(const std::string &taskName,
 
 // *****************************************************************************
 Task TaskMixin::updateTask(const std::string &taskName,
-                           const int taskViewOrder,
                            const std::string &taskAssignee,
                            const std::string &taskStartDate,
                            const std::string &taskEndDate,
@@ -192,18 +189,12 @@ Task TaskMixin::updateTask(const std::string &taskName,
 
     SgMap updateMap;
 
-    // taskViewOrder
-    if (taskViewOrder != TIPSHOTGUN_INVALID_ORDER_NUM)
-    {
-        updateMap["sg_view_order"] = toXmlrpcValue(taskViewOrder);
-    }
-
     // taskAssignee
     if (taskAssignee != "")
     {
         try
         {
-            User user = task.sg()->findUserByLogin(taskAssignee);
+            HumanUser user = task.sg()->findHumanUserByLogin(taskAssignee);
 
             SgArray assignees;
             assignees.push_back(toXmlrpcValue(user.asLink()));

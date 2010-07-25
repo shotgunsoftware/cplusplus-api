@@ -46,13 +46,6 @@ Playlist::Playlist(Shotgun *sg, const xmlrpc_c::value &attrs)
     m_attrs = new xmlrpc_c::value(attrs);
 }
 
-// *****************************************************************************
-Playlist::Playlist()
-    : Entity(NULL)
-{
-    m_type = "Playlist";
-    m_attrs = NULL;
-}
 
 // *****************************************************************************
 Playlist::Playlist(const Playlist &ref)

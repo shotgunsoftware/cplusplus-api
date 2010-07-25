@@ -47,14 +47,6 @@ Task::Task(Shotgun *sg, const xmlrpc_c::value &attrs)
 }
 
 // *****************************************************************************
-Task::Task()
-    : Entity(NULL)
-{
-    m_type = "Task";
-    m_attrs = NULL;
-}
-
-// *****************************************************************************
 Task::Task(const Task &ref)
     : Entity(ref.m_sg)
 {
@@ -73,7 +65,6 @@ Task Task::create(Shotgun *sg,
                   const std::string &projectCode,
                   const std::string &taskName,
                   const std::string &taskType,
-                  const int taskViewOrder,
                   const std::string &taskAssignee,
                   const std::string &taskStartDate,
                   const std::string &taskEndDate,
@@ -96,18 +87,12 @@ Task Task::create(Shotgun *sg,
         attrsMap["entity"] = toXmlrpcValue(taskEntityLink);
     }
 
-    // taskViewOrder
-    if (taskViewOrder != TIPSHOTGUN_INVALID_ORDER_NUM)
-    {
-        attrsMap["sg_view_order"] = toXmlrpcValue(taskViewOrder);
-    }
-
-    // taskAssignee - could be a User or a Group
+    // taskAssignee - could be a HumanUser or a Group
     if (taskAssignee != "")
     {
         try
         {
-            User user = sg->findUserByLogin(taskAssignee);
+            HumanUser user = sg->findHumanUserByLogin(taskAssignee);
 
             SgArray assignees;
             assignees.push_back(toXmlrpcValue(user.asLink()));
@@ -193,7 +178,7 @@ Tasks Task::find(Shotgun *sg, SgMap &findMap)
 // *****************************************************************************
 const EntityPtrs Task::sgAssignees() const
 {
-    // Assignees is a mixed list of Users & Groups
+    // Assignees is a mixed list of HumanUsers & Groups
     SgArray entities = Entity::getAttrValueAsMultiEntityAttrMap("task_assignees");
     EntityPtrs assignees;
 
@@ -203,7 +188,7 @@ const EntityPtrs Task::sgAssignees() const
 
         if (Entity::getAttrValueAsString("type", entityAsMap) == "HumanUser")
         {
-            assignees.push_back(new User(m_sg, entities[i]));
+            assignees.push_back(new HumanUser(m_sg, entities[i]));
         }
         else if (getAttrValueAsString("type", entityAsMap) == "Group")
         {
@@ -223,7 +208,7 @@ void Task::sgAssignees(const Strings &val)
     {
         try
         {
-            User user = m_sg->findUserByLogin(val[i]);
+            HumanUser user = m_sg->findHumanUserByLogin(val[i]);
             assigneeLinkArray.push_back(toXmlrpcValue(user.asLink()));
         }
         catch (SgEntityNotFoundError)

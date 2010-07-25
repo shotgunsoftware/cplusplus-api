@@ -13,7 +13,6 @@ libShotgun_la_SOURCES = Asset.cpp               \
                         NoteMixin.cpp           \
                         Playlist.cpp            \
                         PublishEvent.cpp        \
-                        Reference.cpp           \
                         Review.cpp              \
                         ReviewItem.cpp          \
                         Sequence.cpp            \
@@ -23,7 +22,7 @@ libShotgun_la_SOURCES = Asset.cpp               \
                         Task.cpp                \
                         TaskMixin.cpp           \
                         Type.cpp                \
-                        User.cpp                \
+                        HumanUser.cpp           \
                         Version.cpp             \
                         utils.cpp
 
@@ -37,7 +36,6 @@ include_HEADERS = Asset.h                       \
                   NoteMixin.h                   \
                   Playlist.h                    \
                   PublishEvent.h                \
-                  Reference.h                   \
                   Review.h                      \
                   ReviewItem.h                  \
                   Sequence.h                    \

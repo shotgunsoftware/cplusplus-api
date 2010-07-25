@@ -46,23 +46,12 @@ class Playlist : public Entity
     friend class Shotgun;
     friend class Entity;
  
-protected:
-    Playlist(Shotgun *sg, const xmlrpc_c::value &attrs);
-
-    static Playlist create(Shotgun *sg,
-                           const std::string &projectCode,
-                           const std::string &playlistName);
-
-    static Playlists find(Shotgun *sg, SgMap &findMap);
-    
 public:
-    Playlist();
     Playlist(const Playlist &ref);
     virtual ~Playlist();
 
     // Get an attribute's value
     const std::string sgName() const { return getAttrValueAsString("code"); }
-    const time_t sgDateTime() const { return getAttrValueAsDatetime("sg_date_and_time"); }
     const std::string sgDescription() const { return getAttrValueAsString("description"); }
     const std::string sgThumbnail() const { return getAttrValueAsString("image"); }
     const Strings sgTags() const { return getAttrValueAsTags("tag_list"); }
@@ -71,7 +60,6 @@ public:
 
     // Set an attribute's value
     void sgName(const std::string &val) { setAttrValue("code", toXmlrpcValue(val)); }
-    void sgDateTime(const time_t &val) { setAttrValue("sg_date_and_time", toXmlrpcValue(val)); }
     void sgDescription(const std::string &val) { setAttrValue("description", toXmlrpcValue(val)); }
     void sgTags(const Strings &val) { setAttrValue("tag_list", toXmlrpcValue(val)); }
     void sgNotes(const Notes &val);  // An array of Note entities
@@ -84,6 +72,16 @@ public:
         Entity::operator=(that);
         return *this;
     }
+
+protected:
+    Playlist(Shotgun *sg, const xmlrpc_c::value &attrs);
+
+    static Playlist create(Shotgun *sg,
+                           const std::string &projectCode,
+                           const std::string &playlistName);
+
+    static Playlists find(Shotgun *sg, SgMap &findMap);
+    
 };
 
 } // End namespace Shotgun

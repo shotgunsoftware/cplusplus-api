@@ -1,6 +1,8 @@
 
 SUBDIRS = lib plugins test
 
+EXTRA_DIST = TODO
+
 #
 # Auto-generate ChangeLog from the git log
 #

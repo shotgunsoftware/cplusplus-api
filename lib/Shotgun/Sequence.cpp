@@ -48,14 +48,6 @@ Sequence::Sequence(Shotgun *sg, const xmlrpc_c::value &attrs)
 }
 
 // *****************************************************************************
-Sequence::Sequence()
-    : Entity(NULL)
-{
-    m_type = "Sequence";
-    m_attrs = NULL; 
-}
-
-// *****************************************************************************
 Sequence::Sequence(const Sequence &ref)
     : Entity(ref.m_sg)
 {

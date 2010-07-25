@@ -49,14 +49,6 @@ Review::Review(Shotgun *sg, const xmlrpc_c::value &attrs)
 }
 
 // *****************************************************************************
-Review::Review()
-    : Entity(NULL)
-{
-    m_type = "Review";
-    m_attrs = NULL;
-}
-
-// *****************************************************************************
 Review::Review(const Review &ref)
     : Entity(ref.m_sg)
 {
@@ -73,8 +65,7 @@ Review::~Review()
 // *****************************************************************************
 Review Review::create(Shotgun *sg, 
                       const std::string &projectCode,
-                      const std::string &reviewName,
-                      const std::string &reviewType)
+                      const std::string &reviewName)
 {
     // Check if the review already exists
     try
@@ -91,7 +82,6 @@ Review Review::create(Shotgun *sg,
         SgMap attrsMap;
         attrsMap["project"] = toXmlrpcValue(project.asLink());
         attrsMap["code"] = toXmlrpcValue(reviewName);
-        attrsMap["sg_review_type"] = toXmlrpcValue(reviewType);
 
         // Call the base class function to create an entity
         return Review(sg, createEntity(sg, "Review", attrsMap));

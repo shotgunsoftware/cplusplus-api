@@ -38,10 +38,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <xmlrpc-c/base.hpp>
 
-//TODO: update these to some numbers that make sense
-#define TIPSHOTGUN_INVALID_VERSION_NUM -1
-#define TIPSHOTGUN_INVALID_ORDER_NUM -1
-
 namespace Shotgun {
 
 class Entity;
@@ -49,7 +45,7 @@ class Project;
 class Sequence;
 class Shot;
 class Version;
-class User;
+class HumanUser;
 class Element;
 class Asset;
 class Delivery;
@@ -59,7 +55,6 @@ class ReviewItem;
 class Task;
 class Group;
 class Note;
-class Reference;
 class Playlist;
 
 // *****************************************************************************
@@ -68,12 +63,12 @@ typedef Strings MethodSignature;
 typedef std::vector<Strings> MethodSignatures;
 typedef std::map<std::string, xmlrpc_c::value> SgMap;
 typedef std::vector<xmlrpc_c::value> SgArray;
-typedef std::vector<Entity *> EntityPtrs; // Only (Entity *) can be dynamic_casted, not (Entity)
+typedef std::vector<Entity *> EntityPtrs;
 typedef std::vector<Project> Projects;
 typedef std::vector<Sequence> Sequences;
 typedef std::vector<Shot> Shots;
 typedef std::vector<Version> Versions;
-typedef std::vector<User> Users;
+typedef std::vector<HumanUser> HumanUsers;
 typedef std::vector<Element> Elements;
 typedef std::vector<Asset> Assets;
 typedef std::vector<Delivery> Deliveries;
@@ -83,7 +78,6 @@ typedef std::vector<ReviewItem> ReviewItems;
 typedef std::vector<Task> Tasks;
 typedef std::vector<Group> Groups;
 typedef std::vector<Note> Notes;
-typedef std::vector<Reference> References;
 typedef std::vector<Playlist> Playlists;
 
 // *****************************************************************************
@@ -119,8 +113,8 @@ std::string toStdString(const Shot &shot);
 std::string toStdString(const Shots &shots);
 std::string toStdString(const Version &version);
 std::string toStdString(const Versions &versions);
-std::string toStdString(const User &user);
-std::string toStdString(const Users &users);
+std::string toStdString(const HumanUser &user);
+std::string toStdString(const HumanUsers &users);
 std::string toStdString(const Element &element);
 std::string toStdString(const Elements &elements);
 std::string toStdString(const Asset &asset);
@@ -139,8 +133,6 @@ std::string toStdString(const Group &group);
 std::string toStdString(const Groups &groups);
 std::string toStdString(const Note &note);
 std::string toStdString(const Notes &notes);
-std::string toStdString(const Reference &referece);
-std::string toStdString(const References &references);
 std::string toStdString(const Playlist &playlist);
 std::string toStdString(const Playlists &playlists);
 
@@ -160,8 +152,8 @@ std::ostream &operator<<(std::ostream& output, const Shot &shot);
 std::ostream &operator<<(std::ostream& output, const Shots &shots);
 std::ostream &operator<<(std::ostream& output, const Version &version);
 std::ostream &operator<<(std::ostream& output, const Versions &versions);
-std::ostream &operator<<(std::ostream& output, const User &user);
-std::ostream &operator<<(std::ostream& output, const Users &users);
+std::ostream &operator<<(std::ostream& output, const HumanUser &user);
+std::ostream &operator<<(std::ostream& output, const HumanUsers &users);
 std::ostream &operator<<(std::ostream& output, const Element &element);
 std::ostream &operator<<(std::ostream& output, const Elements &elements);
 std::ostream &operator<<(std::ostream& output, const Asset &asset);
@@ -180,8 +172,6 @@ std::ostream &operator<<(std::ostream& output, const Group &group);
 std::ostream &operator<<(std::ostream& output, const Groups &groups);
 std::ostream &operator<<(std::ostream& output, const Note &note);
 std::ostream &operator<<(std::ostream& output, const Notes &notes);
-std::ostream &operator<<(std::ostream& output, const Reference &reference);
-std::ostream &operator<<(std::ostream& output, const References &references);
 std::ostream &operator<<(std::ostream& output, const Playlist &playlist);
 std::ostream &operator<<(std::ostream& output, const Playlists &playlists);
 

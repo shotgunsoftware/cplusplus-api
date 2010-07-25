@@ -34,6 +34,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Entity.h>
 #include <Shotgun/Shotgun.h>
 #include <Shotgun/Note.h>
+#include <Shotgun/Version.h>
 #include <Shotgun/Project.h>
 #include <Shotgun/Review.h>
 #include <Shotgun/Shot.h>
@@ -46,14 +47,6 @@ Note::Note(Shotgun *sg, const xmlrpc_c::value &attrs)
 {
     m_type = "Note";
     m_attrs = new xmlrpc_c::value(attrs);
-}
-
-// *****************************************************************************
-Note::Note()
-    : Entity(NULL)
-{
-    m_type = "Note";
-    m_attrs = NULL;
 }
 
 // *****************************************************************************
@@ -83,7 +76,7 @@ Note Note::create(Shotgun *sg,
                   const std::string &noteOrigin)
 {
     Project project = sg->findProjectByCode(projectCode);
-    User user = sg->findUserByLogin(noteFromUserName);
+    HumanUser user = sg->findHumanUserByLogin(noteFromUserName);
 
     SgMap attrsMap;
     attrsMap["project"] = toXmlrpcValue(project.asLink());
@@ -104,7 +97,7 @@ Note Note::create(Shotgun *sg,
     {
         try
         {
-            User toUser = sg->findUserByLogin(noteToUserNames[i]);
+            HumanUser toUser = sg->findHumanUserByLogin(noteToUserNames[i]);
 
             addressingsTo.push_back(toXmlrpcValue(toUser.asLink()));
         }
@@ -121,7 +114,7 @@ Note Note::create(Shotgun *sg,
     {
         try
         {
-            User toUser = sg->findUserByLogin(noteCcUserNames[i]);
+            HumanUser toUser = sg->findHumanUserByLogin(noteCcUserNames[i]);
 
             addressingsCc.push_back(toXmlrpcValue(toUser.asLink()));
         }
@@ -199,26 +192,27 @@ const Shot Note::getLinkedShot() const
     throw SgEntityNotFoundError("Shot");
 }
 
-// // *****************************************************************************
-// const Daily Note::getLinkedDaily() const
-// {
-//     SgArray links = sgLinks();
-// 
-//     for (size_t i = 0; i < links.size(); i++)
-//     {
-//         SgMap linkAsMap = SgMap(xmlrpc_c::value_struct(links[i]));
-// 
-//         int id = Entity::getAttrValueAsInt("id", linkAsMap);
-//         std::string type = Entity::getAttrValueAsString("type", linkAsMap);
-// 
-//         if (type == "Version")
-//         {
-//             return Daily(m_sg, 
-//                          findOneEntityBySingleFilter(m_sg, type, "id", "is", toXmlrpcValue(id)));
-//         }
-//     }
-// 
-//     throw SgEntityNotFoundError("Version");
-// }
+// *****************************************************************************
+const Version Note::getLinkedVersion() const
+{
+    SgArray links = sgLinks();
+
+    for (size_t i = 0; i < links.size(); i++)
+    {
+        SgMap linkAsMap = SgMap(xmlrpc_c::value_struct(links[i]));
+
+        int id = Entity::getAttrValueAsInt("id", linkAsMap);
+        std::string type = Entity::getAttrValueAsString("type", linkAsMap);
+
+        if (type == "Version")
+        {
+            return Version(m_sg,
+                           findOneEntityBySingleFilter(m_sg, 
+                                type, "id", "is", toXmlrpcValue(id)));
+        }
+    }
+
+    throw SgEntityNotFoundError("Version");
+}
 
 } // End namespace Shotgun

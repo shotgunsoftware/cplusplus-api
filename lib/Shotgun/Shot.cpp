@@ -32,8 +32,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <iostream>
 
-// #include <TipUtil/ShotName.h>
-
 #include <Shotgun/Method.h>
 #include <Shotgun/Entity.h>
 #include <Shotgun/Shotgun.h>
@@ -52,14 +50,6 @@ Shot::Shot(Shotgun *sg, const xmlrpc_c::value &attrs)
 }
 
 // *****************************************************************************
-Shot::Shot()
-    : Entity(NULL)
-{
-    m_type = "Shot";
-    m_attrs = NULL;
-}
-
-// *****************************************************************************
 Shot::Shot(const Shot &ref)
     : Entity(ref.m_sg)
 {
@@ -75,12 +65,14 @@ Shot::~Shot()
 
 // *****************************************************************************
 Shot Shot::create(Shotgun *sg, 
+                  const std::string &projectName,
                   const std::string &shotName,
-                  const std::string &shotType)
+                  const std::string &sequenceName)
 {
     // Check if the shot already exists
     try
     {
+#warning TODO: Include project (& sequence?) in search
         Shot shot = sg->findShotByName(shotName);
 
         std::string err = "Shot \"" + shotName + "\" already exists.";
@@ -88,27 +80,25 @@ Shot Shot::create(Shotgun *sg,
     }
     catch (SgEntityNotFoundError)
     {
-#warning Implement in non-Tippett way
-//         TipUtil::ShotName sn = TipUtil::ShotName(shotName);
-//         Show show = sg->findShowByCode(sn.show());
+        Project project = sg->findProjectByCode(projectName);
+#warning TODO: Fix this
 //         Sequence seq;
 //         try
 //         {
-//             seq = Sequence(sg, sg->findSequenceByName(sn.show(), sn.sequence()).attrs());
+//             seq = Sequence(sg, sg->findSequenceByName(projectName, sequenceName).attrs());
 //         }
 //         catch (SgEntityNotFoundError)
 //         {
-//             seq = sg->createSequence(sn.show(), sn.sequence());
+//             seq = sg->createSequence(sn.project(), sn.sequence());
 //         }
-//         // Other attributes will be filled by the python code
-//         SgMap attrsMap;
-//         attrsMap["project"] = toXmlrpcValue(show.asLink());
-//         attrsMap["code"] = toXmlrpcValue(shotName);
-//         attrsMap["sg_type"] = toXmlrpcValue(shotType);
+        // Other attributes will be filled by the python code
+        SgMap attrsMap;
+        attrsMap["project"] = toXmlrpcValue(project.asLink());
+        attrsMap["code"] = toXmlrpcValue(shotName);
 //         attrsMap["sg_sequence"] = toXmlrpcValue(seq.asLink());
-//         
-//         // Call the base class function to create an entity
-//         return Shot(sg, createEntity(sg, "Shot", attrsMap));
+        
+        // Call the base class function to create an entity
+        return Shot(sg, createEntity(sg, "Shot", attrsMap));
     }
 }
 
@@ -145,32 +135,6 @@ void Shot::sgSequence(const SgMap &val)
     setAttrValue("sg_sequence", toXmlrpcValue(val));
 }
 
-// *****************************************************************************
-const std::string Shot::getTippettWorkingLength() const
-{
-    std::string result;
-    bool makeWorkingLength = false;
-
-    try
-    {
-        result = getAttrValueAsString("sg_tippett_working_length");
-        if (result == "") makeWorkingLength = true;
-    }
-    catch (SgAttrError &err)
-    {
-        makeWorkingLength = true;
-    }
-
-    if (makeWorkingLength)
-    {
-        char workingLen[1024];
-        sprintf(workingLen, "%d-%d", sgHeadIn(), sgHeadOut());
-
-        result = std::string(workingLen);
-    }
-
-    return result;
-}
 
 // *****************************************************************************
 const Elements Shot::sgElements() const

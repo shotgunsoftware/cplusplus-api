@@ -604,7 +604,7 @@ SgMap Entity::buildCreateMap(const std::string &entityType,
         returnFields.push_back(toXmlrpcValue("sg_preview_hd_qt"));
         returnFields.push_back(toXmlrpcValue("user"));
     }
-    else if (sgEntityTypeStr == "HumanUser") // User
+    else if (sgEntityTypeStr == "HumanUser")
     {
         returnFields.push_back(toXmlrpcValue("name"));
         returnFields.push_back(toXmlrpcValue("admin"));
@@ -732,18 +732,6 @@ SgMap Entity::buildCreateMap(const std::string &entityType,
         returnFields.push_back(toXmlrpcValue("subject"));
         returnFields.push_back(toXmlrpcValue("sg_note_type"));
         returnFields.push_back(toXmlrpcValue("note_links"));
-    }
-    else if (sgEntityTypeStr == "CustomEntity02") // Reference
-    {
-        returnFields.push_back(toXmlrpcValue("code"));
-        returnFields.push_back(toXmlrpcValue("sg_checksum"));
-        returnFields.push_back(toXmlrpcValue("sg_hero"));
-        returnFields.push_back(toXmlrpcValue("sg_remove"));
-        returnFields.push_back(toXmlrpcValue("sg_asset"));
-        returnFields.push_back(toXmlrpcValue("sg_sequence"));
-        returnFields.push_back(toXmlrpcValue("sg_shot"));
-        returnFields.push_back(toXmlrpcValue("sg_purpose"));
-        returnFields.push_back(toXmlrpcValue("tag_list"));
     }
     else if (sgEntityTypeStr == "Playlist") 
     {
@@ -938,7 +926,7 @@ SgMap Entity::buildFindMap(const std::string &entityType,
         returnFields.push_back(toXmlrpcValue("sg_preview_hd_qt"));
         returnFields.push_back(toXmlrpcValue("user"));
     }
-    else if (sgEntityTypeStr == "HumanUser") // User
+    else if (sgEntityTypeStr == "HumanUser")
     {
         returnFields.push_back(toXmlrpcValue("name"));
         returnFields.push_back(toXmlrpcValue("admin"));
@@ -1066,18 +1054,6 @@ SgMap Entity::buildFindMap(const std::string &entityType,
         returnFields.push_back(toXmlrpcValue("subject"));
         returnFields.push_back(toXmlrpcValue("sg_note_type"));
         returnFields.push_back(toXmlrpcValue("note_links"));
-    }
-    else if (sgEntityTypeStr == "CustomEntity02") // Reference
-    {
-        returnFields.push_back(toXmlrpcValue("code"));
-        returnFields.push_back(toXmlrpcValue("sg_checksum"));
-        returnFields.push_back(toXmlrpcValue("sg_hero"));
-        returnFields.push_back(toXmlrpcValue("sg_remove"));
-        returnFields.push_back(toXmlrpcValue("sg_asset"));
-        returnFields.push_back(toXmlrpcValue("sg_sequence"));
-        returnFields.push_back(toXmlrpcValue("sg_shot"));
-        returnFields.push_back(toXmlrpcValue("sg_purpose"));
-        returnFields.push_back(toXmlrpcValue("tag_list"));
     }
     else if (sgEntityTypeStr == "Playlist") 
     {
@@ -1972,9 +1948,9 @@ Entity *Entity::entityAttrMapToEntityPtr(Shotgun *sg,
     {
         return new Version(sg, entityAttrMap);
     }
-    else if (tipType == "User")
+    else if (tipType == "HumanUser")
     {
-        return new User(sg, entityAttrMap);
+        return new HumanUser(sg, entityAttrMap);
     }
     else if (tipType == "Element")
     {
@@ -2011,10 +1987,6 @@ Entity *Entity::entityAttrMapToEntityPtr(Shotgun *sg,
     else if (tipType == "Note")
     {
         return new Note(sg, entityAttrMap);
-    }
-    else if (tipType == "Reference")
-    {
-        return new Reference(sg, entityAttrMap);
     }
     else if (tipType == "Playlist")
     {
@@ -2079,7 +2051,7 @@ EntityPtrs Entity::getAttrValueAsMultiEntityPtr(Shotgun *sg,
 // *****************************************************************************
 const std::string Entity::getAttrValueAsUserLogin(const std::string &attrName) const 
 {
-    User user = User(m_sg, getAttrValueAsEntityAttrMap(attrName));
+    HumanUser user(m_sg, getAttrValueAsEntityAttrMap(attrName));
 
     return user.sgLogin();
 }
@@ -2090,7 +2062,7 @@ const std::string Entity::getAttrValueAsUserLogin(Shotgun *sg,
                                                   const std::string &attrName,
                                                   const SgMap &attrsMap) 
 {
-    User user = User(sg, getAttrValueAsEntityAttrMap(sg, attrName, attrsMap));
+    HumanUser user(sg, getAttrValueAsEntityAttrMap(sg, attrName, attrsMap));
 
     return user.sgLogin();
 }

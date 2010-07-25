@@ -46,13 +46,6 @@ Delivery::Delivery(Shotgun *sg, const xmlrpc_c::value &attrs)
     m_attrs = new xmlrpc_c::value(attrs);
 }
 
-// *****************************************************************************
-Delivery::Delivery()
-    : Entity(NULL)
-{
-    m_type = "Delivery";
-    m_attrs = NULL;
-}
 
 // *****************************************************************************
 Delivery::Delivery(const Delivery &ref)
@@ -84,20 +77,13 @@ Delivery Delivery::create(Shotgun *sg,
     catch (SgEntityNotFoundError)
     {
         Project project = sg->findProjectByCode(projectCode);
-        User user = sg->findUserByLogin(std::string(getenv("USER")));
 
         SgMap attrsMap;
         attrsMap["project"] = toXmlrpcValue(project.asLink());
         attrsMap["title"] = toXmlrpcValue(deliveryName);
-        attrsMap["sg_wrangler"] = toXmlrpcValue(user.asLink());
 
         // Call the base class function to create an entity
         Delivery delivery = Delivery(sg, createEntity(sg, "Delivery", attrsMap));
-
-        // Update "title" and attach sgId() to it. See addDelivery() in delivery.py.
-        char titleStr[32];
-        sprintf(titleStr, "%s [%d]", delivery.sgName().c_str(), delivery.sgId());
-        delivery.sgName(std::string(titleStr));
 
         return delivery;
     }

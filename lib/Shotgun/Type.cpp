@@ -39,7 +39,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Sequence.h>
 #include <Shotgun/Shot.h>
 #include <Shotgun/Version.h>
-#include <Shotgun/User.h>
+#include <Shotgun/HumanUser.h>
 #include <Shotgun/Element.h>
 #include <Shotgun/Asset.h>
 #include <Shotgun/Delivery.h>
@@ -49,7 +49,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Task.h>
 #include <Shotgun/Group.h>
 #include <Shotgun/Note.h>
-#include <Shotgun/Reference.h>
 #include <Shotgun/Playlist.h>
 
 namespace Shotgun {
@@ -89,32 +88,14 @@ std::string xmlrpcValueTypeStr(const xmlrpc_c::value::type_t xmlrpcType)
 #warning REMOVE THIS
 std::string tipEntityType(const std::string &sgEntityType)
 {
-    if (sgEntityType == "Project")
-        return std::string("Project");
-    else if (sgEntityType == "Version")
-        return std::string("Version");
-    else if (sgEntityType == "HumanUser")
-        return std::string("User");
-    else if (sgEntityType == "CustomEntity02")
-        return std::string("Reference");
-    else
-        return sgEntityType;
+    return sgEntityType;
 }
 
 // *****************************************************************************
 #warning REMOVE THIS
 std::string sgEntityType(const std::string &tipEntityType)
 {
-    if (tipEntityType == "Project")
-        return std::string("Project");
-    else if (tipEntityType == "Version")
-        return std::string("Version");
-    else if (tipEntityType == "User")
-        return std::string("HumanUser");
-    else if (tipEntityType == "Reference")
-        return std::string("CustomEntity02");
-    else
-        return tipEntityType;
+    return tipEntityType;
 }
 
 // *****************************************************************************
@@ -463,13 +444,13 @@ std::string toStdString(const Versions &versions)
 }
 
 // *****************************************************************************
-std::string toStdString(const User &user)
+std::string toStdString(const HumanUser &user)
 {
     return toStdString(user.attrs());
 }
 
 // *****************************************************************************
-std::string toStdString(const Users &users)
+std::string toStdString(const HumanUsers &users)
 {
     SgArray array;
     for (size_t i = 0; i < users.size(); i++)
@@ -643,24 +624,6 @@ std::string toStdString(const Notes &notes)
 }
 
 // *****************************************************************************
-std::string toStdString(const Reference &reference)
-{
-    return toStdString(reference.attrs());
-}
-
-// *****************************************************************************
-std::string toStdString(const References &references)
-{
-    SgArray array;
-    for (size_t i = 0; i < references.size(); i++)
-    {
-        array.push_back(references[i].attrs());
-    }
-    
-    return toStdString(toXmlrpcValue(array));
-}
-
-// *****************************************************************************
 std::string toStdString(const Playlist &playlist)
 {
     return toStdString(playlist.attrs());
@@ -770,14 +733,14 @@ std::ostream &operator<<(std::ostream& output, const Versions &versions)
 }
 
 // *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const User &user)
+std::ostream &operator<<(std::ostream& output, const HumanUser &user)
 {
     output << toStdString(user);
     return output;
 }
 
 // *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const Users &users)
+std::ostream &operator<<(std::ostream& output, const HumanUsers &users)
 {
     output << toStdString(users);
     return output;
@@ -906,20 +869,6 @@ std::ostream &operator<<(std::ostream& output, const Note &note)
 std::ostream &operator<<(std::ostream& output, const Notes &notes)
 {
     output << toStdString(notes);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const Reference &reference)
-{
-    output << toStdString(reference);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const References &references)
-{
-    output << toStdString(references);
     return output;
 }
 

@@ -54,9 +54,9 @@ LTLIBRARIES = $(lib_LTLIBRARIES)
 libShotgun_la_DEPENDENCIES =
 am_libShotgun_la_OBJECTS = Asset.lo Delivery.lo Element.lo Entity.lo \
 	Group.lo Method.lo Note.lo NoteMixin.lo Playlist.lo \
-	PublishEvent.lo Reference.lo Review.lo ReviewItem.lo \
-	Sequence.lo Shot.lo Shotgun.lo Project.lo Task.lo TaskMixin.lo \
-	Type.lo User.lo Version.lo utils.lo
+	PublishEvent.lo Review.lo ReviewItem.lo Sequence.lo Shot.lo \
+	Shotgun.lo Project.lo Task.lo TaskMixin.lo Type.lo \
+	HumanUser.lo Version.lo utils.lo
 libShotgun_la_OBJECTS = $(am_libShotgun_la_OBJECTS)
 DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
@@ -210,7 +210,6 @@ libShotgun_la_SOURCES = Asset.cpp               \
                         NoteMixin.cpp           \
                         Playlist.cpp            \
                         PublishEvent.cpp        \
-                        Reference.cpp           \
                         Review.cpp              \
                         ReviewItem.cpp          \
                         Sequence.cpp            \
@@ -220,7 +219,7 @@ libShotgun_la_SOURCES = Asset.cpp               \
                         Task.cpp                \
                         TaskMixin.cpp           \
                         Type.cpp                \
-                        User.cpp                \
+                        HumanUser.cpp           \
                         Version.cpp             \
                         utils.cpp
 
@@ -234,7 +233,6 @@ include_HEADERS = Asset.h                       \
                   NoteMixin.h                   \
                   Playlist.h                    \
                   PublishEvent.h                \
-                  Reference.h                   \
                   Review.h                      \
                   ReviewItem.h                  \
                   Sequence.h                    \
@@ -323,13 +321,13 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Element.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Entity.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Group.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/HumanUser.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Method.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Note.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NoteMixin.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Playlist.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Project.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/PublishEvent.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Reference.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Review.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ReviewItem.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Sequence.Plo@am__quote@
@@ -338,7 +336,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Task.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/TaskMixin.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Type.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/User.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Version.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utils.Plo@am__quote@
 

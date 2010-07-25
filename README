@@ -1,0 +1,14 @@
+
+
+* Design goals
+
+    Easy to use
+    Easy to extend
+    Where possible, don't allow creation of invalid objects
+
+
+* Why don't you auto-generate API code xmlrpc introspection?
+
+    API stability issues across versions
+    Difficult to write
+    Error-prone

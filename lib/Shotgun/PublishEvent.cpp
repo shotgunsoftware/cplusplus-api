@@ -46,13 +46,6 @@ PublishEvent::PublishEvent(Shotgun *sg, const xmlrpc_c::value &attrs)
     m_attrs = new xmlrpc_c::value(attrs);
 }
 
-// *****************************************************************************
-PublishEvent::PublishEvent()
-    : Entity(NULL)
-{
-    m_type = "PublishEvent";
-    m_attrs = NULL;
-}
 
 // *****************************************************************************
 PublishEvent::PublishEvent(const PublishEvent &ref)
@@ -71,11 +64,7 @@ PublishEvent::~PublishEvent()
 // *****************************************************************************
 PublishEvent PublishEvent::create(Shotgun *sg, 
                                   const std::string &projectCode,
-                                  const std::string &publishEventName,
-                                  const std::string &publishEventSource,
-                                  const std::string &publishEventType,
-                                  const int publishEventVersion,
-                                  const std::string &publishEventResolution)
+                                  const std::string &publishEventName)
 {
     // Check if the publishEvent already exists
     try
@@ -92,14 +81,6 @@ PublishEvent PublishEvent::create(Shotgun *sg,
         SgMap attrsMap;
         attrsMap["project"] = toXmlrpcValue(project.asLink());
         attrsMap["code"] = toXmlrpcValue(publishEventName);
-        attrsMap["sg_file"] = toXmlrpcValue(publishEventSource);
-        attrsMap["sg_type"] = toXmlrpcValue(publishEventType);
-        attrsMap["sg_resolution"] = toXmlrpcValue(publishEventResolution);
-
-        if (publishEventVersion != TIPSHOTGUN_INVALID_VERSION_NUM)
-        {
-            attrsMap["sg_rev"] = toXmlrpcValue(publishEventVersion);
-        }
 
         // Call the base class function to create an entity
         return PublishEvent(sg, createEntity(sg, "PublishEvent", attrsMap));

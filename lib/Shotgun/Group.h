@@ -49,25 +49,24 @@ class Group : public Entity
     friend class Entity;
     friend class Task;
  
-protected:
-    Group(Shotgun *sg, const xmlrpc_c::value &attrs);
-
-    static Group create(Shotgun *sg, const std::string &groupName);
-    static Groups find(Shotgun *sg, SgMap &findMap);
-    
 public:
-    Group();
     Group(const Group &ref);
     virtual ~Group();
 
     const std::string sgName() const { return getAttrValueAsString("code"); } 
-    const std::string sgLogin() const { return getAttrValueAsString("code"); } 
 
     Group &operator=(const Group &that)
     {
         Entity::operator=(that);
         return *this;
     }
+
+protected:
+    Group(Shotgun *sg, const xmlrpc_c::value &attrs);
+
+    static Group create(Shotgun *sg, const std::string &groupName);
+    static Groups find(Shotgun *sg, SgMap &findMap);
+
 };
 
 } // End namespace Shotgun
