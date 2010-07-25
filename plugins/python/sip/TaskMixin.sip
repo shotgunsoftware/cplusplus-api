@@ -39,9 +39,6 @@ class TaskMixin
     #include <Shotgun/TaskMixin.h>
 %End
 
-protected:
-    TaskMixin();
-
 public:
     virtual ~TaskMixin();
 
@@ -52,7 +49,6 @@ public:
 
     Shotgun::Task addTask(const std::string &taskName,
                              const std::string &taskType,
-                             const int taskViewOrder = TIPSHOTGUN_INVALID_ORDER_NUM,
                              const std::string &taskAssignee = "",
                              const std::string &taskStartDate = "",
                              const std::string &taskDueDate = "",
@@ -61,7 +57,6 @@ public:
                              const bool taskMilestone = false) throw(Shotgun::SgAttrError, Shotgun::SgEntityError);
 
     Shotgun::Task updateTask(const std::string &taskName,
-                                const int taskViewOrder = TIPSHOTGUN_INVALID_ORDER_NUM,
                                 const std::string &taskAssignee = "",
                                 const std::string &taskStartDate = "",
                                 const std::string &taskEndDate = "",
@@ -70,6 +65,10 @@ public:
                                 const bool taskMilestone = false) throw(Shotgun::SgAttrError, Shotgun::SgEntityError);
 
     bool removeTask(const std::string &taskName) throw(Shotgun::SgEntityError);
+
+protected:
+    TaskMixin();
+
 };
 
 }; // End namespace Shotgun - must have a semi-colon

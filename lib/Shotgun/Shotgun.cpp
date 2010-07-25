@@ -88,11 +88,9 @@ Project Shotgun::findProjectByName(const std::string &projectName)
     
     
 // *****************************************************************************
-Projects Shotgun::findProjectsByStatus(const std::string &projectStatus)
+Projects Shotgun::allProjects()
 {
-    SgMap findMap = Entity::buildFindMapWithSingleFilter(this,
-                                                         "Project",
-                                                         "sg_status", "is", toXmlrpcValue(projectStatus));
+    SgMap findMap = Entity::buildFindMapWithNoFilter(this, "Project");
 
     return findProjects(findMap);
 }
@@ -688,71 +686,69 @@ Playlists Shotgun::findPlaylistsByProject(const std::string &projectCode,
 }
     
 // *****************************************************************************
+#warning FIX THIS
 Entity *Shotgun::findEntityById(const std::string &entityType, const int &id)
 {
-    xmlrpc_c::value entity = Entity::findOneEntityBySingleFilter(this,
-                                                                 sgEntityType(entityType),
+    xmlrpc_c::value entity = Entity::findOneEntityBySingleFilter(this, entityType,
                                                                  "id", "is", toXmlrpcValue(id));
-    std::string tipType = tipEntityType(entityType);
-
     // IMPORTANT: user is responsible to delete them in C++ app.
-    if (tipType == "Project")
+    if (entityType == "Project")
     {
         return new Project(this, entity);
     }
-    else if (tipType == "Sequence")
+    else if (entityType == "Sequence")
     {
         return new Sequence(this, entity);
     }
-    else if (tipType == "Shot")
+    else if (entityType == "Shot")
     {
         return new Shot(this, entity);
     }
-    else if (tipType == "Version")
+    else if (entityType == "Version")
     {
         return new Version(this, entity);
     }
-    else if (tipType == "HumanUser")
+    else if (entityType == "HumanUser")
     {
         return new HumanUser(this, entity);
     }
-    else if (tipType == "Element")
+    else if (entityType == "Element")
     {
         return new Element(this, entity);
     }
-    else if (tipType == "Asset")
+    else if (entityType == "Asset")
     {
         return new Asset(this, entity);
     }
-    else if (tipType == "Delivery")
+    else if (entityType == "Delivery")
     {
         return new Delivery(this, entity);
     }
-    else if (tipType == "PublishEvent")
+    else if (entityType == "PublishEvent")
     {
         return new PublishEvent(this, entity);
     }
-    else if (tipType == "Review")
+    else if (entityType == "Review")
     {
         return new Review(this, entity);
     }
-    else if (tipType == "ReviewItem")
+    else if (entityType == "ReviewItem")
     {
         return new ReviewItem(this, entity);
     }
-    else if (tipType == "Task")
+    else if (entityType == "Task")
     {
         return new Task(this, entity);
     }
-    else if (tipType == "Group")
+    else if (entityType == "Group")
     {
         return new Group(this, entity);
     }
-    else if (tipType == "Note")
+    else if (entityType == "Note")
     {
         return new Note(this, entity);
     }
-    else if (tipType == "Playlist")
+    else if (entityType == "Playlist")
     {
         return new Playlist(this, entity);
     }

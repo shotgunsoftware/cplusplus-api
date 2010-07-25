@@ -39,35 +39,18 @@ class Review : Shotgun::Entity
     #include <Shotgun/Review.h>
 %End
 
-protected:
-    Review(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
-
 public:
-    Review();
     Review(const Shotgun::Review &ref);
     virtual ~Review();
 
     // Get an attribute's value
     const std::string sgName() const throw(Shotgun::SgAttrError);
-    const std::string sgType() const throw(Shotgun::SgAttrError);
-    const std::string sgMedia() const throw(Shotgun::SgAttrError);
-    const std::string sgDateSent() const throw(Shotgun::SgAttrError);
-    const std::string sgSentTo() const throw(Shotgun::SgAttrError);
-    const std::string sgDateReviewed() const throw(Shotgun::SgAttrError);
-    const std::string sgReviewedBy() const throw(Shotgun::SgAttrError);
-    const std::string sgDisclaimers() const throw(Shotgun::SgAttrError);
-    const std::string sgTipSupeNotes() const throw(Shotgun::SgAttrError);
-    const std::string sgClientNotes() const throw(Shotgun::SgAttrError);
 
     // Set an attribute's value
-    void sgMedia(const std::string &val) throw(Shotgun::SgAttrError);
-    void sgDateSent(const std::string &val) throw(Shotgun::SgAttrError);
-    void sgSentTo(const std::string &val) throw(Shotgun::SgAttrError);
-    void sgDateReviewed(const std::string &val) throw(Shotgun::SgAttrError);
-    void sgReviewedBy(const std::string &val) throw(Shotgun::SgAttrError);
-    void sgDisclaimers(const std::string &val) throw(Shotgun::SgAttrError);
-    void sgTipSupeNotes(const std::string &val) throw(Shotgun::SgAttrError);
-    void sgClientNotes(const std::string &val) throw(Shotgun::SgAttrError);
+
+protected:
+    Review(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
+
 };
 
 }; // End namespace Shotgun - IMPORTANT: must have the semi-colon

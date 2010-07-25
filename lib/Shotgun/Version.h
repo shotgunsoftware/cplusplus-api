@@ -54,7 +54,6 @@ class Version : public Entity, public NoteMixin
     friend class Entity;
     
 public:
-//     Version();
     Version(const Version &ref);
     virtual ~Version();
 

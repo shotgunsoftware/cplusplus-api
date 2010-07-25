@@ -82,7 +82,7 @@ public:
         { return Project::create(this, projectName, projectCode); }
     Project findProjectByCode(const std::string &projectCode);
     Project findProjectByName(const std::string &projectName);
-    Projects findProjectsByStatus(const std::string &projectStatus);
+    Projects allProjects();
     bool deleteProjectById(const int id) { return Entity::deleteEntity(this, "Project", id); }
 
     //------------------------------------------------------------------------
@@ -301,7 +301,7 @@ public:
     Sequences findSequences(SgMap &findMap) { return Sequence::find(this, findMap); }
     Shots findShots(SgMap &findMap) { return Shot::find(this, findMap); }
     Versions findVersions(SgMap &findMap) { return Version::find(this, findMap); }
-    HumanUsers findUsers(SgMap &findMap) { return HumanUser::find(this, findMap); }
+    HumanUsers findHumanUsers(SgMap &findMap) { return HumanUser::find(this, findMap); }
     Elements findElements(SgMap &findMap) { return Element::find(this, findMap); }
     Assets findAssets(SgMap &findMap) { return Asset::find(this, findMap); }
     Deliveries findDeliveries(SgMap &findMap) { return Delivery::find(this, findMap); }

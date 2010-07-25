@@ -39,11 +39,7 @@ class Note : Shotgun::Entity
     #include <Shotgun/Note.h>
 %End
 
-protected:
-    Note(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
-
 public:
-    Note();
     Note(const Shotgun::Note &ref);
     virtual ~Note();
 
@@ -59,7 +55,11 @@ public:
 
     const Shotgun::Review getLinkedReview() const throw(Shotgun::SgAttrError, Shotgun::SgEntityError);
     const Shotgun::Shot getLinkedShot() const throw(Shotgun::SgAttrError, Shotgun::SgEntityError);
-    const Shotgun::Daily getLinkedDaily() const throw(Shotgun::SgAttrError, Shotgun::SgEntityError);
+    const Shotgun::Version getLinkedVersion() const throw(Shotgun::SgAttrError, Shotgun::SgEntityError);
+
+protected:
+    Note(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
+
 };
 
 }; // End namespace Shotgun - IMPORTANT: has to have the semi-colon

@@ -35,16 +35,15 @@ namespace Shotgun {
 // *****************************************************************************
 class Group : Shotgun::Entity
 {
-protected:
-    Group(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
-
 public:
-    Group();
     Group(const Shotgun::Group &ref);
     virtual ~Group();
 
     const std::string sgName() const throw(Shotgun::SgAttrError);
-    const std::string sgLogin() const throw(Shotgun::SgAttrError);
+
+protected:
+    Group(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
+
 };
 
 }; // End namespace Shotgun - IMPORTANT: must have a semi-colon

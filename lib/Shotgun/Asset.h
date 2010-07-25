@@ -53,7 +53,6 @@ class Asset : public Entity, public TaskMixin, public NoteMixin
     friend class Entity;
  
 public:
-//     Asset();
     Asset(const Asset &ref);
     virtual ~Asset();
 

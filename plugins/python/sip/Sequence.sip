@@ -39,11 +39,7 @@ class Sequence : Shotgun::Entity
     #include <Shotgun/Sequence.h>
 %End
 
-protected:
-    Sequence(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
-
 public:
-    Sequence();
     Sequence(const Shotgun::Sequence &ref);
     virtual ~Sequence();
 
@@ -52,6 +48,10 @@ public:
 
     // Set an attribute's value
     void sgName(const std::string &name) throw(Shotgun::SgAttrError);
+
+protected:
+    Sequence(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
+
 };
 
 }; // End namespace Shotgun - IMPORTANT: must have the semi-colon

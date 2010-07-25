@@ -39,11 +39,7 @@ class Element : Shotgun::Entity
     #include <Shotgun/Element.h>
 %End
 
-protected:
-    Element(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
-
 public:
-    Element();
     Element(const Shotgun::Element &ref);
     virtual ~Element();
 
@@ -61,6 +57,10 @@ public:
     void sgShots(const Shotgun::SgArray &val) throw(Shotgun::SgAttrError); 
     void sgTags(const Shotgun::Strings &val) throw(Shotgun::SgAttrError);
     void sgType(const std::string &val) throw(Shotgun::SgAttrError);
+
+
+protected:
+    Element(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
 };
 
 }; // End namespace Shotgun - IMPORTANT: must have the semi-colon

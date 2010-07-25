@@ -1,14 +1,55 @@
 
 
-* Design goals
+Shotgun C++ / Python API
+
+http://github.com/shotgunsoftware/cplusplus-api
+
+
+*************************************************
+
+                    WARNING
+
+The API is not yet stable.  This library isn't
+ready to be used in a production environment yet.
+
+*************************************************
+
+
+Background
+----------
+
+    Tippett Studio has been using Shotgun in production for several years. 
+During that time, we've developed a number of tools and processes that work with
+data in Shotgun, almost all of which are written in Python.  Most of these   The
+original API offered by Shotgun Software was quite simple
+
+    
 
     Easy to use
     Easy to extend
     Where possible, don't allow creation of invalid objects
 
 
-* Why don't you auto-generate API code xmlrpc introspection?
+
+* Why don't you just auto-generate the whole API via xmlrpc introspection?
 
     API stability issues across versions
     Difficult to write
     Error-prone
+
+
+Building
+--------
+
+  * The only dependency is the xmlrpc-c library, available at
+    http://xmlrpc-c.sourceforge.net/  Make sure the xmlrpc-c-config binary is in
+    your path so configure can find it.
+
+  * --with-default-url
+    Specify a URL to use by default when creating a Shotgun instance (you can
+    always override it at runtime).  If you don't give it a default URL, 'make
+    check' skips the tests, but you can still run them manually with a URL on
+    the command line.
+
+  * --enable-python
+    Turning this on will also build the sip-based Python interface.  

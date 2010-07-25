@@ -33,43 +33,35 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace Shotgun {
 
 // *****************************************************************************
-class Reference : Shotgun::Entity
+class Version : Shotgun::Entity, Shotgun::NoteMixin
 {
 %TypeHeaderCode
-    #include <Shotgun/Reference.h>
+    #include <Shotgun/Version.h>
 %End
- 
-protected:
-    Reference(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
 
 public:
-    Reference();
-    Reference(const Shotgun::Reference &ref);
-    virtual ~Reference();
+    Version(const Shotgun::Version &ref);
+    virtual ~Version();
 
     // Get an attribute's value
     const std::string sgName() const throw(Shotgun::SgAttrError);
-    const std::string sgChecksum() const throw(Shotgun::SgAttrError);
-    const bool sgHero() const throw(Shotgun::SgAttrError);
-    const bool sgRemove() const throw(Shotgun::SgAttrError);
-    const Shotgun::Asset sgAsset() const throw(Shotgun::SgAttrError, Shotgun::SgEntityError);
-    const Shotgun::Sequence sgSequence() const throw(Shotgun::SgAttrError, Shotgun::SgEntityError);
-    const Shotgun::Shot sgShot() const throw(Shotgun::SgAttrError, Shotgun::SgEntityError);
-    const std::string sgPurpose() const throw(Shotgun::SgAttrError);
-    const Shotgun::Strings sgTags() const throw(Shotgun::SgAttrError);
+    const std::string sgCode() const throw(Shotgun::SgAttrError);
+    const std::string sgAuthor() const throw(Shotgun::SgAttrError, Shotgun::SgEntityError);
+    const Shotgun::Shot sgShot() const throw(Shotgun::SgAttrError);
+    const std::string sgDescription() const throw(Shotgun::SgAttrError);
+    const size_t sgFrameCount() const throw(Shotgun::SgAttrError);
+    const std::string sgFrameRange() const throw(Shotgun::SgAttrError);
 
-    // Set an attribute's value
-    void sgChecksum(const std::string &val) throw(Shotgun::SgAttrError);
-    void sgHero(const bool val) throw(Shotgun::SgAttrError);
-    void sgRemove(const bool val) throw(Shotgun::SgAttrError);
-    void sgAsset(const Shotgun::Asset &val) throw(Shotgun::SgAttrError);
-    void sgAsset(const Shotgun::SgMap &val) throw(Shotgun::SgAttrError);
-    void sgSequence(const Shotgun::Sequence &val) throw(Shotgun::SgAttrError);
-    void sgSequence(const Shotgun::SgMap &val) throw(Shotgun::SgAttrError);
-    void sgShot(const Shotgun::Shot &val) throw(Shotgun::SgAttrError);
-    void sgShot(const Shotgun::SgMap &val) throw(Shotgun::SgAttrError);
-    void sgPurpose(const std::string &val) throw(Shotgun::SgAttrError);
-    void sgTags(const Shotgun::Strings &val) throw(Shotgun::SgAttrError);
+    // ------------------------------------------------------------------------
+    // Add a /Factory/ annotation which specifies that the value returned by
+    // the function (which should be a wrapped C structure or C++ class instance)
+    // is a newly created instance and is owned by Python.
+    // ------------------------------------------------------------------------
+    Shotgun::Entity *sgLink() throw(Shotgun::SgAttrError, Shotgun::SgEntityError) /Factory/;
+    const std::string sgLinkEntityType() const throw(Shotgun::SgAttrError);
+
+protected:
+    Version(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
 };
 
-}; // End namespace Shotgun - must have the semi-colon
+}; // End namespace Shotgun - IMPORTANT: has to have the semi-colon

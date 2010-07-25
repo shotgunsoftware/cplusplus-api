@@ -63,7 +63,7 @@ public:
     Shot(const Shot &ref);
     virtual ~Shot();
 
-    // Set an attribute's value
+    // Get an attribute's value
     const std::string sgName() const { return getAttrValueAsString("code"); }
     const std::string sgDescription() const { return getAttrValueAsString("description"); } 
     const Elements sgElements() const;

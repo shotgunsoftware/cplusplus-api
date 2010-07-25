@@ -1,30 +1,31 @@
 
+SUBDIRS = test
+
 EXTRA_DIST = configure.py               \
+             sip/_shotgun.sip           \
+             sip/exceptions.sip         \
+             sip/mappedTypes.sip        \
              sip/Asset.sip              \
-             sip/Daily.sip              \
              sip/DeliveryItem.sip       \
              sip/Delivery.sip           \
              sip/Element.sip            \
              sip/Entity.sip             \
-             sip/exceptions.sip         \
              sip/Group.sip              \
-             sip/mappedTypes.sip        \
+             sip/HumanUser.sip          \
              sip/Method.sip             \
              sip/NoteMixin.sip          \
              sip/Note.sip               \
              sip/Playlist.sip           \
+             sip/Project.sip            \
              sip/PublishEvent.sip       \
-             sip/Reference.sip          \
              sip/ReviewItem.sip         \
              sip/Review.sip             \
              sip/Sequence.sip           \
-             sip/_shotgun.sip           \
              sip/Shotgun.sip            \
              sip/Shot.sip               \
-             sip/Show.sip               \
              sip/TaskMixin.sip          \
              sip/Task.sip               \
-             sip/User.sip
+             sip/Version.sip
 
 BUILT_SOURCES = _shotgun.so
 
@@ -32,6 +33,7 @@ BUILT_SOURCES = _shotgun.so
 export XMLRPC_CFLAGS
 export XMLRPC_LDFLAGS
 export XMLRPC_LDADD
+export DEFS
 
 _shotgun.so: 
 	mkdir -p src
@@ -43,5 +45,3 @@ CLEANFILES = _shotgun.so src/*.o
 
 maintainer-clean:
 	rm -rf src _shotgun.so Makefile
-
-

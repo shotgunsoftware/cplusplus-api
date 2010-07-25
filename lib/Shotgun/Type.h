@@ -82,8 +82,6 @@ typedef std::vector<Playlist> Playlists;
 
 // *****************************************************************************
 std::string xmlrpcValueTypeStr(const xmlrpc_c::value::type_t xmlrpcType);
-std::string tipEntityType(const std::string &sgEntityType);
-std::string sgEntityType(const std::string &tipEntityType);
 
 // *****************************************************************************
 xmlrpc_c::value toXmlrpcValue(const char *in);
@@ -345,10 +343,7 @@ public:
         }
         else
         {
-            if (entityType == tipEntityType(entityType))
-                m_msg += "Shotgun \"" + entityType + "\" entity not found.";
-            else
-                m_msg += "Shotgun \"" + entityType + "\" (Tippett \"" + tipEntityType(entityType) + "\") entity not found.";
+            m_msg += "Shotgun \"" + entityType + "\" entity not found.";
         }
     }
 

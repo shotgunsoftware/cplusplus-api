@@ -181,7 +181,7 @@ bool Entity::deleteEntity(Shotgun *sg,
     Method *md = sg->method("delete");
 
     SgMap deleteMap;
-    deleteMap["type"] = toXmlrpcValue(sgEntityType(entityType));
+    deleteMap["type"] = toXmlrpcValue(entityType);
     deleteMap["id"] = toXmlrpcValue(id);
 
     xmlrpc_c::paramList params;
@@ -459,7 +459,7 @@ const std::string Entity::getProjectCode() const
 const SgMap Entity::asLink() const
 {
     SgMap link;
-    link["type"] = toXmlrpcValue(sgEntityType(entityType()));
+    link["type"] = toXmlrpcValue(entityType());
     link["id"] = toXmlrpcValue(sgId());
     link["name"] = toXmlrpcValue(sgName());
 
@@ -492,7 +492,7 @@ SgMap Entity::buildCreateMap(const std::string &entityType,
 
     // -------------------------------------------------------------------
     // "type"
-    createMap["type"] = toXmlrpcValue(sgEntityType(entityType));
+    createMap["type"] = toXmlrpcValue(entityType);
 
     // -------------------------------------------------------------------
     // "fields"
@@ -520,8 +520,7 @@ SgMap Entity::buildCreateMap(const std::string &entityType,
     returnFields.push_back(toXmlrpcValue("updated_at"));
 
     // Add entity-specific return fields here
-    std::string sgEntityTypeStr = sgEntityType(entityType);
-    if (sgEntityTypeStr == "Project")
+    if (entityType == "Project")
     {
         returnFields.push_back(toXmlrpcValue("name"));
         returnFields.push_back(toXmlrpcValue("code"));
@@ -535,11 +534,11 @@ SgMap Entity::buildCreateMap(const std::string &entityType,
         returnFields.push_back(toXmlrpcValue("sg_default_start_frame"));
         returnFields.push_back(toXmlrpcValue("sg_ms_project_schedule"));
     }
-    else if (sgEntityTypeStr == "Sequence")
+    else if (entityType == "Sequence")
     {
         returnFields.push_back(toXmlrpcValue("code"));
     }
-    else if (sgEntityTypeStr == "Shot")
+    else if (entityType == "Shot")
     {
         returnFields.push_back(toXmlrpcValue("code"));
         returnFields.push_back(toXmlrpcValue("sg_continuity"));
@@ -571,7 +570,6 @@ SgMap Entity::buildCreateMap(const std::string &entityType,
         returnFields.push_back(toXmlrpcValue("smart_tail_in"));
         returnFields.push_back(toXmlrpcValue("smart_tail_out"));
         returnFields.push_back(toXmlrpcValue("smart_working_duration"));
-        returnFields.push_back(toXmlrpcValue("sg_tippett_working_length"));
         returnFields.push_back(toXmlrpcValue("sg_actual_plate_resolution"));
         returnFields.push_back(toXmlrpcValue("sg_storage___tier"));
         returnFields.push_back(toXmlrpcValue("sg_storage___filesystem"));
@@ -581,7 +579,7 @@ SgMap Entity::buildCreateMap(const std::string &entityType,
         returnFields.push_back(toXmlrpcValue("sg_slate_header_info"));
         returnFields.push_back(toXmlrpcValue("sg_pixel_aspect"));
     }
-    else if (sgEntityTypeStr == "Version") // Daily
+    else if (entityType == "Version") // Daily
     {
         returnFields.push_back(toXmlrpcValue("code"));
         returnFields.push_back(toXmlrpcValue("sg_department"));
@@ -604,7 +602,7 @@ SgMap Entity::buildCreateMap(const std::string &entityType,
         returnFields.push_back(toXmlrpcValue("sg_preview_hd_qt"));
         returnFields.push_back(toXmlrpcValue("user"));
     }
-    else if (sgEntityTypeStr == "HumanUser")
+    else if (entityType == "HumanUser")
     {
         returnFields.push_back(toXmlrpcValue("name"));
         returnFields.push_back(toXmlrpcValue("admin"));
@@ -614,7 +612,7 @@ SgMap Entity::buildCreateMap(const std::string &entityType,
         returnFields.push_back(toXmlrpcValue("sg_role"));
         returnFields.push_back(toXmlrpcValue("permission_rule_set"));
     }
-    else if (sgEntityTypeStr == "Element")
+    else if (entityType == "Element")
     {
         returnFields.push_back(toXmlrpcValue("code"));
         returnFields.push_back(toXmlrpcValue("assets"));
@@ -622,7 +620,7 @@ SgMap Entity::buildCreateMap(const std::string &entityType,
         returnFields.push_back(toXmlrpcValue("tag_list"));
         returnFields.push_back(toXmlrpcValue("sg_element_type"));
     }
-    else if (sgEntityTypeStr == "Asset")
+    else if (entityType == "Asset")
     {
         returnFields.push_back(toXmlrpcValue("code"));
         returnFields.push_back(toXmlrpcValue("sg_asset_type"));
@@ -634,7 +632,7 @@ SgMap Entity::buildCreateMap(const std::string &entityType,
         returnFields.push_back(toXmlrpcValue("assets"));
         returnFields.push_back(toXmlrpcValue("shots"));
     }
-    else if (sgEntityTypeStr == "Delivery")
+    else if (entityType == "Delivery")
     {
         returnFields.push_back(toXmlrpcValue("title"));
         returnFields.push_back(toXmlrpcValue("sg_delivery_data_size"));
@@ -646,7 +644,7 @@ SgMap Entity::buildCreateMap(const std::string &entityType,
         returnFields.push_back(toXmlrpcValue("sg_wrangler"));
         returnFields.push_back(toXmlrpcValue("sg_wrangler_notes"));
     }
-    else if (sgEntityTypeStr == "CustomEntity01") // "DeliveryItem"
+    else if (entityType == "CustomEntity01") // "DeliveryItem"
     {
         returnFields.push_back(toXmlrpcValue("code"));
         returnFields.push_back(toXmlrpcValue("sg_asset"));
@@ -668,7 +666,7 @@ SgMap Entity::buildCreateMap(const std::string &entityType,
         returnFields.push_back(toXmlrpcValue("sg_tippett_start_frame"));
         returnFields.push_back(toXmlrpcValue("sg_wrangler_notes"));
     }
-    else if (sgEntityTypeStr == "PublishEvent")
+    else if (entityType == "PublishEvent")
     {
         returnFields.push_back(toXmlrpcValue("code"));
         returnFields.push_back(toXmlrpcValue("sg_file"));
@@ -679,7 +677,7 @@ SgMap Entity::buildCreateMap(const std::string &entityType,
         returnFields.push_back(toXmlrpcValue("sg_resolution"));
         returnFields.push_back(toXmlrpcValue("sg_type"));
     }
-    else if (sgEntityTypeStr == "Review")
+    else if (entityType == "Review")
     {
         returnFields.push_back(toXmlrpcValue("code"));
         returnFields.push_back(toXmlrpcValue("sg_review_type"));
@@ -692,7 +690,7 @@ SgMap Entity::buildCreateMap(const std::string &entityType,
         returnFields.push_back(toXmlrpcValue("sg_review_tipsupe_notes"));
         returnFields.push_back(toXmlrpcValue("sg_review_client_notes"));
     }
-    else if (sgEntityTypeStr == "ReviewItem")
+    else if (entityType == "ReviewItem")
     {
         returnFields.push_back(toXmlrpcValue("code"));
         returnFields.push_back(toXmlrpcValue("sg_version"));
@@ -704,7 +702,7 @@ SgMap Entity::buildCreateMap(const std::string &entityType,
         returnFields.push_back(toXmlrpcValue("sg_date_reviewed"));
         returnFields.push_back(toXmlrpcValue("sg_approved_"));
     }
-    else if (sgEntityTypeStr == "Task")
+    else if (entityType == "Task")
     {
         returnFields.push_back(toXmlrpcValue("content"));
         returnFields.push_back(toXmlrpcValue("task_assignees"));
@@ -718,11 +716,11 @@ SgMap Entity::buildCreateMap(const std::string &entityType,
         returnFields.push_back(toXmlrpcValue("sg_system_task_type"));
         returnFields.push_back(toXmlrpcValue("sg_view_order"));
     }
-    else if (sgEntityTypeStr == "Group")
+    else if (entityType == "Group")
     {
         returnFields.push_back(toXmlrpcValue("code"));
     }
-    else if (sgEntityTypeStr == "Note")
+    else if (entityType == "Note")
     {
         returnFields.push_back(toXmlrpcValue("user"));
         returnFields.push_back(toXmlrpcValue("content"));
@@ -733,7 +731,7 @@ SgMap Entity::buildCreateMap(const std::string &entityType,
         returnFields.push_back(toXmlrpcValue("sg_note_type"));
         returnFields.push_back(toXmlrpcValue("note_links"));
     }
-    else if (sgEntityTypeStr == "Playlist") 
+    else if (entityType == "Playlist") 
     {
         returnFields.push_back(toXmlrpcValue("code"));
         returnFields.push_back(toXmlrpcValue("sg_date_and_time"));
@@ -756,7 +754,7 @@ SgMap Entity::buildUpdateMap(const std::string &entityType,
 {
     SgMap updateMap;
 
-    updateMap["type"] = toXmlrpcValue(sgEntityType(entityType));
+    updateMap["type"] = toXmlrpcValue(entityType);
     updateMap["id"] = toXmlrpcValue(entityId);
     updateMap["fields"] = toXmlrpcValue(fieldsToUpdate);
 
@@ -776,7 +774,7 @@ SgMap Entity::buildFindMap(const std::string &entityType,
 
     // -------------------------------------------------------------------
     // "type"
-    findMap["type"] = toXmlrpcValue(sgEntityType(entityType));
+    findMap["type"] = toXmlrpcValue(entityType);
 
     // -------------------------------------------------------------------
     // "filters"
@@ -831,6 +829,7 @@ SgMap Entity::buildFindMap(const std::string &entityType,
     }
     findMap["paging"] = toXmlrpcValue(paging);
 
+#warning This giant block of stuff shouldn't be here
     // -------------------------------------------------------------------
     // "return_fields"
     //
@@ -842,26 +841,16 @@ SgMap Entity::buildFindMap(const std::string &entityType,
     returnFields.push_back(toXmlrpcValue("updated_at"));
 
     // Add entity-specific return fields here
-    std::string sgEntityTypeStr = sgEntityType(entityType);
-    if (sgEntityTypeStr == "Project")
+    if (entityType == "Project")
     {
         returnFields.push_back(toXmlrpcValue("name"));
         returnFields.push_back(toXmlrpcValue("code"));
-        returnFields.push_back(toXmlrpcValue("sg_status"));
-        returnFields.push_back(toXmlrpcValue("sg_archive_watcher"));
-        returnFields.push_back(toXmlrpcValue("sg_pub_stills_watcher"));
-        returnFields.push_back(toXmlrpcValue("sg_generate_shot_aliases"));
-        returnFields.push_back(toXmlrpcValue("sg_send_dailies_notices"));
-        returnFields.push_back(toXmlrpcValue("sg_polish_shot_notifications"));
-        returnFields.push_back(toXmlrpcValue("sg_report_storage_information"));
-        returnFields.push_back(toXmlrpcValue("sg_default_start_frame"));
-        returnFields.push_back(toXmlrpcValue("sg_ms_project_schedule"));
     }
-    else if (sgEntityTypeStr == "Sequence")
+    else if (entityType == "Sequence")
     {
         returnFields.push_back(toXmlrpcValue("code"));
     }
-    else if (sgEntityTypeStr == "Shot")
+    else if (entityType == "Shot")
     {
         returnFields.push_back(toXmlrpcValue("code"));
         returnFields.push_back(toXmlrpcValue("sg_continuity"));
@@ -903,7 +892,7 @@ SgMap Entity::buildFindMap(const std::string &entityType,
         returnFields.push_back(toXmlrpcValue("sg_slate_header_info"));
         returnFields.push_back(toXmlrpcValue("sg_pixel_aspect"));
     }
-    else if (sgEntityTypeStr == "Version") // Daily
+    else if (entityType == "Version") // Daily
     {
         returnFields.push_back(toXmlrpcValue("code"));
         returnFields.push_back(toXmlrpcValue("sg_department"));
@@ -926,7 +915,7 @@ SgMap Entity::buildFindMap(const std::string &entityType,
         returnFields.push_back(toXmlrpcValue("sg_preview_hd_qt"));
         returnFields.push_back(toXmlrpcValue("user"));
     }
-    else if (sgEntityTypeStr == "HumanUser")
+    else if (entityType == "HumanUser")
     {
         returnFields.push_back(toXmlrpcValue("name"));
         returnFields.push_back(toXmlrpcValue("admin"));
@@ -936,7 +925,7 @@ SgMap Entity::buildFindMap(const std::string &entityType,
         returnFields.push_back(toXmlrpcValue("sg_role"));
         returnFields.push_back(toXmlrpcValue("permission_rule_set"));
     }
-    else if (sgEntityTypeStr == "Element")
+    else if (entityType == "Element")
     {
         returnFields.push_back(toXmlrpcValue("code"));
         returnFields.push_back(toXmlrpcValue("assets"));
@@ -944,7 +933,7 @@ SgMap Entity::buildFindMap(const std::string &entityType,
         returnFields.push_back(toXmlrpcValue("tag_list"));
         returnFields.push_back(toXmlrpcValue("sg_element_type"));
     }
-    else if (sgEntityTypeStr == "Asset")
+    else if (entityType == "Asset")
     {
         returnFields.push_back(toXmlrpcValue("code"));
         returnFields.push_back(toXmlrpcValue("sg_asset_type"));
@@ -956,7 +945,7 @@ SgMap Entity::buildFindMap(const std::string &entityType,
         returnFields.push_back(toXmlrpcValue("assets"));
         returnFields.push_back(toXmlrpcValue("shots"));
     }
-    else if (sgEntityTypeStr == "Delivery")
+    else if (entityType == "Delivery")
     {
         returnFields.push_back(toXmlrpcValue("title"));
         returnFields.push_back(toXmlrpcValue("sg_delivery_data_size"));
@@ -968,7 +957,7 @@ SgMap Entity::buildFindMap(const std::string &entityType,
         returnFields.push_back(toXmlrpcValue("sg_wrangler"));
         returnFields.push_back(toXmlrpcValue("sg_wrangler_notes"));
     }
-    else if (sgEntityTypeStr == "CustomEntity01") // "DeliveryItem"
+    else if (entityType == "CustomEntity01") // "DeliveryItem"
     {
         returnFields.push_back(toXmlrpcValue("code"));
         returnFields.push_back(toXmlrpcValue("sg_asset"));
@@ -990,7 +979,7 @@ SgMap Entity::buildFindMap(const std::string &entityType,
         returnFields.push_back(toXmlrpcValue("sg_tippett_start_frame"));
         returnFields.push_back(toXmlrpcValue("sg_wrangler_notes"));
     }
-    else if (sgEntityTypeStr == "PublishEvent")
+    else if (entityType == "PublishEvent")
     {
         returnFields.push_back(toXmlrpcValue("code"));
         returnFields.push_back(toXmlrpcValue("sg_file"));
@@ -1001,7 +990,7 @@ SgMap Entity::buildFindMap(const std::string &entityType,
         returnFields.push_back(toXmlrpcValue("sg_resolution"));
         returnFields.push_back(toXmlrpcValue("sg_type"));
     }
-    else if (sgEntityTypeStr == "Review")
+    else if (entityType == "Review")
     {
         returnFields.push_back(toXmlrpcValue("code"));
         returnFields.push_back(toXmlrpcValue("sg_review_type"));
@@ -1014,7 +1003,7 @@ SgMap Entity::buildFindMap(const std::string &entityType,
         returnFields.push_back(toXmlrpcValue("sg_review_tipsupe_notes"));
         returnFields.push_back(toXmlrpcValue("sg_review_client_notes"));
     }
-    else if (sgEntityTypeStr == "ReviewItem")
+    else if (entityType == "ReviewItem")
     {
         returnFields.push_back(toXmlrpcValue("code"));
         returnFields.push_back(toXmlrpcValue("sg_version"));
@@ -1026,7 +1015,7 @@ SgMap Entity::buildFindMap(const std::string &entityType,
         returnFields.push_back(toXmlrpcValue("sg_date_reviewed"));
         returnFields.push_back(toXmlrpcValue("sg_approved_"));
     }
-    else if (sgEntityTypeStr == "Task")
+    else if (entityType == "Task")
     {
         returnFields.push_back(toXmlrpcValue("content"));
         returnFields.push_back(toXmlrpcValue("task_assignees"));
@@ -1040,11 +1029,11 @@ SgMap Entity::buildFindMap(const std::string &entityType,
         returnFields.push_back(toXmlrpcValue("sg_system_task_type"));
         returnFields.push_back(toXmlrpcValue("sg_view_order"));
     }
-    else if (sgEntityTypeStr == "Group")
+    else if (entityType == "Group")
     {
         returnFields.push_back(toXmlrpcValue("code"));
     }
-    else if (sgEntityTypeStr == "Note")
+    else if (entityType == "Note")
     {
         returnFields.push_back(toXmlrpcValue("user"));
         returnFields.push_back(toXmlrpcValue("content"));
@@ -1055,7 +1044,7 @@ SgMap Entity::buildFindMap(const std::string &entityType,
         returnFields.push_back(toXmlrpcValue("sg_note_type"));
         returnFields.push_back(toXmlrpcValue("note_links"));
     }
-    else if (sgEntityTypeStr == "Playlist") 
+    else if (entityType == "Playlist") 
     {
         returnFields.push_back(toXmlrpcValue("code"));
         returnFields.push_back(toXmlrpcValue("sg_date_and_time"));
@@ -1922,73 +1911,71 @@ const SgArray Entity::getAttrValueAsMultiEntityAttrMap(Shotgun *sg,
 
 // *****************************************************************************
 // static helper function
-#warning FIX THIS 
 Entity *Entity::entityAttrMapToEntityPtr(Shotgun *sg,
                                          const xmlrpc_c::value &entityAttrMap)
 {
     SgMap entityAsSgMap = SgMap(xmlrpc_c::value_struct(entityAttrMap));
 
-    std::string type = getAttrValueAsString("type", entityAsSgMap);
-    std::string tipType = tipEntityType(type);
+    const std::string &type = getAttrValueAsString("type", entityAsSgMap);
 
     // IMPORTANT: user is responsible to delete them in C++ app.
-    if (tipType == "Project")
+    if (type == "Project")
     {
         return new Project(sg, entityAttrMap);
     }
-    else if (tipType == "Sequence")
+    else if (type == "Sequence")
     {
         return new Sequence(sg, entityAttrMap);
     }
-    else if (tipType == "Shot")
+    else if (type == "Shot")
     {
         return new Shot(sg, entityAttrMap);
     }
-    else if (tipType == "Version")
+    else if (type == "Version")
     {
         return new Version(sg, entityAttrMap);
     }
-    else if (tipType == "HumanUser")
+    else if (type == "HumanUser")
     {
         return new HumanUser(sg, entityAttrMap);
     }
-    else if (tipType == "Element")
+    else if (type == "Element")
     {
         return new Element(sg, entityAttrMap);
     }
-    else if (tipType == "Asset")
+    else if (type == "Asset")
     {
         return new Asset(sg, entityAttrMap);
     }
-    else if (tipType == "Delivery")
+    else if (type == "Delivery")
     {
         return new Delivery(sg, entityAttrMap);
     }
-    else if (tipType == "PublishEvent")
+    else if (type == "PublishEvent")
     {
         return new PublishEvent(sg, entityAttrMap);
     }
-    else if (tipType == "Review")
+    else if (type == "Review")
     {
         return new Review(sg, entityAttrMap);
     }
-    else if (tipType == "ReviewItem")
+    else if (type == "ReviewItem")
     {
         return new ReviewItem(sg, entityAttrMap);
     }
-    else if (tipType == "Task")
+    else if (type == "Task")
     {
         return new Task(sg, entityAttrMap);
     }
-    else if (tipType == "Group")
+    else if (type == "Group")
     {
         return new Group(sg, entityAttrMap);
     }
-    else if (tipType == "Note")
+    else if (type == "Note")
     {
         return new Note(sg, entityAttrMap);
     }
-    else if (tipType == "Playlist")
+    else if (type == "Playlist")
     {
         return new Playlist(sg, entityAttrMap);
     }

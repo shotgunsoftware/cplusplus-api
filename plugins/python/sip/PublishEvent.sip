@@ -39,32 +39,17 @@ class PublishEvent : Shotgun::Entity
     #include <Shotgun/PublishEvent.h>
 %End
 
-protected:
-    PublishEvent(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
-
 public:
-    PublishEvent();
     PublishEvent(const Shotgun::PublishEvent &ref);
     virtual ~PublishEvent();
 
     // Get an attribute's value
     const std::string sgName() const throw(Shotgun::SgAttrError);
-    const std::string sgFile() const throw(Shotgun::SgAttrError);
-    //const std::string sgFormat() const throw(Shotgun::SgAttrError);
-    const std::string sgPreviewHDQT() const throw(Shotgun::SgAttrError);
-    const std::string sgPreviewQT() const throw(Shotgun::SgAttrError);
-    const int sgRev() const throw(Shotgun::SgAttrError);
-    const std::string sgResolution() const throw(Shotgun::SgAttrError);
-    const std::string sgType() const throw(Shotgun::SgAttrError);
 
     // Set an attribute's value
-    void sgFile(const std::string &val) throw(Shotgun::SgAttrError);
-    //void sgFormat(const std::string &val) throw(Shotgun::SgAttrError);
-    void sgPreviewHDQT(const std::string &val) throw(Shotgun::SgAttrError);
-    void sgPreviewQT(const std::string &val) throw(Shotgun::SgAttrError);
-    void sgRev(const int val) throw(Shotgun::SgAttrError);
-    void sgResolution(const std::string &val) throw(Shotgun::SgAttrError);
-    void sgType(const std::string &val) throw(Shotgun::SgAttrError);
+
+protected:
+    PublishEvent(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
 };
 
 }; // End namespace Shotgun - IMPORTANT: must have the semi-colon

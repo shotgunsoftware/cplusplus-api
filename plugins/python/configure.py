@@ -33,8 +33,10 @@ if (xmlrpc_cppflags is None
     or xmlrpc_ldadd is None):
     print "./configure.py is intended to be run by make."
 
-makefile.extra_cxxflags = [xmlrpc_cppflags]
-makefile.extra_lflags = ["-Wl,-Bstatic", "-lShotgun", "-Wl,-Bdynamic",
+automake_defs = os.environ["DEFS"]
+
+makefile.extra_cxxflags = [automake_defs, xmlrpc_cppflags]
+makefile.extra_lflags = ["-lShotgun", 
                           xmlrpc_ldflags, xmlrpc_ldadd, "-lstdc++"]
 
 makefile.extra_include_dirs = ["../../../lib"]

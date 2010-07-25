@@ -39,9 +39,6 @@ class NoteMixin
     #include <Shotgun/NoteMixin.h>
 %End
 
-protected:
-    NoteMixin();
-
 public:
     virtual ~NoteMixin();
 
@@ -57,6 +54,9 @@ public:
                              const std::string &noteType = "",
                              const Shotgun::SgArray &noteLinks = Shotgun::SgArray(),
                              const std::string &noteOrigin = "") throw(Shotgun::SgAttrError, Shotgun::SgEntityError);
+
+protected:
+    NoteMixin();
 
 };
 

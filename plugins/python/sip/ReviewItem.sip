@@ -39,23 +39,12 @@ class ReviewItem : Shotgun::Entity
     #include <Shotgun/ReviewItem.h>
 %End
 
-protected:
-    ReviewItem(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
-
 public:
-    ReviewItem();
     ReviewItem(const Shotgun::ReviewItem &ref);
     virtual ~ReviewItem();
 
     // Get an attribute's value
     const std::string sgName() const throw(Shotgun::SgAttrError);
-    const Shotgun::Daily sgDaily() const throw(Shotgun::SgAttrError, Shotgun::SgEntityError);
-    const Shotgun::Review sgReview() const throw(Shotgun::SgAttrError, Shotgun::SgEntityError);
-    const std::string sgPurpose() const throw(Shotgun::SgAttrError);
-    const int sgOrder() const throw(Shotgun::SgAttrError);
-    const std::string sgReviewedBy() const throw(Shotgun::SgAttrError);
-    const std::string sgDateReviewed() const throw(Shotgun::SgAttrError);
-    const bool sgApproved() const throw(Shotgun::SgAttrError);
 
     // ------------------------------------------------------------------------
     // Add a /Factory/ annotation which specifies that the value returned by
@@ -65,8 +54,11 @@ public:
     Shotgun::Entity *sgLink() throw(Shotgun::SgAttrError, Shotgun::SgEntityError) /Factory/;
     const std::string sgLinkEntityType() const throw(Shotgun::SgAttrError);
 
-    // Set an attribute's value
-    void sgDateReviewed(const std::string &val) throw(Shotgun::SgAttrError);
+
+protected:
+    ReviewItem(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
+
+
 };
 
 }; // End namespace Shotgun - IMPORTANT: must have the semi-colon

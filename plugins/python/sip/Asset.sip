@@ -39,24 +39,19 @@ class Asset : Shotgun::Entity, Shotgun::TaskMixin, Shotgun::NoteMixin
     #include <Shotgun/Asset.h>
 %End
 
-protected:
-    Asset(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
-
 public:
-    Asset();
     Asset(const Shotgun::Asset &ref);
     virtual ~Asset();
 
     // Get an attribute's value
     const std::string sgName() const throw(Shotgun::SgAttrError);
-    const std::string sgType() const throw(Shotgun::SgAttrError);
-    const std::string sgStatus() const throw(Shotgun::SgAttrError);
-    const std::string sgPreviewQt() const throw(Shotgun::SgAttrError);
-    const std::string sgSource() const throw(Shotgun::SgAttrError);
     const Shotgun::SgArray sgParents() const throw(Shotgun::SgAttrError);
     const Shotgun::Elements sgElements() const throw(Shotgun::SgAttrError);
     const Shotgun::Assets sgAssets() const throw(Shotgun::SgAttrError);
     const Shotgun::Shots sgShots() const throw(Shotgun::SgAttrError);
+
+protected:
+    Asset(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
 };
 
 }; // End namespace Shotgun - IMPORTANT: must have the semi-colon

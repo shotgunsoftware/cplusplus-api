@@ -52,6 +52,8 @@ class Entity
     friend class NoteMixin;
 
 public:
+    virtual ~Entity();
+
     enum InvalidAttrMode
     {
         INVALID_ATTR_THROW_EXCEPTION = 0,
@@ -222,15 +224,6 @@ public:
 protected:
     Entity(Shotgun *sg);
 
-    Shotgun *m_sg; 
-    InvalidAttrMode m_invalidAttrMode;
-    std::string m_type;
-
-    // This has to be an pointer since xmlrpc_c::value will not allow the
-    // assignment of an already-instantiated xmlrpc_c::value. For details,
-    // see: http://xmlrpc-c.sourceforge.net/doc/libxmlrpc++.html
-    xmlrpc_c::value *m_attrs;
-
     // Create a new entity
     static xmlrpc_c::value createEntity(Shotgun *sg, 
                                         const std::string &entityType, 
@@ -302,8 +295,15 @@ protected:
     const std::string getProjectName() const;
     const std::string getProjectCode() const;
 
-public:
-    virtual ~Entity();
+protected:
+    Shotgun *m_sg; 
+    InvalidAttrMode m_invalidAttrMode;
+    std::string m_type;
+
+    // This has to be an pointer since xmlrpc_c::value will not allow the
+    // assignment of an already-instantiated xmlrpc_c::value. For details,
+    // see: http://xmlrpc-c.sourceforge.net/doc/libxmlrpc++.html
+    xmlrpc_c::value *m_attrs;
 };
 
 } // End namespace Shotgun

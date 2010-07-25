@@ -45,7 +45,7 @@ include_HEADERS = Asset.h                       \
                   Task.h                        \
                   TaskMixin.h                   \
                   Type.h                        \
-                  User.h                        \
+                  HumanUser.h                   \
                   Version.h                     \
                   utils.h
 

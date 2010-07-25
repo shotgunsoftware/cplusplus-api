@@ -39,37 +39,23 @@ class Delivery : Shotgun::Entity
     #include <Shotgun/Delivery.h>
 %End
 
-protected:
-    Delivery(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
-
 public:
-    Delivery();
     Delivery(const Shotgun::Delivery &ref);
     virtual ~Delivery();
 
     // Get an attribute's value
     const std::string sgName() const throw(Shotgun::SgAttrError);
-    const std::string sgDataSize() const throw(Shotgun::SgAttrError);
-    const std::string sgNotes() const throw(Shotgun::SgAttrError);
-    const std::string sgPath() const throw(Shotgun::SgAttrError);
-    const std::string sgOriginalPath() const throw(Shotgun::SgAttrError);
     const std::string sgStatus() const throw(Shotgun::SgAttrError);
     const std::string sgType() const throw(Shotgun::SgAttrError);
-    const std::string sgWrangler() const throw(Shotgun::SgAttrError, Shotgun::SgEntityError);
-    const std::string sgWranglerNotes() const throw(Shotgun::SgAttrError);
-    const std::string sgStagedPath() const throw(Shotgun::SgAttrError);
 
     // Set an attribute's value
     void sgName(const std::string &val) throw(Shotgun::SgAttrError);
-    void sgDataSize(const std::string &val) throw(Shotgun::SgAttrError);
-    void sgNotes(const std::string &val) throw(Shotgun::SgAttrError);
-    void sgPath(const std::string &val) throw(Shotgun::SgAttrError);
-    void sgOriginalPath(const std::string &val) throw(Shotgun::SgAttrError);
-    void sgStagedPath(const std::string &val) throw(Shotgun::SgAttrError);
     void sgStatus(const std::string &val) throw(Shotgun::SgAttrError);
     void sgType(const std::string &val) throw(Shotgun::SgAttrError);
-    void sgWrangler(const std::string &val) throw(Shotgun::SgAttrError);
-    void sgWranglerNotes(const std::string &val) throw(Shotgun::SgAttrError);
+
+protected:
+    Delivery(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
+
 };
 
 }; // End namespace Shotgun - must have the semi-colon

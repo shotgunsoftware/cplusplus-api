@@ -17,15 +17,34 @@
   about each other.
 
 * Clarify 'name' vs. 'code' vs. 'title' attributes/methods.  Very confusing as
-  it is.
+  it is.  Maybe it's just as confusing in Shotgun itself...
 
-* Make all attribute getters/setters virtual
+* Make all attribute getters/setters virtual.
 
 * Make classes for other entities
 
-* The classes are too 'friendly'.
+* The classes are too 'friendly' with each other :|
 
 * Add getter/setter methods for all shotgun built-in attributes.
 
-* There are probably several places where incorrect assumptions were made,
-  resulting in code that is not generic enough or lacks features.
+* There are still places where incorrect assumptions were made, resulting in
+  code that is incorrect, not generic enough, or lacks features.
+
+* Needs some examples and more tests
+
+* Doxygen-ify the comments & add a make target to build docs
+
+* Change Entity.m_sg from Shotgun* to Shotgun&, set in initializer
+
+* Move toStdString() and operator<< overloads into individual classes.  They
+  shouldn't be all grouped together in one file as they are.
+
+* There's a TON of unnecessary copying going on.  Use more references!
+
+* Handle date/time fields correctly.  Need to take into account timezone,
+  etc.  I believe shotgun stores date/times internally as UTC, so convert
+  (correctly!) to/from local time (or other if specified).
+
+* Make the python plugin build process better--get rid of configure.py
+
+

@@ -39,29 +39,20 @@ class Project : Shotgun::Entity
     #include <Shotgun/Project.h>
 %End
 
-protected:
-    Project(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
-
 public:
-    Project();
     Project(const Shotgun::Project &ref);
     virtual ~Project();
 
     const std::string sgName() const throw(Shotgun::SgAttrError);
     const std::string sgCode() const throw(Shotgun::SgAttrError);
-    const std::string sgStatus() const throw(Shotgun::SgAttrError);
-    const bool sgArchiveWatcher() const throw(Shotgun::SgAttrError);
-    const bool sgPubStillsWatcher() const throw(Shotgun::SgAttrError);
-    const bool sgGenerateShotAliases() const throw(Shotgun::SgAttrError);
-    const bool sgSendDailiesNotices() const throw(Shotgun::SgAttrError);
-    const bool sgPolishShotNotifications() const throw(Shotgun::SgAttrError);
-    const bool sgReportStorageInformation() const throw(Shotgun::SgAttrError);
-    const int sgDefaultStartFrame() const throw(Shotgun::SgAttrError);
 
     // Overrides for base entity methods that don't work correctly 
     // for this entity type
     virtual const std::string sgProjectName() const throw(Shotgun::SgAttrError);
     virtual const std::string sgProjectCode() const throw(Shotgun::SgAttrError);
+
+protected:
+    Project(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
 };
 
 }; // End namespace Shotgun - IMPORTANT: has to have the semi-colon

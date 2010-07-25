@@ -30,34 +30,42 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-namespace Shotgun {
+#include <iostream>
+#include <stdexcept>
 
-// *****************************************************************************
-class Method
+#include <Shotgun/Shotgun.h>
+#include <Shotgun/Project.h>
+#include <Shotgun/Type.h>
+
+int main( int argc, char **argv )
 {
-%TypeHeaderCode
-    #include <Shotgun/Method.h>
-%End
+    std::string shotgunURL(SG_DEFAULT_URL);
+    if( argc == 2 )
+    {
+        shotgunURL = argv[1];
+    }
+    if(shotgunURL == "")
+    {
+        std::cerr << "No default Shotgun URL specified to configure.  Skipping test."
+                  << std::endl;
+        exit(0);
+    }
+    try
+    {
+        Shotgun::Shotgun sg(shotgunURL);
 
-public:
-    const std::string &methodName() const;
-    Shotgun::MethodSignatures &signature() throw (Shotgun::SgEntityXmlrpcError); 
-    std::string &help() throw (Shotgun::SgEntityXmlrpcError);
-    xmlrpc_c::value call() throw (Shotgun::SgEntityXmlrpcError);
-    xmlrpc_c::value call(const xmlrpc_c::paramList &params) throw (Shotgun::SgEntityXmlrpcError);
+        Shotgun::Projects projects = sg.allProjects();
+        for( size_t p = 0; p < projects.size(); ++p )
+        {
+            std::cout << projects[p] << std::endl;
+            std::cout << "-------------------" << std::endl;
+        }
+    }
+    catch (const std::exception& e)
+    {
+        std::cerr << "ERROR: " << e.what() << std::endl;
+        return -1;
+    }
 
-protected:
-    // (1) Even if this ctor is protected, it shoule be put here to prevent a 
-    //     default public ctor being generated. See the complex example in the
-    //     "SIP reference guide".
-    //
-    //         http://www.riverbankcomputing.co.uk/static/Docs/sip4/index.html
-    //
-    // (2) The Shotgun type needs its namespace attached.
-    // (3) TODO: may need a /TransferThis/ annotation
-    Method(Shotgun::Shotgun *sg, const std::string &methodName);
-    virtual ~Method();
-};
-
-}; // End namespace Shotgun - IMPORTANT: has to have the semi-colon
-
+    return 0;
+}

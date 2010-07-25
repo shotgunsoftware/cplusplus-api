@@ -33,19 +33,15 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace Shotgun {
 
 // *****************************************************************************
-class User : Shotgun::Entity
+class HumanUser : Shotgun::Entity
 {
 %TypeHeaderCode
-    #include <Shotgun/User.h>
+    #include <Shotgun/HumanUser.h>
 %End
 
-protected:
-    User(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
-
 public:
-    User();
-    User(const Shotgun::User &ref);
-    virtual ~User();
+    HumanUser(const Shotgun::HumanUser &ref);
+    virtual ~HumanUser();
 
     // --------------------------------------------------------------------------
     // NOTE: There are two ways of throwing the exceptions. Either one can be 
@@ -77,18 +73,18 @@ public:
 
     // Get an attribute's value
     const std::string sgName() const throw(Shotgun::SgAttrError);
-    const bool sgCode() const throw(Shotgun::SgAttrError);
-    const std::string sgDepartment() const throw(Shotgun::SgAttrError);
     const std::string sgEmail() const throw(Shotgun::SgAttrError);
     const std::string sgLogin() const throw(Shotgun::SgAttrError);
-    const std::string sgRole() const throw(Shotgun::SgAttrError);
     const Shotgun::SgMap sgPermissionGroup() const throw(Shotgun::SgAttrError);
 
     // Set an attribute's value
     void sgName(const std::string &val) throw(Shotgun::SgAttrError);
-    void sgDepartment(const std::string &val) throw(Shotgun::SgAttrError);
     void sgEmail(const std::string &val) throw(Shotgun::SgAttrError);
     void sgLogin(const std::string &val) throw(Shotgun::SgAttrError);
+
+protected:
+    HumanUser(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
+
 };
 
 }; // End namespace Shotgun - IMPORTANT: has to have the semi-colon

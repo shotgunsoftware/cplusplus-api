@@ -85,20 +85,6 @@ std::string xmlrpcValueTypeStr(const xmlrpc_c::value::type_t xmlrpcType)
 }
 
 // *****************************************************************************
-#warning REMOVE THIS
-std::string tipEntityType(const std::string &sgEntityType)
-{
-    return sgEntityType;
-}
-
-// *****************************************************************************
-#warning REMOVE THIS
-std::string sgEntityType(const std::string &tipEntityType)
-{
-    return tipEntityType;
-}
-
-// *****************************************************************************
 xmlrpc_c::value toXmlrpcValue(const char *in)
 {
     return xmlrpc_c::value(xmlrpc_c::value_string(std::string(in)));

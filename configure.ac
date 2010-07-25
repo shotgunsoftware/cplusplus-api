@@ -117,6 +117,7 @@ AC_CONFIG_FILES([Makefile
                  lib/Shotgun/Makefile
                  plugins/Makefile
                  plugins/python/Makefile
+                 plugins/python/test/Makefile
                  test/Makefile
                 ])
 AC_OUTPUT

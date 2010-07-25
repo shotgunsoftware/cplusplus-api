@@ -39,42 +39,15 @@ class Shot : Shotgun::Entity, Shotgun::TaskMixin, Shotgun::NoteMixin
     #include <Shotgun/Shot.h>
 %End
 
-protected:
-    Shot(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
-    
 public:
-    Shot();
     Shot(const Shotgun::Shot &ref);
     virtual ~Shot();
 
     // Get an attribute's value
     const std::string sgName() const throw(Shotgun::SgAttrError);
-    const bool sgCbb() const throw(Shotgun::SgAttrError); 
-    const int sgContinuity() const throw(Shotgun::SgAttrError);
     const std::string sgDescription() const throw(Shotgun::SgAttrError);
     const Shotgun::Elements sgElements() const throw(Shotgun::SgAttrError);
-    const int sgEstimatedFrameRenderHours() const throw(Shotgun::SgAttrError);
-    const Shotgun::Daily sgFinalDaily() throw(Shotgun::SgAttrError, Shotgun::SgEntityError);
-    const Shotgun::Daily sgLatestDaily() throw(Shotgun::SgAttrError, Shotgun::SgEntityError);
-    const int sgLens() const throw(Shotgun::SgAttrError);
-    const bool sgOmit() const throw(Shotgun::SgAttrError);
-    const bool sgOnHold() const throw(Shotgun::SgAttrError);
-    const std::string sgProdVFX() const throw(Shotgun::SgAttrError);
-    const Shotgun::Sequence sgSequence() throw(Shotgun::SgAttrError, Shotgun::SgEntityError);
-    const std::string sgShotNotifications() const throw(Shotgun::SgAttrError);
     const std::string sgProject() const throw(Shotgun::SgAttrError);
-    const std::string sgStatus() const throw(Shotgun::SgAttrError);
-    const bool sgTurnover() const throw(Shotgun::SgAttrError);
-    const std::string sgType() const throw(Shotgun::SgAttrError);
-    const std::string sgActualPlateResolution() const throw(Shotgun::SgAttrError);
-    // TODO: const std::string sgActualPlateImageFormat() const throw(Shotgun::SgAttrError);
-    const std::string sgStorageTier() const throw(Shotgun::SgAttrError);
-    const std::string sgStorageFilesystem() const throw(Shotgun::SgAttrError);
-    const std::string sgStorageFilesystemUsedPercentage() const throw(Shotgun::SgAttrError);
-    const int sgStorageSizeGb() const throw(Shotgun::SgAttrError);
-    const double sgPixelAspect() const throw(Shotgun::SgAttrError);
-    const std::string sgSlateBurninInfo() const throw(Shotgun::SgAttrError);
-    const std::string sgSlateHeaderInfo() const throw(Shotgun::SgAttrError);
     const int sgCutDuration() const throw(Shotgun::SgAttrError);
     const int sgCutIn() const throw(Shotgun::SgAttrError);
     const int sgCutOut() const throw(Shotgun::SgAttrError);
@@ -87,26 +60,14 @@ public:
     const int sgTailIn() const throw(Shotgun::SgAttrError);
     const int sgTailOut() const throw(Shotgun::SgAttrError);
     const int sgWorkingDuration() const throw(Shotgun::SgAttrError);
-    const std::string sgTippettWorkingLength() const throw(Shotgun::SgAttrError);
 
     // Set an attribute's value
-    void sgCbb(const bool val) throw(Shotgun::SgAttrError);
-    void sgFinalDaily(const Shotgun::Daily &val) throw(Shotgun::SgAttrError);
-    void sgFinalDaily(const Shotgun::SgMap &val) throw(Shotgun::SgAttrError);
-    void sgLatestDaily(const Shotgun::Daily &val) throw(Shotgun::SgAttrError);
-    void sgLatestDaily(const Shotgun::SgMap &val) throw(Shotgun::SgAttrError);
-    void sgOmit(const bool val) throw(Shotgun::SgAttrError);
-    void sgOnHold(const bool val) throw(Shotgun::SgAttrError);
-    void sgSequence(const Shotgun::Sequence &val) throw(Shotgun::SgAttrError);
-    void sgSequence(const Shotgun::SgMap &val) throw(Shotgun::SgAttrError);
-    void sgShotNotifications(const std::string &val) throw(Shotgun::SgAttrError);
-    void sgStatus(const std::string &val) throw(Shotgun::SgAttrError);
-    void sgStorageTier(const std::string &val) throw(Shotgun::SgAttrError);
-    void sgStorageFilesystem(const std::string &val) throw(Shotgun::SgAttrError);
-    void sgStorageFilesystemUsedPercentage(const std::string &val) throw(Shotgun::SgAttrError);
-    void sgStorageSizeGb(const int val) throw(Shotgun::SgAttrError);
     void sgElements(const Shotgun::Elements &val) throw(Shotgun::SgAttrError); 
     void sgElements(const Shotgun::SgArray &val) throw(Shotgun::SgAttrError); 
+
+protected:
+    Shot(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
+    
 };
 
 }; // End namespace Shotgun - IMPORTANT: has to have the semi-colon

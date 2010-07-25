@@ -42,7 +42,7 @@ class Shotgun
 public:
     // TODO: Figure out why this doesn't work:
 //    Shotgun(const std::string &serverURL) throw (Shotgun::SgApiError);
-    Shotgun(const std::string &serverURL);
+    Shotgun(const std::string &serverURL=SG_DEFAULT_URL);
 
     virtual ~Shotgun(); // This might not need to be listed here at all
 
@@ -60,7 +60,7 @@ public:
                                 const std::string &projectCode) throw(Shotgun::SgEntityError);
     Shotgun::Project findProjectByCode(const std::string &projectCode) throw(Shotgun::SgEntityError);
     Shotgun::Project findProjectByName(const std::string &projectName) throw(Shotgun::SgEntityError);
-    Shotgun::Projects findProjectsByStatus(const std::string &projectStatus) throw(Shotgun::SgEntityError);
+    Shotgun::Projects allProjects() throw(Shotgun::SgEntityError);
     bool deleteProjectById(const int id) throw(Shotgun::SgEntityError);
 
     //------------------------------------------------------------------------
@@ -82,29 +82,28 @@ public:
     bool deleteShotById(const int id) throw(Shotgun::SgEntityError);
 
     //------------------------------------------------------------------------
-    // Daily Entity
-    Shotgun::Daily createDaily(const std::string &dailyName) throw(Shotgun::SgEntityError);
-    Shotgun::Daily findDailyByName(const std::string &dailyName) throw(Shotgun::SgEntityError);
-    Shotgun::Dailies findDailiesByProject(const std::string &projectCode, 
+    // Version Entity
+    Shotgun::Version createVersion(const std::string &versionName) throw(Shotgun::SgEntityError);
+    Shotgun::Version findVersionByName(const std::string &versionName) throw(Shotgun::SgEntityError);
+    Shotgun::Versions findVersionsByProject(const std::string &projectCode, 
                                           const int limit = 0) throw(Shotgun::SgEntityError);
-    Shotgun::Dailies findDailiesByShot(const std::string &projectCode, 
+    Shotgun::Versions findVersionsByShot(const std::string &projectCode, 
                                           const std::string &shotName, 
                                           const int limit = 0) throw(Shotgun::SgEntityError);
-    Shotgun::Dailies findDailiesByReviewStatus(const std::string &projectCode, 
+    Shotgun::Versions findVersionsByReviewStatus(const std::string &projectCode, 
                                                   const std::string &reviewStatus,
                                                   const int limit = 0) throw(Shotgun::SgEntityError);
-    bool deleteDailyById(const int id) throw(Shotgun::SgEntityError);
+    bool deleteVersionById(const int id) throw(Shotgun::SgEntityError);
 
     //-----------------------------------------------------------------------
-    // User Entity
-    Shotgun::User createUser(const std::string &userName,
-                                const std::string &userLogin,
-                                const std::string &userEmail,
-                                const std::string &userDept) throw(Shotgun::SgEntityError);
-    Shotgun::User findUserById(const int userId) throw(Shotgun::SgEntityError);
-    Shotgun::User findUserByLogin(const std::string &userLogin) throw(Shotgun::SgEntityError);
-    Shotgun::User findRetiredUser(const std::string &userLogin) throw(Shotgun::SgEntityError);
-    bool deleteUserById(const int id) throw(Shotgun::SgEntityError);
+    // HumanHumanUser Entity
+    Shotgun::HumanUser createHumanUser(const std::string &userName,
+                                       const std::string &userLogin,
+                                       const std::string &userEmail) throw(Shotgun::SgEntityError);
+    Shotgun::HumanUser findHumanUserById(const int userId) throw(Shotgun::SgEntityError);
+    Shotgun::HumanUser findHumanUserByLogin(const std::string &userLogin) throw(Shotgun::SgEntityError);
+    Shotgun::HumanUser findRetiredHumanUser(const std::string &userLogin) throw(Shotgun::SgEntityError);
+    bool deleteHumanUserById(const int id) throw(Shotgun::SgEntityError);
 
     //------------------------------------------------------------------------
     // Element Entity
@@ -144,25 +143,9 @@ public:
     bool deleteDeliveryById(const int id) throw(Shotgun::SgEntityError);
 
     //------------------------------------------------------------------------
-    // DeliveryItem Entity
-    Shotgun::DeliveryItem createDeliveryItem(const std::string &projectCode,
-                                                const std::string &deliveryItemName,
-                                                const Shotgun::SgMap &deliveryLink = Shotgun::SgMap()) throw(Shotgun::SgEntityError);
-    Shotgun::DeliveryItem findDeliveryItemByName(const std::string &projectCode,
-                                                    const std::string &deliveryItemName) throw(Shotgun::SgEntityError);
-    Shotgun::DeliveryItem findDeliveryItemById(const int &deliveryItemId) throw(Shotgun::SgEntityError);
-    Shotgun::DeliveryItems findDeliveryItemsByProject(const std::string &projectCode,
-                                                      const int limit = 0) throw(Shotgun::SgEntityError);
-    bool deleteDeliveryItemById(const int id) throw(Shotgun::SgEntityError);
-
-    //------------------------------------------------------------------------
     // PublishEvent Entity
     Shotgun::PublishEvent createPublishEvent(const std::string &projectCode,
-                                                const std::string &publishEventName,
-                                                const std::string &publishEventSource,
-                                                const std::string &publishEventType = "",
-                                                const int publishEventVersion = TIPSHOTGUN_INVALID_VERSION_NUM,
-                                                const std::string &publishEventResolution = "") throw(Shotgun::SgEntityError);
+                                                const std::string &publishEventName) throw(Shotgun::SgEntityError);
     Shotgun::PublishEvent findPublishEventByName(const std::string &projectCode,
                                                     const std::string &publishEventName) throw(Shotgun::SgEntityError);
     Shotgun::PublishEvents findPublishEventsByProject(const std::string &projectCode,
@@ -173,25 +156,19 @@ public:
     //------------------------------------------------------------------------
     // Review Entity
     Shotgun::Review createReview(const std::string &projectCode,
-                                    const std::string &reviewName, 
-                                    const std::string &reviewType) throw(Shotgun::SgEntityError);
+                                    const std::string &reviewName) throw(Shotgun::SgEntityError);
     Shotgun::Review findReviewByName(const std::string &projectCode, 
                                         const std::string &reviewName,
                                         const std::string &dateSent = "") throw(Shotgun::SgEntityError);
     Shotgun::Review findReviewById(const int &reviewId) throw(Shotgun::SgEntityError);
     Shotgun::Reviews findReviewsByProject(const std::string &projectCode,
-                                          const std::string &reviewType = "",
                                           const int limit = 0) throw(Shotgun::SgEntityError);
     bool deleteReviewById(const int id) throw(Shotgun::SgEntityError);
 
     //------------------------------------------------------------------------
     // ReviewItem Entity
     Shotgun::ReviewItem createReviewItem(const std::string &projectCode,
-                                            const Shotgun::SgMap &reviewItemShotLink,
-                                            const Shotgun::SgMap &reviewItemDailyLink,
-                                            const Shotgun::SgMap &reviewItemReviewLink,
-                                            const std::string &reviewItemPurpose = "",
-                                            const int reviewItemOrder = TIPSHOTGUN_INVALID_ORDER_NUM) throw(Shotgun::SgEntityError);
+                                         const std::string &reviewItemName) throw(Shotgun::SgEntityError);
     Shotgun::ReviewItem findReviewItemByName(const std::string &projectCode, 
                                                 const std::string &reviewItemName) throw(Shotgun::SgEntityError);
     Shotgun::ReviewItem findReviewItemById(const int &reviewItemId) throw(Shotgun::SgEntityError);
@@ -204,7 +181,6 @@ public:
     Shotgun::Task createTask(const std::string &projectCode,
                                 const std::string &taskName,
                                 const std::string &taskType,
-                                const int taskViewOrder = TIPSHOTGUN_INVALID_ORDER_NUM,
                                 const std::string &taskAssignee = "",
                                 const std::string &taskStartDate = "",
                                 const std::string &taskDueDate = "",
@@ -238,9 +214,9 @@ public:
     //------------------------------------------------------------------------
     // Note
     Shotgun::Note createNote(const std::string &projectCode,
-                                const std::string &noteFromUserName,
-                                const Shotgun::Strings &noteToUserNames = Shotgun::Strings(),
-                                const Shotgun::Strings &noteCcUserNames = Shotgun::Strings(),
+                                const std::string &noteFromHumanUserName,
+                                const Shotgun::Strings &noteToHumanUserNames = Shotgun::Strings(),
+                                const Shotgun::Strings &noteCcHumanUserNames = Shotgun::Strings(),
                                 const std::string &noteSubject = "",
                                 const std::string &noteBody = "",
                                 const std::string &noteType = "",
@@ -257,23 +233,6 @@ public:
                                        const std::string &projectCode = "",
                                        const int limit = 0) throw(Shotgun::SgEntityError);
     bool deleteNoteById(const int id) throw(Shotgun::SgEntityError);
-
-    //------------------------------------------------------------------------
-    // Reference Entity
-    Shotgun::Reference createReference(const std::string &projectCode,
-                                          const std::string &referencePath,
-                                          const std::string &referencePurpose = "",
-                                          const Shotgun::Strings &linkAssets = Shotgun::Strings(),
-                                          const Shotgun::Strings &linkSequences = Shotgun::Strings(),
-                                          const Shotgun::Strings &linkShots = Shotgun::Strings(),
-                                          const Shotgun::Strings &tags = Shotgun::Strings()) throw(Shotgun::SgEntityError);
-    Shotgun::Reference findReferenceByPath(const std::string &projectCode, 
-                                              const std::string &referencePath) throw(Shotgun::SgEntityError);
-    Shotgun::Reference findReferenceByName(const std::string &projectCode, 
-                                              const std::string &referenceName) throw(Shotgun::SgEntityError);
-    Shotgun::References findReferencesByProject(const std::string &projectCode, 
-                                                const int limit = 0);
-    bool deleteReferenceById(const int id) throw(Shotgun::SgEntityError);
 
     //------------------------------------------------------------------------
     // Playlist Entity
@@ -294,19 +253,17 @@ public:
     Shotgun::Projects findProjects(Shotgun::SgMap &findMap) throw(Shotgun::SgEntityError);
     Shotgun::Sequences findSequences(Shotgun::SgMap &findMap) throw(Shotgun::SgEntityError);
     Shotgun::Shots findShots(Shotgun::SgMap &findMap) throw(Shotgun::SgEntityError);
-    Shotgun::Dailies findDailies(Shotgun::SgMap &findMap) throw(Shotgun::SgEntityError);
-    Shotgun::Users findUsers(Shotgun::SgMap &findMap) throw(Shotgun::SgEntityError);
+    Shotgun::Versions findVersions(Shotgun::SgMap &findMap) throw(Shotgun::SgEntityError);
+    Shotgun::HumanUsers findHumanUsers(Shotgun::SgMap &findMap) throw(Shotgun::SgEntityError);
     Shotgun::Elements findElements(Shotgun::SgMap &findMap) throw(Shotgun::SgEntityError);
     Shotgun::Assets findAssets(Shotgun::SgMap &findMap) throw(Shotgun::SgEntityError);
     Shotgun::Deliveries findDeliveries(Shotgun::SgMap &findMap) throw(Shotgun::SgEntityError);
-    Shotgun::DeliveryItems findDeliveryItems(Shotgun::SgMap &findMap) throw(Shotgun::SgEntityError);
     Shotgun::PublishEvents findPublishEvents(Shotgun::SgMap &findMap) throw(Shotgun::SgEntityError);
     Shotgun::Reviews findReviews(Shotgun::SgMap &findMap) throw(Shotgun::SgEntityError);
     Shotgun::ReviewItems findReviewItems(Shotgun::SgMap &findMap) throw(Shotgun::SgEntityError);
     Shotgun::Tasks findTasks(Shotgun::SgMap &findMap) throw(Shotgun::SgEntityError);
     Shotgun::Groups findGroups(Shotgun::SgMap &findMap) throw(Shotgun::SgEntityError);
     Shotgun::Notes findNotes(Shotgun::SgMap &findMap) throw(Shotgun::SgEntityError);
-    Shotgun::References findReferences(Shotgun::SgMap &findMap) throw(Shotgun::SgEntityError);
     Shotgun::Playlists findPlaylists(Shotgun::SgMap &findMap) throw(Shotgun::SgEntityError);
 };
 

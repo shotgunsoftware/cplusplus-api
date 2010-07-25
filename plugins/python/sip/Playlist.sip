@@ -39,32 +39,29 @@ class Playlist : Shotgun::Entity
     #include <Shotgun/Playlist.h>
 %End
 
-protected:
-    Playlist(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
-
 public:
-    Playlist();
     Playlist(const Shotgun::Playlist &ref);
     virtual ~Playlist();
 
     // Get an attribute's value
     const std::string sgName() const throw(Shotgun::SgAttrError);
-    const time_t sgDateTime() const throw(Shotgun::SgAttrError);
     const std::string sgDescription() const throw(Shotgun::SgAttrError);
     const std::string sgThumbnail() const throw(Shotgun::SgAttrError);
     const Shotgun::Strings sgTags() const throw(Shotgun::SgAttrError);
     const Shotgun::Notes sgNotes() const throw(Shotgun::SgAttrError, Shotgun::SgEntityError);
-    const Shotgun::Dailies sgDailies() const throw(Shotgun::SgAttrError, Shotgun::SgEntityError);
+    const Shotgun::Versions sgVersions() const throw(Shotgun::SgAttrError, Shotgun::SgEntityError);
 
     // Set an attribute's value
     void sgName(const std::string &val) throw(Shotgun::SgAttrError);
-    void sgDateTime(const time_t &val) throw(Shotgun::SgAttrError);
     void sgDescription(const std::string &val) throw(Shotgun::SgAttrError);
     void sgTags(const Shotgun::Strings &val) throw(Shotgun::SgAttrError);
     void sgNotes(const Shotgun::Notes &val) throw(Shotgun::SgAttrError); 
     void sgNotes(const Shotgun::SgArray &val) throw(Shotgun::SgAttrError);
-    void sgDailies(const Shotgun::Dailies &val) throw(Shotgun::SgAttrError);
-    void sgDailies(const Shotgun::SgArray &val) throw(Shotgun::SgAttrError);
+    void sgVersions(const Shotgun::Versions &val) throw(Shotgun::SgAttrError);
+    void sgVersions(const Shotgun::SgArray &val) throw(Shotgun::SgAttrError);
+
+protected:
+    Playlist(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
 };
 
 }; // End namespace Shotgun - must have the semi-colon

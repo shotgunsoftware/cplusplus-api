@@ -40,7 +40,12 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 int main( int argc, char **argv )
 {
-    if(std::string(SG_DEFAULT_URL) == "")
+    std::string shotgunURL(SG_DEFAULT_URL);
+    if( argc == 2 )
+    {
+        shotgunURL = argv[1];
+    }
+    if(shotgunURL == "")
     {
         std::cerr << "No default Shotgun URL specified to configure.  Skipping test."
                   << std::endl;
@@ -48,7 +53,7 @@ int main( int argc, char **argv )
     }
     try
     {
-        Shotgun::Shotgun sg;
+        Shotgun::Shotgun sg(shotgunURL);
 
         // Create a shotgun Method instance
         std::string const methodName("system.listMethods");

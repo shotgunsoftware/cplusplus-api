@@ -39,11 +39,7 @@ class Task : Shotgun::Entity
     #include <Shotgun/Task.h>
 %End
  
-protected:
-    Task(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
-
 public:
-    Task();
     Task(const Shotgun::Task &ref);
     virtual ~Task();
 
@@ -56,8 +52,6 @@ public:
     const std::string sgStartDate() const throw(Shotgun::SgAttrError);
     const std::string sgStatus() const throw(Shotgun::SgAttrError);
     const std::string sgType() const throw(Shotgun::SgAttrError);
-    const int sgViewOrder() const throw(Shotgun::SgAttrError);
-    const std::string sgDueDate() const throw(Shotgun::SgAttrError);
 
     // ------------------------------------------------------------------------
     // Add a /Factory/ annotation which specifies that the value returned by 
@@ -70,8 +64,10 @@ public:
 
     // Set an attribute's value
     void sgStatus(const std::string &val) throw(Shotgun::SgAttrError);
-    void sgViewOrder(const int val) throw(Shotgun::SgAttrError);
     void sgAssignees(const Shotgun::Strings &val) throw(Shotgun::SgAttrError);
+
+protected:
+    Task(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
 };
 
 }; // End namespace Shotgun - IMPORTANT: must have the semi-colon

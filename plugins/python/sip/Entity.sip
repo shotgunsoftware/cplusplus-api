@@ -39,17 +39,6 @@ class Entity
     #include <Shotgun/Entity.h>
 %End
 
-protected:
-    // (1) Even if this ctor is protected, it shoule be put here to prevent a
-    //     default public ctor being generated. See the complex example in the
-    //     "SIP reference guide".
-    //
-    //         http://www.riverbankcomputing.co.uk/static/Docs/sip4/index.html
-    //
-    // (2) The Shotgun type needs its namespace attached.
-    // (3) TODO: may need a /TransferThis/ annotation
-    Entity(Shotgun::Shotgun *sg);
-
 public:
     virtual ~Entity();
 
@@ -112,14 +101,6 @@ public:
                                                      const Shotgun::SgMap &attrsMap) 
                             throw(Shotgun::SgAttrError, Shotgun::SgEntityError);
 
-    const std::string getAttrValueAsQtURL(const std::string &attrName) const throw(Shotgun::SgAttrError);
-    static const std::string getAttrValueAsQtURL(const std::string &attrName,
-                                                 const Shotgun::SgMap &attrsMap) throw(Shotgun::SgAttrError);
-
-    const std::string getAttrValueAsQtPath(const std::string &attrName) const throw(Shotgun::SgAttrError);
-    static const std::string getAttrValueAsQtPath(const std::string &attrName,
-                                                  const Shotgun::SgMap &attrsMap) throw(Shotgun::SgAttrError);
-
     // Set a attribute's value - Omitted the optional "parent_entity" for now
     void setAttrValue(const std::string &attrName,
                       const xmlrpc_c::value &attrValue,
@@ -166,6 +147,7 @@ public:
                                                           const Shotgun::SgArray &extraReturnFields = Shotgun::SgArray(),
                                                           const bool retiredOnly = false) throw(Shotgun::SgEntityError, Shotgun::SgAttrError);
 
+
     // ------------------------------------------------------------------------
     SIP_PYOBJECT __str__();
 %MethodCode
@@ -178,6 +160,16 @@ public:
     sipRes = PyString_FromString(sipCpp->str().c_str());
 %End
 
+protected:
+    // (1) Even if this ctor is protected, it shoule be put here to prevent a
+    //     default public ctor being generated. See the complex example in the
+    //     "SIP reference guide".
+    //
+    //         http://www.riverbankcomputing.co.uk/static/Docs/sip4/index.html
+    //
+    // (2) The Shotgun type needs its namespace attached.
+    // (3) TODO: may need a /TransferThis/ annotation
+    Entity(Shotgun::Shotgun *sg);
 };
 
 }; // End namespace Shotgun - IMPORTANT: has to have the semi-colon

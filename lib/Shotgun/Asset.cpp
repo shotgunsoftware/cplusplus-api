@@ -46,14 +46,6 @@ Asset::Asset(Shotgun *sg, const xmlrpc_c::value &attrs)
     m_attrs = new xmlrpc_c::value(attrs);
 }
 
-// // *****************************************************************************
-// Asset::Asset()
-//     : Entity(NULL)
-// {
-//     m_type = "Asset";
-//     m_attrs = NULL;
-// }
-
 // *****************************************************************************
 Asset::Asset(const Asset &ref)
     : Entity(ref.m_sg)

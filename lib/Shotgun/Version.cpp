@@ -49,14 +49,6 @@ Version::Version(Shotgun *sg, const xmlrpc_c::value &attrs)
 }
 
 // *****************************************************************************
-// Version::Version()
-//     : Entity(NULL)
-// {
-//     m_type = "Version";
-//     m_attrs = NULL;
-// }
-
-// *****************************************************************************
 Version::Version(const Version &ref)
     : Entity(ref.m_sg)
 {
@@ -83,6 +75,7 @@ Version Version::create(Shotgun *sg, const std::string &versionName)
     }
     catch (SgEntityNotFoundError)
     {
+        throw SgEntityCreateError("Not implemented yet.");
 #warning Implement in non-Tippett way
 //         TipUtil::VersionName dn = TipUtil::VersionName(versionName);
 //         Show show = sg->findShowByCode(dn.show());
