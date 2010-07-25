@@ -3,7 +3,9 @@
 # If the ./configure script is missing, you can run this script to create it
 #
 
-aclocal \
+mkdir -p config
+libtoolize --force --copy \
+&& aclocal \
 && automake --gnu --add-missing --copy \
 && autoconf
 rm -rf autom4te.cache
