@@ -3,11 +3,12 @@
 #
 
 AC_INIT(Shotgun, 0.0.0)
-AC_CONFIG_AUX_DIR(config)
-AM_INIT_AUTOMAKE()
-AC_LANG(C++)
-AC_PROG_INSTALL
-AC_PROG_CXX
+AC_CONFIG_AUX_DIR([config])
+AC_CANONICAL_HOST
+AC_CONFIG_MACRO_DIR([config/m4])
+AM_INIT_AUTOMAKE(1.6.3)  dnl Require automake 1.6.3 or better
+AM_MAINTAINER_MODE
+
 
 # This is the version info according to the libtool versioning system.
 # It does *not* correspond to the release number, and has a technical
@@ -29,9 +30,24 @@ AC_PROG_CXX
 #    6. If any interfaces have been removed or changed since the last public
 #       release, then set age to 0.
 #
-SHARED_VERSION_INFO="0:0:0"
+LIBTOOL_CURRENT=0
+LIBTOOL_REVISION=0
+LIBTOOL_AGE=0
+LIBTOOL_VERSION=$LIBTOOL_CURRENT:$LIBTOOL_REVISION:$LIBTOOL_AGE
+AC_SUBST(LIBTOOL_VERSION)
 
-AC_PROG_LIBTOOL()
+AC_LANG(C++)
+AC_PROG_INSTALL
+AC_PROG_CXX
+AC_PROG_LN_S
+AC_PROG_LIBTOOL
+AC_PROG_MAKE_SET
+AC_CHECK_FUNCS([memset])
+AC_C_CONST
+AC_HEADER_STDBOOL
+AC_PROG_RANLIB
+AC_STRUCT_TM
+AC_TYPE_SIZE_T
 
 AC_ARG_ENABLE([python],
           [AC_HELP_STRING([--enable-python],
@@ -85,11 +101,10 @@ AC_SUBST(XMLRPC_LDFLAGS)
 #
 if test "x$sg_build_python" != "xno"; then
 AM_PATH_PYTHON(,,[:])
-AC_CHECK_PROG(SIP,sip,sip)
-if test "x$SIP" = "x"; then
-    AC_MSG_ERROR("sip is required for building the Python plugin.")
+AS_IF([`$PYTHON -c "import sipconfig" > /dev/null 2>&1`],,
+    AC_MSG_ERROR("sip is required for building the Python plugin."))
 fi
-fi
+
 #
 # END Check for python/sip
 # -------------------------------

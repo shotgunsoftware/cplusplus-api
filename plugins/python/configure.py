@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import sys
 import os
 import subprocess
 import sipconfig
@@ -11,29 +12,33 @@ build_file = "shotgun.sbf"
 # Get the SIP configuration information.
 config = sipconfig.Configuration()
 
+# Work around sipconfig module bug on OS X
+config.qt_framework = None
+
 # Run SIP to generate the code.
-sipcmd = ["sip"]
+sipcmd = [config.sip_bin]
 sipcmd.extend(["-I", "../../../lib/"])
 sipcmd.extend(["-b", "src/%s" % build_file])
 sipcmd.extend(["-c", "src"])
 sipcmd.append("-e")
 sipcmd.append("-w")
 sipcmd.append("sip/_shotgun.sip")
-subprocess.call(sipcmd)
+print " ".join(sipcmd)
+result = subprocess.call(sipcmd)
+if result != 0:
+    sys.exit(result)
 
 # Create the Makefile.
 makefile = sipconfig.SIPModuleMakefile(config, build_file, dir="src")
 
-xmlrpc_cppflags = os.environ.get("XMLRPC_CFLAGS", None)
-xmlrpc_ldflags = os.environ.get("XMLRPC_LDFLAGS", None)
-xmlrpc_ldadd = os.environ.get("XMLRPC_LDADD", None)
-
-if (xmlrpc_cppflags is None
-    or xmlrpc_ldflags is None
-    or xmlrpc_ldadd is None):
+try:
+    xmlrpc_cppflags = os.environ["XMLRPC_CFLAGS"]
+    xmlrpc_ldflags = os.environ["XMLRPC_LDFLAGS"]
+    xmlrpc_ldadd = os.environ["XMLRPC_LDADD"]
+    automake_defs = os.environ["DEFS"]
+except KeyError:
     print "./configure.py is intended to be run by make."
-
-automake_defs = os.environ["DEFS"]
+    sys.exit(1)
 
 makefile.extra_cxxflags = [automake_defs, xmlrpc_cppflags]
 makefile.extra_lflags = ["-lShotgun", 
