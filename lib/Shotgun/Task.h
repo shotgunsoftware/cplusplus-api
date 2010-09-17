@@ -46,7 +46,6 @@ class Shotgun;
 class Task : public Entity
 {
     friend class Shotgun;
-    friend class Entity;
     
 public:
     Task(const Task &ref);
@@ -60,7 +59,8 @@ public:
     const bool sgMilestone() const { return getAttrValueAsBool("milestone"); } 
     const std::string sgStartDate() const { return getAttrValueAsString("start_date"); } 
     const std::string sgStatus() const { return getAttrValueAsString("sg_status_list"); } 
-    const std::string sgType() const { return getAttrValueAsString("sg_system_task_type"); } 
+    // The "sg_system_task_type" field seems no longer exist
+    //const std::string sgType() const { return getAttrValueAsString("sg_system_task_type"); } 
     
     // ------------------------------------------------------------------------
     // IMPORTANT: 
@@ -68,7 +68,7 @@ public:
     // (2) Python - the ownership has been transferred to Python by using the 
     //     /Factory/ annotation.
     // ------------------------------------------------------------------------
-    Entity *sgLink() { return getAttrValueAsEntityPtr("entity"); }
+    const Entity *sgLink() const { return getAttrValueAsEntityPtr("entity"); }
     // The return value is a mixed list of HumanUsers & Groups
     const EntityPtrs sgAssignees() const; 
     const std::string sgLinkEntityType() const { return linkEntityType("entity"); }
@@ -76,6 +76,8 @@ public:
     // Set an attribute's value
     void sgStatus(const std::string &val) { setAttrValue("sg_status_list", toXmlrpcValue(val)); }
     void sgAssignees(const Strings &val);
+
+    static std::string type() { return std::string("Task"); }
 
     Task &operator=(const Task &that)
     {
@@ -86,6 +88,7 @@ public:
 protected:
     Task(Shotgun *sg, const xmlrpc_c::value &attrs);
 
+    static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Task(sg, attrs); }
     static Task create(Shotgun *sg, 
                        const std::string &projectCode,
                        const std::string &taskName,
@@ -97,8 +100,8 @@ protected:
                        const std::string &taskColor = "",
                        const bool taskMilestone = false,
                        const SgMap &taskEntityLink = SgMap());
-    static Tasks find(Shotgun *sg, SgMap &findMap);
 
+    static SgArray populateReturnFields(const SgArray &extraReturnFields = SgArray());
 };
 
 } // End namespace Shotgun

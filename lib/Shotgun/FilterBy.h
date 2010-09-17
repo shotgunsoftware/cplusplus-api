@@ -30,54 +30,84 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __SEQUENCE_H__
-#define __SEQUENCE_H__
+#ifndef __FILTERBY_H__
+#define __FILTERBY_H__
 
 #include <string>
 
 #include <Shotgun/Type.h>
-#include <Shotgun/Entity.h>
 
 namespace Shotgun {
 
-class Shotgun;
-
 // *****************************************************************************
-class Sequence : public Entity
+class FilterBy
 {
-    friend class Shotgun;
-    friend class Shot;
-    friend class Reference;
- 
 public:
-    Sequence(const Sequence &ref);
-    virtual ~Sequence();
+    FilterBy();
 
-    // Get an attribute's value
-    const std::string sgName() const { return getAttrValueAsString("code"); } 
-
-    // Set an attribute's value
-    void sgName(const std::string &name) { setAttrValue("code", toXmlrpcValue(name)); }
-
-    static std::string type() { return std::string("Sequence"); }
-
-    Sequence &operator=(const Sequence &that)
+    template <typename T>
+    FilterBy(const std::string &path,
+             const std::string &relation,
+             const T &value)
     {
-        Entity::operator=(that);
+         op("and", path, relation, toXmlrpcValue(value));      
+    }
+
+    // -------------------------------------------------------------------
+    // logic "and"
+    template <typename T>
+    FilterBy &And(const std::string &path,
+                  const std::string &relation,
+                  const T &value)
+    {
+        return op("and", path, relation, toXmlrpcValue(value));
+    }
+
+    FilterBy &And(const FilterBy &that)
+    {
+        return op("and", that);
+    }
+
+    // -------------------------------------------------------------------
+    // logic "or"
+    template <typename T>
+    FilterBy &Or(const std::string &path,
+                 const std::string &relation,
+                 const T &value)
+    {
+        return op("or", path, relation, toXmlrpcValue(value));
+    }
+    
+    FilterBy &Or(const FilterBy &that)
+    {
+        return op("or", that);
+    }
+
+
+    const SgMap &filters() const { return m_filters; }
+    const bool empty() const { return m_filters.empty(); }
+
+    FilterBy &operator=(const FilterBy &that)
+    {
+        if (this != &that)
+        {
+            m_filters = that.m_filters;
+        }
+
         return *this;
     }
 
 protected:
-    Sequence(Shotgun *sg, const xmlrpc_c::value &attrs);
+    FilterBy &op(const std::string &logicOperator,
+                 const std::string &path,
+                 const std::string &relation,
+                 const xmlrpc_c::value &value);
+    FilterBy &op(const std::string &logicOperator,
+                 const FilterBy &that);
 
-    static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Sequence(sg, attrs); }
-    static Sequence create(Shotgun *sg, 
-                           const std::string &projectCode,
-                           const std::string &sequenceName);
-
-    static SgArray populateReturnFields(const SgArray &extraReturnFields = SgArray());
+    SgMap m_filters;
 };
 
 } // End namespace Shotgun
 
-#endif    // End #ifdef __SEQUENCE_H__
+#endif    // End #ifdef __FILTERBY_H__

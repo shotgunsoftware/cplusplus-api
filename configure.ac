@@ -109,6 +109,10 @@ fi
 # END Check for python/sip
 # -------------------------------
 
+
+# -------------------------------
+# SG_DEFAULT_URL
+#
 AC_ARG_WITH(default-url,
 AS_HELP_STRING([--with-default-url=URL],
                [Specify a default Shotgun URL]),
@@ -125,6 +129,32 @@ SG_DEFAULT_URL=""
 )
 AC_DEFINE_UNQUOTED(SG_DEFAULT_URL, "$SG_DEFAULT_URL",
                      [The default Shotgun URL])
+#
+# SG_DEFAULT_URL
+# -------------------------------
+
+# -------------------------------
+# SG_AUTHENTICATION_KEY
+#
+AC_ARG_WITH(authentication-key,
+AS_HELP_STRING([--with-authentication-key=KEY],
+               [Specify a default Shotgun authentication key]),
+[
+    if test "$withval" = "yes" ; then
+      AC_MSG_ERROR([--with-authentication-key requires an argument.])
+    else
+      SG_AUTHENTICATION_KEY=$withval
+    fi
+],
+[
+SG_AUTHENTICATION_KEY=""
+]
+)
+AC_DEFINE_UNQUOTED(SG_AUTHENTICATION_KEY, "$SG_AUTHENTICATION_KEY",
+                     [The default Shotgun authentication key])
+#
+# SG_AUTHENTICATION_KEY
+# -------------------------------
 
 
 AC_CONFIG_FILES([Makefile

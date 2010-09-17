@@ -65,7 +65,8 @@ Group Group::create(Shotgun *sg, const std::string &groupName)
     // Check if the group already exists
     try
     {
-        Group group = sg->findGroupByName(groupName);
+        Group *group = sg->findGroupByName(groupName);
+        delete group;
 
         std::string err = "Group \"" + groupName + "\" already exists.";
         throw SgEntityCreateError(err);
@@ -76,26 +77,23 @@ Group Group::create(Shotgun *sg, const std::string &groupName)
         attrsMap["code"] = toXmlrpcValue(groupName);
 
         // Call the base class function to create an entity
-        return Group(sg, createEntity(sg, "Group", attrsMap));
+        return Group(sg, createSGEntity(sg, "Group", attrsMap));
     }
 }
 
 // *****************************************************************************
-Groups Group::find(Shotgun *sg, SgMap &findMap)
+SgArray Group::populateReturnFields(const SgArray &extraReturnFields)
 {
-    // Find the entities that match the findMap and create a Group for each of them
-    Groups groups;
+    SgArray returnFields = extraReturnFields;
 
-    SgArray result = Entity::findEntities(sg, findMap);
-    if (result.size() > 0)
-    {
-        for (size_t i = 0; i < result.size(); i++)
-        {
-            groups.push_back(Group(sg, result[i]));
-        }
-    }
+    returnFields.push_back(toXmlrpcValue("id"));
+    returnFields.push_back(toXmlrpcValue("project"));
+    returnFields.push_back(toXmlrpcValue("created_at"));
+    returnFields.push_back(toXmlrpcValue("updated_at"));
 
-    return groups;
+    returnFields.push_back(toXmlrpcValue("code"));
+
+    return returnFields;
 }
 
 } // End namespace Shotgun

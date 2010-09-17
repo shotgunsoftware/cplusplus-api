@@ -69,65 +69,73 @@ Playlist Playlist::create(Shotgun *sg,
     // Check if the playlist already exists
     try
     {
-        Playlist playlist = sg->findPlaylistByName(projectCode, playlistName);
+        Playlist *playlist = sg->findPlaylistByName(projectCode, playlistName);
+        delete playlist;
 
         std::string err = "Playlist \"" + playlistName + "\" already exists.";
         throw SgEntityCreateError(err);
     }
     catch (SgEntityNotFoundError)
     {
-        Project project = sg->findProjectByCode(projectCode);
-
         SgMap attrsMap;
-        attrsMap["project"] = toXmlrpcValue(project.asLink());
+        attrsMap["project"] = toXmlrpcValue(sg->getProjectLink(projectCode));
         attrsMap["code"] = toXmlrpcValue(playlistName);
 
         // Call the base class function to create an entity
-        return Playlist(sg, createEntity(sg, "Playlist", attrsMap));
+        return Playlist(sg, createSGEntity(sg, "Playlist", attrsMap));
     }
 }
 
 // *****************************************************************************
-Playlists Playlist::find(Shotgun *sg, SgMap &findMap)
+SgArray Playlist::populateReturnFields(const SgArray &extraReturnFields)
 {
-    // Find the entities that match the findMap and create an Playlist for each of them
-    Playlists playlists;
+    SgArray returnFields = extraReturnFields;
 
-    SgArray result = Entity::findEntities(sg, findMap);
-    if (result.size() > 0)
-    {
-        for (size_t i = 0; i < result.size(); i++)
-        {
-            playlists.push_back(Playlist(sg, result[i]));
-        }
-    }
+    returnFields.push_back(toXmlrpcValue("id"));
+    returnFields.push_back(toXmlrpcValue("project"));
+    returnFields.push_back(toXmlrpcValue("created_at"));
+    returnFields.push_back(toXmlrpcValue("updated_at"));
 
-    return playlists;
+    returnFields.push_back(toXmlrpcValue("code"));
+    returnFields.push_back(toXmlrpcValue("sg_date_and_time"));
+    returnFields.push_back(toXmlrpcValue("description"));
+    returnFields.push_back(toXmlrpcValue("notes"));
+    returnFields.push_back(toXmlrpcValue("tag_list"));
+    returnFields.push_back(toXmlrpcValue("image"));
+    returnFields.push_back(toXmlrpcValue("versions"));
+
+    return returnFields;
 }
 
 // *****************************************************************************
-const Notes Playlist::sgNotes() const
+const NotePtrs Playlist::sgNotes() const
 {
-    Notes notes;
+    NotePtrs notes;
 
-    SgArray entities = getAttrValueAsMultiEntityAttrMap("notes");
+    EntityPtrs entities = getAttrValueAsMultiEntityPtr("notes");
     for (size_t i = 0; i < entities.size(); i++)
     {
-        notes.push_back(Note(m_sg, entities[i]));
+        if (Note *note = dynamic_cast<Note *>(entities[i]))
+        {
+            notes.push_back(note);
+        }
     }
 
     return notes;
 }
 
 // *****************************************************************************
-const Versions Playlist::sgVersions() const
+const VersionPtrs Playlist::sgVersions() const
 {
-    Versions versions;
+    VersionPtrs versions;
 
-    SgArray entities = getAttrValueAsMultiEntityAttrMap("versions");
+    EntityPtrs entities = getAttrValueAsMultiEntityPtr("versions");
     for (size_t i = 0; i < entities.size(); i++)
     {
-        versions.push_back(Version(m_sg, entities[i]));
+        if (Version *version = dynamic_cast<Version *>(entities[i]))
+        {
+            versions.push_back(version);
+        }
     }
 
     return versions;

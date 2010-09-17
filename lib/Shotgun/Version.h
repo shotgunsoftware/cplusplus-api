@@ -51,7 +51,6 @@ class Version : public Entity, public NoteMixin
     friend class ReviewItem;
     friend class Note;
     friend class Playlist;
-    friend class Entity;
     
 public:
     Version(const Version &ref);
@@ -61,7 +60,7 @@ public:
     const std::string sgName() const { return getAttrValueAsString("code"); }
     const std::string sgCode() const { return sgName(); }
     const std::string sgAuthor() const { return getAttrValueAsUserLogin("user"); }
-    const Shot sgShot() const; 
+    const Shot *sgShot() const; 
     const std::string sgDescription() const { return getAttrValueAsString("description"); }
     const size_t sgFrameCount() const { return getAttrValueAsInt("frame_count"); }
     const std::string sgFrameRange() const { return getAttrValueAsString("frame_range"); }
@@ -73,8 +72,10 @@ public:
     // (2) Python - the ownership has been transferred to Python by using the
     //     /Factory/ annotation.
     // ------------------------------------------------------------------------
-    Entity *sgLink() { return getAttrValueAsEntityPtr("entity"); } 
+    const Entity *sgLink() const { return getAttrValueAsEntityPtr("entity"); } 
     const std::string sgLinkEntityType() const { return linkEntityType("entity"); }
+
+    static std::string type() { return std::string("Version"); }
 
     Version &operator=(const Version &that)
     {
@@ -85,9 +86,10 @@ public:
 protected:
     Version(Shotgun *sg, const xmlrpc_c::value &attrs);
 
+    static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Version(sg, attrs); }
     static Version create(Shotgun *sg, const std::string &versionName);
-    static Versions find(Shotgun *sg, SgMap &findMap);
 
+    static SgArray populateReturnFields(const SgArray &extraReturnFields = SgArray());
 };
 
 } // End namespace Shotgun

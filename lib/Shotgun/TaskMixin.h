@@ -46,11 +46,12 @@ class TaskMixin
 public:
     virtual ~TaskMixin() {};
 
-    Tasks getTasks(const int limit = 0);
-    Task getTaskByName(const std::string &taskName);
-    Tasks getMilestoneTasks(const int limit = 0);
-    Task getNextIncompleteMilestoneTask();
+    TaskPtrs getTasks(const int limit = 0);
+    Task *getTaskByName(const std::string &taskName);
+    TaskPtrs getMilestoneTasks(const int limit = 0);
+    Task *getNextIncompleteMilestoneTask();
 
+#warning Update these functions to return pointer type
     Task addTask(const std::string &taskName,
                  const std::string &taskType,
                  const std::string &taskAssignee = "",

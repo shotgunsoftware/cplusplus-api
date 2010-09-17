@@ -57,7 +57,6 @@ class Shot : public Entity, public TaskMixin, public NoteMixin
     friend class Reference;
     friend class Note;
     friend class Asset;
-    friend class Entity;
  
 public:
     Shot(const Shot &ref);
@@ -66,8 +65,8 @@ public:
     // Get an attribute's value
     const std::string sgName() const { return getAttrValueAsString("code"); }
     const std::string sgDescription() const { return getAttrValueAsString("description"); } 
-    const Elements sgElements() const;
-    const Sequence sgSequence() const { return Sequence(m_sg, getAttrValueAsEntityAttrMap("sg_sequence")); } 
+    const ElementPtrs sgElements() const;
+    const Sequence *sgSequence() const;
     const std::string sgProject() const { return sgProjectName(); }
     const std::string sgStatus() const { return getAttrValueAsString("sg_status_list"); } 
     const int sgCutDuration() const { return getAttrValueAsInt("smart_cut_duration"); }
@@ -88,6 +87,8 @@ public:
     void sgElements(const Elements &val); // An array of Element entities
     void sgElements(const SgArray &val); // An array of entity links
 
+    static std::string type() { return std::string("Shot"); }
+
     Shot &operator=(const Shot &that)
     {
         Entity::operator=(that);
@@ -97,11 +98,13 @@ public:
 protected:
     Shot(Shotgun *sg, const xmlrpc_c::value &attrs);
 
+    static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Shot(sg, attrs); }
     static Shot create(Shotgun *sg, 
-                       const std::string &projectName,
+                       const std::string &projectCode,
                        const std::string &shotName,
                        const std::string &sequenceName="");
-    static Shots find(Shotgun *sg, SgMap &findMap);
+
+    static SgArray populateReturnFields(const SgArray &extraReturnFields = SgArray());
 };
 
 } // End namespace Shotgun

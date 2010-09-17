@@ -46,7 +46,6 @@ class Shotgun;
 class Note : public Entity
 {
     friend class Shotgun;
-    friend class Entity;
     friend class Playlist;
 
 public:
@@ -59,9 +58,9 @@ public:
     const std::string sgStatus() const { return getAttrValueAsString("sg_status_list"); } 
     const std::string sgSubject() const { return getAttrValueAsString("subject"); } 
     const std::string sgType() const { return getAttrValueAsString("sg_note_type"); } 
-    const Review getLinkedReview() const;
-    const Shot getLinkedShot() const;
-    const Version getLinkedVersion() const;
+    Review *getLinkedReview();
+    Shot *getLinkedShot();
+    Version *getLinkedVersion();
 
     // Both sgCc() and sgTo() could be a mixed list of HumanUser and Group entities.
     // sgLinks() is a list of mixed types of entities. If we want to these 
@@ -70,6 +69,8 @@ public:
     const SgArray sgCc() const { return getAttrValueAsArray("addressings_cc"); } 
     const SgArray sgTo() const { return getAttrValueAsArray("addressings_to"); } 
     const SgArray sgLinks() const { return getAttrValueAsArray("note_links"); } 
+
+    static std::string type() { return std::string("Note"); }
 
     Note &operator=(const Note &that)
     {
@@ -80,6 +81,7 @@ public:
 protected:
     Note(Shotgun *sg, const xmlrpc_c::value &attrs);
 
+    static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Note(sg, attrs); }
     static Note create(Shotgun *sg, 
                        const std::string &projectCode,
                        const std::string &noteFromUserName,
@@ -90,8 +92,8 @@ protected:
                        const std::string &noteType = "",
                        const SgArray &noteLinks = SgArray(),
                        const std::string &noteOrigin = "");
-    static Notes find(Shotgun *sg, SgMap &findMap);
 
+    static SgArray populateReturnFields(const SgArray &extraReturnFields = SgArray());
 };
 
 } // End namespace Shotgun

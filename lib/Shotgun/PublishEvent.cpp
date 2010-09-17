@@ -69,40 +69,43 @@ PublishEvent PublishEvent::create(Shotgun *sg,
     // Check if the publishEvent already exists
     try
     {
-        PublishEvent publishEvent = sg->findPublishEventByName(projectCode, publishEventName);
+        PublishEvent *publishEvent = sg->findPublishEventByName(projectCode, publishEventName);
+        delete publishEvent;
 
         std::string err = "PublishEvent \"" + publishEventName + "\" already exists.";
         throw SgEntityCreateError(err);
     }
     catch (SgEntityNotFoundError)
     {
-        Project project = sg->findProjectByCode(projectCode);
-
         SgMap attrsMap;
-        attrsMap["project"] = toXmlrpcValue(project.asLink());
+        attrsMap["project"] = toXmlrpcValue(sg->getProjectLink(projectCode));
         attrsMap["code"] = toXmlrpcValue(publishEventName);
 
         // Call the base class function to create an entity
-        return PublishEvent(sg, createEntity(sg, "PublishEvent", attrsMap));
+        return PublishEvent(sg, createSGEntity(sg, "PublishEvent", attrsMap));
     }
 }
 
 // *****************************************************************************
-PublishEvents PublishEvent::find(Shotgun *sg, SgMap &findMap)
+SgArray PublishEvent::populateReturnFields(const SgArray &extraReturnFields)
 {
-    // Find the entities that match the findMap and create a Shot for each of them
-    PublishEvents publishEvents;
+    SgArray returnFields = extraReturnFields;
 
-    SgArray result = Entity::findEntities(sg, findMap);
-    if (result.size() > 0)
-    {
-        for (size_t i = 0; i < result.size(); i++)
-        {
-            publishEvents.push_back(PublishEvent(sg, result[i]));
-        }
-    }
+    returnFields.push_back(toXmlrpcValue("id"));
+    returnFields.push_back(toXmlrpcValue("project"));
+    returnFields.push_back(toXmlrpcValue("created_at"));
+    returnFields.push_back(toXmlrpcValue("updated_at"));
 
-    return publishEvents;
+    returnFields.push_back(toXmlrpcValue("code"));
+    returnFields.push_back(toXmlrpcValue("sg_file"));
+    //returnFields.push_back(toXmlrpcValue("sg_format"));
+    returnFields.push_back(toXmlrpcValue("sg_preview_hd_qt"));
+    returnFields.push_back(toXmlrpcValue("sg_preview_qt"));
+    returnFields.push_back(toXmlrpcValue("sg_rev"));
+    returnFields.push_back(toXmlrpcValue("sg_resolution"));
+    returnFields.push_back(toXmlrpcValue("sg_type"));
+
+    return returnFields;
 }
 
 } // End namespace Shotgun

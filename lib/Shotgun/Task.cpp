@@ -73,12 +73,10 @@ Task Task::create(Shotgun *sg,
                   const bool taskMilestone,
                   const SgMap &taskEntityLink)
 {
-    Project project = sg->findProjectByCode(projectCode);
-
     SgMap attrsMap;
-    attrsMap["project"] = toXmlrpcValue(project.asLink());
+    attrsMap["project"] = toXmlrpcValue(sg->getProjectLink(projectCode));
     attrsMap["content"] = toXmlrpcValue(taskName);
-    attrsMap["sg_system_task_type"] = toXmlrpcValue(taskType);
+    attrsMap["sg_system_task_type"] = toXmlrpcValue(taskType); // This field seems no longer exist
     attrsMap["milestone"] = toXmlrpcValue(taskMilestone);
 
     // taskEntityLink
@@ -92,21 +90,25 @@ Task Task::create(Shotgun *sg,
     {
         try
         {
-            HumanUser user = sg->findHumanUserByLogin(taskAssignee);
+            HumanUser *user = sg->findHumanUserByLogin(taskAssignee);
 
             SgArray assignees;
-            assignees.push_back(toXmlrpcValue(user.asLink()));
+            assignees.push_back(toXmlrpcValue(user->asLink()));
             attrsMap["task_assignees"] = toXmlrpcValue(assignees);
+
+            delete user;
         }
         catch (SgEntityNotFoundError)
         {
             try
             {
-                Group group = sg->findGroupByName(taskAssignee);
+                Group *group = sg->findGroupByName(taskAssignee);
 
                 SgArray assignees;
-                assignees.push_back(toXmlrpcValue(group.asLink()));
+                assignees.push_back(toXmlrpcValue(group->asLink()));
                 attrsMap["task_assignees"] = toXmlrpcValue(assignees);
+
+                delete group;
             }
             catch (SgEntityNotFoundError)
             {
@@ -154,49 +156,39 @@ Task Task::create(Shotgun *sg,
     }
 
     // Call the base class function to create an entity
-    return Task(sg, createEntity(sg, "Task", attrsMap));
+    return Task(sg, createSGEntity(sg, "Task", attrsMap));
 }
 
 // *****************************************************************************
-Tasks Task::find(Shotgun *sg, SgMap &findMap)
+SgArray Task::populateReturnFields(const SgArray &extraReturnFields)
 {
-    // Find the entities that match the findMap and create a Task for each of them
-    Tasks tasks;
+    SgArray returnFields = extraReturnFields;
 
-    SgArray result = Entity::findEntities(sg, findMap);
-    if (result.size() > 0)
-    {
-        for (size_t i = 0; i < result.size(); i++)
-        {
-            tasks.push_back(Task(sg, result[i]));
-        }
-    }
+    returnFields.push_back(toXmlrpcValue("id"));
+    returnFields.push_back(toXmlrpcValue("project"));
+    returnFields.push_back(toXmlrpcValue("created_at"));
+    returnFields.push_back(toXmlrpcValue("updated_at"));
 
-    return tasks;
+    returnFields.push_back(toXmlrpcValue("content"));
+    returnFields.push_back(toXmlrpcValue("task_assignees"));
+    returnFields.push_back(toXmlrpcValue("color"));
+    returnFields.push_back(toXmlrpcValue("due_date"));
+    returnFields.push_back(toXmlrpcValue("duration"));
+    returnFields.push_back(toXmlrpcValue("entity"));
+    returnFields.push_back(toXmlrpcValue("milestone"));
+    returnFields.push_back(toXmlrpcValue("start_date"));
+    returnFields.push_back(toXmlrpcValue("sg_status_list"));
+//    returnFields.push_back(toXmlrpcValue("sg_system_task_type")); // Seems no longer exist
+    returnFields.push_back(toXmlrpcValue("sg_view_order"));
+
+    return returnFields;
 }
 
 // *****************************************************************************
 const EntityPtrs Task::sgAssignees() const
 {
     // Assignees is a mixed list of HumanUsers & Groups
-    SgArray entities = Entity::getAttrValueAsMultiEntityAttrMap("task_assignees");
-    EntityPtrs assignees;
-
-    for (size_t i = 0; i < entities.size(); i++)
-    {
-        SgMap entityAsMap = SgMap(xmlrpc_c::value_struct(entities[i]));
-
-        if (Entity::getAttrValueAsString("type", entityAsMap) == "HumanUser")
-        {
-            assignees.push_back(new HumanUser(m_sg, entities[i]));
-        }
-        else if (getAttrValueAsString("type", entityAsMap) == "Group")
-        {
-            assignees.push_back(new Group(m_sg, entities[i]));
-        }
-    }
-
-    return assignees;
+    return Entity::getAttrValueAsMultiEntityPtr("task_assignees");
 }
 
 // *****************************************************************************
@@ -208,15 +200,19 @@ void Task::sgAssignees(const Strings &val)
     {
         try
         {
-            HumanUser user = m_sg->findHumanUserByLogin(val[i]);
-            assigneeLinkArray.push_back(toXmlrpcValue(user.asLink()));
+            HumanUser *user = m_sg->findHumanUserByLogin(val[i]);
+            assigneeLinkArray.push_back(toXmlrpcValue(user->asLink()));
+   
+            delete user;
         }
         catch (SgEntityNotFoundError)
         {
             try
             {
-                Group group = m_sg->findGroupByName(val[i]);
-                assigneeLinkArray.push_back(toXmlrpcValue(group.asLink()));
+                Group *group = m_sg->findGroupByName(val[i]);
+                assigneeLinkArray.push_back(toXmlrpcValue(group->asLink()));
+
+                delete group;
             }
             catch (SgEntityNotFoundError)
             {

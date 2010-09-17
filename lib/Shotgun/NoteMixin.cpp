@@ -40,7 +40,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace Shotgun {
 
 // *****************************************************************************
-Notes NoteMixin::getNotes(const int limit)
+NotePtrs NoteMixin::getNotes(const int limit)
 {
     // Dynamic_cast can cast it to the other base class of this class' 
     // derived class.
@@ -49,9 +49,9 @@ Notes NoteMixin::getNotes(const int limit)
         SgArray noteLinks;
         noteLinks.push_back(toXmlrpcValue(entity->asLink()));
 
-        return entity->sg()->findNotesByLinks(noteLinks, 
+        return entity->sg()->findNotesByLinks("", // projectCode - unnecessary in this case
+                                              noteLinks, 
                                               "", // noteType
-                                              "", // projectCode - unnecessary in this case
                                               limit);
     }
     else
@@ -61,14 +61,14 @@ Notes NoteMixin::getNotes(const int limit)
 }
 
 // *****************************************************************************
-Notes NoteMixin::getDisclaimerNotes(const int limit)
+NotePtrs NoteMixin::getDisclaimerNotes(const int limit)
 {
-    Notes notes = getNotes();
+    NotePtrs notes = getNotes();
 
-    Notes outNotes;
+    NotePtrs outNotes;
     for (size_t i = 0; i < notes.size(); i++)
     {
-        if (notes[i].sgType() == "Disclaimer")
+        if (notes[i]->sgType() == "Disclaimer")
         {
             outNotes.push_back(notes[i]);
 
@@ -80,14 +80,14 @@ Notes NoteMixin::getDisclaimerNotes(const int limit)
 }
 
 // *****************************************************************************
-Notes NoteMixin::getClientNotes(const int limit)
+NotePtrs NoteMixin::getClientNotes(const int limit)
 {
-    Notes notes = getNotes();
+    NotePtrs notes = getNotes();
 
-    Notes outNotes;
+    NotePtrs outNotes;
     for (size_t i = 0; i < notes.size(); i++)
     {
-        if (notes[i].sgType() == "Client")
+        if (notes[i]->sgType() == "Client")
         {
             outNotes.push_back(notes[i]);
 
@@ -119,8 +119,9 @@ Note NoteMixin::addNote(const std::string &noteFromUserName,
             {
                 try
                 {
-                    Shot shot = version->sgShot();
-                    links.push_back(toXmlrpcValue(shot.asLink()));
+                    const Shot *shot = version->sgShot();
+                    links.push_back(toXmlrpcValue(shot->asLink()));
+                    delete shot;
                 }
                 catch (SgEntityNotFoundError)
                 {

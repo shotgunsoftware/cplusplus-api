@@ -68,51 +68,67 @@ Version Version::create(Shotgun *sg, const std::string &versionName)
     // Check if the version already exists
     try
     {
-        Version version = sg->findVersionByName(versionName);
+        Version *version = sg->findVersionByName(versionName);
+        delete version;
 
         std::string err = "Version \"" + versionName + "\" already exists.";
         throw SgEntityCreateError(err);
     }
     catch (SgEntityNotFoundError)
     {
-        throw SgEntityCreateError("Not implemented yet.");
+        throw SgEntityCreateError("[Not implemented yet] Version::create(..)");
 #warning Implement in non-Tippett way
 //         TipUtil::VersionName dn = TipUtil::VersionName(versionName);
-//         Show show = sg->findShowByCode(dn.show());
 // 
 //         // Create a very basic Version entity with most of its attributes 
 //         // be filled later from the Python side.
 //         SgMap attrsMap;
-//         attrsMap["project"] = toXmlrpcValue(show.asLink());
+//         attrsMap["project"] = toXmlrpcValue(sg->getProjectLink(projectCode));
 //         attrsMap["code"] = toXmlrpcValue(versionName);
 //         attrsMap["sg_sequence"] = toXmlrpcValue(dn.sequence());
 //         attrsMap["sg_rev"] = toXmlrpcValue(dn.versionStr());
 // 
 //         // Call the base class function to create an entity
-//         return Version(sg, createEntity(sg, "Version", attrsMap));
+//         return Version(sg, createSGEntity(sg, "Version", attrsMap));
     }
 }
 
 // *****************************************************************************
-Versions Version::find(Shotgun *sg, SgMap &findMap)
+SgArray Version::populateReturnFields(const SgArray &extraReturnFields)
 {
-    // Find the entities that match the findMap and create an Version for each of them
-    Versions versions;
+    SgArray returnFields = extraReturnFields;
 
-    SgArray result = Entity::findEntities(sg, findMap);
-    if (result.size() > 0)
-    {
-        for (size_t i = 0; i < result.size(); i++)
-        {
-            versions.push_back(Version(sg, result[i]));
-        }
-    }
+    returnFields.push_back(toXmlrpcValue("id"));
+    returnFields.push_back(toXmlrpcValue("project"));
+    returnFields.push_back(toXmlrpcValue("created_at"));
+    returnFields.push_back(toXmlrpcValue("updated_at"));
 
-    return versions;
+    returnFields.push_back(toXmlrpcValue("code"));
+    returnFields.push_back(toXmlrpcValue("sg_department"));
+    returnFields.push_back(toXmlrpcValue("description"));
+    returnFields.push_back(toXmlrpcValue("sg_sequence"));
+    returnFields.push_back(toXmlrpcValue("entity"));
+    returnFields.push_back(toXmlrpcValue("sg_rev"));
+    returnFields.push_back(toXmlrpcValue("frame_count"));
+    returnFields.push_back(toXmlrpcValue("frame_range"));
+    returnFields.push_back(toXmlrpcValue("sg_source"));
+    returnFields.push_back(toXmlrpcValue("sg_source_2k"));
+    returnFields.push_back(toXmlrpcValue("sg_daily_hd"));
+    returnFields.push_back(toXmlrpcValue("image"));
+    returnFields.push_back(toXmlrpcValue("sg_status"));
+    returnFields.push_back(toXmlrpcValue("sg_status_list"));
+    returnFields.push_back(toXmlrpcValue("sg_epk_"));
+    returnFields.push_back(toXmlrpcValue("sg_dailies_date"));
+    returnFields.push_back(toXmlrpcValue("sg_view_order"));
+    returnFields.push_back(toXmlrpcValue("sg_preview_qt"));
+    returnFields.push_back(toXmlrpcValue("sg_preview_hd_qt"));
+    returnFields.push_back(toXmlrpcValue("user"));
+
+    return returnFields;
 }
 
 // *****************************************************************************
-const Shot Version::sgShot() const
+const Shot *Version::sgShot() const
 {
 #warning Implement in non-Tippett way
 //     std::string theShotName = TipUtil::ShotName(sgProjectCode(), sgShotName()).shot(true, true);

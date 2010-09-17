@@ -57,13 +57,15 @@ class Group;
 class Note;
 class Playlist;
 
+class FilterBy;
+
 // *****************************************************************************
 typedef std::vector<std::string> Strings;
 typedef Strings MethodSignature;
 typedef std::vector<Strings> MethodSignatures;
 typedef std::map<std::string, xmlrpc_c::value> SgMap;
 typedef std::vector<xmlrpc_c::value> SgArray;
-typedef std::vector<Entity *> EntityPtrs;
+
 typedef std::vector<Project> Projects;
 typedef std::vector<Sequence> Sequences;
 typedef std::vector<Shot> Shots;
@@ -80,6 +82,24 @@ typedef std::vector<Group> Groups;
 typedef std::vector<Note> Notes;
 typedef std::vector<Playlist> Playlists;
 
+#warning Add these to sip's mappedTypes
+typedef std::vector<Entity *> EntityPtrs;
+typedef std::vector<Project *> ProjectPtrs;
+typedef std::vector<Sequence *> SequencePtrs;
+typedef std::vector<Shot *> ShotPtrs;
+typedef std::vector<Version *> VersionPtrs;
+typedef std::vector<HumanUser *> HumanUserPtrs;
+typedef std::vector<Element *> ElementPtrs;
+typedef std::vector<Asset *> AssetPtrs;
+typedef std::vector<Delivery *> DeliveryPtrs;
+typedef std::vector<PublishEvent *> PublishEventPtrs;
+typedef std::vector<Review *> ReviewPtrs;
+typedef std::vector<ReviewItem *> ReviewItemPtrs;
+typedef std::vector<Task *> TaskPtrs;
+typedef std::vector<Group *> GroupPtrs;
+typedef std::vector<Note *> NotePtrs;
+typedef std::vector<Playlist *> PlaylistPtrs;
+
 // *****************************************************************************
 std::string xmlrpcValueTypeStr(const xmlrpc_c::value::type_t xmlrpcType);
 
@@ -94,6 +114,7 @@ xmlrpc_c::value toXmlrpcValue(const SgArray &in);
 xmlrpc_c::value toXmlrpcValue(const SgMap &in);
 xmlrpc_c::value toXmlrpcValue(const Strings &in);
 xmlrpc_c::value toXmlrpcValue(const MethodSignatures &in);
+xmlrpc_c::value toXmlrpcValue(const FilterBy &in);
 xmlrpc_c::value toXmlrpcValue(const xmlrpc_c::value &in);
 
 // *****************************************************************************
@@ -103,6 +124,7 @@ std::string toStdString(const SgArray &array);
 std::string toStdString(const Strings &strs);
 //std::string toStdString(const MethodSignature &sig); // same as Strings
 std::string toStdString(const MethodSignatures &sigs);
+std::string toStdString(const FilterBy &filterList);
 std::string toStdString(const Project &project);
 std::string toStdString(const Projects &projects);
 std::string toStdString(const Sequence &sequence);
@@ -142,6 +164,7 @@ std::ostream &operator<<(std::ostream& output, const SgArray &array);
 std::ostream &operator<<(std::ostream& output, const Strings &strs);
 //std::ostream &operator<<(std::ostream& output, const MethodSignature &sig); // same as Strings
 std::ostream &operator<<(std::ostream& output, const MethodSignatures &sigs);
+std::ostream &operator<<(std::ostream& output, const FilterBy &filterList);
 std::ostream &operator<<(std::ostream& output, const Project &project);
 std::ostream &operator<<(std::ostream& output, const Projects &projects);
 std::ostream &operator<<(std::ostream& output, const Sequence &sequence);
@@ -351,6 +374,20 @@ public:
 };
 
 // *****************************************************************************
+class SgEntityFunctionNotFoundError : public SgEntityError
+{
+public:
+    SgEntityFunctionNotFoundError(const std::string &entityType, 
+                                  const std::string &funcMapName) : SgEntityError("SgEntityFunctionNotFoundError: ")
+    {
+        m_msg += "Can't find entry for \"" + entityType + "\" entity in function map \"";
+        m_msg += funcMapName + "\". Check Shotgun class' constructor.";
+    }
+
+    virtual ~SgEntityFunctionNotFoundError() throw() {}
+};
+
+// *****************************************************************************
 class SgEntityDynamicCastError : public SgEntityError
 {
 public:
@@ -387,5 +424,10 @@ public:
 };
 
 } // End namespace Shotgun
+
+#warning Finish moving these operators out of Shotgun namespace
+std::ostream &operator<<(std::ostream& output, const xmlrpc_c::value &value);
+std::ostream &operator<<(std::ostream& output, const Shotgun::SgArray &array);
+std::ostream &operator<<(std::ostream& output, const Shotgun::SgMap &map);
 
 #endif    // End #ifdef __TYPE_H__

@@ -70,40 +70,45 @@ Review Review::create(Shotgun *sg,
     // Check if the review already exists
     try
     {
-        Review review = sg->findReviewByName(projectCode, reviewName);
+        Review *review = sg->findReviewByName(projectCode, reviewName);
+        delete review;
 
         std::string err = "Review \"" + reviewName + "\" already exists.";
         throw SgEntityCreateError(err);
     }
     catch (SgEntityNotFoundError)
     {
-        Project project = sg->findProjectByCode(projectCode);
-
         SgMap attrsMap;
-        attrsMap["project"] = toXmlrpcValue(project.asLink());
+        attrsMap["project"] = toXmlrpcValue(sg->getProjectLink(projectCode));
         attrsMap["code"] = toXmlrpcValue(reviewName);
 
         // Call the base class function to create an entity
-        return Review(sg, createEntity(sg, "Review", attrsMap));
+        return Review(sg, createSGEntity(sg, "Review", attrsMap));
     }
 }
 
 // *****************************************************************************
-Reviews Review::find(Shotgun *sg, SgMap &findMap)
+SgArray Review::populateReturnFields(const SgArray &extraReturnFields)
 {
-    // Find the entities that match the findMap and create a Review for each of them
-    Reviews reviews;
+    SgArray returnFields = extraReturnFields;
 
-    SgArray result = Entity::findEntities(sg, findMap);
-    if (result.size() > 0)
-    {
-        for (size_t i = 0; i < result.size(); i++)
-        {
-            reviews.push_back(Review(sg, result[i]));
-        }
-    }
+    returnFields.push_back(toXmlrpcValue("id"));
+    returnFields.push_back(toXmlrpcValue("project"));
+    returnFields.push_back(toXmlrpcValue("created_at"));
+    returnFields.push_back(toXmlrpcValue("updated_at"));
 
-    return reviews;
+    returnFields.push_back(toXmlrpcValue("code"));
+    returnFields.push_back(toXmlrpcValue("sg_review_type"));
+    returnFields.push_back(toXmlrpcValue("sg_review_media"));
+    returnFields.push_back(toXmlrpcValue("sg_review_date_sent"));
+    returnFields.push_back(toXmlrpcValue("sg_review_sent_to"));
+    returnFields.push_back(toXmlrpcValue("sg_review_date_reviewed"));
+    returnFields.push_back(toXmlrpcValue("sg_review_reviewed_by"));
+    returnFields.push_back(toXmlrpcValue("sg_review_disclaimers"));
+    returnFields.push_back(toXmlrpcValue("sg_review_tipsupe_notes"));
+    returnFields.push_back(toXmlrpcValue("sg_review_client_notes"));
+
+    return returnFields;
 }
 
 } // End namespace Shotgun

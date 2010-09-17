@@ -69,53 +69,56 @@ Element Element::create(Shotgun *sg,
     // Check if the element already exists
     try
     {
-        Element element = sg->findElementByName(projectCode, elementName);
+        Element *element = sg->findElementByName(projectCode, elementName);
+        delete element;
 
         std::string err = "Element \"" + elementName + "\" already exists.";
         throw SgEntityCreateError(err);
     }
     catch (SgEntityNotFoundError)
     {
-        Project project = sg->findProjectByCode(projectCode);
-
         SgMap attrsMap;
-        attrsMap["project"] = toXmlrpcValue(project.asLink());
+        attrsMap["project"] = toXmlrpcValue(sg->getProjectLink(projectCode));
         attrsMap["code"] = toXmlrpcValue(elementName);
         attrsMap["sg_element_type"] = toXmlrpcValue(elementType);
 
         // Call the base class function to create an entity
-        return Element(sg, createEntity(sg, "Element", attrsMap));
+        return Element(sg, createSGEntity(sg, "Element", attrsMap));
     }
 }
 
 // *****************************************************************************
-Elements Element::find(Shotgun *sg, SgMap &findMap)
+SgArray Element::populateReturnFields(const SgArray &extraReturnFields)
 {
-    // Find the entities that match the findMap and create a Shot for each of them
-    Elements elements;
+    SgArray returnFields = extraReturnFields;
 
-    SgArray result = Entity::findEntities(sg, findMap);
-    if (result.size() > 0)
-    {
-        for (size_t i = 0; i < result.size(); i++)
-        {
-            elements.push_back(Element(sg, result[i]));
-        }
-    }
+    returnFields.push_back(toXmlrpcValue("id"));
+    returnFields.push_back(toXmlrpcValue("project"));
+    returnFields.push_back(toXmlrpcValue("created_at"));
+    returnFields.push_back(toXmlrpcValue("updated_at"));
 
-    return elements;
+    returnFields.push_back(toXmlrpcValue("code"));
+    returnFields.push_back(toXmlrpcValue("assets"));
+    returnFields.push_back(toXmlrpcValue("shots"));
+    returnFields.push_back(toXmlrpcValue("tag_list"));
+    returnFields.push_back(toXmlrpcValue("sg_element_type"));
+
+    return returnFields;
 }
 
 // *****************************************************************************
 // Don't put this implementation in .h file since Shot class is forward-declared.
-const Assets Element::sgAssets() const
+const AssetPtrs Element::sgAssets() const
 {
-    Assets assets;
+    AssetPtrs assets;
 
-    SgArray entities = getAttrValueAsMultiEntityAttrMap("assets");
+    EntityPtrs entities = getAttrValueAsMultiEntityPtr("assets");
     for (size_t i = 0; i < entities.size(); i++)
     {
-        assets.push_back(Asset(m_sg, entities[i]));
+        if (Asset *asset = dynamic_cast<Asset *>(entities[i]))
+        {
+            assets.push_back(asset);
+        }
     }
 
     return assets;
@@ -123,14 +126,17 @@ const Assets Element::sgAssets() const
 
 // *****************************************************************************
 // Don't put this implementation in .h file since Shot class is forward-declared.
-const Shots Element::sgShots() const
+const ShotPtrs Element::sgShots() const
 {
-    Shots shots;
+    ShotPtrs shots;
 
-    SgArray entities = getAttrValueAsMultiEntityAttrMap("shots");
+    EntityPtrs entities = getAttrValueAsMultiEntityPtr("shots");
     for (size_t i = 0; i < entities.size(); i++)
     {
-        shots.push_back(Shot(m_sg, entities[i]));
+        if (Shot *shot = dynamic_cast<Shot *>(entities[i]))
+        {
+            shots.push_back(shot);
+        }
     }
 
     return shots;

@@ -34,6 +34,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <stdexcept>
 
 #include <Shotgun/Type.h>
+#include <Shotgun/FilterBy.h>
 #include <Shotgun/Method.h>
 #include <Shotgun/Entity.h>
 #include <Shotgun/Shotgun.h>
@@ -46,6 +47,12 @@ Entity::Entity(Shotgun *sg)
     //: m_sg(sg), m_invalidAttrMode(INVALID_ATTR_USE_DEFAULT)
 {
     m_attrs = NULL;
+
+    // These are the default return fields for all entity types
+    //m_returnFields.push_back(toXmlrpcValue("id"));
+    //m_returnFields.push_back(toXmlrpcValue("project"));
+    //m_returnFields.push_back(toXmlrpcValue("created_at"));
+    //m_returnFields.push_back(toXmlrpcValue("updated_at"));
 }
 
 // *****************************************************************************
@@ -55,9 +62,9 @@ Entity::~Entity()
 }
 
 // *****************************************************************************
-xmlrpc_c::value Entity::createEntity(Shotgun *sg, 
-                                     const std::string &entityType, 
-                                     const SgMap &data)
+xmlrpc_c::value Entity::createSGEntity(Shotgun *sg, 
+                                       const std::string &entityType, 
+                                       const SgMap &data)
 {
     Method *md = sg->method("create");
 
@@ -80,10 +87,10 @@ xmlrpc_c::value Entity::createEntity(Shotgun *sg,
 }
 
 // *****************************************************************************
-xmlrpc_c::value Entity::updateEntity(Shotgun *sg, 
-                                     const std::string &entityType, 
-                                     const int entityId,
-                                     const SgArray &fieldsToUpdate)
+xmlrpc_c::value Entity::updateSGEntity(Shotgun *sg, 
+                                       const std::string &entityType, 
+                                       const int entityId,
+                                       const SgArray &fieldsToUpdate)
 {
     Method *md = sg->method("update");
 
@@ -106,7 +113,7 @@ xmlrpc_c::value Entity::updateEntity(Shotgun *sg,
 }
 
 // *****************************************************************************
-SgArray Entity::findEntities(Shotgun *sg, SgMap &findMap)
+SgArray Entity::findSGEntities(Shotgun *sg, SgMap &findMap)
 {
     Method *md = sg->method("read");
 
@@ -174,9 +181,9 @@ SgArray Entity::findEntities(Shotgun *sg, SgMap &findMap)
 }
 
 // *****************************************************************************
-bool Entity::deleteEntity(Shotgun *sg,
-                          const std::string &entityType,
-                          const int id)
+bool Entity::deleteSGEntity(Shotgun *sg,
+                            const std::string &entityType,
+                            const int id)
 {
     Method *md = sg->method("delete");
 
@@ -191,181 +198,6 @@ bool Entity::deleteEntity(Shotgun *sg,
     xmlrpc_c::value rawResult = md->call(params); 
 
     return getAttrValueAsBool("results", SgMap(xmlrpc_c::value_struct(rawResult)));
-}
-
-// *****************************************************************************
-void Entity::addOneConditionToList(SgArray &conditionList, 
-                                   const std::string &path,
-                                   const std::string &relation,
-                                   const xmlrpc_c::value &valuesArray)
-{
-    // Shotgun will give appropriate exception if the type for the
-    // values is not an array. So no need to take care of it here.
-    SgMap condition;
-    condition["path"] = toXmlrpcValue(path);
-    condition["relation"] = toXmlrpcValue(relation);
-    condition["values"] = valuesArray;
-
-    conditionList.push_back(toXmlrpcValue(condition));
-}
-
-// *****************************************************************************
-void Entity::addOneConditionToFindMap(SgMap &findMap,
-                                      const std::string &filterName,
-                                      const std::string &filterOp,
-                                      const xmlrpc_c::value &filterValue)
-{
-    SgMap filters = getAttrValueAsMap("filters", findMap);
-    SgArray conditions = getAttrValueAsArray("conditions", filters);
-
-    // --------------------------------------------------------------
-    // Add an extra condition and make a new conditions list
-    SgMap condition;
-    condition["path"] = toXmlrpcValue(filterName);
-    condition["relation"] = toXmlrpcValue(filterOp);
-    SgArray valueArray;
-#if 1
-    if (filterValue.type() == xmlrpc_c::value::TYPE_ARRAY)
-    {
-        valueArray = xmlrpc_c::value_array(filterValue).vectorValueValue();
-    }     
-    else
-    {
-        valueArray.push_back(filterValue);
-    }
-#else
-    valueArray.push_back(filterValue);
-#endif
-    condition["values"] = toXmlrpcValue(valueArray);
-
-    conditions.push_back(toXmlrpcValue(condition));
-
-    // --------------------------------------------------------------
-    // Construct the new filters with the updated conditions
-    SgMap newFilters;
-    newFilters["logical_operator"] = toXmlrpcValue(getAttrValueAsString("logical_operator",filters));
-    newFilters["conditions"] = toXmlrpcValue(conditions);
-
-    // --------------------------------------------------------------
-    // Replace the old "filters" with the "newFilters"
-    findMap.erase("filters");
-    findMap["filters"] = toXmlrpcValue(newFilters);
-}
-
-// *****************************************************************************
-SgMap Entity::buildFindMapWithNoFilter(Shotgun *sg,
-                                       const std::string &entityType,
-                                       const std::string &projectCode,
-                                       const int limit,
-                                       const SgArray &extraReturnFields,
-                                       const bool retiredOnly)
-{
-    // -------------------------------------------------------------------
-    // "conditions"
-    SgArray conditions;
-    
-    if (projectCode != "")
-    {
-        Project project = sg->findProjectByCode(projectCode);
-
-        // Both ways work, but the second one seems much faster. From my
-        // observation, searching by filterOp, "is", is MUCH faster than 
-        // "name_contains".
-#if 0
-        SgArray projValues;
-        projValues.push_back(toXmlrpcValue(project.sgName()));
-        Entity::addOneConditionToList(conditions, Entity::condition("project", "name_contains", toXmlrpcValue(projValues)));
-#else
-        SgArray projValues;
-        projValues.push_back(toXmlrpcValue(project.asLink()));
-        Entity::addOneConditionToList(conditions, "project", "is", toXmlrpcValue(projValues));
-#endif
-    }
-
-    // ------------------------------------------------------------------
-    // The findMap
-    SgMap findMap = buildFindMap(entityType, 
-                                 conditions, 
-                                 "all", 
-                                 extraReturnFields, 
-                                 retiredOnly, 
-                                 limit);
-
-    return findMap;    
-}
-
-// *****************************************************************************
-SgMap Entity::buildFindMapWithSingleFilter(Shotgun *sg,
-                                           const std::string &entityType,
-                                           const std::string &filterName,
-                                           const std::string &filterOp,
-                                           const xmlrpc_c::value &filterValue, 
-                                           const std::string &projectCode,
-                                           const int limit,
-                                           const SgArray &extraReturnFields,
-                                           const bool retiredOnly)
-{
-    // ------------------------------------------------------------------
-    // "conditions"
-    SgArray conditions;
-
-    if (projectCode != "")
-    {
-        Project project = sg->findProjectByCode(projectCode);
-
-        SgArray projValues;
-        projValues.push_back(toXmlrpcValue(project.asLink()));
-        Entity::addOneConditionToList(conditions, "project", "is", toXmlrpcValue(projValues));
-    }
-
-    if (filterName != "" && filterOp != "")
-    {
-        SgArray values;
-        values.push_back(filterValue);
-        addOneConditionToList(conditions, filterName, filterOp, toXmlrpcValue(values));
-    }
-
-    // ------------------------------------------------------------------
-    // The findMap
-    SgMap findMap = buildFindMap(entityType, 
-                                 conditions, 
-                                 "all", 
-                                 extraReturnFields, 
-                                 retiredOnly, 
-                                 limit);
-
-    return findMap;    
-}
-
-// *****************************************************************************
-xmlrpc_c::value Entity::findOneEntityBySingleFilter(Shotgun *sg,
-                                                    const std::string &entityType,
-                                                    const std::string &filterName,
-                                                    const std::string &filterOp,
-                                                    const xmlrpc_c::value &filterValue, 
-                                                    const std::string &projectCode,
-                                                    const SgArray &extraReturnFields,
-                                                    const bool retiredOnly)
-{
-    SgMap findMap = buildFindMapWithSingleFilter(sg,
-                                                 entityType,
-                                                 filterName,
-                                                 filterOp,
-                                                 filterValue,
-                                                 projectCode,
-                                                 0,
-                                                 extraReturnFields,
-                                                 retiredOnly);
-
-    SgArray resultEntities = findEntities(sg, findMap);
-
-    if (resultEntities.size() > 0)
-    {
-        return resultEntities[0];
-    }
-    {
-        throw SgEntityNotFoundError(entityType);
-    }
 }
 
 // *****************************************************************************
@@ -448,11 +280,8 @@ const std::string Entity::getProjectCode() const
     SgMap projectMap = getAttrValueAsMap("project");
     std::string projectName = getAttrValueAsString("name", projectMap);
 
-    Project project = Project(m_sg, findOneEntityBySingleFilter(m_sg, 
-                                                       "Project", 
-                                                       "name", "is", toXmlrpcValue(projectName)));
-
-    return project.sgCode();
+    Project *project = m_sg->findProjectByName(projectName);
+    return project->sgCode();
 }
 
 // *****************************************************************************
@@ -509,240 +338,241 @@ SgMap Entity::buildCreateMap(const std::string &entityType,
     
     createMap["fields"] = toXmlrpcValue(fields);
 
-    // -------------------------------------------------------------------
-    // "return_fields"
-    //
-    // Add a few basic return fields for all entities
-    SgArray returnFields = extraReturnFields;
-    returnFields.push_back(toXmlrpcValue("id"));
-    returnFields.push_back(toXmlrpcValue("project"));
-    returnFields.push_back(toXmlrpcValue("created_at"));
-    returnFields.push_back(toXmlrpcValue("updated_at"));
-
-    // Add entity-specific return fields here
-    if (entityType == "Project")
-    {
-        returnFields.push_back(toXmlrpcValue("name"));
-        returnFields.push_back(toXmlrpcValue("code"));
-        returnFields.push_back(toXmlrpcValue("sg_status"));
-        returnFields.push_back(toXmlrpcValue("sg_archive_watcher"));
-        returnFields.push_back(toXmlrpcValue("sg_pub_stills_watcher"));
-        returnFields.push_back(toXmlrpcValue("sg_generate_shot_aliases"));
-        returnFields.push_back(toXmlrpcValue("sg_send_dailies_notices"));
-        returnFields.push_back(toXmlrpcValue("sg_polish_shot_notifications"));
-        returnFields.push_back(toXmlrpcValue("sg_report_storage_information"));
-        returnFields.push_back(toXmlrpcValue("sg_default_start_frame"));
-        returnFields.push_back(toXmlrpcValue("sg_ms_project_schedule"));
-    }
-    else if (entityType == "Sequence")
-    {
-        returnFields.push_back(toXmlrpcValue("code"));
-    }
-    else if (entityType == "Shot")
-    {
-        returnFields.push_back(toXmlrpcValue("code"));
-        returnFields.push_back(toXmlrpcValue("sg_continuity"));
-        returnFields.push_back(toXmlrpcValue("description"));
-        returnFields.push_back(toXmlrpcValue("elements"));
-        returnFields.push_back(toXmlrpcValue("sg_estimated_frame_render_hours"));
-        returnFields.push_back(toXmlrpcValue("sg_final_daily"));
-        returnFields.push_back(toXmlrpcValue("sg_latest_daily"));
-        returnFields.push_back(toXmlrpcValue("sg_lens"));
-        returnFields.push_back(toXmlrpcValue("sg_prod_vfx__"));
-        returnFields.push_back(toXmlrpcValue("sg_sequence"));
-        returnFields.push_back(toXmlrpcValue("sg_shot_notifications"));
-        returnFields.push_back(toXmlrpcValue("project_names"));
-        returnFields.push_back(toXmlrpcValue("sg_status_list"));
-        returnFields.push_back(toXmlrpcValue("sg_turnover_"));
-        returnFields.push_back(toXmlrpcValue("sg_type"));
-        returnFields.push_back(toXmlrpcValue("sg_omit_"));
-        returnFields.push_back(toXmlrpcValue("sg_on_hold_"));
-        returnFields.push_back(toXmlrpcValue("sg_cbb_"));
-        returnFields.push_back(toXmlrpcValue("smart_cut_duration"));
-        returnFields.push_back(toXmlrpcValue("smart_cut_in"));
-        returnFields.push_back(toXmlrpcValue("smart_cut_out"));
-        returnFields.push_back(toXmlrpcValue("smart_cut_summary_display"));
-        returnFields.push_back(toXmlrpcValue("smart_duration_summary_display"));
-        returnFields.push_back(toXmlrpcValue("smart_head_duration"));
-        returnFields.push_back(toXmlrpcValue("smart_head_in"));
-        returnFields.push_back(toXmlrpcValue("smart_head_out"));
-        returnFields.push_back(toXmlrpcValue("smart_tail_duration"));
-        returnFields.push_back(toXmlrpcValue("smart_tail_in"));
-        returnFields.push_back(toXmlrpcValue("smart_tail_out"));
-        returnFields.push_back(toXmlrpcValue("smart_working_duration"));
-        returnFields.push_back(toXmlrpcValue("sg_actual_plate_resolution"));
-        returnFields.push_back(toXmlrpcValue("sg_storage___tier"));
-        returnFields.push_back(toXmlrpcValue("sg_storage___filesystem"));
-        returnFields.push_back(toXmlrpcValue("sg_storage___filesystem_used_percentage"));
-        returnFields.push_back(toXmlrpcValue("sg_storage___size_gb"));
-        returnFields.push_back(toXmlrpcValue("sg_slate_burnin_info"));
-        returnFields.push_back(toXmlrpcValue("sg_slate_header_info"));
-        returnFields.push_back(toXmlrpcValue("sg_pixel_aspect"));
-    }
-    else if (entityType == "Version") // Daily
-    {
-        returnFields.push_back(toXmlrpcValue("code"));
-        returnFields.push_back(toXmlrpcValue("sg_department"));
-        returnFields.push_back(toXmlrpcValue("description"));
-        returnFields.push_back(toXmlrpcValue("sg_sequence"));
-        returnFields.push_back(toXmlrpcValue("entity"));
-        returnFields.push_back(toXmlrpcValue("sg_rev"));
-        returnFields.push_back(toXmlrpcValue("frame_count"));
-        returnFields.push_back(toXmlrpcValue("frame_range"));
-        returnFields.push_back(toXmlrpcValue("sg_source"));
-        returnFields.push_back(toXmlrpcValue("sg_source_2k"));
-        returnFields.push_back(toXmlrpcValue("sg_daily_hd"));
-        returnFields.push_back(toXmlrpcValue("image"));
-        returnFields.push_back(toXmlrpcValue("sg_status"));
-        returnFields.push_back(toXmlrpcValue("sg_status_list"));
-        returnFields.push_back(toXmlrpcValue("sg_epk_"));
-        returnFields.push_back(toXmlrpcValue("sg_dailies_date"));
-        returnFields.push_back(toXmlrpcValue("sg_view_order"));
-        returnFields.push_back(toXmlrpcValue("sg_preview_qt"));
-        returnFields.push_back(toXmlrpcValue("sg_preview_hd_qt"));
-        returnFields.push_back(toXmlrpcValue("user"));
-    }
-    else if (entityType == "HumanUser")
-    {
-        returnFields.push_back(toXmlrpcValue("name"));
-        returnFields.push_back(toXmlrpcValue("admin"));
-        returnFields.push_back(toXmlrpcValue("sg_department"));
-        returnFields.push_back(toXmlrpcValue("email"));
-        returnFields.push_back(toXmlrpcValue("login"));
-        returnFields.push_back(toXmlrpcValue("sg_role"));
-        returnFields.push_back(toXmlrpcValue("permission_rule_set"));
-    }
-    else if (entityType == "Element")
-    {
-        returnFields.push_back(toXmlrpcValue("code"));
-        returnFields.push_back(toXmlrpcValue("assets"));
-        returnFields.push_back(toXmlrpcValue("shots"));
-        returnFields.push_back(toXmlrpcValue("tag_list"));
-        returnFields.push_back(toXmlrpcValue("sg_element_type"));
-    }
-    else if (entityType == "Asset")
-    {
-        returnFields.push_back(toXmlrpcValue("code"));
-        returnFields.push_back(toXmlrpcValue("sg_asset_type"));
-        returnFields.push_back(toXmlrpcValue("sg_status_list"));
-        returnFields.push_back(toXmlrpcValue("sg_asset_preview_qt"));
-        returnFields.push_back(toXmlrpcValue("sg_asset_source"));
-        returnFields.push_back(toXmlrpcValue("elements"));
-        returnFields.push_back(toXmlrpcValue("parents"));
-        returnFields.push_back(toXmlrpcValue("assets"));
-        returnFields.push_back(toXmlrpcValue("shots"));
-    }
-    else if (entityType == "Delivery")
-    {
-        returnFields.push_back(toXmlrpcValue("title"));
-        returnFields.push_back(toXmlrpcValue("sg_delivery_data_size"));
-        returnFields.push_back(toXmlrpcValue("sg_delivery_notes"));
-        returnFields.push_back(toXmlrpcValue("sg_delivery_path"));
-        returnFields.push_back(toXmlrpcValue("sg_delivery_staged_path"));
-        returnFields.push_back(toXmlrpcValue("sg_delivery_status"));
-        returnFields.push_back(toXmlrpcValue("sg_delivery_type"));
-        returnFields.push_back(toXmlrpcValue("sg_wrangler"));
-        returnFields.push_back(toXmlrpcValue("sg_wrangler_notes"));
-    }
-    else if (entityType == "CustomEntity01") // "DeliveryItem"
-    {
-        returnFields.push_back(toXmlrpcValue("code"));
-        returnFields.push_back(toXmlrpcValue("sg_asset"));
-        returnFields.push_back(toXmlrpcValue("sg_delivery"));
-        returnFields.push_back(toXmlrpcValue("sg_staging_status"));
-        returnFields.push_back(toXmlrpcValue("sg_staging_qt"));
-        returnFields.push_back(toXmlrpcValue("sg_processing_status"));
-        returnFields.push_back(toXmlrpcValue("sg_quality_control_status"));
-        returnFields.push_back(toXmlrpcValue("sg_data_size"));
-        returnFields.push_back(toXmlrpcValue("sg_files"));
-        returnFields.push_back(toXmlrpcValue("sg_notes"));
-        returnFields.push_back(toXmlrpcValue("sg_priority"));
-        returnFields.push_back(toXmlrpcValue("sg_processing_type"));
-        returnFields.push_back(toXmlrpcValue("sg_publish_type"));
-        returnFields.push_back(toXmlrpcValue("sg_sequence"));
-        returnFields.push_back(toXmlrpcValue("sg_shot"));
-        returnFields.push_back(toXmlrpcValue("sg_tippett_name"));
-        returnFields.push_back(toXmlrpcValue("sg_tippett_path"));
-        returnFields.push_back(toXmlrpcValue("sg_tippett_start_frame"));
-        returnFields.push_back(toXmlrpcValue("sg_wrangler_notes"));
-    }
-    else if (entityType == "PublishEvent")
-    {
-        returnFields.push_back(toXmlrpcValue("code"));
-        returnFields.push_back(toXmlrpcValue("sg_file"));
-        //returnFields.push_back(toXmlrpcValue("sg_format"));
-        returnFields.push_back(toXmlrpcValue("sg_preview_hd_qt"));
-        returnFields.push_back(toXmlrpcValue("sg_preview_qt"));
-        returnFields.push_back(toXmlrpcValue("sg_rev"));
-        returnFields.push_back(toXmlrpcValue("sg_resolution"));
-        returnFields.push_back(toXmlrpcValue("sg_type"));
-    }
-    else if (entityType == "Review")
-    {
-        returnFields.push_back(toXmlrpcValue("code"));
-        returnFields.push_back(toXmlrpcValue("sg_review_type"));
-        returnFields.push_back(toXmlrpcValue("sg_review_media"));
-        returnFields.push_back(toXmlrpcValue("sg_review_date_sent"));
-        returnFields.push_back(toXmlrpcValue("sg_review_sent_to"));
-        returnFields.push_back(toXmlrpcValue("sg_review_date_reviewed"));
-        returnFields.push_back(toXmlrpcValue("sg_review_reviewed_by"));
-        returnFields.push_back(toXmlrpcValue("sg_review_disclaimers"));
-        returnFields.push_back(toXmlrpcValue("sg_review_tipsupe_notes"));
-        returnFields.push_back(toXmlrpcValue("sg_review_client_notes"));
-    }
-    else if (entityType == "ReviewItem")
-    {
-        returnFields.push_back(toXmlrpcValue("code"));
-        returnFields.push_back(toXmlrpcValue("sg_version"));
-        returnFields.push_back(toXmlrpcValue("sg_link"));
-        returnFields.push_back(toXmlrpcValue("sg_review"));
-        returnFields.push_back(toXmlrpcValue("sg_purpose"));
-        returnFields.push_back(toXmlrpcValue("sg_order"));
-        returnFields.push_back(toXmlrpcValue("sg_reviewed_by"));
-        returnFields.push_back(toXmlrpcValue("sg_date_reviewed"));
-        returnFields.push_back(toXmlrpcValue("sg_approved_"));
-    }
-    else if (entityType == "Task")
-    {
-        returnFields.push_back(toXmlrpcValue("content"));
-        returnFields.push_back(toXmlrpcValue("task_assignees"));
-        returnFields.push_back(toXmlrpcValue("color"));
-        returnFields.push_back(toXmlrpcValue("due_date"));
-        returnFields.push_back(toXmlrpcValue("duration"));
-        returnFields.push_back(toXmlrpcValue("entity"));
-        returnFields.push_back(toXmlrpcValue("milestone"));
-        returnFields.push_back(toXmlrpcValue("start_date"));
-        returnFields.push_back(toXmlrpcValue("sg_status_list"));
-        returnFields.push_back(toXmlrpcValue("sg_system_task_type"));
-        returnFields.push_back(toXmlrpcValue("sg_view_order"));
-    }
-    else if (entityType == "Group")
-    {
-        returnFields.push_back(toXmlrpcValue("code"));
-    }
-    else if (entityType == "Note")
-    {
-        returnFields.push_back(toXmlrpcValue("user"));
-        returnFields.push_back(toXmlrpcValue("content"));
-        returnFields.push_back(toXmlrpcValue("addressings_cc"));
-        returnFields.push_back(toXmlrpcValue("addressings_to"));
-        returnFields.push_back(toXmlrpcValue("sg_status_list"));
-        returnFields.push_back(toXmlrpcValue("subject"));
-        returnFields.push_back(toXmlrpcValue("sg_note_type"));
-        returnFields.push_back(toXmlrpcValue("note_links"));
-    }
-    else if (entityType == "Playlist") 
-    {
-        returnFields.push_back(toXmlrpcValue("code"));
-        returnFields.push_back(toXmlrpcValue("sg_date_and_time"));
-        returnFields.push_back(toXmlrpcValue("description"));
-        returnFields.push_back(toXmlrpcValue("notes"));
-        returnFields.push_back(toXmlrpcValue("tag_list"));
-        returnFields.push_back(toXmlrpcValue("image"));
-        returnFields.push_back(toXmlrpcValue("versions"));
-    }
-
-    createMap["return_fields"] = toXmlrpcValue(returnFields);
+//     // -------------------------------------------------------------------
+//     // "return_fields"
+//     //
+//     // Add a few basic return fields for all entities
+//     SgArray returnFields = extraReturnFields;
+//     returnFields.push_back(toXmlrpcValue("id"));
+//     returnFields.push_back(toXmlrpcValue("project"));
+//     returnFields.push_back(toXmlrpcValue("created_at"));
+//     returnFields.push_back(toXmlrpcValue("updated_at"));
+// 
+//     // Add entity-specific return fields here
+//     if (entityType == "Project")
+//     {
+//         returnFields.push_back(toXmlrpcValue("name"));
+//         returnFields.push_back(toXmlrpcValue("code"));
+//         returnFields.push_back(toXmlrpcValue("sg_status"));
+//         returnFields.push_back(toXmlrpcValue("sg_archive_watcher"));
+//         returnFields.push_back(toXmlrpcValue("sg_pub_stills_watcher"));
+//         returnFields.push_back(toXmlrpcValue("sg_generate_shot_aliases"));
+//         returnFields.push_back(toXmlrpcValue("sg_send_dailies_notices"));
+//         returnFields.push_back(toXmlrpcValue("sg_polish_shot_notifications"));
+//         returnFields.push_back(toXmlrpcValue("sg_report_storage_information"));
+//         returnFields.push_back(toXmlrpcValue("sg_default_start_frame"));
+//         returnFields.push_back(toXmlrpcValue("sg_ms_project_schedule"));
+//     }
+//     else if (entityType == "Sequence")
+//     {
+//         returnFields.push_back(toXmlrpcValue("code"));
+//     }
+//     else if (entityType == "Shot")
+//     {
+//         returnFields.push_back(toXmlrpcValue("code"));
+//         returnFields.push_back(toXmlrpcValue("sg_continuity"));
+//         returnFields.push_back(toXmlrpcValue("description"));
+//         returnFields.push_back(toXmlrpcValue("elements"));
+//         returnFields.push_back(toXmlrpcValue("sg_estimated_frame_render_hours"));
+//         returnFields.push_back(toXmlrpcValue("sg_final_daily"));
+//         returnFields.push_back(toXmlrpcValue("sg_latest_daily"));
+//         returnFields.push_back(toXmlrpcValue("sg_lens"));
+//         returnFields.push_back(toXmlrpcValue("sg_prod_vfx__"));
+//         returnFields.push_back(toXmlrpcValue("sg_sequence"));
+//         returnFields.push_back(toXmlrpcValue("sg_shot_notifications"));
+//         returnFields.push_back(toXmlrpcValue("project_names"));
+//         returnFields.push_back(toXmlrpcValue("sg_status_list"));
+//         returnFields.push_back(toXmlrpcValue("sg_turnover_"));
+//         returnFields.push_back(toXmlrpcValue("sg_type"));
+//         returnFields.push_back(toXmlrpcValue("sg_omit_"));
+//         returnFields.push_back(toXmlrpcValue("sg_on_hold_"));
+//         returnFields.push_back(toXmlrpcValue("sg_cbb_"));
+//         returnFields.push_back(toXmlrpcValue("smart_cut_duration"));
+//         returnFields.push_back(toXmlrpcValue("smart_cut_in"));
+//         returnFields.push_back(toXmlrpcValue("smart_cut_out"));
+//         returnFields.push_back(toXmlrpcValue("smart_cut_summary_display"));
+//         returnFields.push_back(toXmlrpcValue("smart_duration_summary_display"));
+//         returnFields.push_back(toXmlrpcValue("smart_head_duration"));
+//         returnFields.push_back(toXmlrpcValue("smart_head_in"));
+//         returnFields.push_back(toXmlrpcValue("smart_head_out"));
+//         returnFields.push_back(toXmlrpcValue("smart_tail_duration"));
+//         returnFields.push_back(toXmlrpcValue("smart_tail_in"));
+//         returnFields.push_back(toXmlrpcValue("smart_tail_out"));
+//         returnFields.push_back(toXmlrpcValue("smart_working_duration"));
+//         returnFields.push_back(toXmlrpcValue("sg_tippett_working_length"));
+//         returnFields.push_back(toXmlrpcValue("sg_actual_plate_resolution"));
+//         returnFields.push_back(toXmlrpcValue("sg_storage___tier"));
+//         returnFields.push_back(toXmlrpcValue("sg_storage___filesystem"));
+//         returnFields.push_back(toXmlrpcValue("sg_storage___filesystem_used_percentage"));
+//         returnFields.push_back(toXmlrpcValue("sg_storage___size_gb"));
+//         returnFields.push_back(toXmlrpcValue("sg_slate_burnin_info"));
+//         returnFields.push_back(toXmlrpcValue("sg_slate_header_info"));
+//         returnFields.push_back(toXmlrpcValue("sg_pixel_aspect"));
+//     }
+//     else if (entityType == "Version") // Daily
+//     {
+//         returnFields.push_back(toXmlrpcValue("code"));
+//         returnFields.push_back(toXmlrpcValue("sg_department"));
+//         returnFields.push_back(toXmlrpcValue("description"));
+//         returnFields.push_back(toXmlrpcValue("sg_sequence"));
+//         returnFields.push_back(toXmlrpcValue("entity"));
+//         returnFields.push_back(toXmlrpcValue("sg_rev"));
+//         returnFields.push_back(toXmlrpcValue("frame_count"));
+//         returnFields.push_back(toXmlrpcValue("frame_range"));
+//         returnFields.push_back(toXmlrpcValue("sg_source"));
+//         returnFields.push_back(toXmlrpcValue("sg_source_2k"));
+//         returnFields.push_back(toXmlrpcValue("sg_daily_hd"));
+//         returnFields.push_back(toXmlrpcValue("image"));
+//         returnFields.push_back(toXmlrpcValue("sg_status"));
+//         returnFields.push_back(toXmlrpcValue("sg_status_list"));
+//         returnFields.push_back(toXmlrpcValue("sg_epk_"));
+//         returnFields.push_back(toXmlrpcValue("sg_dailies_date"));
+//         returnFields.push_back(toXmlrpcValue("sg_view_order"));
+//         returnFields.push_back(toXmlrpcValue("sg_preview_qt"));
+//         returnFields.push_back(toXmlrpcValue("sg_preview_hd_qt"));
+//         returnFields.push_back(toXmlrpcValue("user"));
+//     }
+//     else if (entityType == "HumanUser")
+//     {
+//         returnFields.push_back(toXmlrpcValue("name"));
+//         returnFields.push_back(toXmlrpcValue("admin"));
+//         returnFields.push_back(toXmlrpcValue("sg_department"));
+//         returnFields.push_back(toXmlrpcValue("email"));
+//         returnFields.push_back(toXmlrpcValue("login"));
+//         returnFields.push_back(toXmlrpcValue("sg_role"));
+//         returnFields.push_back(toXmlrpcValue("permission_rule_set"));
+//     }
+//     else if (entityType == "Element")
+//     {
+//         returnFields.push_back(toXmlrpcValue("code"));
+//         returnFields.push_back(toXmlrpcValue("assets"));
+//         returnFields.push_back(toXmlrpcValue("shots"));
+//         returnFields.push_back(toXmlrpcValue("tag_list"));
+//         returnFields.push_back(toXmlrpcValue("sg_element_type"));
+//     }
+//     else if (entityType == "Asset")
+//     {
+//         returnFields.push_back(toXmlrpcValue("code"));
+//         returnFields.push_back(toXmlrpcValue("sg_asset_type"));
+//         returnFields.push_back(toXmlrpcValue("sg_status_list"));
+//         returnFields.push_back(toXmlrpcValue("sg_asset_preview_qt"));
+//         returnFields.push_back(toXmlrpcValue("sg_asset_source"));
+//         returnFields.push_back(toXmlrpcValue("elements"));
+//         returnFields.push_back(toXmlrpcValue("parents"));
+//         returnFields.push_back(toXmlrpcValue("assets"));
+//         returnFields.push_back(toXmlrpcValue("shots"));
+//     }
+//     else if (entityType == "Delivery")
+//     {
+//         returnFields.push_back(toXmlrpcValue("title"));
+//         returnFields.push_back(toXmlrpcValue("sg_delivery_data_size"));
+//         returnFields.push_back(toXmlrpcValue("sg_delivery_notes"));
+//         returnFields.push_back(toXmlrpcValue("sg_delivery_path"));
+//         returnFields.push_back(toXmlrpcValue("sg_delivery_staged_path"));
+//         returnFields.push_back(toXmlrpcValue("sg_delivery_status"));
+//         returnFields.push_back(toXmlrpcValue("sg_delivery_type"));
+//         returnFields.push_back(toXmlrpcValue("sg_wrangler"));
+//         returnFields.push_back(toXmlrpcValue("sg_wrangler_notes"));
+//     }
+//     else if (entityType == "CustomEntity01") // "DeliveryItem"
+//     {
+//         returnFields.push_back(toXmlrpcValue("code"));
+//         returnFields.push_back(toXmlrpcValue("sg_asset"));
+//         returnFields.push_back(toXmlrpcValue("sg_delivery"));
+//         returnFields.push_back(toXmlrpcValue("sg_staging_status"));
+//         returnFields.push_back(toXmlrpcValue("sg_staging_qt"));
+//         returnFields.push_back(toXmlrpcValue("sg_processing_status"));
+//         returnFields.push_back(toXmlrpcValue("sg_quality_control_status"));
+//         returnFields.push_back(toXmlrpcValue("sg_data_size"));
+//         returnFields.push_back(toXmlrpcValue("sg_files"));
+//         returnFields.push_back(toXmlrpcValue("sg_notes"));
+//         returnFields.push_back(toXmlrpcValue("sg_priority"));
+//         returnFields.push_back(toXmlrpcValue("sg_processing_type"));
+//         returnFields.push_back(toXmlrpcValue("sg_publish_type"));
+//         returnFields.push_back(toXmlrpcValue("sg_sequence"));
+//         returnFields.push_back(toXmlrpcValue("sg_shot"));
+//         returnFields.push_back(toXmlrpcValue("sg_tippett_name"));
+//         returnFields.push_back(toXmlrpcValue("sg_tippett_path"));
+//         returnFields.push_back(toXmlrpcValue("sg_tippett_start_frame"));
+//         returnFields.push_back(toXmlrpcValue("sg_wrangler_notes"));
+//     }
+//     else if (entityType == "PublishEvent")
+//     {
+//         returnFields.push_back(toXmlrpcValue("code"));
+//         returnFields.push_back(toXmlrpcValue("sg_file"));
+//         //returnFields.push_back(toXmlrpcValue("sg_format"));
+//         returnFields.push_back(toXmlrpcValue("sg_preview_hd_qt"));
+//         returnFields.push_back(toXmlrpcValue("sg_preview_qt"));
+//         returnFields.push_back(toXmlrpcValue("sg_rev"));
+//         returnFields.push_back(toXmlrpcValue("sg_resolution"));
+//         returnFields.push_back(toXmlrpcValue("sg_type"));
+//     }
+//     else if (entityType == "Review")
+//     {
+//         returnFields.push_back(toXmlrpcValue("code"));
+//         returnFields.push_back(toXmlrpcValue("sg_review_type"));
+//         returnFields.push_back(toXmlrpcValue("sg_review_media"));
+//         returnFields.push_back(toXmlrpcValue("sg_review_date_sent"));
+//         returnFields.push_back(toXmlrpcValue("sg_review_sent_to"));
+//         returnFields.push_back(toXmlrpcValue("sg_review_date_reviewed"));
+//         returnFields.push_back(toXmlrpcValue("sg_review_reviewed_by"));
+//         returnFields.push_back(toXmlrpcValue("sg_review_disclaimers"));
+//         returnFields.push_back(toXmlrpcValue("sg_review_tipsupe_notes"));
+//         returnFields.push_back(toXmlrpcValue("sg_review_client_notes"));
+//     }
+//     else if (entityType == "ReviewItem")
+//     {
+//         returnFields.push_back(toXmlrpcValue("code"));
+//         returnFields.push_back(toXmlrpcValue("sg_version"));
+//         returnFields.push_back(toXmlrpcValue("sg_link"));
+//         returnFields.push_back(toXmlrpcValue("sg_review"));
+//         returnFields.push_back(toXmlrpcValue("sg_purpose"));
+//         returnFields.push_back(toXmlrpcValue("sg_order"));
+//         returnFields.push_back(toXmlrpcValue("sg_reviewed_by"));
+//         returnFields.push_back(toXmlrpcValue("sg_date_reviewed"));
+//         returnFields.push_back(toXmlrpcValue("sg_approved_"));
+//     }
+//     else if (entityType == "Task")
+//     {
+//         returnFields.push_back(toXmlrpcValue("content"));
+//         returnFields.push_back(toXmlrpcValue("task_assignees"));
+//         returnFields.push_back(toXmlrpcValue("color"));
+//         returnFields.push_back(toXmlrpcValue("due_date"));
+//         returnFields.push_back(toXmlrpcValue("duration"));
+//         returnFields.push_back(toXmlrpcValue("entity"));
+//         returnFields.push_back(toXmlrpcValue("milestone"));
+//         returnFields.push_back(toXmlrpcValue("start_date"));
+//         returnFields.push_back(toXmlrpcValue("sg_status_list"));
+//         returnFields.push_back(toXmlrpcValue("sg_system_task_type"));
+//         returnFields.push_back(toXmlrpcValue("sg_view_order"));
+//     }
+//     else if (entityType == "Group")
+//     {
+//         returnFields.push_back(toXmlrpcValue("code"));
+//     }
+//     else if (entityType == "Note")
+//     {
+//         returnFields.push_back(toXmlrpcValue("user"));
+//         returnFields.push_back(toXmlrpcValue("content"));
+//         returnFields.push_back(toXmlrpcValue("addressings_cc"));
+//         returnFields.push_back(toXmlrpcValue("addressings_to"));
+//         returnFields.push_back(toXmlrpcValue("sg_status_list"));
+//         returnFields.push_back(toXmlrpcValue("subject"));
+//         returnFields.push_back(toXmlrpcValue("sg_note_type"));
+//         returnFields.push_back(toXmlrpcValue("note_links"));
+//     }
+//     else if (entityType == "Playlist") 
+//     {
+//         returnFields.push_back(toXmlrpcValue("code"));
+//         returnFields.push_back(toXmlrpcValue("sg_date_and_time"));
+//         returnFields.push_back(toXmlrpcValue("description"));
+//         returnFields.push_back(toXmlrpcValue("notes"));
+//         returnFields.push_back(toXmlrpcValue("tag_list"));
+//         returnFields.push_back(toXmlrpcValue("image"));
+//         returnFields.push_back(toXmlrpcValue("versions"));
+//     }
+// 
+//     createMap["return_fields"] = toXmlrpcValue(returnFields);
 
     return createMap;
 }
@@ -763,8 +593,7 @@ SgMap Entity::buildUpdateMap(const std::string &entityType,
 
 // *****************************************************************************
 SgMap Entity::buildFindMap(const std::string &entityType,
-                           const SgArray &filterConditions,
-                           const std::string &filterOperator,
+                           const FilterBy &filterList,
                            const SgArray &filterReturnFields,
                            const bool retiredOnly,
                            const int limit,
@@ -778,17 +607,19 @@ SgMap Entity::buildFindMap(const std::string &entityType,
 
     // -------------------------------------------------------------------
     // "filters"
-    SgMap filters;
-    if (filterOperator != "" or filterOperator == "all")
+    if (!filterList.empty())
     {
-        filters["logical_operator"] = toXmlrpcValue("and");
+        findMap["filters"] = toXmlrpcValue(filterList.filters());
     }
     else
     {
-        filters["logical_operator"] = toXmlrpcValue("or");
+        // The "logic_operator" is required, so give some default value       
+        SgMap filters;
+        filters["logical_operator"] = toXmlrpcValue("and");
+        filters["conditions"] = toXmlrpcValue(SgArray());
+
+        findMap["filters"] = toXmlrpcValue(filters);
     }
-    filters["conditions"] = toXmlrpcValue(filterConditions);
-    findMap["filters"] = toXmlrpcValue(filters);
 
     // -------------------------------------------------------------------
     // "return_only"
@@ -829,262 +660,39 @@ SgMap Entity::buildFindMap(const std::string &entityType,
     }
     findMap["paging"] = toXmlrpcValue(paging);
 
-#warning This giant block of stuff shouldn't be here
-    // -------------------------------------------------------------------
-    // "return_fields"
-    //
-    // Add a few basic return fields for all entities
-    SgArray returnFields = filterReturnFields;
-    returnFields.push_back(toXmlrpcValue("id"));
-    returnFields.push_back(toXmlrpcValue("project"));
-    returnFields.push_back(toXmlrpcValue("created_at"));
-    returnFields.push_back(toXmlrpcValue("updated_at"));
-
-    // Add entity-specific return fields here
-    if (entityType == "Project")
-    {
-        returnFields.push_back(toXmlrpcValue("name"));
-        returnFields.push_back(toXmlrpcValue("code"));
-    }
-    else if (entityType == "Sequence")
-    {
-        returnFields.push_back(toXmlrpcValue("code"));
-    }
-    else if (entityType == "Shot")
-    {
-        returnFields.push_back(toXmlrpcValue("code"));
-        returnFields.push_back(toXmlrpcValue("sg_continuity"));
-        returnFields.push_back(toXmlrpcValue("description"));
-        returnFields.push_back(toXmlrpcValue("elements"));
-        returnFields.push_back(toXmlrpcValue("sg_estimated_frame_render_hours"));
-        returnFields.push_back(toXmlrpcValue("sg_final_daily"));
-        returnFields.push_back(toXmlrpcValue("sg_latest_daily"));
-        returnFields.push_back(toXmlrpcValue("sg_lens"));
-        returnFields.push_back(toXmlrpcValue("sg_prod_vfx__"));
-        returnFields.push_back(toXmlrpcValue("sg_sequence"));
-        returnFields.push_back(toXmlrpcValue("sg_shot_notifications"));
-        returnFields.push_back(toXmlrpcValue("project_names"));
-        returnFields.push_back(toXmlrpcValue("sg_status_list"));
-        returnFields.push_back(toXmlrpcValue("sg_turnover_"));
-        returnFields.push_back(toXmlrpcValue("sg_type"));
-        returnFields.push_back(toXmlrpcValue("sg_omit_"));
-        returnFields.push_back(toXmlrpcValue("sg_on_hold_"));
-        returnFields.push_back(toXmlrpcValue("sg_cbb_"));
-        returnFields.push_back(toXmlrpcValue("smart_cut_duration"));
-        returnFields.push_back(toXmlrpcValue("smart_cut_in"));
-        returnFields.push_back(toXmlrpcValue("smart_cut_out"));
-        returnFields.push_back(toXmlrpcValue("smart_cut_summary_display"));
-        returnFields.push_back(toXmlrpcValue("smart_duration_summary_display"));
-        returnFields.push_back(toXmlrpcValue("smart_head_duration"));
-        returnFields.push_back(toXmlrpcValue("smart_head_in"));
-        returnFields.push_back(toXmlrpcValue("smart_head_out"));
-        returnFields.push_back(toXmlrpcValue("smart_tail_duration"));
-        returnFields.push_back(toXmlrpcValue("smart_tail_in"));
-        returnFields.push_back(toXmlrpcValue("smart_tail_out"));
-        returnFields.push_back(toXmlrpcValue("smart_working_duration"));
-        returnFields.push_back(toXmlrpcValue("sg_tippett_working_length"));
-        returnFields.push_back(toXmlrpcValue("sg_actual_plate_resolution"));
-        returnFields.push_back(toXmlrpcValue("sg_storage___tier"));
-        returnFields.push_back(toXmlrpcValue("sg_storage___filesystem"));
-        returnFields.push_back(toXmlrpcValue("sg_storage___filesystem_used_percentage"));
-        returnFields.push_back(toXmlrpcValue("sg_storage___size_gb"));
-        returnFields.push_back(toXmlrpcValue("sg_slate_burnin_info"));
-        returnFields.push_back(toXmlrpcValue("sg_slate_header_info"));
-        returnFields.push_back(toXmlrpcValue("sg_pixel_aspect"));
-    }
-    else if (entityType == "Version") // Daily
-    {
-        returnFields.push_back(toXmlrpcValue("code"));
-        returnFields.push_back(toXmlrpcValue("sg_department"));
-        returnFields.push_back(toXmlrpcValue("description"));
-        returnFields.push_back(toXmlrpcValue("sg_sequence"));
-        returnFields.push_back(toXmlrpcValue("entity"));
-        returnFields.push_back(toXmlrpcValue("sg_rev"));
-        returnFields.push_back(toXmlrpcValue("frame_count"));
-        returnFields.push_back(toXmlrpcValue("frame_range"));
-        returnFields.push_back(toXmlrpcValue("sg_source"));
-        returnFields.push_back(toXmlrpcValue("sg_source_2k"));
-        returnFields.push_back(toXmlrpcValue("sg_daily_hd"));
-        returnFields.push_back(toXmlrpcValue("image"));
-        returnFields.push_back(toXmlrpcValue("sg_status"));
-        returnFields.push_back(toXmlrpcValue("sg_status_list"));
-        returnFields.push_back(toXmlrpcValue("sg_epk_"));
-        returnFields.push_back(toXmlrpcValue("sg_dailies_date"));
-        returnFields.push_back(toXmlrpcValue("sg_view_order"));
-        returnFields.push_back(toXmlrpcValue("sg_preview_qt"));
-        returnFields.push_back(toXmlrpcValue("sg_preview_hd_qt"));
-        returnFields.push_back(toXmlrpcValue("user"));
-    }
-    else if (entityType == "HumanUser")
-    {
-        returnFields.push_back(toXmlrpcValue("name"));
-        returnFields.push_back(toXmlrpcValue("admin"));
-        returnFields.push_back(toXmlrpcValue("sg_department"));
-        returnFields.push_back(toXmlrpcValue("email"));
-        returnFields.push_back(toXmlrpcValue("login"));
-        returnFields.push_back(toXmlrpcValue("sg_role"));
-        returnFields.push_back(toXmlrpcValue("permission_rule_set"));
-    }
-    else if (entityType == "Element")
-    {
-        returnFields.push_back(toXmlrpcValue("code"));
-        returnFields.push_back(toXmlrpcValue("assets"));
-        returnFields.push_back(toXmlrpcValue("shots"));
-        returnFields.push_back(toXmlrpcValue("tag_list"));
-        returnFields.push_back(toXmlrpcValue("sg_element_type"));
-    }
-    else if (entityType == "Asset")
-    {
-        returnFields.push_back(toXmlrpcValue("code"));
-        returnFields.push_back(toXmlrpcValue("sg_asset_type"));
-        returnFields.push_back(toXmlrpcValue("sg_status_list"));
-        returnFields.push_back(toXmlrpcValue("sg_asset_preview_qt"));
-        returnFields.push_back(toXmlrpcValue("sg_asset_source"));
-        returnFields.push_back(toXmlrpcValue("elements"));
-        returnFields.push_back(toXmlrpcValue("parents"));
-        returnFields.push_back(toXmlrpcValue("assets"));
-        returnFields.push_back(toXmlrpcValue("shots"));
-    }
-    else if (entityType == "Delivery")
-    {
-        returnFields.push_back(toXmlrpcValue("title"));
-        returnFields.push_back(toXmlrpcValue("sg_delivery_data_size"));
-        returnFields.push_back(toXmlrpcValue("sg_delivery_notes"));
-        returnFields.push_back(toXmlrpcValue("sg_delivery_path"));
-        returnFields.push_back(toXmlrpcValue("sg_delivery_staged_path"));
-        returnFields.push_back(toXmlrpcValue("sg_delivery_status"));
-        returnFields.push_back(toXmlrpcValue("sg_delivery_type"));
-        returnFields.push_back(toXmlrpcValue("sg_wrangler"));
-        returnFields.push_back(toXmlrpcValue("sg_wrangler_notes"));
-    }
-    else if (entityType == "CustomEntity01") // "DeliveryItem"
-    {
-        returnFields.push_back(toXmlrpcValue("code"));
-        returnFields.push_back(toXmlrpcValue("sg_asset"));
-        returnFields.push_back(toXmlrpcValue("sg_delivery"));
-        returnFields.push_back(toXmlrpcValue("sg_staging_status"));
-        returnFields.push_back(toXmlrpcValue("sg_staging_qt"));
-        returnFields.push_back(toXmlrpcValue("sg_processing_status"));
-        returnFields.push_back(toXmlrpcValue("sg_quality_control_status"));
-        returnFields.push_back(toXmlrpcValue("sg_data_size"));
-        returnFields.push_back(toXmlrpcValue("sg_files"));
-        returnFields.push_back(toXmlrpcValue("sg_notes"));
-        returnFields.push_back(toXmlrpcValue("sg_priority"));
-        returnFields.push_back(toXmlrpcValue("sg_processing_type"));
-        returnFields.push_back(toXmlrpcValue("sg_publish_type"));
-        returnFields.push_back(toXmlrpcValue("sg_sequence"));
-        returnFields.push_back(toXmlrpcValue("sg_shot"));
-        returnFields.push_back(toXmlrpcValue("sg_tippett_name"));
-        returnFields.push_back(toXmlrpcValue("sg_tippett_path"));
-        returnFields.push_back(toXmlrpcValue("sg_tippett_start_frame"));
-        returnFields.push_back(toXmlrpcValue("sg_wrangler_notes"));
-    }
-    else if (entityType == "PublishEvent")
-    {
-        returnFields.push_back(toXmlrpcValue("code"));
-        returnFields.push_back(toXmlrpcValue("sg_file"));
-        //returnFields.push_back(toXmlrpcValue("sg_format"));
-        returnFields.push_back(toXmlrpcValue("sg_preview_hd_qt"));
-        returnFields.push_back(toXmlrpcValue("sg_preview_qt"));
-        returnFields.push_back(toXmlrpcValue("sg_rev"));
-        returnFields.push_back(toXmlrpcValue("sg_resolution"));
-        returnFields.push_back(toXmlrpcValue("sg_type"));
-    }
-    else if (entityType == "Review")
-    {
-        returnFields.push_back(toXmlrpcValue("code"));
-        returnFields.push_back(toXmlrpcValue("sg_review_type"));
-        returnFields.push_back(toXmlrpcValue("sg_review_media"));
-        returnFields.push_back(toXmlrpcValue("sg_review_date_sent"));
-        returnFields.push_back(toXmlrpcValue("sg_review_sent_to"));
-        returnFields.push_back(toXmlrpcValue("sg_review_date_reviewed"));
-        returnFields.push_back(toXmlrpcValue("sg_review_reviewed_by"));
-        returnFields.push_back(toXmlrpcValue("sg_review_disclaimers"));
-        returnFields.push_back(toXmlrpcValue("sg_review_tipsupe_notes"));
-        returnFields.push_back(toXmlrpcValue("sg_review_client_notes"));
-    }
-    else if (entityType == "ReviewItem")
-    {
-        returnFields.push_back(toXmlrpcValue("code"));
-        returnFields.push_back(toXmlrpcValue("sg_version"));
-        returnFields.push_back(toXmlrpcValue("sg_link"));
-        returnFields.push_back(toXmlrpcValue("sg_review"));
-        returnFields.push_back(toXmlrpcValue("sg_purpose"));
-        returnFields.push_back(toXmlrpcValue("sg_order"));
-        returnFields.push_back(toXmlrpcValue("sg_reviewed_by"));
-        returnFields.push_back(toXmlrpcValue("sg_date_reviewed"));
-        returnFields.push_back(toXmlrpcValue("sg_approved_"));
-    }
-    else if (entityType == "Task")
-    {
-        returnFields.push_back(toXmlrpcValue("content"));
-        returnFields.push_back(toXmlrpcValue("task_assignees"));
-        returnFields.push_back(toXmlrpcValue("color"));
-        returnFields.push_back(toXmlrpcValue("due_date"));
-        returnFields.push_back(toXmlrpcValue("duration"));
-        returnFields.push_back(toXmlrpcValue("entity"));
-        returnFields.push_back(toXmlrpcValue("milestone"));
-        returnFields.push_back(toXmlrpcValue("start_date"));
-        returnFields.push_back(toXmlrpcValue("sg_status_list"));
-        returnFields.push_back(toXmlrpcValue("sg_system_task_type"));
-        returnFields.push_back(toXmlrpcValue("sg_view_order"));
-    }
-    else if (entityType == "Group")
-    {
-        returnFields.push_back(toXmlrpcValue("code"));
-    }
-    else if (entityType == "Note")
-    {
-        returnFields.push_back(toXmlrpcValue("user"));
-        returnFields.push_back(toXmlrpcValue("content"));
-        returnFields.push_back(toXmlrpcValue("addressings_cc"));
-        returnFields.push_back(toXmlrpcValue("addressings_to"));
-        returnFields.push_back(toXmlrpcValue("sg_status_list"));
-        returnFields.push_back(toXmlrpcValue("subject"));
-        returnFields.push_back(toXmlrpcValue("sg_note_type"));
-        returnFields.push_back(toXmlrpcValue("note_links"));
-    }
-    else if (entityType == "Playlist") 
-    {
-        returnFields.push_back(toXmlrpcValue("code"));
-        returnFields.push_back(toXmlrpcValue("sg_date_and_time"));
-        returnFields.push_back(toXmlrpcValue("description"));
-        returnFields.push_back(toXmlrpcValue("notes"));
-        returnFields.push_back(toXmlrpcValue("tag_list"));
-        returnFields.push_back(toXmlrpcValue("image"));
-        returnFields.push_back(toXmlrpcValue("versions"));
-    }
-
-    findMap["return_fields"] = toXmlrpcValue(returnFields);
+     // -------------------------------------------------------------------
+     // "return_fields" - will be populated in Shotgun class' entityFactoryFind(..)
+     
 
     // -------------------------------------------------------------------
-    // "sorts"
+    // "sorts" - This part makes sure that the given order has valid 
+    // list of ("field_name", "direction") pair
     if (order.size() > 0)
     {
         SgArray sorts;
 
         for (size_t i = 0; i < order.size(); i++)
         {
-            SgMap orderField = SgMap(xmlrpc_c::value_struct(order[i]));
+            SgMap orderMap = SgMap(xmlrpc_c::value_struct(order[i]));
 
             std::string fieldName;
             std::string fieldDir;
 
             //---------------
             // "field_name"
-            fieldName = getAttrValueAsString("field_name", orderField, "", INVALID_ATTR_USE_DEFAULT);
+            fieldName = getAttrValueAsString("field_name", orderMap, "", INVALID_ATTR_USE_DEFAULT);
 
             //---------------
             // "direction"
-            fieldDir = getAttrValueAsString("direction", orderField, "", INVALID_ATTR_USE_DEFAULT);
+            fieldDir = getAttrValueAsString("direction", orderMap, "", INVALID_ATTR_USE_DEFAULT);
 
             if (fieldName != "" && fieldDir != "")
             {
-                SgMap orderField2;
-                orderField2["field_name"] = toXmlrpcValue(fieldName);
-                orderField2["direction"] = toXmlrpcValue(fieldDir);
+                SgMap orderMap2;
+                orderMap2["field_name"] = toXmlrpcValue(fieldName);
+                orderMap2["direction"] = toXmlrpcValue(fieldDir);
 
-                sorts.push_back(toXmlrpcValue(orderField2));
+                sorts.push_back(toXmlrpcValue(orderMap2));
             }
         }
 
@@ -1130,16 +738,14 @@ const xmlrpc_c::value Entity::getAttrValue(const std::string &attrName) const
     SgArray returnFields;
     returnFields.push_back(toXmlrpcValue(attrName));
 
-    attrMap = SgMap(xmlrpc_c::value_struct(findOneEntityBySingleFilter(m_sg, 
-                                                                       m_type, 
-                                                                       "id",
-                                                                       "is",
-                                                                       toXmlrpcValue(sgId()), 
-                                                                       "",
-                                                                       returnFields)));
+    Entity *entity = m_sg->findEntity(m_type,
+                                      FilterBy("id", "is", sgId()),
+                                      returnFields);
+
+    attrMap = SgMap(xmlrpc_c::value_struct(entity->attrs()));
+    delete entity;
 
     SgMap::const_iterator foundIter = attrMap.find(attrName);
-
     if (foundIter != attrMap.end())
     {
         return (*foundIter).second;
@@ -1210,10 +816,10 @@ void Entity::setAttrValue(const std::string &attrName,
         // TODO: currently it omits the optional "parent_entity" field.
         // Don't know if it's needed ever.
 
-        xmlrpc_c::value result = updateEntity(m_sg,
-                                              m_type,
-                                              sgId(),
-                                              fields);
+        xmlrpc_c::value result = updateSGEntity(m_sg,
+                                                m_type,
+                                                sgId(),
+                                                fields);
 
         // -------------------------------------------------------------------------
         // Update the attrbute if it is already in m_attrs. If it's not already
@@ -1267,10 +873,10 @@ void Entity::setAttrValue(const SgMap &attrPairs)
         // TODO: ignored multi_values and "parent_entity" field for now.
 
         // Update all the field in one call
-        xmlrpc_c::value result = updateEntity(m_sg,
-                                              m_type,
-                                              sgId(),
-                                              fields);
+        xmlrpc_c::value result = updateSGEntity(m_sg,
+                                                m_type,
+                                                sgId(),
+                                                fields);
 
         // -------------------------------------------------------------------------
         // Update the attrbutes if they are already in m_attrs. If not there, don't 
@@ -1824,8 +1430,11 @@ const Strings Entity::getAttrValueAsTags(const std::string &attrName,
 }
 
 // *****************************************************************************
-const xmlrpc_c::value Entity::getAttrValueAsEntityAttrMap(const std::string &attrName) const 
+const Entity *Entity::getAttrValueAsEntityPtr(const std::string &attrName) const
 {
+//    xmlrpc_c::value entity = getAttrValueAsEntityAttrMap(attrName);
+//    return entityAttrMapToEntityPtr(m_sg, entity);
+
     SgMap entity = getAttrValueAsMap(attrName);
 
     if (!entity.empty())
@@ -1833,7 +1442,8 @@ const xmlrpc_c::value Entity::getAttrValueAsEntityAttrMap(const std::string &att
         int id = getAttrValueAsInt("id", entity);
         std::string type = getAttrValueAsString("type", entity);
 
-        return findOneEntityBySingleFilter(m_sg, type, "id", "is", toXmlrpcValue(id));
+        return m_sg->findEntity(type,
+                                FilterBy("id", "is", id));
     }
     else
     {
@@ -1843,10 +1453,13 @@ const xmlrpc_c::value Entity::getAttrValueAsEntityAttrMap(const std::string &att
 
 // *****************************************************************************
 // static
-const xmlrpc_c::value Entity::getAttrValueAsEntityAttrMap(Shotgun *sg,
-                                                          const std::string &attrName,
-                                                          const SgMap &attrsMap) 
+const Entity *Entity::getAttrValueAsEntityPtr(Shotgun *sg, 
+                                              const std::string &attrName,
+                                              const SgMap &attrsMap)
 {
+//     xmlrpc_c::value entity = getAttrValueAsEntityAttrMap(sg, attrName, attrsMap);
+//     return entityAttrMapToEntityPtr(sg, entity);
+
     SgMap entity = getAttrValueAsMap(attrName, attrsMap);
 
     if (!entity.empty())
@@ -1854,7 +1467,8 @@ const xmlrpc_c::value Entity::getAttrValueAsEntityAttrMap(Shotgun *sg,
         int id = getAttrValueAsInt("id", entity);
         std::string type = getAttrValueAsString("type", entity);
 
-        return findOneEntityBySingleFilter(sg, type, "id", "is", toXmlrpcValue(id));
+        return sg->findEntity(type,
+                              FilterBy("id", "is", id));
     }
     else
     {
@@ -1863,9 +1477,20 @@ const xmlrpc_c::value Entity::getAttrValueAsEntityAttrMap(Shotgun *sg,
 }
 
 // *****************************************************************************
-const SgArray Entity::getAttrValueAsMultiEntityAttrMap(const std::string &attrName) const 
+const EntityPtrs Entity::getAttrValueAsMultiEntityPtr(const std::string &attrName) const
 {
-    SgArray entities;
+//     EntityPtrs entityPtrs;
+// 
+//     SgArray entities = getAttrValueAsMultiEntityAttrMap(attrName);
+// 
+//     for (size_t i = 0; i < entities.size(); i++)
+//     {
+//         entityPtrs.push_back(entityAttrMapToEntityPtr(m_sg, entities[i]));
+//     }
+// 
+//     return entityPtrs;
+
+    EntityPtrs entities;
 
     SgArray entityList = getAttrValueAsArray(attrName);
     for (size_t i = 0; i < entityList.size(); i++)
@@ -1877,7 +1502,8 @@ const SgArray Entity::getAttrValueAsMultiEntityAttrMap(const std::string &attrNa
             int id = getAttrValueAsInt("id", entity);
             std::string type = getAttrValueAsString("type", entity);
 
-            entities.push_back(findOneEntityBySingleFilter(m_sg, type, "id", "is", toXmlrpcValue(id)));
+            entities.push_back(m_sg->findEntity(type,
+                                                FilterBy("id", "is", id)));
         }
     }
 
@@ -1886,11 +1512,22 @@ const SgArray Entity::getAttrValueAsMultiEntityAttrMap(const std::string &attrNa
 
 // *****************************************************************************
 // static
-const SgArray Entity::getAttrValueAsMultiEntityAttrMap(Shotgun *sg,
-                                                       const std::string &attrName,
-                                                       const SgMap &attrsMap) 
+const EntityPtrs Entity::getAttrValueAsMultiEntityPtr(Shotgun *sg, 
+                                                      const std::string &attrName,
+                                                      const SgMap &attrsMap)
 {
-    SgArray entities;
+//     EntityPtrs entityPtrs;
+// 
+//     SgArray entities = getAttrValueAsMultiEntityAttrMap(sg, attrName, attrsMap);
+// 
+//     for (size_t i = 0; i < entities.size(); i++)
+//     {
+//         entityPtrs.push_back(entityAttrMapToEntityPtr(sg, entities[i]));
+//     }
+// 
+//     return entityPtrs;
+
+    EntityPtrs entities;
 
     SgArray entityList = getAttrValueAsArray(attrName, attrsMap);
     for (size_t i = 0; i < entityList.size(); i++)
@@ -1902,7 +1539,8 @@ const SgArray Entity::getAttrValueAsMultiEntityAttrMap(Shotgun *sg,
             int id = getAttrValueAsInt("id", entity);
             std::string type = getAttrValueAsString("type", entity);
 
-            entities.push_back(findOneEntityBySingleFilter(sg, type, "id", "is", toXmlrpcValue(id)));
+            entities.push_back(sg->findEntity(type,
+                                              FilterBy("id", "is", id)));
         }
     }
 
@@ -1910,137 +1548,24 @@ const SgArray Entity::getAttrValueAsMultiEntityAttrMap(Shotgun *sg,
 }
 
 // *****************************************************************************
-// static helper function
-Entity *Entity::entityAttrMapToEntityPtr(Shotgun *sg,
-                                         const xmlrpc_c::value &entityAttrMap)
+const std::string Entity::getAttrValueAsUserLogin(const std::string &attrName) const 
 {
-    SgMap entityAsSgMap = SgMap(xmlrpc_c::value_struct(entityAttrMap));
+//    HumanUser user(m_sg, getAttrValueAsEntityAttrMap(attrName));
+//    return user.sgLogin();
 
-    const std::string &type = getAttrValueAsString("type", entityAsSgMap);
+    const Entity *entity = getAttrValueAsEntityPtr(attrName);
+    if (const HumanUser *user = dynamic_cast<const HumanUser *>(entity))
+    {
+        std::string sgLogin = user->sgLogin();
+        delete entity;
 
-    // IMPORTANT: user is responsible to delete them in C++ app.
-    if (type == "Project")
-    {
-        return new Project(sg, entityAttrMap);
-    }
-    else if (type == "Sequence")
-    {
-        return new Sequence(sg, entityAttrMap);
-    }
-    else if (type == "Shot")
-    {
-        return new Shot(sg, entityAttrMap);
-    }
-    else if (type == "Version")
-    {
-        return new Version(sg, entityAttrMap);
-    }
-    else if (type == "HumanUser")
-    {
-        return new HumanUser(sg, entityAttrMap);
-    }
-    else if (type == "Element")
-    {
-        return new Element(sg, entityAttrMap);
-    }
-    else if (type == "Asset")
-    {
-        return new Asset(sg, entityAttrMap);
-    }
-    else if (type == "Delivery")
-    {
-        return new Delivery(sg, entityAttrMap);
-    }
-    else if (type == "PublishEvent")
-    {
-        return new PublishEvent(sg, entityAttrMap);
-    }
-    else if (type == "Review")
-    {
-        return new Review(sg, entityAttrMap);
-    }
-    else if (type == "ReviewItem")
-    {
-        return new ReviewItem(sg, entityAttrMap);
-    }
-    else if (type == "Task")
-    {
-        return new Task(sg, entityAttrMap);
-    }
-    else if (type == "Group")
-    {
-        return new Group(sg, entityAttrMap);
-    }
-    else if (type == "Note")
-    {
-        return new Note(sg, entityAttrMap);
-    }
-    else if (type == "Playlist")
-    {
-        return new Playlist(sg, entityAttrMap);
+        return sgLogin;
     }
     else
     {
-        return NULL;
+        delete entity;
+        throw SgEntityDynamicCastError("HumanUser");
     }
-}
-
-// *****************************************************************************
-Entity *Entity::getAttrValueAsEntityPtr(const std::string &attrName)
-{
-    xmlrpc_c::value entity = getAttrValueAsEntityAttrMap(attrName);
-    return entityAttrMapToEntityPtr(m_sg, entity);
-}
-
-// *****************************************************************************
-// static
-Entity *Entity::getAttrValueAsEntityPtr(Shotgun *sg, 
-                                        const std::string &attrName,
-                                        const SgMap &attrsMap)
-{
-    xmlrpc_c::value entity = getAttrValueAsEntityAttrMap(sg, attrName, attrsMap);
-    return entityAttrMapToEntityPtr(sg, entity);
-}
-
-// *****************************************************************************
-EntityPtrs Entity::getAttrValueAsMultiEntityPtr(const std::string &attrName)
-{
-    EntityPtrs entityPtrs;
-
-    SgArray entities = getAttrValueAsMultiEntityAttrMap(attrName);
-
-    for (size_t i = 0; i < entities.size(); i++)
-    {
-        entityPtrs.push_back(entityAttrMapToEntityPtr(m_sg, entities[i]));
-    }
-
-    return entityPtrs;
-}
-
-// *****************************************************************************
-// static
-EntityPtrs Entity::getAttrValueAsMultiEntityPtr(Shotgun *sg, 
-                                                const std::string &attrName,
-                                                const SgMap &attrsMap)
-{
-    EntityPtrs entityPtrs;
-
-    SgArray entities = getAttrValueAsMultiEntityAttrMap(sg, attrName, attrsMap);
-
-    for (size_t i = 0; i < entities.size(); i++)
-    {
-        entityPtrs.push_back(entityAttrMapToEntityPtr(sg, entities[i]));
-    }
-
-    return entityPtrs;
-}
-
-// *****************************************************************************
-const std::string Entity::getAttrValueAsUserLogin(const std::string &attrName) const 
-{
-    HumanUser user(m_sg, getAttrValueAsEntityAttrMap(attrName));
-
-    return user.sgLogin();
 }
 
 // *****************************************************************************
@@ -2049,9 +1574,22 @@ const std::string Entity::getAttrValueAsUserLogin(Shotgun *sg,
                                                   const std::string &attrName,
                                                   const SgMap &attrsMap) 
 {
-    HumanUser user(sg, getAttrValueAsEntityAttrMap(sg, attrName, attrsMap));
+//     HumanUser user(sg, getAttrValueAsEntityAttrMap(sg, attrName, attrsMap));
+//     return user.sgLogin();
 
-    return user.sgLogin();
+    const Entity *entity = getAttrValueAsEntityPtr(sg, attrName, attrsMap);
+    if (const HumanUser *user = dynamic_cast<const HumanUser *>(entity))
+    {
+        std::string sgLogin = user->sgLogin();
+        delete entity;
+
+        return sgLogin;
+    }
+    else
+    {
+        delete entity;
+        throw SgEntityDynamicCastError("HumanUser");
+    }
 }
 
 

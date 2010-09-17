@@ -48,7 +48,6 @@ class Review : public Entity
     friend class Shotgun;
     friend class ReviewItem;
     friend class Note;
-    friend class Entity;
  
 public:
     Review(const Review &ref);
@@ -56,6 +55,8 @@ public:
 
     // Get an attribute's value
     const std::string sgName() const { return getAttrValueAsString("code"); } 
+
+    static std::string type() { return std::string("Review"); }
 
     Review &operator=(const Review &that)
     {
@@ -66,12 +67,12 @@ public:
 protected:
     Review(Shotgun *sg, const xmlrpc_c::value &attrs);
 
+    static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Review(sg, attrs); }
     static Review create(Shotgun *sg, 
                          const std::string &projectCode,
                          const std::string &reviewName);
-    static Reviews find(Shotgun *sg, SgMap &findMap);
     
-
+    static SgArray populateReturnFields(const SgArray &extraReturnFields = SgArray());
 };
 
 } // End namespace Shotgun

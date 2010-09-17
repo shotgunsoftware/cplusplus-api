@@ -43,7 +43,6 @@ class Shotgun;
 class HumanUser : public Entity
 {
     friend class Shotgun;
-    friend class Entity;
     friend class Task;
  
 public:
@@ -61,6 +60,8 @@ public:
     void sgEmail(const std::string &val) { setAttrValue("email", toXmlrpcValue(val)); }
     void sgLogin(const std::string &val) { setAttrValue("login", toXmlrpcValue(val)); }
 
+    static std::string type() { return std::string("HumanUser"); }
+
     HumanUser &operator=(const HumanUser &that)
     {
         Entity::operator=(that);
@@ -70,12 +71,14 @@ public:
 protected:
     HumanUser(Shotgun *sg, const xmlrpc_c::value &attrs);
 
+    static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new HumanUser(sg, attrs); }
     static HumanUser create(Shotgun *sg,
                             const std::string &userName,
                             const std::string &userLogin,
                             const std::string &userEmail);
 
-    static HumanUsers find(Shotgun *sg, SgMap &findMap);
+
+    static SgArray populateReturnFields(const SgArray &extraReturnFields = SgArray());
 };
 
 } // End namespace Shotgun

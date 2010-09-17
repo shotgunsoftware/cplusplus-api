@@ -50,7 +50,6 @@ class Asset : public Entity, public TaskMixin, public NoteMixin
     friend class Shotgun;
     friend class Element;
     friend class Reference;
-    friend class Entity;
  
 public:
     Asset(const Asset &ref);
@@ -59,9 +58,11 @@ public:
     // Get an attribute's value
     virtual const std::string sgCode() const { return getAttrValueAsString("code"); }
     virtual const SgArray sgParents() const { return getAttrValueAsArray("parents"); }
-    virtual const Elements sgElements() const;
-    virtual const Assets sgAssets() const;
-    virtual const Shots sgShots() const;
+    virtual const ElementPtrs sgElements() const;
+    virtual const AssetPtrs sgAssets() const;
+    virtual const ShotPtrs sgShots() const;
+
+    static std::string type() { return std::string("Asset"); }
 
     Asset &operator=(const Asset &that)
     {
@@ -72,12 +73,14 @@ public:
 protected:
     Asset(Shotgun *sg, const xmlrpc_c::value &attrs);
 
+    static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Asset(sg, attrs); }
     static Asset create(Shotgun *sg, 
                         const std::string &projectCode,
                         const std::string &assetName,
                         const std::string &assetType,
                         const std::string &assetSource = "");
-    static Assets find(Shotgun *sg, SgMap &findMap);
+
+    static SgArray populateReturnFields(const SgArray &extraReturnFields = SgArray());
 };
 
 } // End namespace Shotgun

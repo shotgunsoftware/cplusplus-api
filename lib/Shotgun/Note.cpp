@@ -31,13 +31,10 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 #include <Shotgun/Method.h>
-#include <Shotgun/Entity.h>
 #include <Shotgun/Shotgun.h>
+#include <Shotgun/Entity.h>
+#include <Shotgun/Type.h>
 #include <Shotgun/Note.h>
-#include <Shotgun/Version.h>
-#include <Shotgun/Project.h>
-#include <Shotgun/Review.h>
-#include <Shotgun/Shot.h>
 
 namespace Shotgun {
 
@@ -75,17 +72,18 @@ Note Note::create(Shotgun *sg,
                   const SgArray &noteLinks,
                   const std::string &noteOrigin)
 {
-    Project project = sg->findProjectByCode(projectCode);
-    HumanUser user = sg->findHumanUserByLogin(noteFromUserName);
+    HumanUser *user = sg->findHumanUserByLogin(noteFromUserName);
 
     SgMap attrsMap;
-    attrsMap["project"] = toXmlrpcValue(project.asLink());
-    attrsMap["user"] = toXmlrpcValue(user.asLink());
+    attrsMap["project"] = toXmlrpcValue(sg->getProjectLink(projectCode));
+    attrsMap["user"] = toXmlrpcValue(user->asLink());
     attrsMap["subject"] = toXmlrpcValue(noteSubject);
     attrsMap["content"] = toXmlrpcValue(noteBody);
     attrsMap["sg_note_type"] = toXmlrpcValue(noteType);
     attrsMap["sg_note_origin"] = toXmlrpcValue(noteOrigin);
     
+    delete user;
+
     if (noteLinks.size() > 0)
     {
         attrsMap["note_links"] = toXmlrpcValue(noteLinks);
@@ -97,9 +95,10 @@ Note Note::create(Shotgun *sg,
     {
         try
         {
-            HumanUser toUser = sg->findHumanUserByLogin(noteToUserNames[i]);
+            HumanUser *toUser = sg->findHumanUserByLogin(noteToUserNames[i]);
+            addressingsTo.push_back(toXmlrpcValue(toUser->asLink()));
 
-            addressingsTo.push_back(toXmlrpcValue(toUser.asLink()));
+            delete toUser;
         }
         catch (SgEntityNotFoundError)
         {
@@ -114,9 +113,10 @@ Note Note::create(Shotgun *sg,
     {
         try
         {
-            HumanUser toUser = sg->findHumanUserByLogin(noteCcUserNames[i]);
+            HumanUser *toUser = sg->findHumanUserByLogin(noteCcUserNames[i]);
+            addressingsCc.push_back(toXmlrpcValue(toUser->asLink()));
 
-            addressingsCc.push_back(toXmlrpcValue(toUser.asLink()));
+            delete toUser;
         }
         catch (SgEntityNotFoundError)
         {
@@ -125,91 +125,76 @@ Note Note::create(Shotgun *sg,
     }
     attrsMap["addressings_cc"] = toXmlrpcValue(addressingsCc);
 
-
     // Call the base class function to create an entity
-    return Note(sg, createEntity(sg, "Note", attrsMap));
+    return Note(sg, createSGEntity(sg, "Note", attrsMap));
+
 }
 
 // *****************************************************************************
-Notes Note::find(Shotgun *sg, SgMap &findMap)
+SgArray Note::populateReturnFields(const SgArray &extraReturnFields)
 {
-    // Find the entities that match the findMap and create a Note for each of them
-    Notes notes;
+    SgArray returnFields = extraReturnFields;
 
-    SgArray result = Entity::findEntities(sg, findMap);
-    if (result.size() > 0)
-    {
-        for (size_t i = 0; i < result.size(); i++)
-        {
-            notes.push_back(Note(sg, result[i]));
-        }
-    }
+    returnFields.push_back(toXmlrpcValue("id"));
+    returnFields.push_back(toXmlrpcValue("project"));
+    returnFields.push_back(toXmlrpcValue("created_at"));
+    returnFields.push_back(toXmlrpcValue("updated_at"));
 
-    return notes;
+    returnFields.push_back(toXmlrpcValue("user"));
+    returnFields.push_back(toXmlrpcValue("content"));
+    returnFields.push_back(toXmlrpcValue("addressings_cc"));
+    returnFields.push_back(toXmlrpcValue("addressings_to"));
+    returnFields.push_back(toXmlrpcValue("sg_status_list"));
+    returnFields.push_back(toXmlrpcValue("subject"));
+    returnFields.push_back(toXmlrpcValue("sg_note_type"));
+    returnFields.push_back(toXmlrpcValue("note_links"));
+
+    return returnFields;
 }
 
 // *****************************************************************************
-const Review Note::getLinkedReview() const
+Review *Note::getLinkedReview()
 {
     SgArray links = sgLinks();
 
     for (size_t i = 0; i < links.size(); i++)
     {
         SgMap linkAsMap = SgMap(xmlrpc_c::value_struct(links[i]));
-
         int id = Entity::getAttrValueAsInt("id", linkAsMap);
-        std::string type = Entity::getAttrValueAsString("type", linkAsMap);
 
-        if (type == "Review")
-        {
-            return Review(m_sg, 
-                          findOneEntityBySingleFilter(m_sg, type, "id", "is", toXmlrpcValue(id)));
-        }
+        return m_sg->findEntity<Review>(FilterBy("id", "is", id));
     }
 
     throw SgEntityNotFoundError("Review");
 }
 
 // *****************************************************************************
-const Shot Note::getLinkedShot() const
+Shot *Note::getLinkedShot()
 {
     SgArray links = sgLinks();
 
     for (size_t i = 0; i < links.size(); i++)
     {
         SgMap linkAsMap = SgMap(xmlrpc_c::value_struct(links[i]));
-
         int id = Entity::getAttrValueAsInt("id", linkAsMap);
-        std::string type = Entity::getAttrValueAsString("type", linkAsMap);
 
-        if (type == "Shot")
-        {
-            return Shot(m_sg, 
-                        findOneEntityBySingleFilter(m_sg, type, "id", "is", toXmlrpcValue(id)));
-        }
+        return m_sg->findEntity<Shot>(FilterBy("id", "is", id));
     }
 
     throw SgEntityNotFoundError("Shot");
 }
 
 // *****************************************************************************
-const Version Note::getLinkedVersion() const
+Version *Note::getLinkedVersion() 
 {
     SgArray links = sgLinks();
 
     for (size_t i = 0; i < links.size(); i++)
     {
         SgMap linkAsMap = SgMap(xmlrpc_c::value_struct(links[i]));
-
         int id = Entity::getAttrValueAsInt("id", linkAsMap);
-        std::string type = Entity::getAttrValueAsString("type", linkAsMap);
 
-        if (type == "Version")
-        {
-            return Version(m_sg,
-                           findOneEntityBySingleFilter(m_sg, 
-                                type, "id", "is", toXmlrpcValue(id)));
-        }
+        return m_sg->findEntity<Version>(FilterBy("id", "is", id));
     }
 
     throw SgEntityNotFoundError("Version");

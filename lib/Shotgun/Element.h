@@ -48,7 +48,6 @@ class Element : public Entity
     friend class Shotgun;
     friend class Shot;
     friend class Asset;
-    friend class Entity;
  
 public:
     Element(const Element &ref);
@@ -56,8 +55,8 @@ public:
 
     // Get an attribute's value
     const std::string sgName() const { return getAttrValueAsString("code"); } 
-    const Assets sgAssets() const;
-    const Shots sgShots() const;
+    const AssetPtrs sgAssets() const;
+    const ShotPtrs sgShots() const;
     const Strings sgTags() const { return getAttrValueAsTags("tag_list"); } 
     const std::string sgType() const { return getAttrValueAsString("sg_element_type"); }
 
@@ -69,6 +68,8 @@ public:
     void sgTags(const Strings &val) { setAttrValue("tag_list", toXmlrpcValue(val)); }
     void sgType(const std::string &val) { setAttrValue("sg_element_type", toXmlrpcValue(val)); }
 
+    static std::string type() { return std::string("Element"); }
+
     Element &operator=(const Element &that)
     {
         Entity::operator=(that);
@@ -78,12 +79,13 @@ public:
 protected:
     Element(Shotgun *sg, const xmlrpc_c::value &attrs);
 
+    static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Element(sg, attrs); }
     static Element create(Shotgun *sg, 
                           const std::string &projectCode,
                           const std::string &elementName,
                           const std::string &elementType);
-    static Elements find(Shotgun *sg, SgMap &findMap);
 
+    static SgArray populateReturnFields(const SgArray &extraReturnFields = SgArray());
 };
 
 } // End namespace Shotgun

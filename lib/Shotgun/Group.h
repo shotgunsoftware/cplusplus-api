@@ -46,7 +46,6 @@ class Shotgun;
 class Group : public Entity
 {
     friend class Shotgun;
-    friend class Entity;
     friend class Task;
  
 public:
@@ -54,6 +53,8 @@ public:
     virtual ~Group();
 
     const std::string sgName() const { return getAttrValueAsString("code"); } 
+
+    static std::string type() { return std::string("Group"); }
 
     Group &operator=(const Group &that)
     {
@@ -64,9 +65,10 @@ public:
 protected:
     Group(Shotgun *sg, const xmlrpc_c::value &attrs);
 
+    static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Group(sg, attrs); }
     static Group create(Shotgun *sg, const std::string &groupName);
-    static Groups find(Shotgun *sg, SgMap &findMap);
 
+    static SgArray populateReturnFields(const SgArray &extraReturnFields = SgArray());
 };
 
 } // End namespace Shotgun

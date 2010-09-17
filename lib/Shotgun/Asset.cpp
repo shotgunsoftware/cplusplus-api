@@ -70,17 +70,16 @@ Asset Asset::create(Shotgun *sg,
     // Check if the asset already exists
     try
     {
-        Asset asset = sg->findAssetByName(projectCode, assetName);
+        Asset *asset = sg->findAssetByName(projectCode, assetName);
+        delete asset;
 
         std::string err = "Asset \"" + assetName + "\" already exists.";
         throw SgEntityCreateError(err);
     }
     catch (SgEntityNotFoundError)
     {
-        Project project = sg->findProjectByCode(projectCode);
-
         SgMap attrsMap;
-        attrsMap["project"] = toXmlrpcValue(project.asLink());
+        attrsMap["project"] = toXmlrpcValue(sg->getProjectLink(projectCode));
         attrsMap["code"] = toXmlrpcValue(assetName);
         attrsMap["sg_asset_type"] = toXmlrpcValue(assetType);
 
@@ -90,22 +89,61 @@ Asset Asset::create(Shotgun *sg,
         }
 
         // Call the base class function to create an entity
-        return Asset(sg, createEntity(sg, "Asset", attrsMap));
+        return Asset(sg, createSGEntity(sg, "Asset", attrsMap));
     }
 }
 
 // *****************************************************************************
-Assets Asset::find(Shotgun *sg, SgMap &findMap)
+SgArray Asset::populateReturnFields(const SgArray &extraReturnFields)
 {
-    // Find the entities that match the findMap and create a Shot for each of them
-    Assets assets;
+    SgArray returnFields = extraReturnFields;
+    
+    returnFields.push_back(toXmlrpcValue("id"));
+    returnFields.push_back(toXmlrpcValue("project"));
+    returnFields.push_back(toXmlrpcValue("created_at"));
+    returnFields.push_back(toXmlrpcValue("updated_at"));
 
-    SgArray result = Entity::findEntities(sg, findMap);
-    if (result.size() > 0)
+    returnFields.push_back(toXmlrpcValue("code"));
+    returnFields.push_back(toXmlrpcValue("sg_asset_type"));
+    returnFields.push_back(toXmlrpcValue("sg_status_list"));
+    returnFields.push_back(toXmlrpcValue("sg_asset_preview_qt"));
+    returnFields.push_back(toXmlrpcValue("sg_asset_source"));
+    returnFields.push_back(toXmlrpcValue("elements"));
+    returnFields.push_back(toXmlrpcValue("parents"));
+    returnFields.push_back(toXmlrpcValue("assets"));
+    returnFields.push_back(toXmlrpcValue("shots"));
+
+    return returnFields;
+}
+
+// *****************************************************************************
+const ElementPtrs Asset::sgElements() const
+{
+    ElementPtrs elements;
+
+    EntityPtrs entities = getAttrValueAsMultiEntityPtr("elements");
+    for (size_t i = 0; i < entities.size(); i++)
     {
-        for (size_t i = 0; i < result.size(); i++)
+        if (Element *element = dynamic_cast<Element *>(entities[i]))
         {
-            assets.push_back(Asset(sg, result[i]));
+            elements.push_back(element);
+        }
+    }
+
+    return elements;
+}
+
+// *****************************************************************************
+const AssetPtrs Asset::sgAssets() const
+{
+    AssetPtrs assets;
+
+    EntityPtrs entities = getAttrValueAsMultiEntityPtr("assets");
+    for (size_t i = 0; i < entities.size(); i++)
+    {
+        if (Asset *asset = dynamic_cast<Asset *>(entities[i]))
+        {
+            assets.push_back(asset);
         }
     }
 
@@ -113,42 +151,17 @@ Assets Asset::find(Shotgun *sg, SgMap &findMap)
 }
 
 // *****************************************************************************
-const Elements Asset::sgElements() const
+const ShotPtrs Asset::sgShots() const
 {
-    Elements elements;
+    ShotPtrs shots;
 
-    SgArray entities = getAttrValueAsMultiEntityAttrMap("elements");
+    EntityPtrs entities = getAttrValueAsMultiEntityPtr("shots");
     for (size_t i = 0; i < entities.size(); i++)
     {
-        elements.push_back(Element(m_sg, entities[i]));
-    }
-
-    return elements;
-}
-
-// *****************************************************************************
-const Assets Asset::sgAssets() const
-{
-    Assets assets;
-
-    SgArray entities = getAttrValueAsMultiEntityAttrMap("assets");
-    for (size_t i = 0; i < entities.size(); i++)
-    {
-        assets.push_back(Asset(m_sg, entities[i]));
-    }
-
-    return assets;
-}
-
-// *****************************************************************************
-const Shots Asset::sgShots() const
-{
-    Shots shots;
-
-    SgArray entities = getAttrValueAsMultiEntityAttrMap("shots");
-    for (size_t i = 0; i < entities.size(); i++)
-    {
-        shots.push_back(Shot(m_sg, entities[i]));
+        if (Shot *shot = dynamic_cast<Shot *>(entities[i]))
+        {
+            shots.push_back(shot);
+        }
     }
 
     return shots;

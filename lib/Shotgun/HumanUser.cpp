@@ -41,7 +41,7 @@ namespace Shotgun {
 HumanUser::HumanUser(Shotgun *sg, const xmlrpc_c::value &attrs)
     : Entity(sg)
 {
-    m_type = "HumanHumanUser";
+    m_type = "HumanUser";
     m_attrs = new xmlrpc_c::value(attrs);
 }
 
@@ -50,7 +50,7 @@ HumanUser::HumanUser(Shotgun *sg, const xmlrpc_c::value &attrs)
 HumanUser::HumanUser(const HumanUser &ref)
     : Entity(ref.m_sg)
 {
-    m_type = "HumanHumanUser";
+    m_type = "HumanUser";
     m_attrs = new xmlrpc_c::value(*ref.m_attrs);
 }
 
@@ -69,7 +69,8 @@ HumanUser HumanUser::create(Shotgun *sg,
     // Check if the user already exists
     try
     {
-        HumanUser user = sg->findHumanUserByLogin(userLogin);
+        HumanUser *user = sg->findHumanUserByLogin(userLogin);
+        delete user;
 
         std::string err = "HumanUser \"" + userLogin + "\" already exists.";
         throw SgEntityCreateError(err);
@@ -79,7 +80,8 @@ HumanUser HumanUser::create(Shotgun *sg,
         // Check if there is a retired user with the same name
         try
         {
-            HumanUser retiredHumanUser = sg->findRetiredHumanUser(userLogin);
+            HumanUser *retiredHumanUser = sg->findRetiredHumanUser(userLogin);
+            delete retiredHumanUser;
             
             // TODO: need to reset the retired user's login
            
@@ -95,27 +97,30 @@ HumanUser HumanUser::create(Shotgun *sg,
             attrsMap["email"] = toXmlrpcValue(userEmail);
 
             // Call the base class function to create an entity
-            return HumanUser(sg, createEntity(sg, "HumanHumanUser", attrsMap));
+            return HumanUser(sg, createSGEntity(sg, "HumanUser", attrsMap));
         }
     }
 }
 
 // *****************************************************************************
-HumanUsers HumanUser::find(Shotgun *sg, SgMap &findMap)
+SgArray HumanUser::populateReturnFields(const SgArray &extraReturnFields)
 {
-    // Find the entities that match the findMap and create an HumanUser for each of them
-    HumanUsers users;
+    SgArray returnFields = extraReturnFields;
 
-    SgArray result = Entity::findEntities(sg, findMap);
-    if (result.size() > 0)
-    {
-        for (size_t i = 0; i < result.size(); i++)
-        {
-            users.push_back(HumanUser(sg, result[i]));
-        }
-    }
+    returnFields.push_back(toXmlrpcValue("id"));
+    returnFields.push_back(toXmlrpcValue("project"));
+    returnFields.push_back(toXmlrpcValue("created_at"));
+    returnFields.push_back(toXmlrpcValue("updated_at"));
 
-    return users;
+    returnFields.push_back(toXmlrpcValue("name"));
+    returnFields.push_back(toXmlrpcValue("admin"));
+    returnFields.push_back(toXmlrpcValue("sg_department"));
+    returnFields.push_back(toXmlrpcValue("email"));
+    returnFields.push_back(toXmlrpcValue("login"));
+    returnFields.push_back(toXmlrpcValue("sg_role"));
+    returnFields.push_back(toXmlrpcValue("permission_rule_set"));
+
+    return returnFields;
 }
 
 } // End namespace Shotgun

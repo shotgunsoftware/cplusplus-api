@@ -49,7 +49,6 @@ class Shotgun;
 class ReviewItem : public Entity
 {
     friend class Shotgun;
-    friend class Entity;
  
 public:
     ReviewItem(const ReviewItem &ref);
@@ -64,8 +63,10 @@ public:
     // (2) Python - the ownership has been transferred to Python by using the
     //     /Factory/ annotation.
     // ------------------------------------------------------------------------
-    Entity *sgLink() { return getAttrValueAsEntityPtr("sg_link"); }
+    const Entity *sgLink() const { return getAttrValueAsEntityPtr("sg_link"); }
     const std::string sgLinkEntityType() const { return linkEntityType("sg_link"); }
+
+    static std::string type() { return std::string("ReviewItem"); }
 
     ReviewItem &operator=(const ReviewItem &that)
     {
@@ -76,12 +77,12 @@ public:
 protected:
     ReviewItem(Shotgun *sg, const xmlrpc_c::value &attrs);
 
+    static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new ReviewItem(sg, attrs); }
     static ReviewItem create(Shotgun *sg, 
                              const std::string &projectCode,
                              const std::string &reviewItemName);
-    static ReviewItems find(Shotgun *sg, SgMap &findMap);
     
-
+    static SgArray populateReturnFields(const SgArray &extraReturnFields = SgArray());
 };
 
 } // End namespace Shotgun

@@ -69,42 +69,44 @@ Delivery Delivery::create(Shotgun *sg,
     // Check if the delivery already exists
     try
     {
-        Delivery delivery = sg->findDeliveryByName(projectCode, deliveryName);
+        Delivery *delivery = sg->findDeliveryByName(projectCode, deliveryName);
+        delete delivery;
 
         std::string err = "Delivery \"" + deliveryName + "\" already exists.";
         throw SgEntityCreateError(err);
     }
     catch (SgEntityNotFoundError)
     {
-        Project project = sg->findProjectByCode(projectCode);
-
         SgMap attrsMap;
-        attrsMap["project"] = toXmlrpcValue(project.asLink());
+        attrsMap["project"] = toXmlrpcValue(sg->getProjectLink(projectCode));
         attrsMap["title"] = toXmlrpcValue(deliveryName);
 
         // Call the base class function to create an entity
-        Delivery delivery = Delivery(sg, createEntity(sg, "Delivery", attrsMap));
-
-        return delivery;
+        return Delivery(sg, createSGEntity(sg, "Delivery", attrsMap));
     }
 }
 
 // *****************************************************************************
-Deliveries Delivery::find(Shotgun *sg, SgMap &findMap)
+SgArray Delivery::populateReturnFields(const SgArray &extraReturnFields)
 {
-    // Find the entities that match the findMap and create a Delivery for each of them
-    Deliveries deliveries;
+    SgArray returnFields = extraReturnFields;
 
-    SgArray result = Entity::findEntities(sg, findMap);
-    if (result.size() > 0)
-    {
-        for (size_t i = 0; i < result.size(); i++)
-        {
-            deliveries.push_back(Delivery(sg, result[i]));
-        }
-    }
+    returnFields.push_back(toXmlrpcValue("id"));
+    returnFields.push_back(toXmlrpcValue("project"));
+    returnFields.push_back(toXmlrpcValue("created_at"));
+    returnFields.push_back(toXmlrpcValue("updated_at"));
 
-    return deliveries;
+    returnFields.push_back(toXmlrpcValue("title"));
+    returnFields.push_back(toXmlrpcValue("sg_delivery_data_size"));
+    returnFields.push_back(toXmlrpcValue("sg_delivery_notes"));
+    returnFields.push_back(toXmlrpcValue("sg_delivery_path"));
+    returnFields.push_back(toXmlrpcValue("sg_delivery_staged_path"));
+    returnFields.push_back(toXmlrpcValue("sg_delivery_status"));
+    returnFields.push_back(toXmlrpcValue("sg_delivery_type"));
+    returnFields.push_back(toXmlrpcValue("sg_wrangler"));
+    returnFields.push_back(toXmlrpcValue("sg_wrangler_notes"));
+ 
+    return returnFields;
 }
 
 } // End namespace Shotgun

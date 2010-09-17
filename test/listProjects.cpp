@@ -34,8 +34,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <stdexcept>
 
 #include <Shotgun/Shotgun.h>
-#include <Shotgun/Project.h>
 #include <Shotgun/Type.h>
+#include <Shotgun/FilterBy.h>
 
 int main( int argc, char **argv )
 {
@@ -54,11 +54,13 @@ int main( int argc, char **argv )
     {
         Shotgun::Shotgun sg(shotgunURL);
 
-        Shotgun::Projects projects = sg.allProjects();
+        std::cout << std::endl << "allProjects: ***********************************************" << std::endl;
+        Shotgun::ProjectPtrs projects = sg.allProjects();
         for( size_t p = 0; p < projects.size(); ++p )
         {
-            std::cout << projects[p] << std::endl;
+            std::cout << *(projects[p]) << std::endl;
             std::cout << "-------------------" << std::endl;
+            delete projects[p];
         }
     }
     catch (const std::exception& e)

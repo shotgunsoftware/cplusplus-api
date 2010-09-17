@@ -46,7 +46,6 @@ class Shotgun;
 class Delivery : public Entity
 {
     friend class Shotgun;
-    friend class Entity;
  
 public:
     Delivery(const Delivery &ref);
@@ -63,6 +62,8 @@ public:
     void sgStatus(const std::string &val) { setAttrValue("sg_delivery_status", toXmlrpcValue(val)); }
     void sgType(const std::string &val) { setAttrValue("sg_delivery_type", toXmlrpcValue(val)); }
 
+    static std::string type() { return std::string("Delivery"); }
+
     Delivery &operator=(const Delivery &that)
     {
         Entity::operator=(that);
@@ -72,11 +73,12 @@ public:
 protected:
     Delivery(Shotgun *sg, const xmlrpc_c::value &attrs);
 
+    static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Delivery(sg, attrs); }
     static Delivery create(Shotgun *sg, 
                            const std::string &projectCode,
                            const std::string &deliveryName);
-    static Deliveries find(Shotgun *sg, SgMap &findMap);
     
+    static SgArray populateReturnFields(const SgArray &extraReturnFields = SgArray());
 };
 
 } // End namespace Shotgun

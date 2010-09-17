@@ -44,7 +44,6 @@ class Shotgun;
 class Project : public Entity
 {
     friend class Shotgun;
-    friend class Entity; // So that the base Entity class can call Project::find(..)
  
 public:
     Project(const Project &ref);
@@ -58,6 +57,8 @@ public:
     virtual const std::string sgProjectName() const { return sgName(); }
     virtual const std::string sgProjectCode() const { return sgCode(); }
 
+    static std::string type() { return std::string("Project"); }
+
     Project &operator=(const Project &that)
     {
         Entity::operator=(that);
@@ -67,12 +68,12 @@ public:
 protected:
     Project(Shotgun *sg, const xmlrpc_c::value &attrs);
 
+    static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Project(sg, attrs); }
     static Project create(Shotgun *sg, 
-                       const std::string &projectName, 
-                       const std::string &projectCode);
-    static Projects find(Shotgun *sg, SgMap &findMap);
+                          const std::string &projectName, 
+                          const std::string &projectCode);
 
-
+    static SgArray populateReturnFields(const SgArray &extraReturnFields = SgArray());
 };
 
 } // End namespace Shotgun

@@ -44,7 +44,6 @@ class Shotgun;
 class Playlist : public Entity
 {
     friend class Shotgun;
-    friend class Entity;
  
 public:
     Playlist(const Playlist &ref);
@@ -55,8 +54,8 @@ public:
     const std::string sgDescription() const { return getAttrValueAsString("description"); }
     const std::string sgThumbnail() const { return getAttrValueAsString("image"); }
     const Strings sgTags() const { return getAttrValueAsTags("tag_list"); }
-    const Notes sgNotes() const;
-    const Versions sgVersions() const;
+    const NotePtrs sgNotes() const;
+    const VersionPtrs sgVersions() const;
 
     // Set an attribute's value
     void sgName(const std::string &val) { setAttrValue("code", toXmlrpcValue(val)); }
@@ -67,6 +66,8 @@ public:
     void sgVersions(const Versions &val);  // An array of Version entities
     void sgVersions(const SgArray &val);  // An array of entity links
 
+    static std::string type() { return std::string("Playlist"); }
+
     Playlist &operator=(const Playlist &that)
     {
         Entity::operator=(that);
@@ -76,12 +77,12 @@ public:
 protected:
     Playlist(Shotgun *sg, const xmlrpc_c::value &attrs);
 
+    static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Playlist(sg, attrs); }
     static Playlist create(Shotgun *sg,
                            const std::string &projectCode,
                            const std::string &playlistName);
 
-    static Playlists find(Shotgun *sg, SgMap &findMap);
-    
+    static SgArray populateReturnFields(const SgArray &extraReturnFields = SgArray());
 };
 
 } // End namespace Shotgun

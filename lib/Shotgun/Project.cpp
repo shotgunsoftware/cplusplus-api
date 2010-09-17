@@ -45,7 +45,11 @@ Project::Project(Shotgun *sg, const xmlrpc_c::value &attrs)
     : Entity(sg)
 {
     m_type = "Project";
-    m_attrs = new xmlrpc_c::value(attrs);
+
+    if (attrs.type() != xmlrpc_c::value::TYPE_NIL)
+    {
+        m_attrs = new xmlrpc_c::value(attrs);
+    }
 }
 
 // *****************************************************************************
@@ -70,7 +74,8 @@ Project Project::create(Shotgun *sg,
     // Check if the project already exists
     try
     {
-        Project project = sg->findProjectByCode(projectCode);
+        Project *project = sg->findProjectByCode(projectCode);
+        delete project;
 
         std::string err = "Project \"" + projectCode + "\" already exists.";
         throw SgEntityCreateError(err);
@@ -83,26 +88,33 @@ Project Project::create(Shotgun *sg,
         attrsMap["name"] = toXmlrpcValue(projectName);
 
         // Call the base class function to create an entity
-        return Project(sg, createEntity(sg, "Project", attrsMap));
+        return Project(sg, createSGEntity(sg, "Project", attrsMap));
     }
 }
 
 // *****************************************************************************
-Projects Project::find(Shotgun *sg, SgMap &findMap)
+SgArray Project::populateReturnFields(const SgArray &extraReturnFields)
 {
-    // Find the entities that match the findMap and create an Project for each of them
-    Projects projects;
+    SgArray returnFields = extraReturnFields;
 
-    SgArray result = Entity::findEntities(sg, findMap);
-    if (result.size() > 0)
-    {
-        for (size_t i = 0; i < result.size(); i++)
-        {
-            projects.push_back(Project(sg, result[i]));
-        }
-    }
+    returnFields.push_back(toXmlrpcValue("id"));
+    returnFields.push_back(toXmlrpcValue("project"));
+    returnFields.push_back(toXmlrpcValue("created_at"));
+    returnFields.push_back(toXmlrpcValue("updated_at"));
 
-    return projects;
+    returnFields.push_back(toXmlrpcValue("name"));
+    returnFields.push_back(toXmlrpcValue("code"));
+    returnFields.push_back(toXmlrpcValue("sg_status"));
+    returnFields.push_back(toXmlrpcValue("sg_archive_watcher"));
+    returnFields.push_back(toXmlrpcValue("sg_pub_stills_watcher"));
+    returnFields.push_back(toXmlrpcValue("sg_generate_shot_aliases"));
+    returnFields.push_back(toXmlrpcValue("sg_send_dailies_notices"));
+    returnFields.push_back(toXmlrpcValue("sg_polish_shot_notifications"));
+    returnFields.push_back(toXmlrpcValue("sg_report_storage_information"));
+    returnFields.push_back(toXmlrpcValue("sg_default_start_frame"));
+    returnFields.push_back(toXmlrpcValue("sg_ms_project_schedule"));
+
+    return returnFields;
 }
 
 } // End namespace Shotgun

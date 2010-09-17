@@ -46,10 +46,11 @@ class NoteMixin
 public:
     virtual ~NoteMixin() {};
 
-    Notes getNotes(const int limit = 0);
-    Notes getDisclaimerNotes(const int limit = 0);
-    Notes getClientNotes(const int limit = 0);
+    NotePtrs getNotes(const int limit = 0);
+    NotePtrs getDisclaimerNotes(const int limit = 0);
+    NotePtrs getClientNotes(const int limit = 0);
 
+#warning Update this func to return pointer type
     Note addNote(const std::string &noteFromUserName,
                  const Strings &noteToUserNames = Strings(),
                  const Strings &noteCcUserNames = Strings(),

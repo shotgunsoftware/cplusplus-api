@@ -72,40 +72,36 @@ Sequence Sequence::create(Shotgun *sg,
     // Check if the sequence already exists
     try
     {
-        Sequence seq = sg->findSequenceByName(projectCode, sequenceNameUpper);
+        Sequence *seq = sg->findSequenceByName(projectCode, sequenceNameUpper);
+        delete seq;
 
         std::string err = "Sequence \"" + sequenceNameUpper + "\" already exists for project \"" + projectCode + "\"";
         throw SgEntityCreateError(err);
     }
     catch (SgEntityNotFoundError)
     {
-        Project project = sg->findProjectByCode(projectCode);
-
         SgMap attrsMap;
-        attrsMap["project"] = toXmlrpcValue(project.asLink());
+        attrsMap["project"] = toXmlrpcValue(sg->getProjectLink(projectCode));
         attrsMap["code"] = toXmlrpcValue(sequenceNameUpper);
 
         // Call the base class function to create an entity
-        return Sequence(sg, createEntity(sg, "Sequence", attrsMap));
+        return Sequence(sg, createSGEntity(sg, "Sequence", attrsMap));
     }
 }
 
 // *****************************************************************************
-Sequences Sequence::find(Shotgun *sg, SgMap &findMap)
+SgArray Sequence::populateReturnFields(const SgArray &extraReturnFields)
 {
-    // Find the entities that match the findMap and create a Sequence for each of them
-    Sequences sequences;
+    SgArray returnFields = extraReturnFields;
 
-    SgArray result = Entity::findEntities(sg, findMap);
-    if (result.size() > 0)
-    {
-        for (size_t i = 0; i < result.size(); i++)
-        {
-            sequences.push_back(Sequence(sg, result[i]));
-        }
-    }
+    returnFields.push_back(toXmlrpcValue("id"));
+    returnFields.push_back(toXmlrpcValue("project"));
+    returnFields.push_back(toXmlrpcValue("created_at"));
+    returnFields.push_back(toXmlrpcValue("updated_at"));
 
-    return sequences;
+    returnFields.push_back(toXmlrpcValue("code"));
+
+    return returnFields;
 }
 
 } // End namespace Shotgun

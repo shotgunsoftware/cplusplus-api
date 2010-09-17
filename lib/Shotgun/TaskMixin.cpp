@@ -41,7 +41,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace Shotgun {
 
 // *****************************************************************************
-Tasks TaskMixin::getTasks(const int limit)
+TaskPtrs TaskMixin::getTasks(const int limit)
 {
     // Dynamic_cast can cast it to the other base class of this class' 
     // derived class.
@@ -58,27 +58,13 @@ Tasks TaskMixin::getTasks(const int limit)
 }
 
 // *****************************************************************************
-Task TaskMixin::getTaskByName(const std::string &taskName)
+Task *TaskMixin::getTaskByName(const std::string &taskName)
 {
     if (Entity *entity = dynamic_cast<Entity *>(this))
     {
-        SgMap findMap = Entity::buildFindMapWithNoFilter(entity->sg(),
-                                                         "Task",
-                                                         entity->sgProjectCode(),
-                                                         1);
-
-        Entity::addOneConditionToFindMap(findMap, "content", "is", toXmlrpcValue(taskName)); 
-        Entity::addOneConditionToFindMap(findMap, "entity", "is", toXmlrpcValue(entity->asLink()));
-
-        Tasks tasks = entity->sg()->findTasks(findMap);
-        if (tasks.size() > 0)
-        {
-            return tasks[0];
-        }
-        else
-        {
-            throw SgEntityNotFoundError("Task");
-        }
+        return entity->sg()->findEntity<Task>(FilterBy("content", "is", taskName)
+                                                  .And("entity", "is", entity->asLink())
+                                                  .And("project", "is", entity->sg()->getProjectLink(entity->sgProjectCode())));
     }
     else
     {
@@ -87,19 +73,15 @@ Task TaskMixin::getTaskByName(const std::string &taskName)
 }
 
 // *****************************************************************************
-Tasks TaskMixin::getMilestoneTasks(const int limit)
+TaskPtrs TaskMixin::getMilestoneTasks(const int limit)
 {
     if (Entity *entity = dynamic_cast<Entity *>(this))
     {
-        SgMap findMap = Entity::buildFindMapWithNoFilter(entity->sg(),
-                                                         "Task",
-                                                         entity->sgProjectCode(),
-                                                         limit);
+        return entity->sg()->findEntities<Task>(FilterBy("entity", "is", entity->asLink())
+                                                    .And("milestone", "is", true)
+                                                    .And("project", "is", entity->sg()->getProjectLink(entity->sgProjectCode())),
+                                                limit);
 
-        Entity::addOneConditionToFindMap(findMap, "entity", "is", toXmlrpcValue(entity->asLink()));
-        Entity::addOneConditionToFindMap(findMap, "milestone", "is", toXmlrpcValue(true)); 
-
-        return entity->sg()->findTasks(findMap);
     }
     else
     {
@@ -108,19 +90,19 @@ Tasks TaskMixin::getMilestoneTasks(const int limit)
 }
 
 // *****************************************************************************
-Task TaskMixin::getNextIncompleteMilestoneTask()
+Task *TaskMixin::getNextIncompleteMilestoneTask()
 {
-    Tasks milestones = getMilestoneTasks();
+    TaskPtrs milestones = getMilestoneTasks();
 
     int next = -1; 
     for (size_t i = 0; i < milestones.size(); i++)
     {
         // Is this milestone incomplete?
-        if (milestones[i].sgStatus() != "cmpt")
+        if (milestones[i]->sgStatus() != "cmpt")
         {
             // Yes, consider it
             if (next < 0 or 
-                milestones[next].sgEndDate() > milestones[i].sgEndDate())
+                milestones[next]->sgEndDate() > milestones[i]->sgEndDate())
             {
                 next = i;
             }
@@ -152,7 +134,16 @@ Task TaskMixin::addTask(const std::string &taskName,
     try
     {
         // TODO: check "task_mixin.py"
+#warning This needs update once the return type of this func is changed to pointer type
+#if 0
         return getTaskByName(taskName);
+#else
+        Task *task = getTaskByName(taskName);
+        Task out = *task;
+        delete task;
+
+        return out;
+#endif
     }
     catch (SgEntityNotFoundError)
     {
@@ -185,7 +176,7 @@ Task TaskMixin::updateTask(const std::string &taskName,
                            const std::string &taskColor,
                            const bool taskMilestone)
 {
-    Task task = getTaskByName(taskName);
+    Task *task = getTaskByName(taskName);
 
     SgMap updateMap;
 
@@ -194,21 +185,25 @@ Task TaskMixin::updateTask(const std::string &taskName,
     {
         try
         {
-            HumanUser user = task.sg()->findHumanUserByLogin(taskAssignee);
+            HumanUser *user = task->sg()->findHumanUserByLogin(taskAssignee);
 
             SgArray assignees;
-            assignees.push_back(toXmlrpcValue(user.asLink()));
+            assignees.push_back(toXmlrpcValue(user->asLink()));
             updateMap["task_assignees"] = toXmlrpcValue(assignees);
+
+            delete user;
         }
         catch (SgEntityNotFoundError)
         {
             try
             {
-                Group group = task.sg()->findGroupByName(taskAssignee);
+                Group *group = task->sg()->findGroupByName(taskAssignee);
 
                 SgArray assignees;
-                assignees.push_back(toXmlrpcValue(group.asLink()));
+                assignees.push_back(toXmlrpcValue(group->asLink()));
                 updateMap["task_assignees"] = toXmlrpcValue(assignees);
+
+                delete group;
             }
             catch (SgEntityNotFoundError)
             {
@@ -259,9 +254,16 @@ Task TaskMixin::updateTask(const std::string &taskName,
     updateMap["milestone"] = toXmlrpcValue(taskMilestone);
 
     // update the task's attributes
-    task.setAttrValue(updateMap);
+    task->setAttrValue(updateMap);
 
+#warning This needs to be fixed as soon as the return type is changed to pointer
+#if 0
     return task;
+#else
+    Task out = *task;
+    delete task;
+    return out;
+#endif
 }
 
 // *****************************************************************************
@@ -269,10 +271,11 @@ bool TaskMixin::removeTask(const std::string &taskName)
 {
     try
     {
-        Task task = getTaskByName(taskName);
+        Task *task = getTaskByName(taskName);
 
-        task.sg()->deleteTaskById(task.sgId());
+        task->sg()->deleteTaskById(task->sgId());
 
+        delete task;
         return true;
     }
     catch (SgEntityNotFoundError)

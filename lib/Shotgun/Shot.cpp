@@ -65,7 +65,7 @@ Shot::~Shot()
 
 // *****************************************************************************
 Shot Shot::create(Shotgun *sg, 
-                  const std::string &projectName,
+                  const std::string &projectCode,
                   const std::string &shotName,
                   const std::string &sequenceName)
 {
@@ -73,51 +73,88 @@ Shot Shot::create(Shotgun *sg,
     try
     {
 #warning TODO: Include project (& sequence?) in search
-        Shot shot = sg->findShotByName(shotName);
+        Shot *shot = sg->findShotByName(shotName);
+        delete shot;
 
         std::string err = "Shot \"" + shotName + "\" already exists.";
         throw SgEntityCreateError(err);
     }
     catch (SgEntityNotFoundError)
     {
-        Project project = sg->findProjectByCode(projectName);
 #warning TODO: Fix this
-//         Sequence seq;
+//         Sequence *seq;
 //         try
 //         {
-//             seq = Sequence(sg, sg->findSequenceByName(projectName, sequenceName).attrs());
+//             seq = sg->findSequenceByName(projectCode, sequenceName);
 //         }
 //         catch (SgEntityNotFoundError)
 //         {
 //             seq = sg->createSequence(sn.project(), sn.sequence());
 //         }
+
         // Other attributes will be filled by the python code
         SgMap attrsMap;
-        attrsMap["project"] = toXmlrpcValue(project.asLink());
+        attrsMap["project"] = toXmlrpcValue(sg->getProjectLink(projectCode));
         attrsMap["code"] = toXmlrpcValue(shotName);
-//         attrsMap["sg_sequence"] = toXmlrpcValue(seq.asLink());
+//         attrsMap["sg_sequence"] = toXmlrpcValue(seq->asLink());
+//         delete seq;
         
         // Call the base class function to create an entity
-        return Shot(sg, createEntity(sg, "Shot", attrsMap));
+        return Shot(sg, createSGEntity(sg, "Shot", attrsMap));
     }
 }
 
 // *****************************************************************************
-Shots Shot::find(Shotgun *sg, SgMap &findMap)
+SgArray Shot::populateReturnFields(const SgArray &extraReturnFields)
 {
-    // Find the entities that match the findMap and create a Shot for each of them
-    Shots shots;
+    SgArray returnFields = extraReturnFields;
 
-    SgArray result = Entity::findEntities(sg, findMap);
-    if (result.size() > 0)
-    {
-        for (size_t i = 0; i < result.size(); i++)
-        {
-            shots.push_back(Shot(sg, result[i]));
-        }
-    }
+    returnFields.push_back(toXmlrpcValue("id"));
+    returnFields.push_back(toXmlrpcValue("project"));
+    returnFields.push_back(toXmlrpcValue("created_at"));
+    returnFields.push_back(toXmlrpcValue("updated_at"));
 
-    return shots;
+    returnFields.push_back(toXmlrpcValue("code"));
+    returnFields.push_back(toXmlrpcValue("sg_continuity"));
+    returnFields.push_back(toXmlrpcValue("description"));
+    returnFields.push_back(toXmlrpcValue("elements"));
+    returnFields.push_back(toXmlrpcValue("sg_estimated_frame_render_hours"));
+    returnFields.push_back(toXmlrpcValue("sg_final_daily"));
+    returnFields.push_back(toXmlrpcValue("sg_latest_daily"));
+    returnFields.push_back(toXmlrpcValue("sg_lens"));
+    returnFields.push_back(toXmlrpcValue("sg_prod_vfx__"));
+    returnFields.push_back(toXmlrpcValue("sg_sequence"));
+    returnFields.push_back(toXmlrpcValue("sg_shot_notifications"));
+    returnFields.push_back(toXmlrpcValue("project_names"));
+    returnFields.push_back(toXmlrpcValue("sg_status_list"));
+    returnFields.push_back(toXmlrpcValue("sg_turnover_"));
+    returnFields.push_back(toXmlrpcValue("sg_type"));
+    returnFields.push_back(toXmlrpcValue("sg_omit_"));
+    returnFields.push_back(toXmlrpcValue("sg_on_hold_"));
+    returnFields.push_back(toXmlrpcValue("sg_cbb_"));
+    returnFields.push_back(toXmlrpcValue("smart_cut_duration"));
+    returnFields.push_back(toXmlrpcValue("smart_cut_in"));
+    returnFields.push_back(toXmlrpcValue("smart_cut_out"));
+    returnFields.push_back(toXmlrpcValue("smart_cut_summary_display"));
+    returnFields.push_back(toXmlrpcValue("smart_duration_summary_display"));
+    returnFields.push_back(toXmlrpcValue("smart_head_duration"));
+    returnFields.push_back(toXmlrpcValue("smart_head_in"));
+    returnFields.push_back(toXmlrpcValue("smart_head_out"));
+    returnFields.push_back(toXmlrpcValue("smart_tail_duration"));
+    returnFields.push_back(toXmlrpcValue("smart_tail_in"));
+    returnFields.push_back(toXmlrpcValue("smart_tail_out"));
+    returnFields.push_back(toXmlrpcValue("smart_working_duration"));
+    returnFields.push_back(toXmlrpcValue("sg_tippett_working_length"));
+    returnFields.push_back(toXmlrpcValue("sg_actual_plate_resolution"));
+    returnFields.push_back(toXmlrpcValue("sg_storage___tier"));
+    returnFields.push_back(toXmlrpcValue("sg_storage___filesystem"));
+    returnFields.push_back(toXmlrpcValue("sg_storage___filesystem_used_percentage"));
+    returnFields.push_back(toXmlrpcValue("sg_storage___size_gb"));
+    returnFields.push_back(toXmlrpcValue("sg_slate_burnin_info"));
+    returnFields.push_back(toXmlrpcValue("sg_slate_header_info"));
+    returnFields.push_back(toXmlrpcValue("sg_pixel_aspect"));
+
+    return returnFields;
 }
 
 // *****************************************************************************
@@ -135,16 +172,18 @@ void Shot::sgSequence(const SgMap &val)
     setAttrValue("sg_sequence", toXmlrpcValue(val));
 }
 
-
 // *****************************************************************************
-const Elements Shot::sgElements() const
+const ElementPtrs Shot::sgElements() const
 {
-    Elements elements;
+    ElementPtrs elements;
 
-    SgArray entities = getAttrValueAsMultiEntityAttrMap("elements");
+    EntityPtrs entities = getAttrValueAsMultiEntityPtr("elements");
     for (size_t i = 0; i < entities.size(); i++)
     {
-        elements.push_back(Element(m_sg, entities[i]));
+        if (Element *element = dynamic_cast<Element *>(entities[i]))
+        {
+            elements.push_back(element);
+        }
     }
 
     return elements;
@@ -179,6 +218,20 @@ void Shot::sgElements(const SgArray &val)
     }
 
     setAttrValue("elements", toXmlrpcValue(val));
+}
+
+// *****************************************************************************
+const Sequence *Shot::sgSequence() const
+{
+    const Entity *entity = getAttrValueAsEntityPtr("sg_sequence");
+    if (const Sequence *sequence = dynamic_cast<const Sequence *>(entity))
+    {
+        return sequence;
+    }
+    else
+    {
+        throw SgEntityDynamicCastError("Sequence");
+    } 
 }
 
 } // End namespace Shotgun

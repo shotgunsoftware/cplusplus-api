@@ -35,6 +35,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <time.h>
 
 #include <Shotgun/Type.h>
+#include <Shotgun/FilterBy.h>
 #include <Shotgun/Project.h>
 #include <Shotgun/Sequence.h>
 #include <Shotgun/Shot.h>
@@ -156,6 +157,12 @@ xmlrpc_c::value toXmlrpcValue(const MethodSignatures &in)
     }
 
     return xmlrpc_c::value(xmlrpc_c::value_array(strArray));
+}
+
+// *****************************************************************************
+xmlrpc_c::value toXmlrpcValue(const FilterBy &in)
+{
+    return xmlrpc_c::value(xmlrpc_c::value_struct(in.filters()));
 }
 
 // *****************************************************************************
@@ -335,6 +342,12 @@ std::string toStdString(const MethodSignatures &sigs)
     output += "]";
 
     return output;
+}
+
+// *****************************************************************************
+std::string toStdString(const FilterBy &filterList)
+{
+    return toStdString(filterList.filters());
 }
 
 // *****************************************************************************
@@ -663,6 +676,13 @@ std::ostream &operator<<(std::ostream& output, const MethodSignatures &sigs)
 }
 
 // *****************************************************************************
+std::ostream &operator<<(std::ostream& output, const FilterBy &filterList)
+{
+    output << toStdString(filterList);
+    return output;
+}
+
+// *****************************************************************************
 std::ostream &operator<<(std::ostream& output, const Project &project)
 {
     output << toStdString(project);
@@ -888,3 +908,26 @@ std::string currDateStr()
 }
 
 } // End namespace Shotgun
+
+// *****************************************************************************
+std::ostream &operator<<(std::ostream& output, const xmlrpc_c::value &value)
+{
+    output << Shotgun::toStdString(value);
+    return output;
+}
+
+// *****************************************************************************
+std::ostream &operator<<(std::ostream& output, const Shotgun::SgArray &array)
+{
+    output << Shotgun::toStdString(array);
+    return output;
+}
+
+// *****************************************************************************
+std::ostream &operator<<(std::ostream& output, const Shotgun::SgMap &map)
+{
+    output << Shotgun::toStdString(map);
+    return output;
+}
+
+

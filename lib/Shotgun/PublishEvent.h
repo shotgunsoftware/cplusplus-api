@@ -46,7 +46,6 @@ class Shotgun;
 class PublishEvent : public Entity
 {
     friend class Shotgun;
-    friend class Entity;
      
 public:
     PublishEvent(const PublishEvent &ref);
@@ -54,6 +53,8 @@ public:
 
     // Get an attribute's value
     const std::string sgName() const { return getAttrValueAsString("code"); }
+
+    static std::string type() { return std::string("PublishEvent"); }
 
     PublishEvent &operator=(const PublishEvent &that)
     {
@@ -64,10 +65,12 @@ public:
 protected:
     PublishEvent(Shotgun *sg, const xmlrpc_c::value &attrs);
 
+    static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new PublishEvent(sg, attrs); }
     static PublishEvent create(Shotgun *sg, 
                                const std::string &projectCode,
                                const std::string &publishEventName);
-    static PublishEvents find(Shotgun *sg, SgMap &findMap);
+
+    static SgArray populateReturnFields(const SgArray &extraReturnFields = SgArray());
 };
 
 } // End namespace Shotgun
