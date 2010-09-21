@@ -30,8 +30,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __FILTERBY_H__
-#define __FILTERBY_H__
+#ifndef __SORTBY_H__
+#define __SORTBY_H__
 
 #include <string>
 
@@ -40,75 +40,39 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace Shotgun {
 
 // *****************************************************************************
-class FilterBy
+class SortBy
 {
 public:
-    FilterBy();
+    SortBy();
 
-    template <typename T>
-    FilterBy(const std::string &path,
-             const std::string &relation,
-             const T &value)
+    SortBy(const std::string &fieldName,
+           const std::string &direction = "asc")
     {
-         op("and", path, relation, toXmlrpcValue(value));      
+         then(fieldName, direction);      
     }
 
-    // -------------------------------------------------------------------
-    // logic "and"
-    template <typename T>
-    FilterBy &And(const std::string &path,
-                  const std::string &relation,
-                  const T &value)
-    {
-        return op("and", path, relation, toXmlrpcValue(value));
-    }
+    const SgArray &sorts() const { return m_sorts; }
+    const bool empty() const { return m_sorts.empty(); }
+    const bool size() const { return m_sorts.size(); }
 
-    FilterBy &And(const FilterBy &that)
-    {
-        return op("and", that);
-    }
-
-    // -------------------------------------------------------------------
-    // logic "or"
-    template <typename T>
-    FilterBy &Or(const std::string &path,
-                 const std::string &relation,
-                 const T &value)
-    {
-        return op("or", path, relation, toXmlrpcValue(value));
-    }
-    
-    FilterBy &Or(const FilterBy &that)
-    {
-        return op("or", that);
-    }
-
-
-    const SgMap &filters() const { return m_filters; }
-    const bool empty() const { return m_filters.empty(); }
-    const bool size() const { return m_filters.size(); }
-
-    FilterBy &operator=(const FilterBy &that)
+    SortBy &operator=(const SortBy &that)
     {
         if (this != &that)
         {
-            m_filters = that.m_filters;
+            m_sorts = that.m_sorts;
         }
 
         return *this;
     }
 
-protected:
-    FilterBy &op(const std::string &logicOperator,
-                 const std::string &path,
-                 const std::string &relation,
-                 const xmlrpc_c::value &value);
-    FilterBy &op(const std::string &logicOperator,
-                 const FilterBy &that);
+    SortBy &then(const std::string &fieldName,
+                 const std::string &direction = "asc");
+    SortBy &then(const SortBy &that);
 
-    SgMap m_filters;
+protected:
+    SgArray m_sorts;
 };
 
 } // End namespace Shotgun
 
-#endif    // End #ifdef __FILTERBY_H__
+#endif    // End #ifdef __SORTBY_H__

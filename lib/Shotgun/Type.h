@@ -58,6 +58,7 @@ class Note;
 class Playlist;
 
 class FilterBy;
+class SortBy;
 
 // *****************************************************************************
 typedef std::vector<std::string> Strings;
@@ -115,16 +116,18 @@ xmlrpc_c::value toXmlrpcValue(const SgMap &in);
 xmlrpc_c::value toXmlrpcValue(const Strings &in);
 xmlrpc_c::value toXmlrpcValue(const MethodSignatures &in);
 xmlrpc_c::value toXmlrpcValue(const FilterBy &in);
+xmlrpc_c::value toXmlrpcValue(const SortBy &in);
 xmlrpc_c::value toXmlrpcValue(const xmlrpc_c::value &in);
 
+#warning These should be moved either out of the Shotgun namespace or into indivial classes
 // *****************************************************************************
 std::string toStdString(const xmlrpc_c::value &value);
 std::string toStdString(const SgMap &map);
 std::string toStdString(const SgArray &array);
 std::string toStdString(const Strings &strs);
-//std::string toStdString(const MethodSignature &sig); // same as Strings
 std::string toStdString(const MethodSignatures &sigs);
 std::string toStdString(const FilterBy &filterList);
+std::string toStdString(const SortBy &filterList);
 std::string toStdString(const Project &project);
 std::string toStdString(const Projects &projects);
 std::string toStdString(const Sequence &sequence);
@@ -162,9 +165,9 @@ std::ostream &operator<<(std::ostream& output, const xmlrpc_c::value &value);
 std::ostream &operator<<(std::ostream& output, const SgMap &map);
 std::ostream &operator<<(std::ostream& output, const SgArray &array);
 std::ostream &operator<<(std::ostream& output, const Strings &strs);
-//std::ostream &operator<<(std::ostream& output, const MethodSignature &sig); // same as Strings
 std::ostream &operator<<(std::ostream& output, const MethodSignatures &sigs);
 std::ostream &operator<<(std::ostream& output, const FilterBy &filterList);
+std::ostream &operator<<(std::ostream& output, const SortBy &filterList);
 std::ostream &operator<<(std::ostream& output, const Project &project);
 std::ostream &operator<<(std::ostream& output, const Projects &projects);
 std::ostream &operator<<(std::ostream& output, const Sequence &sequence);
@@ -425,9 +428,19 @@ public:
 
 } // End namespace Shotgun
 
+// *****************************************************************************
+// These are outside of the Shotgun namespace
 #warning Finish moving these operators out of Shotgun namespace
+std::string toStdString(const xmlrpc_c::value &value);
+std::string toStdString(const Shotgun::SgArray &array);
+std::string toStdString(const Shotgun::SgMap &map);
+std::string toStdString(const Shotgun::Strings &strs);
+std::string toStdString(const Shotgun::MethodSignatures &sigs);
+
 std::ostream &operator<<(std::ostream& output, const xmlrpc_c::value &value);
 std::ostream &operator<<(std::ostream& output, const Shotgun::SgArray &array);
 std::ostream &operator<<(std::ostream& output, const Shotgun::SgMap &map);
+std::ostream &operator<<(std::ostream& output, const Shotgun::Strings &strs);
+std::ostream &operator<<(std::ostream& output, const Shotgun::MethodSignatures &sigs);
 
 #endif    // End #ifdef __TYPE_H__

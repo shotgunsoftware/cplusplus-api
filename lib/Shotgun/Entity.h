@@ -38,6 +38,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <Shotgun/Type.h>
 #include <Shotgun/FilterBy.h>
+#include <Shotgun/SortBy.h>
 #include <Shotgun/Method.h>
 
 namespace Shotgun {
@@ -223,7 +224,7 @@ protected:
                               const SgArray &returnFields = SgArray(),
                               const bool retiredOnly = false,
                               const int limit = 0,
-                              const SgArray &order = SgArray());
+                              const SortBy &order = SortBy());
 
     // The result of the method call is a struct. This function is to extract 
     // a list of entities from the find result struct.

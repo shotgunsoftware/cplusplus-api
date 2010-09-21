@@ -36,6 +36,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Shotgun.h>
 #include <Shotgun/Type.h>
 #include <Shotgun/FilterBy.h>
+#include <Shotgun/SortBy.h>
 
 int main( int argc, char **argv )
 {
@@ -61,6 +62,30 @@ int main( int argc, char **argv )
             std::cout << *(projects[p]) << std::endl;
             std::cout << "-------------------" << std::endl;
             delete projects[p];
+        }
+
+        std::cout << std::endl << "allProjects: order by code (ascending): ***********************************************" << std::endl;
+        Shotgun::ProjectPtrs projectsOrderByCode = sg.findEntities<Shotgun::Project>(Shotgun::FilterBy(),  // filters
+                                                                                     0,                    // limit
+                                                                                     Shotgun::SgArray(),   // extraReturnFields
+                                                                                     false,                // retiredOnly
+                                                                                     Shotgun::SortBy("code", "asc"));  // order
+        for( size_t p = 0; p < projectsOrderByCode.size(); ++p )
+        {
+            std::cout << projectsOrderByCode[p]->sgCode() << std::endl;
+            delete projectsOrderByCode[p];
+        }
+
+        std::cout << std::endl << "allProjects: order by name (descending): ***********************************************" << std::endl;
+        Shotgun::ProjectPtrs projectsOrderByName = sg.findEntities<Shotgun::Project>(Shotgun::FilterBy(),  // filters
+                                                                                     0,                    // limit
+                                                                                     Shotgun::SgArray(),   // extraReturnFields
+                                                                                     false,                // retiredOnly
+                                                                                     Shotgun::SortBy("name", "desc"));  // order
+        for( size_t p = 0; p < projectsOrderByName.size(); ++p )
+        {
+            std::cout << projectsOrderByName[p]->sgName() << std::endl;
+            delete projectsOrderByName[p];
         }
     }
     catch (const std::exception& e)

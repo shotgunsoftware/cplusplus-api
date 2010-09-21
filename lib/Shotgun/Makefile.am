@@ -28,6 +28,7 @@ libShotgun_la_SOURCES = Asset.cpp               \
 			HumanUser.cpp           \
 			Version.cpp             \
 			FilterBy.cpp            \
+			SortBy.cpp              \
 			utils.cpp
 
 include_HEADERS = Asset.h                       \
@@ -52,4 +53,5 @@ include_HEADERS = Asset.h                       \
 	          HumanUser.h                   \
 	          Version.h                     \
 	          FilterBy.h                    \
+	          SortBy.h                      \
 	          utils.h

@@ -597,7 +597,7 @@ SgMap Entity::buildFindMap(const std::string &entityType,
                            const SgArray &filterReturnFields,
                            const bool retiredOnly,
                            const int limit,
-                           const SgArray &order)
+                           const SortBy &order)
 {
     SgMap findMap;
 
@@ -665,41 +665,10 @@ SgMap Entity::buildFindMap(const std::string &entityType,
      
 
     // -------------------------------------------------------------------
-    // "sorts" - This part makes sure that the given order has valid 
-    // list of ("field_name", "direction") pair
-    if (order.size() > 0)
+    // "sorts" 
+    if (!order.empty())
     {
-        SgArray sorts;
-
-        for (size_t i = 0; i < order.size(); i++)
-        {
-            SgMap orderMap = SgMap(xmlrpc_c::value_struct(order[i]));
-
-            std::string fieldName;
-            std::string fieldDir;
-
-            //---------------
-            // "field_name"
-            fieldName = getAttrValueAsString("field_name", orderMap, "", INVALID_ATTR_USE_DEFAULT);
-
-            //---------------
-            // "direction"
-            fieldDir = getAttrValueAsString("direction", orderMap, "", INVALID_ATTR_USE_DEFAULT);
-
-            if (fieldName != "" && fieldDir != "")
-            {
-                SgMap orderMap2;
-                orderMap2["field_name"] = toXmlrpcValue(fieldName);
-                orderMap2["direction"] = toXmlrpcValue(fieldDir);
-
-                sorts.push_back(toXmlrpcValue(orderMap2));
-            }
-        }
-
-        if (sorts.size() > 0)
-        {
-            findMap["sorts"] = toXmlrpcValue(sorts);
-        }
+        findMap["sorts"] = toXmlrpcValue(order.sorts());
     }
 
     // -------------------------------------------------------------------

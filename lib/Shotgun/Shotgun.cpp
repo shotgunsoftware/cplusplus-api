@@ -40,8 +40,10 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace Shotgun {
 
 // *****************************************************************************
-Shotgun::Shotgun(const std::string &serverURL)
+Shotgun::Shotgun(const std::string &serverURL,
+                 const std::string &authKey)
     : m_serverURL(serverURL),
+      m_authKey(authKey),
       m_client(NULL)
 {
     // Client
@@ -60,10 +62,25 @@ Shotgun::Shotgun(const std::string &serverURL)
 
         m_authMap.clear();
         m_authMap["script_name"] = toXmlrpcValue("shotgun.main.Shotgun");
-        m_authMap["script_key"] = toXmlrpcValue(SG_AUTHENTICATION_KEY);
+        m_authMap["script_key"] = toXmlrpcValue(m_authKey);
     }
 
-    registerClass();
+    // Register the classes
+    registerClass("Asset",        &Asset::factory,        &Asset::populateReturnFields);
+    registerClass("Delivery",     &Delivery::factory,     &Delivery::populateReturnFields);
+    registerClass("Element",      &Element::factory,      &Element::populateReturnFields);
+    registerClass("Group",        &Group::factory,        &Group::populateReturnFields);
+    registerClass("HumanUser",    &HumanUser::factory,    &HumanUser::populateReturnFields);
+    registerClass("Note",         &Note::factory,         &Note::populateReturnFields);
+    registerClass("Playlist",     &Playlist::factory,     &Playlist::populateReturnFields);
+    registerClass("Project",      &Project::factory,      &Project::populateReturnFields);
+    registerClass("PublishEvent", &PublishEvent::factory, &PublishEvent::populateReturnFields);
+    registerClass("Review",       &Review::factory,       &Review::populateReturnFields);
+    registerClass("ReviewItem",   &ReviewItem::factory,   &ReviewItem::populateReturnFields);
+    registerClass("Sequence",     &Sequence::factory,     &Sequence::populateReturnFields);
+    registerClass("Shot",         &Shot::factory,         &Shot::populateReturnFields);
+    registerClass("Task",         &Task::factory,         &Task::populateReturnFields);
+    registerClass("Version",      &Version::factory,      &Version::populateReturnFields);
 }
 
 // *****************************************************************************
@@ -72,25 +89,14 @@ Shotgun::~Shotgun()
     delete m_client;
 }
 
-void Shotgun::registerClass()
+void Shotgun::registerClass(const std::string &entityType,
+                            const FactoryFunc &factoryFunc,
+                            const PopulateReturnFieldsFunc &populateFunc)
 {
-    m_classRegistry["Asset"]        = RegistryFuncPair(&Asset::factory,        &Asset::populateReturnFields);
-    m_classRegistry["Delivery"]     = RegistryFuncPair(&Delivery::factory,     &Delivery::populateReturnFields);
-    m_classRegistry["Element"]      = RegistryFuncPair(&Element::factory,      &Element::populateReturnFields);
-    m_classRegistry["Group"]        = RegistryFuncPair(&Group::factory,        &Group::populateReturnFields);
-    m_classRegistry["HumanUser"]    = RegistryFuncPair(&HumanUser::factory,    &HumanUser::populateReturnFields);
-    m_classRegistry["Note"]         = RegistryFuncPair(&Note::factory,         &Note::populateReturnFields);
-    m_classRegistry["Playlist"]     = RegistryFuncPair(&Playlist::factory,     &Playlist::populateReturnFields);
-    m_classRegistry["Project"]      = RegistryFuncPair(&Project::factory,      &Project::populateReturnFields);
-    m_classRegistry["PublishEvent"] = RegistryFuncPair(&PublishEvent::factory, &PublishEvent::populateReturnFields);
-    m_classRegistry["Review"]       = RegistryFuncPair(&Review::factory,       &Review::populateReturnFields);
-    m_classRegistry["ReviewItem"]   = RegistryFuncPair(&ReviewItem::factory,   &ReviewItem::populateReturnFields);
-    m_classRegistry["Sequence"]     = RegistryFuncPair(&Sequence::factory,     &Sequence::populateReturnFields);
-    m_classRegistry["Shot"]         = RegistryFuncPair(&Shot::factory,         &Shot::populateReturnFields);
-    m_classRegistry["Task"]         = RegistryFuncPair(&Task::factory,         &Task::populateReturnFields);
-    m_classRegistry["Version"]      = RegistryFuncPair(&Version::factory,      &Version::populateReturnFields);
+    m_classRegistry[entityType] = RegistryFuncPair(factoryFunc, populateFunc);
 }
 
+#if 0
 #warning This one should be deprecated 
 // *****************************************************************************
 Entity *Shotgun::entityFactoryFind(const std::string &entityType)
@@ -107,6 +113,7 @@ Entity *Shotgun::entityFactoryFind(const std::string &entityType)
         return NULL;
     }
 }
+#endif
 
 // *****************************************************************************
 EntityPtrs Shotgun::entityFactoryFind(const std::string &entityType, SgMap &findMap)
@@ -616,7 +623,7 @@ Entity *Shotgun::findEntity(const std::string &entityType,
                             const FilterBy &filterList,
                             const SgArray &extraReturnFields,
                             const bool retiredOnly,
-                            const SgArray &order)
+                            const SortBy &order)
 {
     SgMap findMap = Entity::buildFindMap(entityType,
                                          filterList,

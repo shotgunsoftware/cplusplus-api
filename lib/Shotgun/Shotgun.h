@@ -56,6 +56,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Playlist.h>
 
 #include <Shotgun/FilterBy.h>
+#include <Shotgun/SortBy.h>
 
 namespace Shotgun {
 
@@ -76,24 +77,30 @@ class Shotgun
     friend class NoteMixin;
 
 public:
-    Shotgun(const std::string &serverURL=SG_DEFAULT_URL);
+    Shotgun(const std::string &serverURL = SG_DEFAULT_URL,
+            const std::string &authKey = SG_AUTHENTICATION_KEY);
     virtual ~Shotgun();
 
     xmlrpc_c::client_xml *client() const { return m_client; }
     const std::string &serverURL() const { return m_serverURL; }
+    const std::string &authKey() const { return m_authKey; }
     const std::string &api() const { return m_api; }
     const SgMap &authMap() const { return m_authMap; } 
 
     Method *method(const std::string &methodName) 
         { return new Method(this, methodName); }
 
-    void registerClass();
+    void registerClass(const std::string &entityType,
+                       const FactoryFunc &factoryFunc,
+                       const PopulateReturnFieldsFunc &populateFunc);
 
+#if 0
 #warning This entityFactoryFind(..) func should be deprecated
     //----------------------------------------------------------------------
     // This factory function creates an entity object which does not link to 
     // any of the existing Shotgun entities.
     Entity *entityFactoryFind(const std::string &entityType);
+#endif
 
     //----------------------------------------------------------------------
     // This factory function creates an array of entity objects which link to
@@ -326,30 +333,33 @@ public:
     T *findEntity(const FilterBy &filterList = FilterBy(),
                   const SgArray &extraReturnFields = SgArray(),
                   const bool retiredOnly = false,
-                  const SgArray &order = SgArray());
+                  const SortBy &order = SortBy());
 
     template <class T>
     std::vector<T *> findEntities(const FilterBy &filterList = FilterBy(),
                                   const int limit = 0,
                                   const SgArray &extraReturnFields = SgArray(),
                                   const bool retiredOnly = false,
-                                  const SgArray &order = SgArray());
-
-    ClassRegistry m_classRegistry;
+                                  const SortBy &order = SortBy());
 
 protected:
-    std::string m_serverURL;
-    std::string m_api;
-    xmlrpc_c::clientXmlTransport_curl m_transport;
-    xmlrpc_c::client_xml *m_client;
-    SgMap m_authMap;
-
     // Overloaded function that is used within this library
     Entity *findEntity(const std::string &entityType,
                        const FilterBy &filterList = FilterBy(),
                        const SgArray &extraReturnFields = SgArray(),
                        const bool retiredOnly = false,
-                       const SgArray &order = SgArray());
+                       const SortBy &order = SortBy());
+
+    std::string m_serverURL;
+    std::string m_authKey;
+    std::string m_api;
+    xmlrpc_c::clientXmlTransport_curl m_transport;
+    xmlrpc_c::client_xml *m_client;
+    SgMap m_authMap;
+
+private:
+    ClassRegistry m_classRegistry;
+
 };
 
 // *****************************************************************************
@@ -359,7 +369,7 @@ template <class T>
 T *Shotgun::findEntity(const FilterBy &filterList,
                        const SgArray &extraReturnFields,
                        const bool retiredOnly,
-                       const SgArray &order)
+                       const SortBy &order)
 {
     Entity *entity = findEntity(T::type(),
                                 filterList,
@@ -386,7 +396,7 @@ std::vector<T *> Shotgun::findEntities(const FilterBy &filterList,
                                        const int limit,
                                        const SgArray &extraReturnFields,
                                        const bool retiredOnly,
-                                       const SgArray &order)
+                                       const SortBy &order)
 {
     SgMap findMap = Entity::buildFindMap(T::type(),
                                          filterList,
@@ -398,6 +408,7 @@ std::vector<T *> Shotgun::findEntities(const FilterBy &filterList,
     EntityPtrs entities = this->entityFactoryFind(T::type(), findMap);
     std::vector<T *> outEntities;
 
+#warning May consider throwing error if casting fails
     for (size_t i = 0; i < entities.size(); i++)
     {
         if (T *t = dynamic_cast<T *>(entities[i]))
