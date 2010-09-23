@@ -35,7 +35,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <string>
 
-#include <Shotgun/Type.h>
 #include <Shotgun/Task.h>
 
 namespace Shotgun {

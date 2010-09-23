@@ -204,3 +204,36 @@ void Element::sgShots(const SgArray &val)
 }
 
 } // End namespace Shotgun
+
+// *****************************************************************************
+// *****************************************************************************
+std::string toStdString(const Shotgun::Element &element)
+{
+    return toStdString(element.attrs());
+}
+
+// *****************************************************************************
+std::string toStdString(const Shotgun::Elements &elements)
+{
+    Shotgun::SgArray array;
+    for (size_t i = 0; i < elements.size(); i++)
+    {
+        array.push_back(elements[i].attrs());
+    }
+    
+    return toStdString(Shotgun::toXmlrpcValue(array));
+}
+
+// *****************************************************************************
+std::ostream& operator<<(std::ostream &output, const Shotgun::Element &element)
+{
+    output << toStdString(element);
+    return output;
+}
+
+// *****************************************************************************
+std::ostream& operator<<(std::ostream &output, const Shotgun::Elements &elements)
+{
+    output << toStdString(elements);
+    return output;
+}

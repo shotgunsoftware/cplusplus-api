@@ -60,6 +60,7 @@ class Playlist;
 class FilterBy;
 class SortBy;
 class List;
+class Dict;
 
 // *****************************************************************************
 typedef std::vector<std::string> Strings;
@@ -119,319 +120,41 @@ xmlrpc_c::value toXmlrpcValue(const MethodSignatures &in);
 xmlrpc_c::value toXmlrpcValue(const FilterBy &in);
 xmlrpc_c::value toXmlrpcValue(const SortBy &in);
 xmlrpc_c::value toXmlrpcValue(const List &in);
+xmlrpc_c::value toXmlrpcValue(const Dict &in);
 xmlrpc_c::value toXmlrpcValue(const xmlrpc_c::value &in);
 
-#warning These should be moved either out of the Shotgun namespace or into indivial classes
 // *****************************************************************************
-std::string toStdString(const xmlrpc_c::value &value);
-std::string toStdString(const SgMap &map);
-std::string toStdString(const SgArray &array);
-std::string toStdString(const Strings &strs);
-std::string toStdString(const MethodSignatures &sigs);
-std::string toStdString(const FilterBy &filterList);
-std::string toStdString(const SortBy &filterList);
-std::string toStdString(const List &list);
-std::string toStdString(const Project &project);
-std::string toStdString(const Projects &projects);
-std::string toStdString(const Sequence &sequence);
-std::string toStdString(const Sequences &sequences);
-std::string toStdString(const Shot &shot);
-std::string toStdString(const Shots &shots);
-std::string toStdString(const Version &version);
-std::string toStdString(const Versions &versions);
-std::string toStdString(const HumanUser &user);
-std::string toStdString(const HumanUsers &users);
-std::string toStdString(const Element &element);
-std::string toStdString(const Elements &elements);
-std::string toStdString(const Asset &asset);
-std::string toStdString(const Assets &assets);
-std::string toStdString(const Delivery &delivery);
-std::string toStdString(const Deliveries &deliveries);
-std::string toStdString(const PublishEvent &publsihEvent);
-std::string toStdString(const PublishEvents &publsihEvents);
-std::string toStdString(const Review &review);
-std::string toStdString(const Reviews &reviews);
-std::string toStdString(const ReviewItem &reviewItem);
-std::string toStdString(const ReviewItems &reviewItems);
-std::string toStdString(const Task &task);
-std::string toStdString(const Tasks &tasks);
-std::string toStdString(const Group &group);
-std::string toStdString(const Groups &groups);
-std::string toStdString(const Note &note);
-std::string toStdString(const Notes &notes);
-std::string toStdString(const Playlist &playlist);
-std::string toStdString(const Playlists &playlists);
+// The template approach won't work since xmlrpc_c::value has to be casted to a
+// specific derived xmlrpc_c::value type first, which the compiler doesn't like.
+#if 0
+template <typename T>
+T fromXmlrpcValue(const xmlrpc_c::value &value);
+#endif
 
-// *****************************************************************************
-#warning Move these operator<< guys out of the Shotgun namespace
-std::ostream &operator<<(std::ostream& output, const xmlrpc_c::value &value);
-std::ostream &operator<<(std::ostream& output, const SgMap &map);
-std::ostream &operator<<(std::ostream& output, const SgArray &array);
-std::ostream &operator<<(std::ostream& output, const Strings &strs);
-std::ostream &operator<<(std::ostream& output, const MethodSignatures &sigs);
-std::ostream &operator<<(std::ostream& output, const Project &project);
-std::ostream &operator<<(std::ostream& output, const Projects &projects);
-std::ostream &operator<<(std::ostream& output, const Sequence &sequence);
-std::ostream &operator<<(std::ostream& output, const Sequences &sequences);
-std::ostream &operator<<(std::ostream& output, const Shot &shot);
-std::ostream &operator<<(std::ostream& output, const Shots &shots);
-std::ostream &operator<<(std::ostream& output, const Version &version);
-std::ostream &operator<<(std::ostream& output, const Versions &versions);
-std::ostream &operator<<(std::ostream& output, const HumanUser &user);
-std::ostream &operator<<(std::ostream& output, const HumanUsers &users);
-std::ostream &operator<<(std::ostream& output, const Element &element);
-std::ostream &operator<<(std::ostream& output, const Elements &elements);
-std::ostream &operator<<(std::ostream& output, const Asset &asset);
-std::ostream &operator<<(std::ostream& output, const Assets &assets);
-std::ostream &operator<<(std::ostream& output, const Delivery &delivery);
-std::ostream &operator<<(std::ostream& output, const Deliveries &deliveries);
-std::ostream &operator<<(std::ostream& output, const PublishEvent &publishEvent);
-std::ostream &operator<<(std::ostream& output, const PublishEvents &publishEvents);
-std::ostream &operator<<(std::ostream& output, const Review &review);
-std::ostream &operator<<(std::ostream& output, const Reviews &reviews);
-std::ostream &operator<<(std::ostream& output, const ReviewItem &reviewItem);
-std::ostream &operator<<(std::ostream& output, const ReviewItems &reviewItems);
-std::ostream &operator<<(std::ostream& output, const Task &task);
-std::ostream &operator<<(std::ostream& output, const Tasks &tasks);
-std::ostream &operator<<(std::ostream& output, const Group &group);
-std::ostream &operator<<(std::ostream& output, const Groups &groups);
-std::ostream &operator<<(std::ostream& output, const Note &note);
-std::ostream &operator<<(std::ostream& output, const Notes &notes);
-std::ostream &operator<<(std::ostream& output, const Playlist &playlist);
-std::ostream &operator<<(std::ostream& output, const Playlists &playlists);
+void fromXmlrpcValue(const xmlrpc_c::value &value, char *out);
+void fromXmlrpcValue(const xmlrpc_c::value &value, std::string &out);
+void fromXmlrpcValue(const xmlrpc_c::value &value, int &out);
+void fromXmlrpcValue(const xmlrpc_c::value &value, double &out);
+void fromXmlrpcValue(const xmlrpc_c::value &value, bool &out);
+void fromXmlrpcValue(const xmlrpc_c::value &value, time_t &out);
+void fromXmlrpcValue(const xmlrpc_c::value &value, SgArray &out);
+void fromXmlrpcValue(const xmlrpc_c::value &value, SgMap &out);
+void fromXmlrpcValue(const xmlrpc_c::value &value, Strings &out);
+//void fromXmlrpcValue(const xmlrpc_c::value &value, MethodSignatures &out);
+void fromXmlrpcValue(const xmlrpc_c::value &value, FilterBy &out);
+void fromXmlrpcValue(const xmlrpc_c::value &value, SortBy &out);
+void fromXmlrpcValue(const xmlrpc_c::value &value, List &out);
+void fromXmlrpcValue(const xmlrpc_c::value &value, Dict &out);
+void fromXmlrpcValue(const xmlrpc_c::value &value, xmlrpc_c::value &out);
 
 // *****************************************************************************
 // Utility func
 std::string currDateStr();
 
-// *****************************************************************************
-class SgError : public std::exception
-{
-public:
-    SgError(const std::string &msg = "") { m_msg = msg; }
-    SgError(const char *msg = "") { m_msg = msg; }
-
-    virtual ~SgError() throw() {}
-
-    virtual const char *what() const throw()
-    {
-        return m_msg.c_str();
-    }
-
-protected:
-    std::string m_msg;
-};
-
-// *****************************************************************************
-// "SgAttrError" is nothing more than it's base class, "SgError". It is just an 
-// extra container for the attribute-specific exceptions
-class SgAttrError : public SgError
-{
-public:
-    SgAttrError(const std::string &msg = "") : SgError(msg) {}
-    SgAttrError(const char *msg = "") : SgError(msg) {}
-
-    virtual ~SgAttrError() throw() {}
-};
-
-// *****************************************************************************
-class SgAttrNotFoundError : public SgAttrError
-{
-public:
-    SgAttrNotFoundError(const std::string &attrName) : SgAttrError("SgAttrNotFoundError: ")
-    {
-        m_msg += "Attribute, '" + attrName + "', is not found.";
-    }
-
-    virtual ~SgAttrNotFoundError() throw() {}
-};
-
-// *****************************************************************************
-class SgAttrTypeError : public SgAttrError
-{
-public:
-    SgAttrTypeError(const std::string &attrName,
-                    const xmlrpc_c::value::type_t wrongType,
-                    const xmlrpc_c::value::type_t correctType) : SgAttrError("SgAttrTypeError: ")
-    {
-        m_msg += "Attribute, '" + attrName + ", ";
-        m_msg += "is not of '" + xmlrpcValueTypeStr(wrongType) + "'. ";
-        m_msg += "It is of '" + xmlrpcValueTypeStr(correctType) + "'.";
-    }
-
-    virtual ~SgAttrTypeError() throw() {}
-};
-
-// *****************************************************************************
-class SgAttrValueError : public SgAttrError
-{
-public:
-    SgAttrValueError(const std::string &attrName) : SgAttrError("SgAttrValueError: ")
-    {
-        m_msg += "Attribute, '" + attrName + "', does not have a valid value.";
-    }
-
-    virtual ~SgAttrValueError() throw() {}
-};
-
-
-// *****************************************************************************
-class SgAttrLinkError : public SgAttrError
-{
-public:
-    SgAttrLinkError(const SgMap &link) : SgAttrError("SgAttrLinkError: ")
-    {
-        m_msg += "The given link is missing one or more of the required fields: \"id\", \"type\", \"name\"\n";
-        m_msg += toStdString(link);
-    }
-
-    SgAttrLinkError(const xmlrpc_c::value &link,
-                    const xmlrpc_c::value::type_t &type) : SgAttrError("SgAttrLinkError: ")
-    {
-        m_msg += "The given link has the wrong type: \"" + xmlrpcValueTypeStr(type);
-        m_msg += "\", it should be type of \"TYPE_STRUCT\"\n";
-        m_msg += toStdString(link);
-    }
-
-    virtual ~SgAttrLinkError() throw() {}
-};
-
-
-// *****************************************************************************
-class SgAttrSetValueError : public SgAttrError
-{
-public:
-    SgAttrSetValueError(const std::string &attrName,
-                        const std::string &errMsg = "") : SgAttrError("SgAttrSetValueError: ")
-    {
-        m_msg += "Failed to set value for attribute, '" + attrName + "'";
-        if (errMsg != "")
-        {
-            m_msg += "\n" + errMsg;
-        }
-    }
-
-    SgAttrSetValueError(const SgMap &attrPairs,
-                        const std::string &errMsg = "") : SgAttrError("SgAttrSetValueError: ")
-    {
-        m_msg += "Failed to set values for attribute list, " + toStdString(attrPairs);
-        if (errMsg != "")
-        {
-            m_msg += "\n" + errMsg;
-        }
-    }
-
-    virtual ~SgAttrSetValueError() throw() {}
-};
-
-// *****************************************************************************
-class SgEmptyAttrMapError : public SgAttrError
-{
-public:
-    SgEmptyAttrMapError() : SgAttrError("SgEmptyAttrMapError: ")
-    {
-        m_msg += "Empty attribute map.";
-    }
-
-    virtual ~SgEmptyAttrMapError() throw() {}
-};
-
-// *****************************************************************************
-class SgEntityError : public SgError
-{
-public:
-    SgEntityError(const std::string &msg = "") : SgError(msg) {}
-    SgEntityError(const char *msg = "") : SgError(msg) {}
-
-    virtual ~SgEntityError() throw() {}
-};
-
-// *****************************************************************************
-class SgEntityXmlrpcError : public SgEntityError
-{
-public:
-    SgEntityXmlrpcError(const std::string &msg) : SgEntityError("SgEntityXmlrpcError: ") 
-    {
-        m_msg += msg;
-    }
-
-    virtual ~SgEntityXmlrpcError() throw() {}
-};
-
-// *****************************************************************************
-class SgEntityNotFoundError : public SgEntityError
-{
-public:
-    SgEntityNotFoundError(const std::string &entityType = "" ) : SgEntityError("SgEntityNotFoundError: ")
-    {
-        if (entityType == "")
-        {
-            m_msg += "entity not found.";
-        }
-        else
-        {
-            m_msg += "Shotgun \"" + entityType + "\" entity not found.";
-        }
-    }
-
-    virtual ~SgEntityNotFoundError() throw() {}
-};
-
-// *****************************************************************************
-class SgEntityFunctionNotFoundError : public SgEntityError
-{
-public:
-    SgEntityFunctionNotFoundError(const std::string &entityType, 
-                                  const std::string &funcMapName) : SgEntityError("SgEntityFunctionNotFoundError: ")
-    {
-        m_msg += "Can't find entry for \"" + entityType + "\" entity in function map \"";
-        m_msg += funcMapName + "\". Check Shotgun class' constructor.";
-    }
-
-    virtual ~SgEntityFunctionNotFoundError() throw() {}
-};
-
-// *****************************************************************************
-class SgEntityDynamicCastError : public SgEntityError
-{
-public:
-    SgEntityDynamicCastError(const std::string &castType) : SgEntityError("SgEntityDynamicCastError: ")
-    {
-        m_msg += "dynamic_casting to type \"" + castType + "\" failed.";
-    }
-
-    virtual ~SgEntityDynamicCastError() throw() {}
-};
-
-// *****************************************************************************
-class SgEntityCreateError : public SgEntityError
-{
-public:
-    SgEntityCreateError(const std::string &err) : SgEntityError("SgEntityCreateError: ")
-    {
-        m_msg += err;
-    }
-
-    virtual ~SgEntityCreateError() throw() {}
-};
-
-// *****************************************************************************
-class SgApiError : public SgError
-{
-public:
-    SgApiError(const std::string &api) : SgError("SgApiError: ")
-    {
-        m_msg += api + " is not supported.";
-    }
-
-    virtual ~SgApiError() throw() {}
-};
-
 } // End namespace Shotgun
 
 // *****************************************************************************
-// These are outside of the Shotgun namespace
-#warning Finish moving these operators out of Shotgun namespace
+// *****************************************************************************
 std::string toStdString(const xmlrpc_c::value &value);
 std::string toStdString(const Shotgun::SgArray &array);
 std::string toStdString(const Shotgun::SgMap &map);
@@ -439,8 +162,8 @@ std::string toStdString(const Shotgun::Strings &strs);
 std::string toStdString(const Shotgun::MethodSignatures &sigs);
 
 std::ostream &operator<<(std::ostream& output, const xmlrpc_c::value &value);
-std::ostream &operator<<(std::ostream& output, const Shotgun::SgArray &array);
 std::ostream &operator<<(std::ostream& output, const Shotgun::SgMap &map);
+std::ostream &operator<<(std::ostream& output, const Shotgun::SgArray &array);
 std::ostream &operator<<(std::ostream& output, const Shotgun::Strings &strs);
 std::ostream &operator<<(std::ostream& output, const Shotgun::MethodSignatures &sigs);
 

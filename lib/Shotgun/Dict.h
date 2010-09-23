@@ -53,27 +53,28 @@ public:
     }
 
     template <typename T>
-    Dict &add(const std::string &key, const T &value)
-    {
-        // Remove the (key, value) pair first if the key is found since 
-        // xmlrpc_c::value type can't be reassigned once it's instantiated.
-        remove(key);
-        m_value[key] = toXmlrpcValue(value);
+    Dict &add(const std::string &key, const T &value);
 
-        return *this;
-    }
+    // Return the value of a given key
+    template <typename  T>
+    const T value(const std::string &key) const;
+
+    // --------------------------------------------------------------------
+    // The [] operator that returns the value of a given key. The syntax of
+    // using this operator is kind of complex, which makes it not worth to
+    // use it. For example,
+    //     std::string nameStr = dict.operator[]<std::string>("name");
+    //                  int id = dict.operator[]<int>("id");
+    // Instead use template function, value(key).
+    // --------------------------------------------------------------------
+    template <typename  T>
+    const T operator[](const std::string &key) const;
 
     const SgMap &value() const { return m_value; }
     const bool empty() const { return m_value.empty(); }
     const int size() const { return m_value.size(); }
     const bool find(const std::string &key);
     Dict &remove(const std::string &key);
-
-    template <typename  T>
-    const T value(const std::string &key) const;
-
-    template <typename  T>
-    const T operator[](const std::string &key) const;
 
     Dict &operator=(const Dict &that)
     {
@@ -85,14 +86,21 @@ public:
         return *this;
     }
 
-    friend std::ostream& operator<<(std::ostream &output, const Dict &dict);
-
 protected:
-    template <typename T>
-    const T fromXmlrpcValue(const xmlrpc_c::value &value) const;
-
     SgMap m_value;
 };
+
+// *****************************************************************************
+template <typename T>
+Dict &Dict::add(const std::string &key, const T &value)
+{
+    // Remove the (key, value) pair first if the key is found since 
+    // xmlrpc_c::value type can't be reassigned once it's instantiated.
+    remove(key);
+    m_value[key] = toXmlrpcValue(value);
+
+    return *this;
+}
 
 // *****************************************************************************
 template <typename  T>
@@ -110,7 +118,15 @@ const T Dict::value(const std::string &key) const
         value = xmlrpc_c::value_nil();           
     }
 
+    T outVal;
+    fromXmlrpcValue(value, outVal);
+    return outVal;
+
+#if 0
+    // The template function doesn't work since xmlrpc_c::value has to be casted to a
+    // specific derived xmlrpc_c::value type first, which the compiler doesn't like.
     return fromXmlrpcValue<T>(value);
+#endif
 }
 
 // *****************************************************************************
@@ -120,55 +136,11 @@ const T Dict::operator[](const std::string &key) const
     return value<T>(key);
 }
 
-// *****************************************************************************
-template <typename T>
-const T Dict::fromXmlrpcValue(const xmlrpc_c::value &value) const
-{
-    std::cout << xmlrpcValueTypeStr(value.type()) << std::endl;
-
-#if 0
-    if (value.type() == xmlrpc_c::value::TYPE_INT)
-    {
-        return T(xmlrpc_c::value_int(value));
-    }
-    else if (value.type() == xmlrpc_c::value::TYPE_BOOLEAN)
-    {
-        return T(xmlrpc_c::value_boolean(value));
-    }
-    else if (value.type() == xmlrpc_c::value::TYPE_DOUBLE)
-    {
-        return T(xmlrpc_c::value_double(value));
-    }
-    else if (value.type() == xmlrpc_c::value::TYPE_DATETIME)
-    {
-        return T(xmlrpc_c::value_datetime(value));
-    }
-    else if (value.type() == xmlrpc_c::value::TYPE_STRING)
-    {
-        return T(xmlrpc_c::value_string(value));
-    }
-    else if (value.type() == xmlrpc_c::value::TYPE_BYTESTRING)
-    {
-        return T((xmlrpc_c::value_bytestring(value)).length());
-    }
-    else if (value.type() == xmlrpc_c::value::TYPE_ARRAY)
-    {
-        return T((xmlrpc_c::value_array(value)).vectorValueValue());
-    }
-    else if (value.type() == xmlrpc_c::value::TYPE_STRUCT)
-    {
-        return T(SgMap(xmlrpc_c::value_struct(value)));
-    }
-    else if (value.type() == xmlrpc_c::value::TYPE_NIL)
-    {
-        // TODO: ???
-        return T("nil");
-    }
-#endif
-
-    return std::string("whatever");
-}
-
 } // End namespace Shotgun
+
+// *****************************************************************************
+// *****************************************************************************
+std::string toStdString(const Shotgun::Dict &dict);
+std::ostream& operator<<(std::ostream &output, const Shotgun::Dict &dict);
 
 #endif    // End #ifdef __DICT_H__

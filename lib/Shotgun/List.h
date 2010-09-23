@@ -76,12 +76,15 @@ public:
         return *this;
     }
 
-    friend std::ostream& operator<<(std::ostream &output, const List &list);
-
 protected:
     SgArray m_value;
 };
 
 } // End namespace Shotgun
+
+// *****************************************************************************
+// *****************************************************************************
+std::string toStdString(const Shotgun::List &list);
+std::ostream& operator<<(std::ostream &output, const Shotgun::List &list);
 
 #endif    // End #ifdef __LIST_H__

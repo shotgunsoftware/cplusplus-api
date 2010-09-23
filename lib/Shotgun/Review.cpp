@@ -111,3 +111,35 @@ SgArray Review::populateReturnFields(const SgArray &extraReturnFields)
 }
 
 } // End namespace Shotgun
+
+// *****************************************************************************
+std::string toStdString(const Shotgun::Review &review)
+{
+    return toStdString(review.attrs());
+}
+
+// *****************************************************************************
+std::string toStdString(const Shotgun::Reviews &reviews)
+{
+    Shotgun::SgArray array;
+    for (size_t i = 0; i < reviews.size(); i++)
+    {
+        array.push_back(reviews[i].attrs());
+    }
+    
+    return toStdString(Shotgun::toXmlrpcValue(array));
+}
+
+// *****************************************************************************
+std::ostream& operator<<(std::ostream &output, const Shotgun::Review &review)
+{
+    output << toStdString(review);
+    return output;
+}
+
+// *****************************************************************************
+std::ostream& operator<<(std::ostream &output, const Shotgun::Reviews &reviews)
+{
+    output << toStdString(reviews);
+    return output;
+}

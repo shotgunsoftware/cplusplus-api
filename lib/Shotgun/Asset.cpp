@@ -167,3 +167,36 @@ const ShotPtrs Asset::sgShots() const
 }
 
 } // End namespace Shotgun
+
+// *****************************************************************************
+// *****************************************************************************
+std::string toStdString(const Shotgun::Asset &asset)
+{
+    return toStdString(asset.attrs());
+}
+
+// *****************************************************************************
+std::string toStdString(const Shotgun::Assets &assets)
+{
+    Shotgun::SgArray array;
+    for (size_t i = 0; i < assets.size(); i++)
+    {
+        array.push_back(assets[i].attrs());
+    }
+    
+    return toStdString(Shotgun::toXmlrpcValue(array));
+}
+
+// *****************************************************************************
+std::ostream& operator<<(std::ostream &output, const Shotgun::Asset &asset)
+{
+    output << toStdString(asset);
+    return output;
+}
+
+// *****************************************************************************
+std::ostream& operator<<(std::ostream &output, const Shotgun::Assets &assets)
+{
+    output << toStdString(assets);
+    return output;
+}

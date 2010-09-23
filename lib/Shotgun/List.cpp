@@ -52,13 +52,21 @@ List &List::extend(const List &that)
     return *this;
 }
 
+} // End namespace Shotgun
+
 // *****************************************************************************
-std::ostream& operator<<(std::ostream &output, const List &list)
+// *****************************************************************************
+std::string toStdString(const Shotgun::List &list)
 {
-    output << list.value();
+    return toStdString(list.value());
+}
+
+// *****************************************************************************
+std::ostream& operator<<(std::ostream &output, const Shotgun::List &list)
+{
+    output << toStdString(list);
 
     return output;
 }
 
-} // End namespace Shotgun
 

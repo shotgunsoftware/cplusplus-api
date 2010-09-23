@@ -35,7 +35,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <string>
 
-#include <Shotgun/Type.h>
 #include <Shotgun/Entity.h>
 
 namespace Shotgun {
@@ -74,5 +73,12 @@ protected:
 };
 
 } // End namespace Shotgun
+
+// *****************************************************************************
+// *****************************************************************************
+std::string toStdString(const Shotgun::PublishEvent &publsihEvent);
+std::string toStdString(const Shotgun::PublishEvents &publsihEvents);
+std::ostream& operator<<(std::ostream &output, const Shotgun::PublishEvent &publishEvent);
+std::ostream& operator<<(std::ostream &output, const Shotgun::PublishEvents &publishEvents);
 
 #endif    // End #ifdef __PUBLISH_EVENT_H__

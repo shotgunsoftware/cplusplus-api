@@ -35,7 +35,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <string>
 
-#include <Shotgun/Type.h>
 #include <Shotgun/Entity.h>
 #include <Shotgun/TaskMixin.h>
 #include <Shotgun/NoteMixin.h>
@@ -84,5 +83,12 @@ protected:
 };
 
 } // End namespace Shotgun
+
+// *****************************************************************************
+// *****************************************************************************
+std::string toStdString(const Shotgun::Asset &asset);
+std::string toStdString(const Shotgun::Assets &assets);
+std::ostream& operator<<(std::ostream &output, const Shotgun::Asset &asset);
+std::ostream& operator<<(std::ostream &output, const Shotgun::Assets &assets);
 
 #endif    // End #ifdef __ASSET_H__

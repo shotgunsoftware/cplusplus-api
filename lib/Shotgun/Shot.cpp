@@ -234,3 +234,36 @@ const Sequence *Shot::sgSequence() const
 }
 
 } // End namespace Shotgun
+
+// *****************************************************************************
+// *****************************************************************************
+std::string toStdString(const Shotgun::Shot &shot)
+{
+    return toStdString(shot.attrs());
+}
+
+// *****************************************************************************
+std::string toStdString(const Shotgun::Shots &shots)
+{
+    Shotgun::SgArray array;
+    for (size_t i = 0; i < shots.size(); i++)
+    {
+        array.push_back(shots[i].attrs());
+    }
+    
+    return toStdString(Shotgun::toXmlrpcValue(array));
+}
+
+// *****************************************************************************
+std::ostream& operator<<(std::ostream &output, const Shotgun::Shot &shot)
+{
+    output << toStdString(shot);
+    return output;
+}
+
+// *****************************************************************************
+std::ostream& operator<<(std::ostream &output, const Shotgun::Shots &shots)
+{
+    output << toStdString(shots);
+    return output;
+}

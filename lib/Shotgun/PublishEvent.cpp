@@ -108,3 +108,36 @@ SgArray PublishEvent::populateReturnFields(const SgArray &extraReturnFields)
 }
 
 } // End namespace Shotgun
+
+// *****************************************************************************
+// *****************************************************************************
+std::string toStdString(const Shotgun::PublishEvent &publishEvent)
+{
+    return toStdString(publishEvent.attrs());
+}
+
+// *****************************************************************************
+std::string toStdString(const Shotgun::PublishEvents &publishEvents)
+{
+    Shotgun::SgArray array;
+    for (size_t i = 0; i < publishEvents.size(); i++)
+    {
+        array.push_back(publishEvents[i].attrs());
+    }
+    
+    return toStdString(Shotgun::toXmlrpcValue(array));
+}
+
+// *****************************************************************************
+std::ostream& operator<<(std::ostream &output, const Shotgun::PublishEvent &publishEvent)
+{
+    output << toStdString(publishEvent);
+    return output;
+}
+
+// *****************************************************************************
+std::ostream& operator<<(std::ostream &output, const Shotgun::PublishEvents &publishEvents)
+{
+    output << toStdString(publishEvents);
+    return output;
+}

@@ -104,3 +104,36 @@ SgArray Sequence::populateReturnFields(const SgArray &extraReturnFields)
 }
 
 } // End namespace Shotgun
+
+// *****************************************************************************
+// *****************************************************************************
+std::string toStdString(const Shotgun::Sequence &sequence)
+{
+    return toStdString(sequence.attrs());
+}
+
+// *****************************************************************************
+std::string toStdString(const Shotgun::Sequences &sequences)
+{
+    Shotgun::SgArray array;
+    for (size_t i = 0; i < sequences.size(); i++)
+    {
+        array.push_back(sequences[i].attrs());
+    }
+    
+    return toStdString(Shotgun::toXmlrpcValue(array));
+}
+
+// *****************************************************************************
+std::ostream& operator<<(std::ostream &output, const Shotgun::Sequence &sequence)
+{
+    output << toStdString(sequence);
+    return output;
+}
+
+// *****************************************************************************
+std::ostream& operator<<(std::ostream &output, const Shotgun::Sequences &sequences)
+{
+    output << toStdString(sequences);
+    return output;
+}

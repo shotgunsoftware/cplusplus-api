@@ -96,3 +96,36 @@ SgArray Group::populateReturnFields(const SgArray &extraReturnFields)
 }
 
 } // End namespace Shotgun
+
+// *****************************************************************************
+// *****************************************************************************
+std::string toStdString(const Shotgun::Group &group)
+{
+    return toStdString(group.attrs());
+}
+
+// *****************************************************************************
+std::string toStdString(const Shotgun::Groups &groups)
+{
+    Shotgun::SgArray array;
+    for (size_t i = 0; i < groups.size(); i++)
+    {
+        array.push_back(groups[i].attrs());
+    }
+    
+    return toStdString(Shotgun::toXmlrpcValue(array));
+}
+
+// *****************************************************************************
+std::ostream& operator<<(std::ostream &output, const Shotgun::Group &group)
+{
+    output << toStdString(group);
+    return output;
+}
+
+// *****************************************************************************
+std::ostream& operator<<(std::ostream &output, const Shotgun::Groups &groups)
+{
+    output << toStdString(groups);
+    return output;
+}

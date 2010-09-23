@@ -136,3 +136,36 @@ const Shot *Version::sgShot() const
 }
 
 } // End namespace Shotgun
+
+// *****************************************************************************
+// *****************************************************************************
+std::string toStdString(const Shotgun::Version &version)
+{
+    return toStdString(version.attrs());
+}
+
+// *****************************************************************************
+std::string toStdString(const Shotgun::Versions &versions)
+{
+    Shotgun::SgArray array;
+    for (size_t i = 0; i < versions.size(); i++)
+    {
+        array.push_back(versions[i].attrs());
+    }
+    
+    return toStdString(Shotgun::toXmlrpcValue(array));
+}
+
+// *****************************************************************************
+std::ostream& operator<<(std::ostream &output, const Shotgun::Version &version)
+{
+    output << toStdString(version);
+    return output;
+}
+
+// *****************************************************************************
+std::ostream& operator<<(std::ostream &output, const Shotgun::Versions &versions)
+{
+    output << toStdString(versions);
+    return output;
+}

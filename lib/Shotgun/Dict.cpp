@@ -64,13 +64,21 @@ Dict &Dict::remove(const std::string &key)
     return *this;
 }
 
+} // End namespace Shotgun
+
 // *****************************************************************************
-std::ostream& operator<<(std::ostream &output, const Dict &dict)
+// *****************************************************************************
+std::string toStdString(const Shotgun::Dict &dict)
 {
-    output << dict.value();
+    return toStdString(dict.value());
+}
+
+// *****************************************************************************
+std::ostream& operator<<(std::ostream &output, const Shotgun::Dict &dict)
+{
+    output << toStdString(dict);
 
     return output;
 }
 
-} // End namespace Shotgun
 

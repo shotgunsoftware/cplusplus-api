@@ -199,3 +199,36 @@ Version *Note::getLinkedVersion()
 }
 
 } // End namespace Shotgun
+
+// *****************************************************************************
+// *****************************************************************************
+std::string toStdString(const Shotgun::Note &note)
+{
+    return toStdString(note.attrs());
+}
+
+// *****************************************************************************
+std::string toStdString(const Shotgun::Notes &notes)
+{
+    Shotgun::SgArray array;
+    for (size_t i = 0; i < notes.size(); i++)
+    {
+        array.push_back(notes[i].attrs());
+    }
+    
+    return toStdString(Shotgun::toXmlrpcValue(array));
+}
+
+// *****************************************************************************
+std::ostream& operator<<(std::ostream &output, const Shotgun::Note &note)
+{
+    output << toStdString(note);
+    return output;
+}
+
+// *****************************************************************************
+std::ostream& operator<<(std::ostream &output, const Shotgun::Notes &notes)
+{
+    output << toStdString(notes);
+    return output;
+}

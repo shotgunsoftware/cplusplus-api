@@ -35,7 +35,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <string>
 
-#include <Shotgun/Type.h>
 #include <Shotgun/Entity.h>
 
 namespace Shotgun {
@@ -89,5 +88,12 @@ protected:
 };
 
 } // End namespace Shotgun
+
+// *****************************************************************************
+// *****************************************************************************
+std::string toStdString(const Shotgun::Element &element);
+std::string toStdString(const Shotgun::Elements &elements);
+std::ostream& operator<<(std::ostream &output, const Shotgun::Element &element);
+std::ostream& operator<<(std::ostream &output, const Shotgun::Elements &elements);
 
 #endif    // End #ifdef __ELEMENT_H__

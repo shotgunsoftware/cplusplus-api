@@ -35,7 +35,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <string>
 
-#include <Shotgun/Type.h>
 #include <Shotgun/Entity.h>
 #include <Shotgun/Version.h>
 #include <Shotgun/Shot.h>
@@ -86,5 +85,12 @@ protected:
 };
 
 } // End namespace Shotgun
+
+// *****************************************************************************
+// *****************************************************************************
+std::string toStdString(const Shotgun::ReviewItem &reviewItem);
+std::string toStdString(const Shotgun::ReviewItems &reviewItems);
+std::ostream& operator<<(std::ostream &output, const Shotgun::ReviewItem &reviewItem);
+std::ostream& operator<<(std::ostream &output, const Shotgun::ReviewItems &reviewItems);
 
 #endif    // End #ifdef __REVIEW_ITEM_H__

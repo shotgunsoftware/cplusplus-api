@@ -99,8 +99,6 @@ public:
         return *this;
     }
 
-    friend std::ostream& operator<<(std::ostream &output, const FilterBy &filterList);
-
 protected:
     FilterBy &op(const std::string &logicOperator,
                  const std::string &path,
@@ -113,5 +111,10 @@ protected:
 };
 
 } // End namespace Shotgun
+
+// *****************************************************************************
+// *****************************************************************************
+std::string toStdString(const Shotgun::FilterBy &filterList);
+std::ostream& operator<<(std::ostream &output, const Shotgun::FilterBy &filterList);
 
 #endif    // End #ifdef __FILTERBY_H__

@@ -203,3 +203,35 @@ void Playlist::sgVersions(const SgArray &val)
 }
 
 } // End namespace Shotgun
+
+// *****************************************************************************
+std::string toStdString(const Shotgun::Playlist &playlist)
+{
+    return toStdString(playlist.attrs());
+}
+
+// *****************************************************************************
+std::string toStdString(const Shotgun::Playlists &playlists)
+{
+    Shotgun::SgArray array;
+    for (size_t i = 0; i < playlists.size(); i++)
+    {
+        array.push_back(playlists[i].attrs());
+    }
+    
+    return toStdString(Shotgun::toXmlrpcValue(array));
+}
+
+// *****************************************************************************
+std::ostream& operator<<(std::ostream &output, const Shotgun::Playlist &playlist)
+{
+    output << toStdString(playlist);
+    return output;
+}
+
+// *****************************************************************************
+std::ostream& operator<<(std::ostream &output, const Shotgun::Playlists &playlists)
+{
+    output << toStdString(playlists);
+    return output;
+}

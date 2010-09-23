@@ -117,3 +117,38 @@ SgArray Project::populateReturnFields(const SgArray &extraReturnFields)
 }
 
 } // End namespace Shotgun
+
+// *****************************************************************************
+// *****************************************************************************
+std::string toStdString(const Shotgun::Project &project)
+{
+    return toStdString(project.attrs());
+}
+
+// *****************************************************************************
+std::string toStdString(const Shotgun::Projects &projects)
+{
+    // The std::string of xmlrpc_c::value type has been formatted very well.
+    // So convert it to xmlrpc_c::value first.
+    Shotgun::SgArray array;
+    for (size_t i = 0; i < projects.size(); i++)
+    {
+        array.push_back(projects[i].attrs());
+    }
+    
+    return toStdString(Shotgun::toXmlrpcValue(array));
+}
+
+// *****************************************************************************
+std::ostream& operator<<(std::ostream &output, const Shotgun::Project &project)
+{
+    output << toStdString(project);
+    return output;
+}
+
+// *****************************************************************************
+std::ostream& operator<<(std::ostream &output, const Shotgun::Projects &projects)
+{
+    output << toStdString(projects);
+    return output;
+}

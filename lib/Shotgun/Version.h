@@ -35,7 +35,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <string>
 
-#include <Shotgun/Type.h>
 #include <Shotgun/Entity.h>
 #include <Shotgun/NoteMixin.h>
 
@@ -93,5 +92,12 @@ protected:
 };
 
 } // End namespace Shotgun
+
+// *****************************************************************************
+// *****************************************************************************
+std::string toStdString(const Shotgun::Version &version);
+std::string toStdString(const Shotgun::Versions &versions);
+std::ostream& operator<<(std::ostream &output, const Shotgun::Version &version);
+std::ostream& operator<<(std::ostream &output, const Shotgun::Versions &versions);
 
 #endif    // End #ifdef __VERSION_H__

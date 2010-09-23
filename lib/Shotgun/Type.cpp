@@ -38,6 +38,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/FilterBy.h>
 #include <Shotgun/SortBy.h>
 #include <Shotgun/List.h>
+#include <Shotgun/Dict.h>
 #include <Shotgun/Project.h>
 #include <Shotgun/Sequence.h>
 #include <Shotgun/Shot.h>
@@ -180,11 +181,301 @@ xmlrpc_c::value toXmlrpcValue(const List &in)
 }
 
 // *****************************************************************************
+xmlrpc_c::value toXmlrpcValue(const Dict &in)
+{
+    return xmlrpc_c::value(xmlrpc_c::value_struct(in.value()));
+}
+
+// *****************************************************************************
 xmlrpc_c::value toXmlrpcValue(const xmlrpc_c::value &in)
 {
     return in;
 }
 
+// *****************************************************************************
+// The template approach won't work since xmlrpc_c::value has to be casted to a 
+// specific derived xmlrpc_c::value type first, which the compiler doesn't like.
+#if 0
+template <typename T>
+T Dict::fromXmlrpcValue(const xmlrpc_c::value &value)
+{
+    std::cout << xmlrpcValueTypeStr(value.type()) << std::endl;
+
+    if (value.type() == xmlrpc_c::value::TYPE_INT)
+    {
+        return T(xmlrpc_c::value_int(value));
+    }
+    else if (value.type() == xmlrpc_c::value::TYPE_BOOLEAN)
+    {
+        return T(xmlrpc_c::value_boolean(value));
+    }
+    else if (value.type() == xmlrpc_c::value::TYPE_DOUBLE)
+    {
+        return T(xmlrpc_c::value_double(value));
+    }
+    else if (value.type() == xmlrpc_c::value::TYPE_DATETIME)
+    {
+        return T(xmlrpc_c::value_datetime(value));
+    }
+    else if (value.type() == xmlrpc_c::value::TYPE_STRING)
+    {
+        return T(xmlrpc_c::value_string(value));
+    }
+    else if (value.type() == xmlrpc_c::value::TYPE_BYTESTRING)
+    {
+        return T((xmlrpc_c::value_bytestring(value)).length());
+    }
+    else if (value.type() == xmlrpc_c::value::TYPE_ARRAY)
+    {
+        return T((xmlrpc_c::value_array(value)).vectorValueValue());
+    }
+    else if (value.type() == xmlrpc_c::value::TYPE_STRUCT)
+    {
+        return T(SgMap(xmlrpc_c::value_struct(value)));
+    }
+    else if (value.type() == xmlrpc_c::value::TYPE_NIL)
+    {
+        // TODO: Should it be an exception or just some presumed nil value ???
+        return T("nil");
+    }
+}
+#endif
+
+// *****************************************************************************
+void fromXmlrpcValue(const xmlrpc_c::value &value, char *out)
+{
+    if (value.type() == xmlrpc_c::value::TYPE_STRING)
+    {
+        out = strdup((std::string(xmlrpc_c::value_string(value))).c_str());
+    }
+    else
+    {
+        throw SgXmlrpcValueTypeError(value,
+                                     xmlrpc_c::value::TYPE_STRING,
+                                     value.type());
+    }
+}
+
+// *****************************************************************************
+void fromXmlrpcValue(const xmlrpc_c::value &value, std::string &out)
+{
+    if (value.type() == xmlrpc_c::value::TYPE_STRING)
+    {
+        out = std::string(xmlrpc_c::value_string(value));
+    }
+    else
+    {
+        throw SgXmlrpcValueTypeError(value,
+                                     xmlrpc_c::value::TYPE_STRING,
+                                     value.type());
+    }
+}
+
+// *****************************************************************************
+void fromXmlrpcValue(const xmlrpc_c::value &value, int &out)
+{
+    if (value.type() == xmlrpc_c::value::TYPE_INT)
+    {
+        out = int(xmlrpc_c::value_int(value));
+    }
+    else
+    {
+        throw SgXmlrpcValueTypeError(value,
+                                     xmlrpc_c::value::TYPE_INT,
+                                     value.type());
+    }
+}
+
+// *****************************************************************************
+void fromXmlrpcValue(const xmlrpc_c::value &value, double &out)
+{
+    if (value.type() == xmlrpc_c::value::TYPE_DOUBLE)
+    {
+        out = double(xmlrpc_c::value_double(value));
+    }
+    else
+    {
+        throw SgXmlrpcValueTypeError(value,
+                                     xmlrpc_c::value::TYPE_DOUBLE,
+                                     value.type());
+    }
+}
+
+// *****************************************************************************
+void fromXmlrpcValue(const xmlrpc_c::value &value, bool &out)
+{
+    if (value.type() == xmlrpc_c::value::TYPE_BOOLEAN)
+    {
+        out = bool(xmlrpc_c::value_boolean(value));
+    }
+    else
+    {
+        throw SgXmlrpcValueTypeError(value,
+                                     xmlrpc_c::value::TYPE_BOOLEAN,
+                                     value.type());
+    }
+}
+
+// *****************************************************************************
+void fromXmlrpcValue(const xmlrpc_c::value &value, time_t &out)
+{
+    if (value.type() == xmlrpc_c::value::TYPE_DATETIME)
+    {
+        out = time_t(xmlrpc_c::value_datetime(value));
+    }
+    else
+    {
+        throw SgXmlrpcValueTypeError(value,
+                                     xmlrpc_c::value::TYPE_DATETIME,
+                                     value.type());
+    }
+}
+
+// *****************************************************************************
+void fromXmlrpcValue(const xmlrpc_c::value &value, SgArray &out)
+{
+    if (value.type() == xmlrpc_c::value::TYPE_ARRAY)
+    {
+        out = SgArray((xmlrpc_c::value_array(value)).vectorValueValue());
+    }
+    else
+    {
+        throw SgXmlrpcValueTypeError(value,
+                                     xmlrpc_c::value::TYPE_ARRAY,
+                                     value.type());
+    }
+}
+
+// *****************************************************************************
+void fromXmlrpcValue(const xmlrpc_c::value &value, SgMap &out)
+{
+    if (value.type() == xmlrpc_c::value::TYPE_STRUCT)
+    {
+        out = SgMap(xmlrpc_c::value_struct(value));
+    }
+    else
+    {
+        throw SgXmlrpcValueTypeError(value,
+                                     xmlrpc_c::value::TYPE_STRUCT,
+                                     value.type());
+    }
+}
+
+// *****************************************************************************
+void fromXmlrpcValue(const xmlrpc_c::value &value, Strings &out)
+{
+    if (value.type() == xmlrpc_c::value::TYPE_ARRAY)
+    {
+        SgArray array = SgArray((xmlrpc_c::value_array(value)).vectorValueValue());
+        
+        Strings strings;
+        for (size_t i = 0; i < array.size(); i++)
+        {
+            if (array[i].type() == xmlrpc_c::value::TYPE_STRING)
+            {
+                strings.push_back(std::string(xmlrpc_c::value_string(array[i])));
+            }
+            else
+            {
+                throw SgXmlrpcValueTypeError(array[i],
+                                             xmlrpc_c::value::TYPE_STRING,
+                                             array[i].type());
+            }
+        }
+
+        out = strings;
+    }
+    else
+    {
+        throw SgXmlrpcValueTypeError(value,
+                                     xmlrpc_c::value::TYPE_ARRAY,
+                                     value.type());
+    }
+}
+
+// *****************************************************************************
+void fromXmlrpcValue(const xmlrpc_c::value &value, FilterBy &out)
+{
+    if (value.type() == xmlrpc_c::value::TYPE_STRUCT)
+    {
+        out = FilterBy(SgMap(xmlrpc_c::value_struct(value)));
+    }
+    else
+    {
+        throw SgXmlrpcValueTypeError(value,
+                                     xmlrpc_c::value::TYPE_STRUCT,
+                                     value.type());
+    }
+}
+
+// *****************************************************************************
+void fromXmlrpcValue(const xmlrpc_c::value &value, SortBy &out)
+{
+    if (value.type() == xmlrpc_c::value::TYPE_ARRAY)
+    {
+        out = SortBy(SgArray((xmlrpc_c::value_array(value)).vectorValueValue()));
+    }
+    else
+    {
+        throw SgXmlrpcValueTypeError(value,
+                                     xmlrpc_c::value::TYPE_ARRAY,
+                                     value.type());
+    }
+}
+
+// *****************************************************************************
+void fromXmlrpcValue(const xmlrpc_c::value &value, List &out)
+{
+    if (value.type() == xmlrpc_c::value::TYPE_ARRAY)
+    {
+        out = List(SgArray((xmlrpc_c::value_array(value)).vectorValueValue()));
+    }
+    else
+    {
+        throw SgXmlrpcValueTypeError(value,
+                                     xmlrpc_c::value::TYPE_ARRAY,
+                                     value.type());
+    }
+}
+
+// *****************************************************************************
+void fromXmlrpcValue(const xmlrpc_c::value &value, Dict &out)
+{
+    if (value.type() == xmlrpc_c::value::TYPE_STRUCT)
+    {
+        out = Dict(SgMap(xmlrpc_c::value_struct(value)));
+    }
+    else
+    {
+        throw SgXmlrpcValueTypeError(value,
+                                     xmlrpc_c::value::TYPE_STRUCT,
+                                     value.type());
+    }
+}
+
+// *****************************************************************************
+void fromXmlrpcValue(const xmlrpc_c::value &value, xmlrpc_c::value &out)
+{
+}
+
+// *****************************************************************************
+std::string currDateStr()
+{
+    // Get the current time
+    time_t rawTime;
+    time(&rawTime);
+
+    // Convert to a time string
+    struct tm *timeInfo = localtime(&rawTime);
+    char timeStr[10];
+    sprintf(timeStr, "%d-%02d-%02d", timeInfo->tm_year + 1900, timeInfo->tm_mon + 1, timeInfo->tm_mday);
+
+    return std::string(timeStr);
+}
+
+} // End namespace Shotgun
+
+// *****************************************************************************
 // *****************************************************************************
 std::string toStdString(const xmlrpc_c::value &value)
 {
@@ -239,7 +530,7 @@ std::string toStdString(const xmlrpc_c::value &value)
 
         output = "\n" + indent + "[\n";
 
-        SgArray array = xmlrpc_c::value_array(value).vectorValueValue();
+        Shotgun::SgArray array = xmlrpc_c::value_array(value).vectorValueValue();
         for (size_t i = 0; i < array.size(); i++)
         {
             if (i == (array.size() - 1))
@@ -276,9 +567,9 @@ std::string toStdString(const xmlrpc_c::value &value)
 
         output = "\n" + indent + "{\n";
 
-        SgMap map = SgMap(xmlrpc_c::value_struct(value));
+        Shotgun::SgMap map = Shotgun::SgMap(xmlrpc_c::value_struct(value));
         size_t count = 0;
-        for (SgMap::const_iterator mIter = map.begin(); mIter != map.end(); mIter++)
+        for (Shotgun::SgMap::const_iterator mIter = map.begin(); mIter != map.end(); mIter++)
         {
             count++;
             if (count == map.size())
@@ -307,19 +598,19 @@ std::string toStdString(const xmlrpc_c::value &value)
 }
 
 // *****************************************************************************
-std::string toStdString(const SgMap &map)
+std::string toStdString(const Shotgun::SgMap &map)
 {
     return toStdString(xmlrpc_c::value_struct(map));
 }
 
 // *****************************************************************************
-std::string toStdString(const SgArray &array)
+std::string toStdString(const Shotgun::SgArray &array)
 {
     return toStdString(xmlrpc_c::value_array(array));
 }
 
 // *****************************************************************************
-std::string toStdString(const Strings &strs)
+std::string toStdString(const Shotgun::Strings &strs)
 {
     std::string output = "[";
 
@@ -339,7 +630,7 @@ std::string toStdString(const Strings &strs)
 }
 
 // *****************************************************************************
-std::string toStdString(const MethodSignatures &sigs)
+std::string toStdString(const Shotgun::MethodSignatures &sigs)
 {
     std::string output = "[";
 
@@ -359,314 +650,6 @@ std::string toStdString(const MethodSignatures &sigs)
 }
 
 // *****************************************************************************
-std::string toStdString(const FilterBy &filterList)
-{
-    return toStdString(filterList.filters());
-}
-
-// *****************************************************************************
-std::string toStdString(const SortBy &order)
-{
-    return toStdString(order.sorts());
-}
-
-// *****************************************************************************
-std::string toStdString(const List &list)
-{
-    return toStdString(list.value());
-}
-
-// *****************************************************************************
-std::string toStdString(const Project &project)
-{
-    return toStdString(project.attrs());
-}
-
-// *****************************************************************************
-std::string toStdString(const Projects &projects)
-{
-#if 0
-    std::string output = "\n[";
-
-    if (projects.size() > 0)
-    {
-        for (size_t i = 0; i < projects.size()-1; i++)
-        {
-            output += toStdString(projects[i].attrs()) + ",\n";
-        }
-
-        output += toStdString(projects[projects.size()-1].attrs());
-    }
-
-    output += "\n]\n";
-
-    return output;
-#else
-    // The std::string of xmlrpc_c::value type has been formatted very well.
-    // So convert it to xmlrpc_c::value first.
-    SgArray array;
-    for (size_t i = 0; i < projects.size(); i++)
-    {
-        array.push_back(projects[i].attrs());
-    }
-    
-    return toStdString(toXmlrpcValue(array));
-#endif
-}
-
-// *****************************************************************************
-std::string toStdString(const Sequence &sequence)
-{
-    return toStdString(sequence.attrs());
-}
-
-// *****************************************************************************
-std::string toStdString(const Sequences &sequences)
-{
-    SgArray array;
-    for (size_t i = 0; i < sequences.size(); i++)
-    {
-        array.push_back(sequences[i].attrs());
-    }
-    
-    return toStdString(toXmlrpcValue(array));
-}
-
-// *****************************************************************************
-std::string toStdString(const Shot &shot)
-{
-    return toStdString(shot.attrs());
-}
-
-// *****************************************************************************
-std::string toStdString(const Shots &shots)
-{
-    SgArray array;
-    for (size_t i = 0; i < shots.size(); i++)
-    {
-        array.push_back(shots[i].attrs());
-    }
-    
-    return toStdString(toXmlrpcValue(array));
-}
-
-// *****************************************************************************
-std::string toStdString(const Version &version)
-{
-    return toStdString(version.attrs());
-}
-
-// *****************************************************************************
-std::string toStdString(const Versions &versions)
-{
-    SgArray array;
-    for (size_t i = 0; i < versions.size(); i++)
-    {
-        array.push_back(versions[i].attrs());
-    }
-    
-    return toStdString(toXmlrpcValue(array));
-}
-
-// *****************************************************************************
-std::string toStdString(const HumanUser &user)
-{
-    return toStdString(user.attrs());
-}
-
-// *****************************************************************************
-std::string toStdString(const HumanUsers &users)
-{
-    SgArray array;
-    for (size_t i = 0; i < users.size(); i++)
-    {
-        array.push_back(users[i].attrs());
-    }
-    
-    return toStdString(toXmlrpcValue(array));
-}
-
-// *****************************************************************************
-std::string toStdString(const Element &element)
-{
-    return toStdString(element.attrs());
-}
-
-// *****************************************************************************
-std::string toStdString(const Elements &elements)
-{
-    SgArray array;
-    for (size_t i = 0; i < elements.size(); i++)
-    {
-        array.push_back(elements[i].attrs());
-    }
-    
-    return toStdString(toXmlrpcValue(array));
-}
-
-// *****************************************************************************
-std::string toStdString(const Asset &asset)
-{
-    return toStdString(asset.attrs());
-}
-
-// *****************************************************************************
-std::string toStdString(const Assets &assets)
-{
-    SgArray array;
-    for (size_t i = 0; i < assets.size(); i++)
-    {
-        array.push_back(assets[i].attrs());
-    }
-    
-    return toStdString(toXmlrpcValue(array));
-}
-
-// *****************************************************************************
-std::string toStdString(const Delivery &delivery)
-{
-    return toStdString(delivery.attrs());
-}
-
-// *****************************************************************************
-std::string toStdString(const Deliveries &deliveries)
-{
-    SgArray array;
-    for (size_t i = 0; i < deliveries.size(); i++)
-    {
-        array.push_back(deliveries[i].attrs());
-    }
-    
-    return toStdString(toXmlrpcValue(array));
-}
-
-// *****************************************************************************
-std::string toStdString(const PublishEvent &publishEvent)
-{
-    return toStdString(publishEvent.attrs());
-}
-
-// *****************************************************************************
-std::string toStdString(const PublishEvents &publishEvents)
-{
-    SgArray array;
-    for (size_t i = 0; i < publishEvents.size(); i++)
-    {
-        array.push_back(publishEvents[i].attrs());
-    }
-    
-    return toStdString(toXmlrpcValue(array));
-}
-
-// *****************************************************************************
-std::string toStdString(const Review &review)
-{
-    return toStdString(review.attrs());
-}
-
-// *****************************************************************************
-std::string toStdString(const Reviews &reviews)
-{
-    SgArray array;
-    for (size_t i = 0; i < reviews.size(); i++)
-    {
-        array.push_back(reviews[i].attrs());
-    }
-    
-    return toStdString(toXmlrpcValue(array));
-}
-
-// *****************************************************************************
-std::string toStdString(const ReviewItem &reviewItem)
-{
-    return toStdString(reviewItem.attrs());
-}
-
-// *****************************************************************************
-std::string toStdString(const ReviewItems &reviewItems)
-{
-    SgArray array;
-    for (size_t i = 0; i < reviewItems.size(); i++)
-    {
-        array.push_back(reviewItems[i].attrs());
-    }
-    
-    return toStdString(toXmlrpcValue(array));
-}
-
-// *****************************************************************************
-std::string toStdString(const Task &task)
-{
-    return toStdString(task.attrs());
-}
-
-// *****************************************************************************
-std::string toStdString(const Tasks &tasks)
-{
-    SgArray array;
-    for (size_t i = 0; i < tasks.size(); i++)
-    {
-        array.push_back(tasks[i].attrs());
-    }
-    
-    return toStdString(toXmlrpcValue(array));
-}
-
-// *****************************************************************************
-std::string toStdString(const Group &group)
-{
-    return toStdString(group.attrs());
-}
-
-// *****************************************************************************
-std::string toStdString(const Groups &groups)
-{
-    SgArray array;
-    for (size_t i = 0; i < groups.size(); i++)
-    {
-        array.push_back(groups[i].attrs());
-    }
-    
-    return toStdString(toXmlrpcValue(array));
-}
-
-// *****************************************************************************
-std::string toStdString(const Note &note)
-{
-    return toStdString(note.attrs());
-}
-
-// *****************************************************************************
-std::string toStdString(const Notes &notes)
-{
-    SgArray array;
-    for (size_t i = 0; i < notes.size(); i++)
-    {
-        array.push_back(notes[i].attrs());
-    }
-    
-    return toStdString(toXmlrpcValue(array));
-}
-
-// *****************************************************************************
-std::string toStdString(const Playlist &playlist)
-{
-    return toStdString(playlist.attrs());
-}
-
-// *****************************************************************************
-std::string toStdString(const Playlists &playlists)
-{
-    SgArray array;
-    for (size_t i = 0; i < playlists.size(); i++)
-    {
-        array.push_back(playlists[i].attrs());
-    }
-    
-    return toStdString(toXmlrpcValue(array));
-}
-
-// *****************************************************************************
 std::ostream &operator<<(std::ostream& output, const xmlrpc_c::value &value)
 {
     output << toStdString(value);
@@ -674,278 +657,30 @@ std::ostream &operator<<(std::ostream& output, const xmlrpc_c::value &value)
 }
 
 // *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const SgMap &map)
+std::ostream &operator<<(std::ostream& output, const Shotgun::SgMap &map)
 {
     output << toStdString(map);
     return output;
 }
 
 // *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const SgArray &array)
+std::ostream &operator<<(std::ostream& output, const Shotgun::SgArray &array)
 {
     output << toStdString(array);
     return output;
 }
 
 // *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const Strings &strs)
+std::ostream &operator<<(std::ostream& output, const Shotgun::Strings &strs)
 {
     output << toStdString(strs);
     return output;
 }
 
 // *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const MethodSignatures &sigs)
+std::ostream &operator<<(std::ostream& output, const Shotgun::MethodSignatures &sigs)
 {
     output << toStdString(sigs);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const Project &project)
-{
-    output << toStdString(project);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const Projects &projects)
-{
-    output << toStdString(projects);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const Sequence &sequence)
-{
-    output << toStdString(sequence);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const Sequences &sequences)
-{
-    output << toStdString(sequences);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const Shot &shot)
-{
-    output << toStdString(shot);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const Shots &shots)
-{
-    output << toStdString(shots);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const Version &version)
-{
-    output << toStdString(version);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const Versions &versions)
-{
-    output << toStdString(versions);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const HumanUser &user)
-{
-    output << toStdString(user);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const HumanUsers &users)
-{
-    output << toStdString(users);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const Element &element)
-{
-    output << toStdString(element);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const Elements &elements)
-{
-    output << toStdString(elements);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const Asset &asset)
-{
-    output << toStdString(asset);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const Assets &assets)
-{
-    output << toStdString(assets);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const Delivery &delivery)
-{
-    output << toStdString(delivery);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const Deliveries &deliveries)
-{
-    output << toStdString(deliveries);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const PublishEvent &publishEvent)
-{
-    output << toStdString(publishEvent);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const PublishEvents &publishEvents)
-{
-    output << toStdString(publishEvents);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const Review &review)
-{
-    output << toStdString(review);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const Reviews &reviews)
-{
-    output << toStdString(reviews);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const ReviewItem &reviewItem)
-{
-    output << toStdString(reviewItem);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const ReviewItems &reviewItems)
-{
-    output << toStdString(reviewItems);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const Task &task)
-{
-    output << toStdString(task);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const Tasks &tasks)
-{
-    output << toStdString(tasks);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const Group &group)
-{
-    output << toStdString(group);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const Groups &groups)
-{
-    output << toStdString(groups);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const Note &note)
-{
-    output << toStdString(note);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const Notes &notes)
-{
-    output << toStdString(notes);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const Playlist &playlist)
-{
-    output << toStdString(playlist);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const Playlists &playlists)
-{
-    output << toStdString(playlists);
-    return output;
-}
-
-// *****************************************************************************
-std::string currDateStr()
-{
-    // Get the current time
-    time_t rawTime;
-    time(&rawTime);
-
-    // Convert to a time string
-    struct tm *timeInfo = localtime(&rawTime);
-    char timeStr[10];
-    sprintf(timeStr, "%d-%02d-%02d", timeInfo->tm_year + 1900, timeInfo->tm_mon + 1, timeInfo->tm_mday);
-
-    return std::string(timeStr);
-}
-
-} // End namespace Shotgun
-
-// *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const xmlrpc_c::value &value)
-{
-    output << Shotgun::toStdString(value);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const Shotgun::SgArray &array)
-{
-    output << Shotgun::toStdString(array);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const Shotgun::SgMap &map)
-{
-    output << Shotgun::toStdString(map);
     return output;
 }
 

@@ -109,3 +109,36 @@ SgArray Delivery::populateReturnFields(const SgArray &extraReturnFields)
 }
 
 } // End namespace Shotgun
+
+// *****************************************************************************
+// *****************************************************************************
+std::string toStdString(const Shotgun::Delivery &delivery)
+{
+    return toStdString(delivery.attrs());
+}
+
+// *****************************************************************************
+std::string toStdString(const Shotgun::Deliveries &deliveries)
+{
+    Shotgun::SgArray array;
+    for (size_t i = 0; i < deliveries.size(); i++)
+    {
+        array.push_back(deliveries[i].attrs());
+    }
+    
+    return toStdString(Shotgun::toXmlrpcValue(array));
+}
+
+// *****************************************************************************
+std::ostream& operator<<(std::ostream &output, const Shotgun::Delivery &delivery)
+{
+    output << toStdString(delivery);
+    return output;
+}
+
+// *****************************************************************************
+std::ostream& operator<<(std::ostream &output, const Shotgun::Deliveries &deliveries)
+{
+    output << toStdString(deliveries);
+    return output;
+}

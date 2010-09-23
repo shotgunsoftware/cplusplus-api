@@ -35,7 +35,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <Shotgun/Entity.h>
 
-
 namespace Shotgun {
 
 class Shotgun;
@@ -77,5 +76,12 @@ protected:
 };
 
 } // End namespace Shotgun
+
+// *****************************************************************************
+// *****************************************************************************
+std::string toStdString(const Shotgun::Project &project);
+std::string toStdString(const Shotgun::Projects &projects);
+std::ostream& operator<<(std::ostream &output, const Shotgun::Project &project);
+std::ostream& operator<<(std::ostream &output, const Shotgun::Projects &projects);
 
 #endif    // End #ifdef __PROJECT_H__

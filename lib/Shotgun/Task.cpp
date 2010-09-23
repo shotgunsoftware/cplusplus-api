@@ -225,3 +225,36 @@ void Task::sgAssignees(const Strings &val)
 }
 
 } // End namespace Shotgun
+
+// *****************************************************************************
+// *****************************************************************************
+std::string toStdString(const Shotgun::Task &task)
+{
+    return toStdString(task.attrs());
+}
+
+// *****************************************************************************
+std::string toStdString(const Shotgun::Tasks &tasks)
+{
+    Shotgun::SgArray array;
+    for (size_t i = 0; i < tasks.size(); i++)
+    {
+        array.push_back(tasks[i].attrs());
+    }
+    
+    return toStdString(Shotgun::toXmlrpcValue(array));
+}
+
+// *****************************************************************************
+std::ostream& operator<<(std::ostream &output, const Shotgun::Task &task)
+{
+    output << toStdString(task);
+    return output;
+}
+
+// *****************************************************************************
+std::ostream& operator<<(std::ostream &output, const Shotgun::Tasks &tasks)
+{
+    output << toStdString(tasks);
+    return output;
+}

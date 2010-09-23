@@ -37,9 +37,12 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <string>
 
 #include <Shotgun/Type.h>
+#include <Shotgun/exceptions.h>
+#include <Shotgun/Method.h>
 #include <Shotgun/FilterBy.h>
 #include <Shotgun/SortBy.h>
-#include <Shotgun/Method.h>
+#include <Shotgun/List.h>
+#include <Shotgun/Dict.h>
 
 namespace Shotgun {
 

@@ -38,6 +38,11 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <utility>
 
 #include <Shotgun/Type.h>
+#include <Shotgun/exceptions.h>
+#include <Shotgun/FilterBy.h>
+#include <Shotgun/SortBy.h>
+#include <Shotgun/List.h>
+#include <Shotgun/Dict.h>
 #include <Shotgun/Method.h>
 #include <Shotgun/Project.h>
 #include <Shotgun/Sequence.h>
@@ -54,11 +59,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Group.h>
 #include <Shotgun/Note.h>
 #include <Shotgun/Playlist.h>
-
-#include <Shotgun/FilterBy.h>
-#include <Shotgun/SortBy.h>
-#include <Shotgun/List.h>
-#include <Shotgun/Dict.h>
 
 namespace Shotgun {
 

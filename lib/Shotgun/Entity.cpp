@@ -1198,9 +1198,6 @@ const Strings Entity::getAttrValueAsTags(const std::string &attrName,
 // *****************************************************************************
 const Entity *Entity::getAttrValueAsEntityPtr(const std::string &attrName) const
 {
-//    xmlrpc_c::value entity = getAttrValueAsEntityAttrMap(attrName);
-//    return entityAttrMapToEntityPtr(m_sg, entity);
-
     SgMap entity = getAttrValueAsMap(attrName);
 
     if (!entity.empty())
@@ -1223,9 +1220,6 @@ const Entity *Entity::getAttrValueAsEntityPtr(Shotgun *sg,
                                               const std::string &attrName,
                                               const SgMap &attrsMap)
 {
-//     xmlrpc_c::value entity = getAttrValueAsEntityAttrMap(sg, attrName, attrsMap);
-//     return entityAttrMapToEntityPtr(sg, entity);
-
     SgMap entity = getAttrValueAsMap(attrName, attrsMap);
 
     if (!entity.empty())
@@ -1245,17 +1239,6 @@ const Entity *Entity::getAttrValueAsEntityPtr(Shotgun *sg,
 // *****************************************************************************
 const EntityPtrs Entity::getAttrValueAsMultiEntityPtr(const std::string &attrName) const
 {
-//     EntityPtrs entityPtrs;
-// 
-//     SgArray entities = getAttrValueAsMultiEntityAttrMap(attrName);
-// 
-//     for (size_t i = 0; i < entities.size(); i++)
-//     {
-//         entityPtrs.push_back(entityAttrMapToEntityPtr(m_sg, entities[i]));
-//     }
-// 
-//     return entityPtrs;
-
     EntityPtrs entities;
 
     SgArray entityList = getAttrValueAsArray(attrName);
@@ -1282,17 +1265,6 @@ const EntityPtrs Entity::getAttrValueAsMultiEntityPtr(Shotgun *sg,
                                                       const std::string &attrName,
                                                       const SgMap &attrsMap)
 {
-//     EntityPtrs entityPtrs;
-// 
-//     SgArray entities = getAttrValueAsMultiEntityAttrMap(sg, attrName, attrsMap);
-// 
-//     for (size_t i = 0; i < entities.size(); i++)
-//     {
-//         entityPtrs.push_back(entityAttrMapToEntityPtr(sg, entities[i]));
-//     }
-// 
-//     return entityPtrs;
-
     EntityPtrs entities;
 
     SgArray entityList = getAttrValueAsArray(attrName, attrsMap);
@@ -1362,7 +1334,10 @@ const std::string Entity::getAttrValueAsUserLogin(Shotgun *sg,
 // *****************************************************************************
 void Entity::printAttrs() const
 {
-    std::cout << *m_attrs << std::endl;
+#warning Fix this: 'toStdString' was not declared in this scope
+#if 0
+    std::cout << toStdString(*m_attrs) << std::endl;
+#endif
 }
 
 } // End namespace Shotgun

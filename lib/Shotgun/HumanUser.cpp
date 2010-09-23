@@ -123,3 +123,36 @@ SgArray HumanUser::populateReturnFields(const SgArray &extraReturnFields)
 }
 
 } // End namespace Shotgun
+
+// *****************************************************************************
+// *****************************************************************************
+std::string toStdString(const Shotgun::HumanUser &user)
+{
+    return toStdString(user.attrs());
+}
+
+// *****************************************************************************
+std::string toStdString(const Shotgun::HumanUsers &users)
+{
+    Shotgun::SgArray array;
+    for (size_t i = 0; i < users.size(); i++)
+    {
+        array.push_back(users[i].attrs());
+    }
+    
+    return toStdString(Shotgun::toXmlrpcValue(array));
+}
+
+// *****************************************************************************
+std::ostream& operator<<(std::ostream &output, const Shotgun::HumanUser &user)
+{
+    output << toStdString(user);
+    return output;
+}
+
+// *****************************************************************************
+std::ostream& operator<<(std::ostream &output, const Shotgun::HumanUsers &users)
+{
+    output << toStdString(users);
+    return output;
+}

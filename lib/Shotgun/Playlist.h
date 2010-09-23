@@ -87,4 +87,11 @@ protected:
 
 } // End namespace Shotgun
 
+// *****************************************************************************
+// *****************************************************************************
+std::string toStdString(const Shotgun::Playlist &playlist);
+std::string toStdString(const Shotgun::Playlists &playlists);
+std::ostream& operator<<(std::ostream &output, const Shotgun::Playlist &playlist);
+std::ostream& operator<<(std::ostream &output, const Shotgun::Playlists &playlists);
+
 #endif    // End #ifdef __PLAYLIST_H__

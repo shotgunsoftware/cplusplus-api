@@ -83,4 +83,11 @@ protected:
 
 } // End namespace Shotgun
 
+// *****************************************************************************
+// *****************************************************************************
+std::string toStdString(const Shotgun::HumanUser &user);
+std::string toStdString(const Shotgun::HumanUsers &users);
+std::ostream& operator<<(std::ostream &output, const Shotgun::HumanUser &user);
+std::ostream& operator<<(std::ostream &output, const Shotgun::HumanUsers &users);
+
 #endif    // End #ifdef __USER_H__
