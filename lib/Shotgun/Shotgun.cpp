@@ -171,6 +171,61 @@ EntityPtrs Shotgun::entityFactoryFind(const std::string &entityType, SgMap &find
 }
 
 // *****************************************************************************
+Entity *Shotgun::entityFactoryCreate(const std::string &entityType, SgMap &createMap)
+{
+    // Find the factory func and the populateReturnFields func for the given type of entity
+    ClassRegistry::iterator foundRegistryIter = m_classRegistry.find(entityType);
+
+    if (foundRegistryIter == m_classRegistry.end())
+    {
+        throw SgEntityFunctionNotFoundError(entityType, "m_classRegistry");
+    }
+
+    FactoryFunc factorFunc = (*foundRegistryIter).second.first;
+    PopulateReturnFieldsFunc populateFunc = (*foundRegistryIter).second.second;
+
+    // If the given createMap already has a "return_fields", merge its contents 
+    // with the poupulated returnFields of the given entity type. Shotgun
+    // will ignore the duplicated fields when it returns the search result. 
+    // To update the createMap's "return_fields", erase it first since the 
+    // xmlrpc_c::value type can't be reassigned once it's been instantiated. 
+    SgArray extraReturnFields = SgArray();
+    SgMap::iterator foundReturnFieldsIter = createMap.find("return_fields");
+    if (foundReturnFieldsIter != createMap.end())
+    {
+        extraReturnFields = (xmlrpc_c::value_array((*foundReturnFieldsIter).second)).vectorValueValue();
+        createMap.erase(foundReturnFieldsIter);
+    }
+
+    // Populate the return fields and pass them to the createMap
+    SgArray returnFields = (*populateFunc)(extraReturnFields);
+    createMap["return_fields"] = toXmlrpcValue(returnFields);
+
+    // If the createMap already has a "type" field, override it with the
+    // given "entityType" to ensure the type will not conflict with the
+    // factory function.
+    SgMap::iterator foundTypeIter = createMap.find("type");
+    if (foundTypeIter != createMap.end())
+    {
+        createMap.erase(foundTypeIter);
+    }
+    createMap["type"] = toXmlrpcValue(entityType);
+
+    // Create the shotgun entity by the createMap
+    xmlrpc_c::value xmlrpcCreateResult = Entity::createSGEntity(this, createMap); 
+    
+    // Create entity class object.
+    if (xmlrpcCreateResult.type() != xmlrpc_c::value::TYPE_NIL)
+    {
+        return (*factorFunc)(this, xmlrpcCreateResult);
+    }
+    else
+    {
+        throw SgEntityCreateError(entityType);
+    }
+}
+
+// *****************************************************************************
 Project *Shotgun::findProjectByCode(const std::string &projectCode)
 {
     return findEntity<Project>(FilterBy("code", "is", projectCode));
@@ -621,13 +676,13 @@ PlaylistPtrs Shotgun::findPlaylistsByProject(const std::string &projectCode,
 // protected - called within this library
 Entity *Shotgun::findEntity(const std::string &entityType,
                             const FilterBy &filterList,
-                            const SgArray &extraReturnFields,
+                            const List &extraReturnFields,
                             const bool retiredOnly,
                             const SortBy &order)
 {
     SgMap findMap = Entity::buildFindMap(entityType,
                                          filterList,
-                                         extraReturnFields,
+                                         extraReturnFields.value(),
                                          retiredOnly,
                                          0,
                                          order);

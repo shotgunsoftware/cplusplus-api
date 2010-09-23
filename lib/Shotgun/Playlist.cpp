@@ -62,9 +62,9 @@ Playlist::~Playlist()
 }
 
 // *****************************************************************************
-Playlist Playlist::create(Shotgun *sg, 
-                          const std::string &projectCode,
-                          const std::string &playlistName)
+Playlist *Playlist::create(Shotgun *sg, 
+                           const std::string &projectCode,
+                           const std::string &playlistName)
 {
     // Check if the playlist already exists
     try
@@ -81,8 +81,7 @@ Playlist Playlist::create(Shotgun *sg,
         attrsMap["project"] = toXmlrpcValue(sg->getProjectLink(projectCode));
         attrsMap["code"] = toXmlrpcValue(playlistName);
 
-        // Call the base class function to create an entity
-        return Playlist(sg, createSGEntity(sg, "Playlist", attrsMap));
+        return sg->createEntity<Playlist>(Dict(attrsMap));
     }
 }
 

@@ -61,16 +61,16 @@ Note::~Note()
 }
 
 // *****************************************************************************
-Note Note::create(Shotgun *sg, 
-                  const std::string &projectCode,
-                  const std::string &noteFromUserName,
-                  const Strings &noteToUserNames,
-                  const Strings &noteCcUserNames,
-                  const std::string &noteSubject,
-                  const std::string &noteBody,
-                  const std::string &noteType,
-                  const SgArray &noteLinks,
-                  const std::string &noteOrigin)
+Note *Note::create(Shotgun *sg, 
+                   const std::string &projectCode,
+                   const std::string &noteFromUserName,
+                   const Strings &noteToUserNames,
+                   const Strings &noteCcUserNames,
+                   const std::string &noteSubject,
+                   const std::string &noteBody,
+                   const std::string &noteType,
+                   const SgArray &noteLinks,
+                   const std::string &noteOrigin)
 {
     HumanUser *user = sg->findHumanUserByLogin(noteFromUserName);
 
@@ -125,9 +125,7 @@ Note Note::create(Shotgun *sg,
     }
     attrsMap["addressings_cc"] = toXmlrpcValue(addressingsCc);
 
-    // Call the base class function to create an entity
-    return Note(sg, createSGEntity(sg, "Note", attrsMap));
-
+    return sg->createEntity<Note>(Dict(attrsMap));
 }
 
 // *****************************************************************************

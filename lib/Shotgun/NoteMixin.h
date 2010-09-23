@@ -50,15 +50,14 @@ public:
     NotePtrs getDisclaimerNotes(const int limit = 0);
     NotePtrs getClientNotes(const int limit = 0);
 
-#warning Update this func to return pointer type
-    Note addNote(const std::string &noteFromUserName,
-                 const Strings &noteToUserNames = Strings(),
-                 const Strings &noteCcUserNames = Strings(),
-                 const std::string &noteSubject = "",
-                 const std::string &noteBody = "",
-                 const std::string &noteType = "",
-                 const SgArray &noteLinks = SgArray(),
-                 const std::string &noteOrigin = "");
+    Note *addNote(const std::string &noteFromUserName,
+                  const Strings &noteToUserNames = Strings(),
+                  const Strings &noteCcUserNames = Strings(),
+                  const std::string &noteSubject = "",
+                  const std::string &noteBody = "",
+                  const std::string &noteType = "",
+                  const SgArray &noteLinks = SgArray(),
+                  const std::string &noteOrigin = "");
 
 protected:
     NoteMixin() {}

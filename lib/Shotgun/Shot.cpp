@@ -64,10 +64,10 @@ Shot::~Shot()
 }
 
 // *****************************************************************************
-Shot Shot::create(Shotgun *sg, 
-                  const std::string &projectCode,
-                  const std::string &shotName,
-                  const std::string &sequenceName)
+Shot *Shot::create(Shotgun *sg, 
+                   const std::string &projectCode,
+                   const std::string &shotName,
+                   const std::string &sequenceName)
 {
     // Check if the shot already exists
     try
@@ -99,8 +99,7 @@ Shot Shot::create(Shotgun *sg,
 //         attrsMap["sg_sequence"] = toXmlrpcValue(seq->asLink());
 //         delete seq;
         
-        // Call the base class function to create an entity
-        return Shot(sg, createSGEntity(sg, "Shot", attrsMap));
+        return sg->createEntity<Shot>(Dict(attrsMap));
     }
 }
 

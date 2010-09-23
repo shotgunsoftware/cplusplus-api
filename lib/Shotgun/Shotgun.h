@@ -57,6 +57,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <Shotgun/FilterBy.h>
 #include <Shotgun/SortBy.h>
+#include <Shotgun/List.h>
+#include <Shotgun/Dict.h>
 
 namespace Shotgun {
 
@@ -94,23 +96,10 @@ public:
                        const FactoryFunc &factoryFunc,
                        const PopulateReturnFieldsFunc &populateFunc);
 
-#if 0
-#warning This entityFactoryFind(..) func should be deprecated
-    //----------------------------------------------------------------------
-    // This factory function creates an entity object which does not link to 
-    // any of the existing Shotgun entities.
-    Entity *entityFactoryFind(const std::string &entityType);
-#endif
-
-    //----------------------------------------------------------------------
-    // This factory function creates an array of entity objects which link to
-    // the existing Shotgun entities. The size of the array can be 0. 
-    EntityPtrs entityFactoryFind(const std::string &entityType, SgMap &findMap);
-
-#warning All the create**(..) functions should be updated to return pointer type
+#warning Should the create**(..) functions be removed from this lib?
     //-----------------------------------------------------------------------
     // Project Entity
-    Project createProject(const std::string &projectName, const std::string &projectCode) 
+    Project *createProject(const std::string &projectName, const std::string &projectCode) 
         { return Project::create(this, projectName, projectCode); }
     Project *findProjectByCode(const std::string &projectCode);
     Project *findProjectByName(const std::string &projectName);
@@ -120,7 +109,7 @@ public:
 
     //------------------------------------------------------------------------
     // Sequence Entity
-    Sequence createSequence(const std::string &projectCode, const std::string &sequenceName) 
+    Sequence *createSequence(const std::string &projectCode, const std::string &sequenceName) 
         { return Sequence::create(this, projectCode, sequenceName); }
     Sequence *findSequenceByName(const std::string &projectCode, const std::string &sequenceName);
     SequencePtrs findSequencesByProject(const std::string &projectCode, const int limit = 0);
@@ -128,7 +117,7 @@ public:
 
     //------------------------------------------------------------------------
     // Shot Entity
-    Shot createShot(const std::string &shotName, const std::string &shotType = "") 
+    Shot *createShot(const std::string &shotName, const std::string &shotType = "") 
         { return Shot::create(this, shotName, shotType); }
     Shot *findShotByName(const std::string &shotName);
     ShotPtrs findShotsByProject(const std::string &projectCode, const int limit = 0);
@@ -136,7 +125,7 @@ public:
 
     //------------------------------------------------------------------------
     // Version Entity
-    Version createVersion(const std::string &versionName) 
+    Version *createVersion(const std::string &versionName) 
         { return Version::create(this, versionName); }
     Version *findVersionByName(const std::string &versionName);
     VersionPtrs findVersionsByProject(const std::string &projectCode, const int limit = 0);
@@ -150,7 +139,7 @@ public:
 
     //-----------------------------------------------------------------------
     // HumanUser Entity
-    HumanUser createHumanUser(const std::string &userName,
+    HumanUser *createHumanUser(const std::string &userName,
                               const std::string &userLogin,
                               const std::string &userEmail="")
         { return HumanUser::create(this, userName, userLogin, userEmail); }
@@ -161,7 +150,7 @@ public:
 
     //------------------------------------------------------------------------
     // Element Entity
-    Element createElement(const std::string &projectCode,
+    Element *createElement(const std::string &projectCode,
                           const std::string &elementName, 
                           const std::string &elementType) 
         { return Element::create(this, projectCode, elementName, elementType); }
@@ -173,7 +162,7 @@ public:
 
     //------------------------------------------------------------------------
     // Asset Entity
-    Asset createAsset(const std::string &projectCode,
+    Asset *createAsset(const std::string &projectCode,
                       const std::string &assetName, 
                       const std::string &assetType,
                       const std::string &assetSource = "") 
@@ -186,7 +175,7 @@ public:
 
     //------------------------------------------------------------------------
     // Delivery Entity
-    Delivery createDelivery(const std::string &projectCode, const std::string &deliveryName) 
+    Delivery *createDelivery(const std::string &projectCode, const std::string &deliveryName) 
         { return Delivery::create(this, projectCode, deliveryName); }
     Delivery *findDeliveryByName(const std::string &projectCode, const std::string &deliveryName);
     Delivery *findDeliveryById(const int &deliveryId);
@@ -197,7 +186,7 @@ public:
 
     //------------------------------------------------------------------------
     // PublishEvent Entity
-    PublishEvent createPublishEvent(const std::string &projectCode,
+    PublishEvent *createPublishEvent(const std::string &projectCode,
                                     const std::string &publishEventName)
         { return PublishEvent::create(this, 
                                       projectCode, 
@@ -211,7 +200,7 @@ public:
 
     //------------------------------------------------------------------------
     // Review Entity
-    Review createReview(const std::string &projectCode,
+    Review *createReview(const std::string &projectCode,
                         const std::string &reviewName) 
         { return Review::create(this, projectCode, reviewName); }
     Review *findReviewByName(const std::string &projectCode, 
@@ -224,7 +213,7 @@ public:
 
     //------------------------------------------------------------------------
     // ReviewItem Entity
-    ReviewItem createReviewItem(const std::string &projectCode,
+    ReviewItem *createReviewItem(const std::string &projectCode,
                                 const std::string &reviewItemName) 
         { return ReviewItem::create(this, 
                                     projectCode,
@@ -238,7 +227,7 @@ public:
 
     //------------------------------------------------------------------------
     // Task
-    Task createTask(const std::string &projectCode,
+    Task *createTask(const std::string &projectCode,
                     const std::string &taskName,
                     const std::string &taskType,
                     const std::string &taskAssignee = "",
@@ -276,7 +265,7 @@ public:
 
     //------------------------------------------------------------------------
     // Group Entity
-    Group createGroup(const std::string &groupName) 
+    Group *createGroup(const std::string &groupName) 
         { return Group::create(this, groupName); }
     Group *findGroupByName(const std::string &groupName);
     Group *findGroupById(const int &groupId);
@@ -284,7 +273,7 @@ public:
 
     //------------------------------------------------------------------------
     // Note
-    Note createNote(const std::string &projectCode,
+    Note *createNote(const std::string &projectCode,
                     const std::string &noteFromUserName,
                     const Strings &noteToUserNames = Strings(),
                     const Strings &noteCcUserNames = Strings(),
@@ -318,7 +307,7 @@ public:
 
     //------------------------------------------------------------------------
     // Playlist Entity
-    Playlist createPlaylist(const std::string &projectCode,
+    Playlist *createPlaylist(const std::string &projectCode,
                             const std::string &playlistName)
         { return Playlist::create(this, projectCode, playlistName); }
     Playlist *findPlaylistByName(const std::string &projectCode, const std::string &playlistName);
@@ -331,22 +320,44 @@ public:
 
     template <class T>
     T *findEntity(const FilterBy &filterList = FilterBy(),
-                  const SgArray &extraReturnFields = SgArray(),
+                  const List &extraReturnFields = List(),
                   const bool retiredOnly = false,
                   const SortBy &order = SortBy());
 
     template <class T>
     std::vector<T *> findEntities(const FilterBy &filterList = FilterBy(),
                                   const int limit = 0,
-                                  const SgArray &extraReturnFields = SgArray(),
+                                  const List &extraReturnFields = List(),
                                   const bool retiredOnly = false,
                                   const SortBy &order = SortBy());
 
+    template <class T>
+    T *createEntity(const Dict &data,
+                    const List &extraReturnFields = List());
+
 protected:
+#if 0
+#warning This entityFactoryFind(..) func should be deprecated
+    //----------------------------------------------------------------------
+    // This factory function creates an entity object which does not link to 
+    // any of the existing Shotgun entities.
+    Entity *entityFactoryFind(const std::string &entityType);
+#endif
+
+    //----------------------------------------------------------------------
+    // This factory function creates an array of entity object pointers which 
+    // link to the existing Shotgun entities. The size of the array can be 0. 
+    EntityPtrs entityFactoryFind(const std::string &entityType, SgMap &findMap);
+
+    //----------------------------------------------------------------------
+    // This factory function creates an entity object pointer which links to 
+    // a newly-created Shotgun entity.
+    Entity *entityFactoryCreate(const std::string &entityType, SgMap &data);
+
     // Overloaded function that is used within this library
     Entity *findEntity(const std::string &entityType,
                        const FilterBy &filterList = FilterBy(),
-                       const SgArray &extraReturnFields = SgArray(),
+                       const List &extraReturnFields = List(),
                        const bool retiredOnly = false,
                        const SortBy &order = SortBy());
 
@@ -367,13 +378,13 @@ private:
 // In practice it means implementation inside .h file.
 template <class T>
 T *Shotgun::findEntity(const FilterBy &filterList,
-                       const SgArray &extraReturnFields,
+                       const List &extraReturnFields,
                        const bool retiredOnly,
                        const SortBy &order)
 {
     Entity *entity = findEntity(T::type(),
                                 filterList,
-                                extraReturnFields,
+                                extraReturnFields.value(),
                                 retiredOnly,
                                 order);
 
@@ -389,18 +400,17 @@ T *Shotgun::findEntity(const FilterBy &filterList,
                             
 }
 
-
 // *****************************************************************************
 template <class T>
 std::vector<T *> Shotgun::findEntities(const FilterBy &filterList,
                                        const int limit,
-                                       const SgArray &extraReturnFields,
+                                       const List &extraReturnFields,
                                        const bool retiredOnly,
                                        const SortBy &order)
 {
     SgMap findMap = Entity::buildFindMap(T::type(),
                                          filterList,
-                                         extraReturnFields,
+                                         extraReturnFields.value(),
                                          retiredOnly,
                                          limit,
                                          order);
@@ -418,6 +428,26 @@ std::vector<T *> Shotgun::findEntities(const FilterBy &filterList,
     }
 
     return outEntities;
+}
+
+// *****************************************************************************
+template <class T>
+T *Shotgun::createEntity(const Dict &data,
+                         const List &extraReturnFields)
+{
+    SgMap createMap = Entity::buildCreateMap(T::type(),
+                                             data.value(),
+                                             extraReturnFields.value());
+
+    Entity *entity = this->entityFactoryCreate(T::type(), createMap);
+    if (T *t = dynamic_cast<T *>(entity))
+    {
+        return t;
+    }
+    else
+    {
+        throw SgEntityDynamicCastError(T::type());
+    }
 }
 
 } // End namespace Shotgun

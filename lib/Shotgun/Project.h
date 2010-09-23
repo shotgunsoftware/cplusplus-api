@@ -69,9 +69,9 @@ protected:
     Project(Shotgun *sg, const xmlrpc_c::value &attrs);
 
     static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Project(sg, attrs); }
-    static Project create(Shotgun *sg, 
-                          const std::string &projectName, 
-                          const std::string &projectCode);
+    static Project *create(Shotgun *sg, 
+                           const std::string &projectName, 
+                           const std::string &projectCode);
 
     static SgArray populateReturnFields(const SgArray &extraReturnFields = SgArray());
 };

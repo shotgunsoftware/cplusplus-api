@@ -61,10 +61,10 @@ HumanUser::~HumanUser()
 }
 
 // *****************************************************************************
-HumanUser HumanUser::create(Shotgun *sg, 
-                  const std::string &userName,
-                  const std::string &userLogin,
-                  const std::string &userEmail)
+HumanUser *HumanUser::create(Shotgun *sg, 
+                             const std::string &userName,
+                             const std::string &userLogin,
+                             const std::string &userEmail)
 {
     // Check if the user already exists
     try
@@ -96,8 +96,7 @@ HumanUser HumanUser::create(Shotgun *sg,
             attrsMap["login"] = toXmlrpcValue(userLogin);
             attrsMap["email"] = toXmlrpcValue(userEmail);
 
-            // Call the base class function to create an entity
-            return HumanUser(sg, createSGEntity(sg, "HumanUser", attrsMap));
+            return sg->createEntity<HumanUser>(Dict(attrsMap));
         }
     }
 }

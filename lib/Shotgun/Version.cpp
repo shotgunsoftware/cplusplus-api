@@ -63,7 +63,7 @@ Version::~Version()
 }
 
 // *****************************************************************************
-Version Version::create(Shotgun *sg, const std::string &versionName)
+Version *Version::create(Shotgun *sg, const std::string &versionName)
 {
     // Check if the version already exists
     try
@@ -88,8 +88,7 @@ Version Version::create(Shotgun *sg, const std::string &versionName)
 //         attrsMap["sg_sequence"] = toXmlrpcValue(dn.sequence());
 //         attrsMap["sg_rev"] = toXmlrpcValue(dn.versionStr());
 // 
-//         // Call the base class function to create an entity
-//         return Version(sg, createSGEntity(sg, "Version", attrsMap));
+//         return sg->createEntity<Version>(Dict(attrsMap));
     }
 }
 

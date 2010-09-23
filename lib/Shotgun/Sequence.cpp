@@ -62,9 +62,9 @@ Sequence::~Sequence()
 }
 
 // *****************************************************************************
-Sequence Sequence::create(Shotgun *sg, 
-                          const std::string &projectCode,
-                          const std::string &sequenceName)
+Sequence *Sequence::create(Shotgun *sg, 
+                           const std::string &projectCode,
+                           const std::string &sequenceName)
 {
     // By convention, the sequence name is in uppercase
     std::string sequenceNameUpper = toupper(sequenceName);
@@ -84,8 +84,7 @@ Sequence Sequence::create(Shotgun *sg,
         attrsMap["project"] = toXmlrpcValue(sg->getProjectLink(projectCode));
         attrsMap["code"] = toXmlrpcValue(sequenceNameUpper);
 
-        // Call the base class function to create an entity
-        return Sequence(sg, createSGEntity(sg, "Sequence", attrsMap));
+        return sg->createEntity<Sequence>(Dict(attrsMap));
     }
 }
 

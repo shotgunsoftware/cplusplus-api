@@ -30,52 +30,35 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __SORTBY_H__
-#define __SORTBY_H__
-
-#include <string>
-
-#include <Shotgun/Type.h>
+#include <Shotgun/List.h>
 
 namespace Shotgun {
 
 // *****************************************************************************
-class SortBy
+List::List() : m_value(SgArray())
 {
-public:
-    SortBy();
-    SortBy(const SgArray &sorts);
+}
 
-    SortBy(const std::string &fieldName,
-           const std::string &direction = "asc")
-    {
-         then(fieldName, direction);      
-    }
+// *****************************************************************************
+List::List(const SgArray &array) : m_value(array)
+{
+}
 
-    const SgArray &sorts() const { return m_sorts; }
-    const bool empty() const { return m_sorts.empty(); }
-    const int size() const { return m_sorts.size(); }
+// *****************************************************************************
+List &List::extend(const List &that)
+{
+    m_value.insert(m_value.end(), that.m_value.begin(), that.m_value.end());
 
-    SortBy &operator=(const SortBy &that)
-    {
-        if (this != &that)
-        {
-            m_sorts = that.m_sorts;
-        }
+    return *this;
+}
 
-        return *this;
-    }
+// *****************************************************************************
+std::ostream& operator<<(std::ostream &output, const List &list)
+{
+    output << list.value();
 
-    SortBy &then(const std::string &fieldName,
-                 const std::string &direction = "asc");
-    SortBy &then(const SortBy &that);
-
-    friend std::ostream& operator<<(std::ostream &output, const SortBy &order);
-
-protected:
-    SgArray m_sorts;
-};
+    return output;
+}
 
 } // End namespace Shotgun
 
-#endif    // End #ifdef __SORTBY_H__

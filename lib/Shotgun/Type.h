@@ -59,6 +59,7 @@ class Playlist;
 
 class FilterBy;
 class SortBy;
+class List;
 
 // *****************************************************************************
 typedef std::vector<std::string> Strings;
@@ -117,6 +118,7 @@ xmlrpc_c::value toXmlrpcValue(const Strings &in);
 xmlrpc_c::value toXmlrpcValue(const MethodSignatures &in);
 xmlrpc_c::value toXmlrpcValue(const FilterBy &in);
 xmlrpc_c::value toXmlrpcValue(const SortBy &in);
+xmlrpc_c::value toXmlrpcValue(const List &in);
 xmlrpc_c::value toXmlrpcValue(const xmlrpc_c::value &in);
 
 #warning These should be moved either out of the Shotgun namespace or into indivial classes
@@ -128,6 +130,7 @@ std::string toStdString(const Strings &strs);
 std::string toStdString(const MethodSignatures &sigs);
 std::string toStdString(const FilterBy &filterList);
 std::string toStdString(const SortBy &filterList);
+std::string toStdString(const List &list);
 std::string toStdString(const Project &project);
 std::string toStdString(const Projects &projects);
 std::string toStdString(const Sequence &sequence);
@@ -166,8 +169,6 @@ std::ostream &operator<<(std::ostream& output, const SgMap &map);
 std::ostream &operator<<(std::ostream& output, const SgArray &array);
 std::ostream &operator<<(std::ostream& output, const Strings &strs);
 std::ostream &operator<<(std::ostream& output, const MethodSignatures &sigs);
-std::ostream &operator<<(std::ostream& output, const FilterBy &filterList);
-std::ostream &operator<<(std::ostream& output, const SortBy &filterList);
 std::ostream &operator<<(std::ostream& output, const Project &project);
 std::ostream &operator<<(std::ostream& output, const Projects &projects);
 std::ostream &operator<<(std::ostream& output, const Sequence &sequence);

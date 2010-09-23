@@ -40,6 +40,11 @@ SortBy::SortBy() : m_sorts(SgArray())
 }
 
 // *****************************************************************************
+SortBy::SortBy(const SgArray &sorts) : m_sorts(sorts)
+{
+}
+
+// *****************************************************************************
 SortBy &SortBy::then(const std::string &fieldName,
                      const std::string &direction)
 {
@@ -61,6 +66,14 @@ SortBy &SortBy::then(const SortBy &that)
     }
 
     return *this;
+}
+
+// *****************************************************************************
+std::ostream& operator<<(std::ostream &output, const SortBy &order)
+{
+    output << order.sorts();
+    
+    return output;
 }
 
 } // End namespace Shotgun

@@ -62,9 +62,9 @@ PublishEvent::~PublishEvent()
 }
 
 // *****************************************************************************
-PublishEvent PublishEvent::create(Shotgun *sg, 
-                                  const std::string &projectCode,
-                                  const std::string &publishEventName)
+PublishEvent *PublishEvent::create(Shotgun *sg, 
+                                   const std::string &projectCode,
+                                   const std::string &publishEventName)
 {
     // Check if the publishEvent already exists
     try
@@ -81,8 +81,7 @@ PublishEvent PublishEvent::create(Shotgun *sg,
         attrsMap["project"] = toXmlrpcValue(sg->getProjectLink(projectCode));
         attrsMap["code"] = toXmlrpcValue(publishEventName);
 
-        // Call the base class function to create an entity
-        return PublishEvent(sg, createSGEntity(sg, "PublishEvent", attrsMap));
+        return sg->createEntity<PublishEvent>(Dict(attrsMap));
     }
 }
 

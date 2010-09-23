@@ -40,6 +40,11 @@ FilterBy::FilterBy() : m_filters(SgMap())
 }
 
 // *****************************************************************************
+FilterBy::FilterBy(const SgMap &filters) : m_filters(filters)
+{
+}
+
+// *****************************************************************************
 FilterBy &FilterBy::op(const std::string &logicOperator,
                        const std::string &path,
                        const std::string &relation,
@@ -97,6 +102,14 @@ FilterBy &FilterBy::op(const std::string &logicOperator,
     m_filters["conditions"] = toXmlrpcValue(conditions);
 
     return *this;
+}
+
+// *****************************************************************************
+std::ostream& operator<<(std::ostream &output, const FilterBy &filterList)
+{
+    output << filterList.filters();
+
+    return output;
 }
 
 } // End namespace Shotgun

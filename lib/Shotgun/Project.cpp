@@ -67,9 +67,9 @@ Project::~Project()
 }
 
 // *****************************************************************************
-Project Project::create(Shotgun *sg, 
-                  const std::string &projectName,
-                  const std::string &projectCode)
+Project *Project::create(Shotgun *sg, 
+                         const std::string &projectName,
+                         const std::string &projectCode)
 {
     // Check if the project already exists
     try
@@ -87,8 +87,7 @@ Project Project::create(Shotgun *sg,
         attrsMap["code"] = toXmlrpcValue(projectCode);
         attrsMap["name"] = toXmlrpcValue(projectName);
 
-        // Call the base class function to create an entity
-        return Project(sg, createSGEntity(sg, "Project", attrsMap));
+        return sg->createEntity<Project>(Dict(attrsMap));
     }
 }
 

@@ -61,17 +61,17 @@ Task::~Task()
 }
 
 // *****************************************************************************
-Task Task::create(Shotgun *sg, 
-                  const std::string &projectCode,
-                  const std::string &taskName,
-                  const std::string &taskType,
-                  const std::string &taskAssignee,
-                  const std::string &taskStartDate,
-                  const std::string &taskEndDate,
-                  const std::string &taskStatus,
-                  const std::string &taskColor,
-                  const bool taskMilestone,
-                  const SgMap &taskEntityLink)
+Task *Task::create(Shotgun *sg, 
+                   const std::string &projectCode,
+                   const std::string &taskName,
+                   const std::string &taskType,
+                   const std::string &taskAssignee,
+                   const std::string &taskStartDate,
+                   const std::string &taskEndDate,
+                   const std::string &taskStatus,
+                   const std::string &taskColor,
+                   const bool taskMilestone,
+                   const SgMap &taskEntityLink)
 {
     SgMap attrsMap;
     attrsMap["project"] = toXmlrpcValue(sg->getProjectLink(projectCode));
@@ -155,8 +155,7 @@ Task Task::create(Shotgun *sg,
         attrsMap["color"] = toXmlrpcValue(taskColor);
     }
 
-    // Call the base class function to create an entity
-    return Task(sg, createSGEntity(sg, "Task", attrsMap));
+    return sg->createEntity<Task>(Dict(attrsMap));
 }
 
 // *****************************************************************************

@@ -44,6 +44,7 @@ class FilterBy
 {
 public:
     FilterBy();
+    FilterBy(const SgMap &filters);
 
     template <typename T>
     FilterBy(const std::string &path,
@@ -86,7 +87,7 @@ public:
 
     const SgMap &filters() const { return m_filters; }
     const bool empty() const { return m_filters.empty(); }
-    const bool size() const { return m_filters.size(); }
+    const int size() const { return m_filters.size(); }
 
     FilterBy &operator=(const FilterBy &that)
     {
@@ -97,6 +98,8 @@ public:
 
         return *this;
     }
+
+    friend std::ostream& operator<<(std::ostream &output, const FilterBy &filterList);
 
 protected:
     FilterBy &op(const std::string &logicOperator,

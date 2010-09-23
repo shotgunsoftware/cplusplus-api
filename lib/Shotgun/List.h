@@ -30,61 +30,58 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __REVIEW_ITEM_H__
-#define __REVIEW_ITEM_H__
+#ifndef __LIST_H__
+#define __LIST_H__
 
 #include <string>
 
 #include <Shotgun/Type.h>
-#include <Shotgun/Entity.h>
-#include <Shotgun/Version.h>
-#include <Shotgun/Shot.h>
-#include <Shotgun/Review.h>
 
 namespace Shotgun {
 
-class Shotgun;
-
 // *****************************************************************************
-class ReviewItem : public Entity
+class List
 {
-    friend class Shotgun;
- 
 public:
-    ReviewItem(const ReviewItem &ref);
-    virtual ~ReviewItem();
+    List();
+    List(const SgArray &array);
 
-    // Get an attribute's value
-    const std::string sgName() const { return getAttrValueAsString("code"); } 
-   
-    // ------------------------------------------------------------------------
-    // IMPORTANT:
-    // (1) C++ - user must be responsible for deleting the pointers in C++ app.
-    // (2) Python - the ownership has been transferred to Python by using the
-    //     /Factory/ annotation.
-    // ------------------------------------------------------------------------
-    const Entity *sgLink() const { return getAttrValueAsEntityPtr("sg_link"); }
-    const std::string sgLinkEntityType() const { return linkEntityType("sg_link"); }
-
-    static std::string type() { return std::string("ReviewItem"); }
-
-    ReviewItem &operator=(const ReviewItem &that)
+    template <typename T>
+    List(const T &value)
     {
-        Entity::operator=(that);
+         append(value);      
+    }
+
+    template <typename T>
+    List &append(const T &value)
+    {
+        m_value.push_back(toXmlrpcValue(value));
+
         return *this;
     }
 
-protected:
-    ReviewItem(Shotgun *sg, const xmlrpc_c::value &attrs);
+    List &extend(const List &that);
 
-    static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new ReviewItem(sg, attrs); }
-    static ReviewItem *create(Shotgun *sg, 
-                              const std::string &projectCode,
-                              const std::string &reviewItemName);
-    
-    static SgArray populateReturnFields(const SgArray &extraReturnFields = SgArray());
+    const SgArray &value() const { return m_value; }
+    const bool empty() const { return m_value.empty(); }
+    const int size() const { return m_value.size(); }
+
+    List &operator=(const List &that)
+    {
+        if (this != &that)
+        {
+            m_value = that.m_value;
+        }
+
+        return *this;
+    }
+
+    friend std::ostream& operator<<(std::ostream &output, const List &list);
+
+protected:
+    SgArray m_value;
 };
 
 } // End namespace Shotgun
 
-#endif    // End #ifdef __REVIEW_ITEM_H__
+#endif    // End #ifdef __LIST_H__

@@ -192,9 +192,12 @@ protected:
     Entity(Shotgun *sg);
 
     // Create a new entity
+#warning This should be obsoleted
     static xmlrpc_c::value createSGEntity(Shotgun *sg, 
                                           const std::string &entityType, 
                                           const SgMap &data);
+
+    static xmlrpc_c::value createSGEntity(Shotgun *sg, const SgMap &createMap);
 
     // Update an attribute of an existing entity
     static xmlrpc_c::value updateSGEntity(Shotgun *sg,
@@ -209,6 +212,12 @@ protected:
     static bool deleteSGEntity(Shotgun *sg, 
                                const std::string &entityType,
                                const int id);
+
+#if 0
+    static Dict buildCreateMap(const std::string &entityType,
+                               const Dict &data,
+                               const List &returnFields = List());
+#endif
 
     static SgMap buildCreateMap(const std::string &entityType,
                                 const SgMap &data,

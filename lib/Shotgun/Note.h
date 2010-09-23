@@ -82,16 +82,16 @@ protected:
     Note(Shotgun *sg, const xmlrpc_c::value &attrs);
 
     static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Note(sg, attrs); }
-    static Note create(Shotgun *sg, 
-                       const std::string &projectCode,
-                       const std::string &noteFromUserName,
-                       const Strings &noteToUserNames = Strings(),
-                       const Strings &noteCcUserNames = Strings(),
-                       const std::string &noteSubject = "",
-                       const std::string &noteBody = "",
-                       const std::string &noteType = "",
-                       const SgArray &noteLinks = SgArray(),
-                       const std::string &noteOrigin = "");
+    static Note *create(Shotgun *sg, 
+                        const std::string &projectCode,
+                        const std::string &noteFromUserName,
+                        const Strings &noteToUserNames = Strings(),
+                        const Strings &noteCcUserNames = Strings(),
+                        const std::string &noteSubject = "",
+                        const std::string &noteBody = "",
+                        const std::string &noteType = "",
+                        const SgArray &noteLinks = SgArray(),
+                        const std::string &noteOrigin = "");
 
     static SgArray populateReturnFields(const SgArray &extraReturnFields = SgArray());
 };

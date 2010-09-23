@@ -37,6 +37,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Type.h>
 #include <Shotgun/FilterBy.h>
 #include <Shotgun/SortBy.h>
+#include <Shotgun/List.h>
 #include <Shotgun/Project.h>
 #include <Shotgun/Sequence.h>
 #include <Shotgun/Shot.h>
@@ -170,6 +171,12 @@ xmlrpc_c::value toXmlrpcValue(const FilterBy &in)
 xmlrpc_c::value toXmlrpcValue(const SortBy &in)
 {
     return xmlrpc_c::value(xmlrpc_c::value_array(in.sorts()));
+}
+
+// *****************************************************************************
+xmlrpc_c::value toXmlrpcValue(const List &in)
+{
+    return xmlrpc_c::value(xmlrpc_c::value_array(in.value()));
 }
 
 // *****************************************************************************
@@ -361,6 +368,12 @@ std::string toStdString(const FilterBy &filterList)
 std::string toStdString(const SortBy &order)
 {
     return toStdString(order.sorts());
+}
+
+// *****************************************************************************
+std::string toStdString(const List &list)
+{
+    return toStdString(list.value());
 }
 
 // *****************************************************************************
@@ -685,20 +698,6 @@ std::ostream &operator<<(std::ostream& output, const Strings &strs)
 std::ostream &operator<<(std::ostream& output, const MethodSignatures &sigs)
 {
     output << toStdString(sigs);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const FilterBy &filterList)
-{
-    output << toStdString(filterList);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const SortBy &order)
-{
-    output << toStdString(order);
     return output;
 }
 

@@ -71,9 +71,9 @@ protected:
     Sequence(Shotgun *sg, const xmlrpc_c::value &attrs);
 
     static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Sequence(sg, attrs); }
-    static Sequence create(Shotgun *sg, 
-                           const std::string &projectCode,
-                           const std::string &sequenceName);
+    static Sequence *create(Shotgun *sg, 
+                            const std::string &projectCode,
+                            const std::string &sequenceName);
 
     static SgArray populateReturnFields(const SgArray &extraReturnFields = SgArray());
 };

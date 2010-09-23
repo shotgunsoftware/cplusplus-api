@@ -61,10 +61,10 @@ Element::~Element()
 }
 
 // *****************************************************************************
-Element Element::create(Shotgun *sg, 
-                        const std::string &projectCode,
-                        const std::string &elementName,
-                        const std::string &elementType)
+Element *Element::create(Shotgun *sg, 
+                         const std::string &projectCode,
+                         const std::string &elementName,
+                         const std::string &elementType)
 {
     // Check if the element already exists
     try
@@ -82,8 +82,7 @@ Element Element::create(Shotgun *sg,
         attrsMap["code"] = toXmlrpcValue(elementName);
         attrsMap["sg_element_type"] = toXmlrpcValue(elementType);
 
-        // Call the base class function to create an entity
-        return Element(sg, createSGEntity(sg, "Element", attrsMap));
+        return sg->createEntity<Element>(Dict(attrsMap));
     }
 }
 

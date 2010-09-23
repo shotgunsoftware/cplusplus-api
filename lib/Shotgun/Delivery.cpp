@@ -62,9 +62,9 @@ Delivery::~Delivery()
 }
 
 // *****************************************************************************
-Delivery Delivery::create(Shotgun *sg, 
-                          const std::string &projectCode,
-                          const std::string &deliveryName)
+Delivery *Delivery::create(Shotgun *sg, 
+                           const std::string &projectCode,
+                           const std::string &deliveryName)
 {
     // Check if the delivery already exists
     try
@@ -81,8 +81,7 @@ Delivery Delivery::create(Shotgun *sg,
         attrsMap["project"] = toXmlrpcValue(sg->getProjectLink(projectCode));
         attrsMap["title"] = toXmlrpcValue(deliveryName);
 
-        // Call the base class function to create an entity
-        return Delivery(sg, createSGEntity(sg, "Delivery", attrsMap));
+        return sg->createEntity<Delivery>(Dict(attrsMap));
     }
 }
 

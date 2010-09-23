@@ -61,11 +61,11 @@ Asset::~Asset()
 }
 
 // *****************************************************************************
-Asset Asset::create(Shotgun *sg, 
-                    const std::string &projectCode,
-                    const std::string &assetName,
-                    const std::string &assetType,
-                    const std::string &assetSource)
+Asset *Asset::create(Shotgun *sg, 
+                     const std::string &projectCode,
+                     const std::string &assetName,
+                     const std::string &assetType,
+                     const std::string &assetSource)
 {
     // Check if the asset already exists
     try
@@ -88,8 +88,7 @@ Asset Asset::create(Shotgun *sg,
             attrsMap["sg_asset_source"] = toXmlrpcValue(assetSource);
         }
 
-        // Call the base class function to create an entity
-        return Asset(sg, createSGEntity(sg, "Asset", attrsMap));
+        return sg->createEntity<Asset>(Dict(attrsMap));
     }
 }
 

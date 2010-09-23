@@ -89,17 +89,17 @@ protected:
     Task(Shotgun *sg, const xmlrpc_c::value &attrs);
 
     static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Task(sg, attrs); }
-    static Task create(Shotgun *sg, 
-                       const std::string &projectCode,
-                       const std::string &taskName,
-                       const std::string &taskType,
-                       const std::string &taskAssignee = "",
-                       const std::string &taskStartDate = "",
-                       const std::string &taskEndDate = "",
-                       const std::string &taskStatus = "",
-                       const std::string &taskColor = "",
-                       const bool taskMilestone = false,
-                       const SgMap &taskEntityLink = SgMap());
+    static Task *create(Shotgun *sg, 
+                        const std::string &projectCode,
+                        const std::string &taskName,
+                        const std::string &taskType,
+                        const std::string &taskAssignee = "",
+                        const std::string &taskStartDate = "",
+                        const std::string &taskEndDate = "",
+                        const std::string &taskStatus = "",
+                        const std::string &taskColor = "",
+                        const bool taskMilestone = false,
+                        const SgMap &taskEntityLink = SgMap());
 
     static SgArray populateReturnFields(const SgArray &extraReturnFields = SgArray());
 };

@@ -61,6 +61,7 @@ Entity::~Entity()
     delete m_attrs;
 }
 
+#warning This should be obsoleted
 // *****************************************************************************
 xmlrpc_c::value Entity::createSGEntity(Shotgun *sg, 
                                        const std::string &entityType, 
@@ -69,6 +70,27 @@ xmlrpc_c::value Entity::createSGEntity(Shotgun *sg,
     Method *md = sg->method("create");
 
     SgMap createMap = buildCreateMap(entityType, data);
+
+    xmlrpc_c::paramList params;
+    params.add(toXmlrpcValue(sg->authMap()));
+    params.add(toXmlrpcValue(createMap));
+
+    xmlrpc_c::value rawResult = md->call(params); 
+    xmlrpc_c::value results;
+
+    if (rawResult.type() != xmlrpc_c::value::TYPE_NIL)
+    {
+        results = toXmlrpcValue(getAttrValueAsMap("results",
+                                                  SgMap(xmlrpc_c::value_struct(rawResult))));
+    }
+
+    return results;
+}
+
+// *****************************************************************************
+xmlrpc_c::value Entity::createSGEntity(Shotgun *sg, const SgMap &createMap)
+{
+    Method *md = sg->method("create");
 
     xmlrpc_c::paramList params;
     params.add(toXmlrpcValue(sg->authMap()));
@@ -312,7 +334,6 @@ const std::string Entity::linkEntityType(const std::string &linkName) const
 }
 
 // *****************************************************************************
-#warning FIX THIS 
 SgMap Entity::buildCreateMap(const std::string &entityType,
                              const SgMap &data,
                              const SgArray &extraReturnFields)
@@ -338,241 +359,13 @@ SgMap Entity::buildCreateMap(const std::string &entityType,
     
     createMap["fields"] = toXmlrpcValue(fields);
 
-//     // -------------------------------------------------------------------
-//     // "return_fields"
-//     //
-//     // Add a few basic return fields for all entities
-//     SgArray returnFields = extraReturnFields;
-//     returnFields.push_back(toXmlrpcValue("id"));
-//     returnFields.push_back(toXmlrpcValue("project"));
-//     returnFields.push_back(toXmlrpcValue("created_at"));
-//     returnFields.push_back(toXmlrpcValue("updated_at"));
-// 
-//     // Add entity-specific return fields here
-//     if (entityType == "Project")
-//     {
-//         returnFields.push_back(toXmlrpcValue("name"));
-//         returnFields.push_back(toXmlrpcValue("code"));
-//         returnFields.push_back(toXmlrpcValue("sg_status"));
-//         returnFields.push_back(toXmlrpcValue("sg_archive_watcher"));
-//         returnFields.push_back(toXmlrpcValue("sg_pub_stills_watcher"));
-//         returnFields.push_back(toXmlrpcValue("sg_generate_shot_aliases"));
-//         returnFields.push_back(toXmlrpcValue("sg_send_dailies_notices"));
-//         returnFields.push_back(toXmlrpcValue("sg_polish_shot_notifications"));
-//         returnFields.push_back(toXmlrpcValue("sg_report_storage_information"));
-//         returnFields.push_back(toXmlrpcValue("sg_default_start_frame"));
-//         returnFields.push_back(toXmlrpcValue("sg_ms_project_schedule"));
-//     }
-//     else if (entityType == "Sequence")
-//     {
-//         returnFields.push_back(toXmlrpcValue("code"));
-//     }
-//     else if (entityType == "Shot")
-//     {
-//         returnFields.push_back(toXmlrpcValue("code"));
-//         returnFields.push_back(toXmlrpcValue("sg_continuity"));
-//         returnFields.push_back(toXmlrpcValue("description"));
-//         returnFields.push_back(toXmlrpcValue("elements"));
-//         returnFields.push_back(toXmlrpcValue("sg_estimated_frame_render_hours"));
-//         returnFields.push_back(toXmlrpcValue("sg_final_daily"));
-//         returnFields.push_back(toXmlrpcValue("sg_latest_daily"));
-//         returnFields.push_back(toXmlrpcValue("sg_lens"));
-//         returnFields.push_back(toXmlrpcValue("sg_prod_vfx__"));
-//         returnFields.push_back(toXmlrpcValue("sg_sequence"));
-//         returnFields.push_back(toXmlrpcValue("sg_shot_notifications"));
-//         returnFields.push_back(toXmlrpcValue("project_names"));
-//         returnFields.push_back(toXmlrpcValue("sg_status_list"));
-//         returnFields.push_back(toXmlrpcValue("sg_turnover_"));
-//         returnFields.push_back(toXmlrpcValue("sg_type"));
-//         returnFields.push_back(toXmlrpcValue("sg_omit_"));
-//         returnFields.push_back(toXmlrpcValue("sg_on_hold_"));
-//         returnFields.push_back(toXmlrpcValue("sg_cbb_"));
-//         returnFields.push_back(toXmlrpcValue("smart_cut_duration"));
-//         returnFields.push_back(toXmlrpcValue("smart_cut_in"));
-//         returnFields.push_back(toXmlrpcValue("smart_cut_out"));
-//         returnFields.push_back(toXmlrpcValue("smart_cut_summary_display"));
-//         returnFields.push_back(toXmlrpcValue("smart_duration_summary_display"));
-//         returnFields.push_back(toXmlrpcValue("smart_head_duration"));
-//         returnFields.push_back(toXmlrpcValue("smart_head_in"));
-//         returnFields.push_back(toXmlrpcValue("smart_head_out"));
-//         returnFields.push_back(toXmlrpcValue("smart_tail_duration"));
-//         returnFields.push_back(toXmlrpcValue("smart_tail_in"));
-//         returnFields.push_back(toXmlrpcValue("smart_tail_out"));
-//         returnFields.push_back(toXmlrpcValue("smart_working_duration"));
-//         returnFields.push_back(toXmlrpcValue("sg_tippett_working_length"));
-//         returnFields.push_back(toXmlrpcValue("sg_actual_plate_resolution"));
-//         returnFields.push_back(toXmlrpcValue("sg_storage___tier"));
-//         returnFields.push_back(toXmlrpcValue("sg_storage___filesystem"));
-//         returnFields.push_back(toXmlrpcValue("sg_storage___filesystem_used_percentage"));
-//         returnFields.push_back(toXmlrpcValue("sg_storage___size_gb"));
-//         returnFields.push_back(toXmlrpcValue("sg_slate_burnin_info"));
-//         returnFields.push_back(toXmlrpcValue("sg_slate_header_info"));
-//         returnFields.push_back(toXmlrpcValue("sg_pixel_aspect"));
-//     }
-//     else if (entityType == "Version") // Daily
-//     {
-//         returnFields.push_back(toXmlrpcValue("code"));
-//         returnFields.push_back(toXmlrpcValue("sg_department"));
-//         returnFields.push_back(toXmlrpcValue("description"));
-//         returnFields.push_back(toXmlrpcValue("sg_sequence"));
-//         returnFields.push_back(toXmlrpcValue("entity"));
-//         returnFields.push_back(toXmlrpcValue("sg_rev"));
-//         returnFields.push_back(toXmlrpcValue("frame_count"));
-//         returnFields.push_back(toXmlrpcValue("frame_range"));
-//         returnFields.push_back(toXmlrpcValue("sg_source"));
-//         returnFields.push_back(toXmlrpcValue("sg_source_2k"));
-//         returnFields.push_back(toXmlrpcValue("sg_daily_hd"));
-//         returnFields.push_back(toXmlrpcValue("image"));
-//         returnFields.push_back(toXmlrpcValue("sg_status"));
-//         returnFields.push_back(toXmlrpcValue("sg_status_list"));
-//         returnFields.push_back(toXmlrpcValue("sg_epk_"));
-//         returnFields.push_back(toXmlrpcValue("sg_dailies_date"));
-//         returnFields.push_back(toXmlrpcValue("sg_view_order"));
-//         returnFields.push_back(toXmlrpcValue("sg_preview_qt"));
-//         returnFields.push_back(toXmlrpcValue("sg_preview_hd_qt"));
-//         returnFields.push_back(toXmlrpcValue("user"));
-//     }
-//     else if (entityType == "HumanUser")
-//     {
-//         returnFields.push_back(toXmlrpcValue("name"));
-//         returnFields.push_back(toXmlrpcValue("admin"));
-//         returnFields.push_back(toXmlrpcValue("sg_department"));
-//         returnFields.push_back(toXmlrpcValue("email"));
-//         returnFields.push_back(toXmlrpcValue("login"));
-//         returnFields.push_back(toXmlrpcValue("sg_role"));
-//         returnFields.push_back(toXmlrpcValue("permission_rule_set"));
-//     }
-//     else if (entityType == "Element")
-//     {
-//         returnFields.push_back(toXmlrpcValue("code"));
-//         returnFields.push_back(toXmlrpcValue("assets"));
-//         returnFields.push_back(toXmlrpcValue("shots"));
-//         returnFields.push_back(toXmlrpcValue("tag_list"));
-//         returnFields.push_back(toXmlrpcValue("sg_element_type"));
-//     }
-//     else if (entityType == "Asset")
-//     {
-//         returnFields.push_back(toXmlrpcValue("code"));
-//         returnFields.push_back(toXmlrpcValue("sg_asset_type"));
-//         returnFields.push_back(toXmlrpcValue("sg_status_list"));
-//         returnFields.push_back(toXmlrpcValue("sg_asset_preview_qt"));
-//         returnFields.push_back(toXmlrpcValue("sg_asset_source"));
-//         returnFields.push_back(toXmlrpcValue("elements"));
-//         returnFields.push_back(toXmlrpcValue("parents"));
-//         returnFields.push_back(toXmlrpcValue("assets"));
-//         returnFields.push_back(toXmlrpcValue("shots"));
-//     }
-//     else if (entityType == "Delivery")
-//     {
-//         returnFields.push_back(toXmlrpcValue("title"));
-//         returnFields.push_back(toXmlrpcValue("sg_delivery_data_size"));
-//         returnFields.push_back(toXmlrpcValue("sg_delivery_notes"));
-//         returnFields.push_back(toXmlrpcValue("sg_delivery_path"));
-//         returnFields.push_back(toXmlrpcValue("sg_delivery_staged_path"));
-//         returnFields.push_back(toXmlrpcValue("sg_delivery_status"));
-//         returnFields.push_back(toXmlrpcValue("sg_delivery_type"));
-//         returnFields.push_back(toXmlrpcValue("sg_wrangler"));
-//         returnFields.push_back(toXmlrpcValue("sg_wrangler_notes"));
-//     }
-//     else if (entityType == "CustomEntity01") // "DeliveryItem"
-//     {
-//         returnFields.push_back(toXmlrpcValue("code"));
-//         returnFields.push_back(toXmlrpcValue("sg_asset"));
-//         returnFields.push_back(toXmlrpcValue("sg_delivery"));
-//         returnFields.push_back(toXmlrpcValue("sg_staging_status"));
-//         returnFields.push_back(toXmlrpcValue("sg_staging_qt"));
-//         returnFields.push_back(toXmlrpcValue("sg_processing_status"));
-//         returnFields.push_back(toXmlrpcValue("sg_quality_control_status"));
-//         returnFields.push_back(toXmlrpcValue("sg_data_size"));
-//         returnFields.push_back(toXmlrpcValue("sg_files"));
-//         returnFields.push_back(toXmlrpcValue("sg_notes"));
-//         returnFields.push_back(toXmlrpcValue("sg_priority"));
-//         returnFields.push_back(toXmlrpcValue("sg_processing_type"));
-//         returnFields.push_back(toXmlrpcValue("sg_publish_type"));
-//         returnFields.push_back(toXmlrpcValue("sg_sequence"));
-//         returnFields.push_back(toXmlrpcValue("sg_shot"));
-//         returnFields.push_back(toXmlrpcValue("sg_tippett_name"));
-//         returnFields.push_back(toXmlrpcValue("sg_tippett_path"));
-//         returnFields.push_back(toXmlrpcValue("sg_tippett_start_frame"));
-//         returnFields.push_back(toXmlrpcValue("sg_wrangler_notes"));
-//     }
-//     else if (entityType == "PublishEvent")
-//     {
-//         returnFields.push_back(toXmlrpcValue("code"));
-//         returnFields.push_back(toXmlrpcValue("sg_file"));
-//         //returnFields.push_back(toXmlrpcValue("sg_format"));
-//         returnFields.push_back(toXmlrpcValue("sg_preview_hd_qt"));
-//         returnFields.push_back(toXmlrpcValue("sg_preview_qt"));
-//         returnFields.push_back(toXmlrpcValue("sg_rev"));
-//         returnFields.push_back(toXmlrpcValue("sg_resolution"));
-//         returnFields.push_back(toXmlrpcValue("sg_type"));
-//     }
-//     else if (entityType == "Review")
-//     {
-//         returnFields.push_back(toXmlrpcValue("code"));
-//         returnFields.push_back(toXmlrpcValue("sg_review_type"));
-//         returnFields.push_back(toXmlrpcValue("sg_review_media"));
-//         returnFields.push_back(toXmlrpcValue("sg_review_date_sent"));
-//         returnFields.push_back(toXmlrpcValue("sg_review_sent_to"));
-//         returnFields.push_back(toXmlrpcValue("sg_review_date_reviewed"));
-//         returnFields.push_back(toXmlrpcValue("sg_review_reviewed_by"));
-//         returnFields.push_back(toXmlrpcValue("sg_review_disclaimers"));
-//         returnFields.push_back(toXmlrpcValue("sg_review_tipsupe_notes"));
-//         returnFields.push_back(toXmlrpcValue("sg_review_client_notes"));
-//     }
-//     else if (entityType == "ReviewItem")
-//     {
-//         returnFields.push_back(toXmlrpcValue("code"));
-//         returnFields.push_back(toXmlrpcValue("sg_version"));
-//         returnFields.push_back(toXmlrpcValue("sg_link"));
-//         returnFields.push_back(toXmlrpcValue("sg_review"));
-//         returnFields.push_back(toXmlrpcValue("sg_purpose"));
-//         returnFields.push_back(toXmlrpcValue("sg_order"));
-//         returnFields.push_back(toXmlrpcValue("sg_reviewed_by"));
-//         returnFields.push_back(toXmlrpcValue("sg_date_reviewed"));
-//         returnFields.push_back(toXmlrpcValue("sg_approved_"));
-//     }
-//     else if (entityType == "Task")
-//     {
-//         returnFields.push_back(toXmlrpcValue("content"));
-//         returnFields.push_back(toXmlrpcValue("task_assignees"));
-//         returnFields.push_back(toXmlrpcValue("color"));
-//         returnFields.push_back(toXmlrpcValue("due_date"));
-//         returnFields.push_back(toXmlrpcValue("duration"));
-//         returnFields.push_back(toXmlrpcValue("entity"));
-//         returnFields.push_back(toXmlrpcValue("milestone"));
-//         returnFields.push_back(toXmlrpcValue("start_date"));
-//         returnFields.push_back(toXmlrpcValue("sg_status_list"));
-//         returnFields.push_back(toXmlrpcValue("sg_system_task_type"));
-//         returnFields.push_back(toXmlrpcValue("sg_view_order"));
-//     }
-//     else if (entityType == "Group")
-//     {
-//         returnFields.push_back(toXmlrpcValue("code"));
-//     }
-//     else if (entityType == "Note")
-//     {
-//         returnFields.push_back(toXmlrpcValue("user"));
-//         returnFields.push_back(toXmlrpcValue("content"));
-//         returnFields.push_back(toXmlrpcValue("addressings_cc"));
-//         returnFields.push_back(toXmlrpcValue("addressings_to"));
-//         returnFields.push_back(toXmlrpcValue("sg_status_list"));
-//         returnFields.push_back(toXmlrpcValue("subject"));
-//         returnFields.push_back(toXmlrpcValue("sg_note_type"));
-//         returnFields.push_back(toXmlrpcValue("note_links"));
-//     }
-//     else if (entityType == "Playlist") 
-//     {
-//         returnFields.push_back(toXmlrpcValue("code"));
-//         returnFields.push_back(toXmlrpcValue("sg_date_and_time"));
-//         returnFields.push_back(toXmlrpcValue("description"));
-//         returnFields.push_back(toXmlrpcValue("notes"));
-//         returnFields.push_back(toXmlrpcValue("tag_list"));
-//         returnFields.push_back(toXmlrpcValue("image"));
-//         returnFields.push_back(toXmlrpcValue("versions"));
-//     }
-// 
-//     createMap["return_fields"] = toXmlrpcValue(returnFields);
+    // ---------------------------------------------------------------------
+    // "return_fields" - the default return fields will be populated in 
+    // Shotgun class' entityFactoryCreate(..)
+    if (!extraReturnFields.empty())
+    {
+        createMap["return_fields"] = toXmlrpcValue(extraReturnFields);
+    } 
 
     return createMap;
 }
@@ -594,7 +387,7 @@ SgMap Entity::buildUpdateMap(const std::string &entityType,
 // *****************************************************************************
 SgMap Entity::buildFindMap(const std::string &entityType,
                            const FilterBy &filterList,
-                           const SgArray &filterReturnFields,
+                           const SgArray &extraReturnFields,
                            const bool retiredOnly,
                            const int limit,
                            const SortBy &order)
@@ -660,9 +453,13 @@ SgMap Entity::buildFindMap(const std::string &entityType,
     }
     findMap["paging"] = toXmlrpcValue(paging);
 
-     // -------------------------------------------------------------------
-     // "return_fields" - will be populated in Shotgun class' entityFactoryFind(..)
-     
+    // -------------------------------------------------------------------
+    // "return_fields" - the default return fields will be populated in 
+    // Shotgun class' entityFactoryFind(..)
+    if (!extraReturnFields.empty())
+    {
+        findMap["return_fields"] = toXmlrpcValue(extraReturnFields);
+    } 
 
     // -------------------------------------------------------------------
     // "sorts" 

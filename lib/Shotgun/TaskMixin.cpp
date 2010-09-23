@@ -121,29 +121,20 @@ Task *TaskMixin::getNextIncompleteMilestoneTask()
 }
 
 // *****************************************************************************
-Task TaskMixin::addTask(const std::string &taskName,
-                        const std::string &taskType,
-                        const std::string &taskAssignee,
-                        const std::string &taskStartDate,
-                        const std::string &taskEndDate,
-                        const std::string &taskStatus,
-                        const std::string &taskColor,
-                        const bool taskMilestone)
+Task *TaskMixin::addTask(const std::string &taskName,
+                         const std::string &taskType,
+                         const std::string &taskAssignee,
+                         const std::string &taskStartDate,
+                         const std::string &taskEndDate,
+                         const std::string &taskStatus,
+                         const std::string &taskColor,
+                         const bool taskMilestone)
 {
     // Check if the task already exists
     try
     {
         // TODO: check "task_mixin.py"
-#warning This needs update once the return type of this func is changed to pointer type
-#if 0
         return getTaskByName(taskName);
-#else
-        Task *task = getTaskByName(taskName);
-        Task out = *task;
-        delete task;
-
-        return out;
-#endif
     }
     catch (SgEntityNotFoundError)
     {

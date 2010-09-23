@@ -60,7 +60,7 @@ Group::~Group()
 }
 
 // *****************************************************************************
-Group Group::create(Shotgun *sg, const std::string &groupName)
+Group *Group::create(Shotgun *sg, const std::string &groupName)
 {
     // Check if the group already exists
     try
@@ -76,8 +76,7 @@ Group Group::create(Shotgun *sg, const std::string &groupName)
         SgMap attrsMap;
         attrsMap["code"] = toXmlrpcValue(groupName);
 
-        // Call the base class function to create an entity
-        return Group(sg, createSGEntity(sg, "Group", attrsMap));
+        return sg->createEntity<Group>(Dict(attrsMap));
     }
 }
 

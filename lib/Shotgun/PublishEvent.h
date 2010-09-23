@@ -66,10 +66,10 @@ protected:
     PublishEvent(Shotgun *sg, const xmlrpc_c::value &attrs);
 
     static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new PublishEvent(sg, attrs); }
-    static PublishEvent create(Shotgun *sg, 
-                               const std::string &projectCode,
-                               const std::string &publishEventName);
-
+    static PublishEvent *create(Shotgun *sg, 
+                                const std::string &projectCode,
+                                const std::string &publishEventName);
+ 
     static SgArray populateReturnFields(const SgArray &extraReturnFields = SgArray());
 };
 

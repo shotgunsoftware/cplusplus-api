@@ -52,14 +52,14 @@ public:
     Task *getNextIncompleteMilestoneTask();
 
 #warning Update these functions to return pointer type
-    Task addTask(const std::string &taskName,
-                 const std::string &taskType,
-                 const std::string &taskAssignee = "",
-                 const std::string &taskStartDate = "",
-                 const std::string &taskEndDate = "",
-                 const std::string &taskStatus = "",
-                 const std::string &taskColor = "",
-                 const bool taskMilestone = false);
+    Task *addTask(const std::string &taskName,
+                  const std::string &taskType,
+                  const std::string &taskAssignee = "",
+                  const std::string &taskStartDate = "",
+                  const std::string &taskEndDate = "",
+                  const std::string &taskStatus = "",
+                  const std::string &taskColor = "",
+                  const bool taskMilestone = false);
 
     Task updateTask(const std::string &taskName,
                     const std::string &taskAssignee = "",

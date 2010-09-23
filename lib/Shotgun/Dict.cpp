@@ -30,61 +30,47 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __REVIEW_ITEM_H__
-#define __REVIEW_ITEM_H__
-
-#include <string>
-
-#include <Shotgun/Type.h>
-#include <Shotgun/Entity.h>
-#include <Shotgun/Version.h>
-#include <Shotgun/Shot.h>
-#include <Shotgun/Review.h>
+#include <Shotgun/Dict.h>
 
 namespace Shotgun {
 
-class Shotgun;
+// *****************************************************************************
+Dict::Dict() : m_value(SgMap())
+{
+}
 
 // *****************************************************************************
-class ReviewItem : public Entity
+Dict::Dict(const SgMap &map) : m_value(map)
 {
-    friend class Shotgun;
- 
-public:
-    ReviewItem(const ReviewItem &ref);
-    virtual ~ReviewItem();
+}
 
-    // Get an attribute's value
-    const std::string sgName() const { return getAttrValueAsString("code"); } 
-   
-    // ------------------------------------------------------------------------
-    // IMPORTANT:
-    // (1) C++ - user must be responsible for deleting the pointers in C++ app.
-    // (2) Python - the ownership has been transferred to Python by using the
-    //     /Factory/ annotation.
-    // ------------------------------------------------------------------------
-    const Entity *sgLink() const { return getAttrValueAsEntityPtr("sg_link"); }
-    const std::string sgLinkEntityType() const { return linkEntityType("sg_link"); }
-
-    static std::string type() { return std::string("ReviewItem"); }
-
-    ReviewItem &operator=(const ReviewItem &that)
+// *****************************************************************************
+const bool Dict::find(const std::string &key)
+{
+    SgMap::iterator foundIter = m_value.find(key);
+    if (foundIter != m_value.end())
     {
-        Entity::operator=(that);
-        return *this;
+        return true;
     }
 
-protected:
-    ReviewItem(Shotgun *sg, const xmlrpc_c::value &attrs);
+    return false;
+}
 
-    static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new ReviewItem(sg, attrs); }
-    static ReviewItem *create(Shotgun *sg, 
-                              const std::string &projectCode,
-                              const std::string &reviewItemName);
-    
-    static SgArray populateReturnFields(const SgArray &extraReturnFields = SgArray());
-};
+// *****************************************************************************
+Dict &Dict::remove(const std::string &key)
+{
+    m_value.erase(key);
+
+    return *this;
+}
+
+// *****************************************************************************
+std::ostream& operator<<(std::ostream &output, const Dict &dict)
+{
+    output << dict.value();
+
+    return output;
+}
 
 } // End namespace Shotgun
 
-#endif    // End #ifdef __REVIEW_ITEM_H__

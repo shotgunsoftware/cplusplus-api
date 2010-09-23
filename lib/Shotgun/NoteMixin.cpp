@@ -99,14 +99,14 @@ NotePtrs NoteMixin::getClientNotes(const int limit)
 }
 
 // *****************************************************************************
-Note NoteMixin::addNote(const std::string &noteFromUserName,
-                        const Strings &noteToUserNames,
-                        const Strings &noteCcUserNames,
-                        const std::string &noteSubject,
-                        const std::string &noteBody,
-                        const std::string &noteType,
-                        const SgArray &noteLinks,
-                        const std::string &noteOrigin)
+Note *NoteMixin::addNote(const std::string &noteFromUserName,
+                         const Strings &noteToUserNames,
+                         const Strings &noteCcUserNames,
+                         const std::string &noteSubject,
+                         const std::string &noteBody,
+                         const std::string &noteType,
+                         const SgArray &noteLinks,
+                         const std::string &noteOrigin)
 {
     if (Entity *entity = dynamic_cast<Entity *>(this))
     {
