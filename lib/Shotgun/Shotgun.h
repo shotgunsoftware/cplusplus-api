@@ -37,7 +37,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <string>
 #include <utility>
 
-#include <Shotgun/Type.h>
+#include <Shotgun/types.h>
 #include <Shotgun/exceptions.h>
 #include <Shotgun/FilterBy.h>
 #include <Shotgun/SortBy.h>

@@ -30,10 +30,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-#include <Shotgun/Method.h>
-#include <Shotgun/Shotgun.h>
 #include <Shotgun/Entity.h>
-#include <Shotgun/Type.h>
+#include <Shotgun/Shotgun.h>
 #include <Shotgun/Note.h>
 
 namespace Shotgun {

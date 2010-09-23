@@ -34,7 +34,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <time.h>
 
-#include <Shotgun/Type.h>
+#include <Shotgun/types.h>
 #include <Shotgun/FilterBy.h>
 #include <Shotgun/SortBy.h>
 #include <Shotgun/List.h>

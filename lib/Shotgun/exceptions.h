@@ -33,7 +33,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef __EXCEPTIONS_H__
 #define __EXCEPTIONS_H__
 
-#include <Shotgun/Type.h>
+#include <Shotgun/types.h>
 
 namespace Shotgun {
 

@@ -24,13 +24,13 @@ libShotgun_la_SOURCES = Asset.cpp               \
 			Project.cpp             \
 			Task.cpp                \
 			TaskMixin.cpp           \
-			Type.cpp                \
 			HumanUser.cpp           \
 			Version.cpp             \
 			FilterBy.cpp            \
 			SortBy.cpp              \
 			List.cpp                \
 			Dict.cpp                \
+			types.cpp               \
 			exceptions.cpp          \
 			utils.cpp
 
@@ -52,12 +52,12 @@ include_HEADERS = Asset.h                       \
 	          Project.h                     \
 	          Task.h                        \
 	          TaskMixin.h                   \
-	          Type.h                        \
 	          HumanUser.h                   \
 	          Version.h                     \
 	          FilterBy.h                    \
 	          SortBy.h                      \
 	          List.h                        \
 	          Dict.h                        \
+	          types.h                       \
 	          exceptions.h                  \
 	          utils.h

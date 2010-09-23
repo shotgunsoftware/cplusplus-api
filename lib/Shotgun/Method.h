@@ -41,7 +41,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <xmlrpc-c/client.hpp>
 #include <xmlrpc-c/client_transport.hpp>
 
-#include <Shotgun/Type.h>
+#include <Shotgun/types.h>
 #include <Shotgun/exceptions.h>
 
 namespace Shotgun {
