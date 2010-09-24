@@ -64,7 +64,7 @@ namespace Shotgun {
 
 // Define the ClassRegistry
 typedef Entity* (*FactoryFunc)(Shotgun *, const xmlrpc_c::value &);
-typedef SgArray (*PopulateReturnFieldsFunc) (const SgArray &);
+typedef SgArray (*PopulateReturnFieldsFunc) ();
 typedef std::pair<FactoryFunc, PopulateReturnFieldsFunc> RegistryFuncPair;
 typedef std::map<std::string, RegistryFuncPair> ClassRegistry;
 
@@ -319,6 +319,10 @@ public:
     Entity *findEntityById(const std::string &entityType, const int &id);
 
     template <class T>
+    T *createEntity(const Dict &data,
+                    const List &extraReturnFields = List());
+
+    template <class T>
     T *findEntity(const FilterBy &filterList = FilterBy(),
                   const List &extraReturnFields = List(),
                   const bool retiredOnly = false,
@@ -331,19 +335,13 @@ public:
                                   const bool retiredOnly = false,
                                   const SortBy &order = SortBy());
 
-    template <class T>
-    T *createEntity(const Dict &data,
-                    const List &extraReturnFields = List());
-
-protected:
 #if 0
-#warning This entityFactoryFind(..) func should be deprecated
-    //----------------------------------------------------------------------
-    // This factory function creates an entity object which does not link to 
-    // any of the existing Shotgun entities.
-    Entity *entityFactoryFind(const std::string &entityType);
+    template <class T>
+    T *updateEntity(const int entityId,
+                    const List &fieldsToUpdate);
 #endif
 
+protected:
     //----------------------------------------------------------------------
     // This factory function creates an array of entity object pointers which 
     // link to the existing Shotgun entities. The size of the array can be 0. 
@@ -376,6 +374,27 @@ private:
 // *****************************************************************************
 // G++ requires template header in the same file as implementation. 
 // In practice it means implementation inside .h file.
+// *****************************************************************************
+template <class T>
+T *Shotgun::createEntity(const Dict &data,
+                         const List &extraReturnFields)
+{
+    SgMap createMap = Entity::buildCreateMap(T::type(),
+                                             data.value(),
+                                             extraReturnFields.value());
+
+    Entity *entity = this->entityFactoryCreate(T::type(), createMap);
+    if (T *t = dynamic_cast<T *>(entity))
+    {
+        return t;
+    }
+    else
+    {
+        throw SgEntityDynamicCastError(T::type());
+    }
+}
+
+// *****************************************************************************
 template <class T>
 T *Shotgun::findEntity(const FilterBy &filterList,
                        const List &extraReturnFields,
@@ -430,16 +449,17 @@ std::vector<T *> Shotgun::findEntities(const FilterBy &filterList,
     return outEntities;
 }
 
+#if 0
 // *****************************************************************************
 template <class T>
-T *Shotgun::createEntity(const Dict &data,
-                         const List &extraReturnFields)
+T *Shotgun::updateEntity(const int entityId,
+                         const List &fieldsToUpdate)
 {
-    SgMap createMap = Entity::buildCreateMap(T::type(),
-                                             data.value(),
-                                             extraReturnFields.value());
+    SgMap updateMap = Entity::buildUpdateMap(T::type(),
+                                             entityId,
+                                             fieldsToUpdate.value());
 
-    Entity *entity = this->entityFactoryCreate(T::type(), createMap);
+    Entity *entity = this->entityFactoryUpdate(T::type(), updateMap);
     if (T *t = dynamic_cast<T *>(entity))
     {
         return t;
@@ -449,7 +469,9 @@ T *Shotgun::createEntity(const Dict &data,
         throw SgEntityDynamicCastError(T::type());
     }
 }
+#endif
 
+// *****************************************************************************
 } // End namespace Shotgun
 
 #endif    // End #ifdef __SHOTGUN_H__

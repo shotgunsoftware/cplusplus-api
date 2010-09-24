@@ -86,9 +86,9 @@ PublishEvent *PublishEvent::create(Shotgun *sg,
 }
 
 // *****************************************************************************
-SgArray PublishEvent::populateReturnFields(const SgArray &extraReturnFields)
+SgArray PublishEvent::populateReturnFields()
 {
-    SgArray returnFields = extraReturnFields;
+    SgArray returnFields;
 
     returnFields.push_back(toXmlrpcValue("id"));
     returnFields.push_back(toXmlrpcValue("project"));

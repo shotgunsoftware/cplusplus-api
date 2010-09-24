@@ -81,9 +81,9 @@ Group *Group::create(Shotgun *sg, const std::string &groupName)
 }
 
 // *****************************************************************************
-SgArray Group::populateReturnFields(const SgArray &extraReturnFields)
+SgArray Group::populateReturnFields()
 {
-    SgArray returnFields = extraReturnFields;
+    SgArray returnFields;
 
     returnFields.push_back(toXmlrpcValue("id"));
     returnFields.push_back(toXmlrpcValue("project"));

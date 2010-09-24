@@ -93,9 +93,9 @@ Asset *Asset::create(Shotgun *sg,
 }
 
 // *****************************************************************************
-SgArray Asset::populateReturnFields(const SgArray &extraReturnFields)
+SgArray Asset::populateReturnFields()
 {
-    SgArray returnFields = extraReturnFields;
+    SgArray returnFields;
     
     returnFields.push_back(toXmlrpcValue("id"));
     returnFields.push_back(toXmlrpcValue("project"));

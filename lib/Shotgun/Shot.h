@@ -103,7 +103,7 @@ protected:
                         const std::string &shotName,
                         const std::string &sequenceName="");
 
-    static SgArray populateReturnFields(const SgArray &extraReturnFields = SgArray());
+    static SgArray populateReturnFields();
 };
 
 } // End namespace Shotgun

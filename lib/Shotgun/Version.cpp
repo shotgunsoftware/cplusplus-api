@@ -93,9 +93,9 @@ Version *Version::create(Shotgun *sg, const std::string &versionName)
 }
 
 // *****************************************************************************
-SgArray Version::populateReturnFields(const SgArray &extraReturnFields)
+SgArray Version::populateReturnFields()
 {
-    SgArray returnFields = extraReturnFields;
+    SgArray returnFields;
 
     returnFields.push_back(toXmlrpcValue("id"));
     returnFields.push_back(toXmlrpcValue("project"));

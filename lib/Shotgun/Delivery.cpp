@@ -86,9 +86,9 @@ Delivery *Delivery::create(Shotgun *sg,
 }
 
 // *****************************************************************************
-SgArray Delivery::populateReturnFields(const SgArray &extraReturnFields)
+SgArray Delivery::populateReturnFields()
 {
-    SgArray returnFields = extraReturnFields;
+    SgArray returnFields;
 
     returnFields.push_back(toXmlrpcValue("id"));
     returnFields.push_back(toXmlrpcValue("project"));

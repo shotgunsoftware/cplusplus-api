@@ -96,25 +96,6 @@ void Shotgun::registerClass(const std::string &entityType,
     m_classRegistry[entityType] = RegistryFuncPair(factoryFunc, populateFunc);
 }
 
-#if 0
-#warning This one should be deprecated 
-// *****************************************************************************
-Entity *Shotgun::entityFactoryFind(const std::string &entityType)
-{
-    ClassRegistry::iterator foundIter = m_classRegistry.find(entityType);
-    if (foundIter != m_classRegistry.end())
-    {
-        FactoryFunc factorFunc = (*foundIter).second.first;
-        return (*factorFunc)(this, xmlrpc_c::value_nil());
-    }
-    else
-    {
-#warning Add throw error instead
-        return NULL;
-    }
-}
-#endif
-
 // *****************************************************************************
 EntityPtrs Shotgun::entityFactoryFind(const std::string &entityType, SgMap &findMap)
 {
@@ -132,8 +113,8 @@ EntityPtrs Shotgun::entityFactoryFind(const std::string &entityType, SgMap &find
     PopulateReturnFieldsFunc populateFunc = (*foundRegistryIter).second.second;
 
     // If the given findMap already has a "return_fields", merge its contents 
-    // with the poupulated returnFields of the given entity type. Shotgun
-    // will ignore the duplicated fields when it returns the search result. 
+    // with the poupulated default return Fields of the given entity type. 
+    // Shotgun will ignore the duplicated fields when it returns the search result. 
     // To update the findMap's "return_fields", erase it first since the 
     // xmlrpc_c::value type can't be reassigned once it's been instantiated. 
     SgArray extraReturnFields = SgArray();
@@ -144,8 +125,10 @@ EntityPtrs Shotgun::entityFactoryFind(const std::string &entityType, SgMap &find
         findMap.erase(foundReturnFieldsIter);
     }
 
-    // Populate the return fields and pass them to the findMap
-    SgArray returnFields = (*populateFunc)(extraReturnFields);
+    // Populate the default return fields and add the extra return fields
+    // before passing them to the findMap
+    SgArray returnFields = (*populateFunc)();
+    returnFields.insert(returnFields.end(), extraReturnFields.begin(), extraReturnFields.end());
     findMap["return_fields"] = toXmlrpcValue(returnFields);
 
     // If the findMap already has a "type" field, override it with the
@@ -185,8 +168,8 @@ Entity *Shotgun::entityFactoryCreate(const std::string &entityType, SgMap &creat
     PopulateReturnFieldsFunc populateFunc = (*foundRegistryIter).second.second;
 
     // If the given createMap already has a "return_fields", merge its contents 
-    // with the poupulated returnFields of the given entity type. Shotgun
-    // will ignore the duplicated fields when it returns the search result. 
+    // with the poupulated default return fields of the given entity type. 
+    // Shotgun will ignore the duplicated fields when it returns the search result. 
     // To update the createMap's "return_fields", erase it first since the 
     // xmlrpc_c::value type can't be reassigned once it's been instantiated. 
     SgArray extraReturnFields = SgArray();
@@ -197,9 +180,12 @@ Entity *Shotgun::entityFactoryCreate(const std::string &entityType, SgMap &creat
         createMap.erase(foundReturnFieldsIter);
     }
 
-    // Populate the return fields and pass them to the createMap
-    SgArray returnFields = (*populateFunc)(extraReturnFields);
+    // Populate the default return fields and add the extra return fields
+    // before passing them to the createMap
+    SgArray returnFields = (*populateFunc)();
+    returnFields.insert(returnFields.end(), extraReturnFields.begin(), extraReturnFields.end());
     createMap["return_fields"] = toXmlrpcValue(returnFields);
+
 
     // If the createMap already has a "type" field, override it with the
     // given "entityType" to ensure the type will not conflict with the

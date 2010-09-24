@@ -89,9 +89,9 @@ Sequence *Sequence::create(Shotgun *sg,
 }
 
 // *****************************************************************************
-SgArray Sequence::populateReturnFields(const SgArray &extraReturnFields)
+SgArray Sequence::populateReturnFields()
 {
-    SgArray returnFields = extraReturnFields;
+    SgArray returnFields;
 
     returnFields.push_back(toXmlrpcValue("id"));
     returnFields.push_back(toXmlrpcValue("project"));

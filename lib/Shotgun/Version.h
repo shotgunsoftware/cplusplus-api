@@ -88,7 +88,7 @@ protected:
     static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Version(sg, attrs); }
     static Version *create(Shotgun *sg, const std::string &versionName);
 
-    static SgArray populateReturnFields(const SgArray &extraReturnFields = SgArray());
+    static SgArray populateReturnFields();
 };
 
 } // End namespace Shotgun

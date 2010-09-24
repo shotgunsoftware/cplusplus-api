@@ -127,9 +127,9 @@ Note *Note::create(Shotgun *sg,
 }
 
 // *****************************************************************************
-SgArray Note::populateReturnFields(const SgArray &extraReturnFields)
+SgArray Note::populateReturnFields()
 {
-    SgArray returnFields = extraReturnFields;
+    SgArray returnFields;
 
     returnFields.push_back(toXmlrpcValue("id"));
     returnFields.push_back(toXmlrpcValue("project"));

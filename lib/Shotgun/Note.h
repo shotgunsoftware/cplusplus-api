@@ -92,7 +92,7 @@ protected:
                         const SgArray &noteLinks = SgArray(),
                         const std::string &noteOrigin = "");
 
-    static SgArray populateReturnFields(const SgArray &extraReturnFields = SgArray());
+    static SgArray populateReturnFields();
 };
 
 } // End namespace Shotgun

@@ -92,6 +92,13 @@ public:
         m_msg += "It is of '" + xmlrpcValueTypeStr(correctType) + "'.";
     }
 
+    SgAttrTypeError(const std::string &attrName,
+                    const std::string &msg = "") : SgAttrError("SgAttrTypeError: ")
+    {
+        m_msg += "Type error for attribute, '" + attrName + ".\n ";
+        m_msg += msg;
+    }
+
     virtual ~SgAttrTypeError() throw() {}
 };
 

@@ -100,7 +100,7 @@ protected:
                         const bool taskMilestone = false,
                         const SgMap &taskEntityLink = SgMap());
 
-    static SgArray populateReturnFields(const SgArray &extraReturnFields = SgArray());
+    static SgArray populateReturnFields();
 };
 
 } // End namespace Shotgun

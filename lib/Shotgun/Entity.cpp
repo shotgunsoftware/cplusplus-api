@@ -33,6 +33,9 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <iostream>
 #include <stdexcept>
 
+#include <Shotgun/types.h>
+#include <Shotgun/FilterBy.h>
+#include <Shotgun/Method.h>
 #include <Shotgun/Entity.h>
 #include <Shotgun/Shotgun.h>
 
@@ -45,43 +48,12 @@ Entity::Entity(Shotgun *sg)
 {
     m_attrs = NULL;
 
-    // These are the default return fields for all entity types
-    //m_returnFields.push_back(toXmlrpcValue("id"));
-    //m_returnFields.push_back(toXmlrpcValue("project"));
-    //m_returnFields.push_back(toXmlrpcValue("created_at"));
-    //m_returnFields.push_back(toXmlrpcValue("updated_at"));
 }
 
 // *****************************************************************************
 Entity::~Entity()
 {
     delete m_attrs;
-}
-
-#warning This should be obsoleted
-// *****************************************************************************
-xmlrpc_c::value Entity::createSGEntity(Shotgun *sg, 
-                                       const std::string &entityType, 
-                                       const SgMap &data)
-{
-    Method *md = sg->method("create");
-
-    SgMap createMap = buildCreateMap(entityType, data);
-
-    xmlrpc_c::paramList params;
-    params.add(toXmlrpcValue(sg->authMap()));
-    params.add(toXmlrpcValue(createMap));
-
-    xmlrpc_c::value rawResult = md->call(params); 
-    xmlrpc_c::value results;
-
-    if (rawResult.type() != xmlrpc_c::value::TYPE_NIL)
-    {
-        results = toXmlrpcValue(getAttrValueAsMap("results",
-                                                  SgMap(xmlrpc_c::value_struct(rawResult))));
-    }
-
-    return results;
 }
 
 // *****************************************************************************
@@ -92,32 +64,6 @@ xmlrpc_c::value Entity::createSGEntity(Shotgun *sg, const SgMap &createMap)
     xmlrpc_c::paramList params;
     params.add(toXmlrpcValue(sg->authMap()));
     params.add(toXmlrpcValue(createMap));
-
-    xmlrpc_c::value rawResult = md->call(params); 
-    xmlrpc_c::value results;
-
-    if (rawResult.type() != xmlrpc_c::value::TYPE_NIL)
-    {
-        results = toXmlrpcValue(getAttrValueAsMap("results",
-                                                  SgMap(xmlrpc_c::value_struct(rawResult))));
-    }
-
-    return results;
-}
-
-// *****************************************************************************
-xmlrpc_c::value Entity::updateSGEntity(Shotgun *sg, 
-                                       const std::string &entityType, 
-                                       const int entityId,
-                                       const SgArray &fieldsToUpdate)
-{
-    Method *md = sg->method("update");
-
-    SgMap updateMap = buildUpdateMap(entityType, entityId, fieldsToUpdate);
-
-    xmlrpc_c::paramList params;
-    params.add(toXmlrpcValue(sg->authMap()));
-    params.add(toXmlrpcValue(updateMap));
 
     xmlrpc_c::value rawResult = md->call(params); 
     xmlrpc_c::value results;
@@ -197,6 +143,55 @@ SgArray Entity::findSGEntities(Shotgun *sg, SgMap &findMap)
     }
 
     return entityArray;
+}
+
+#if 0
+// *****************************************************************************
+xmlrpc_c::value Entity::updateSGEntity(Shotgun *sg, const SgMap &updateMap)
+{
+    Method *md = sg->method("update");
+
+    xmlrpc_c::paramList params;
+    params.add(toXmlrpcValue(sg->authMap()));
+    params.add(toXmlrpcValue(updateMap));
+
+    xmlrpc_c::value rawResult = md->call(params); 
+    xmlrpc_c::value results;
+
+    if (rawResult.type() != xmlrpc_c::value::TYPE_NIL)
+    {
+        results = toXmlrpcValue(getAttrValueAsMap("results",
+                                                  SgMap(xmlrpc_c::value_struct(rawResult))));
+    }
+
+    return results;
+}
+#endif
+
+// *****************************************************************************
+xmlrpc_c::value Entity::updateSGEntity(Shotgun *sg, 
+                                       const std::string &entityType, 
+                                       const int entityId,
+                                       const SgArray &fieldsToUpdate)
+{
+    Method *md = sg->method("update");
+
+    SgMap updateMap = buildUpdateMap(entityType, entityId, fieldsToUpdate);
+
+    xmlrpc_c::paramList params;
+    params.add(toXmlrpcValue(sg->authMap()));
+    params.add(toXmlrpcValue(updateMap));
+
+    xmlrpc_c::value rawResult = md->call(params); 
+    xmlrpc_c::value results;
+
+    if (rawResult.type() != xmlrpc_c::value::TYPE_NIL)
+    {
+        results = toXmlrpcValue(getAttrValueAsMap("results",
+                                                  SgMap(xmlrpc_c::value_struct(rawResult))));
+    }
+
+    return results;
 }
 
 // *****************************************************************************
@@ -686,21 +681,16 @@ const int Entity::getAttrValueAsInt(const std::string &attrName,
 
     xmlrpc_c::value genericResult = getAttrValue(attrName);
 
-    if (genericResult.type() == xmlrpc_c::value::TYPE_INT)
+    try
     {
-        result = int(xmlrpc_c::value_int(genericResult));
+        fromXmlrpcValue(genericResult, result);
     }
-    else if (m_invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
+    catch (SgXmlrpcValueTypeError &error)
     {
-        if (genericResult.type() != xmlrpc_c::value::TYPE_NIL)
+        if (m_invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
         {
-            throw SgAttrTypeError(attrName, 
-                                  xmlrpc_c::value::TYPE_INT, 
-                                  genericResult.type());
-        }
-        else
-        {
-            throw SgAttrValueError(attrName);
+            throw SgAttrTypeError(attrName,
+                                  error.what());
         }
     }
 
@@ -718,21 +708,16 @@ const int Entity::getAttrValueAsInt(const std::string &attrName,
 
     xmlrpc_c::value genericResult = getAttrValue(attrName, attrsMap);
 
-    if (genericResult.type() == xmlrpc_c::value::TYPE_INT)
+    try
     {
-        result = int(xmlrpc_c::value_int(genericResult));
+        fromXmlrpcValue(genericResult, result);
     }
-    else if (invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
+    catch (SgXmlrpcValueTypeError &error)
     {
-        if (genericResult.type() != xmlrpc_c::value::TYPE_NIL)
+        if (invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
         {
-            throw SgAttrTypeError(attrName, 
-                                  xmlrpc_c::value::TYPE_INT, 
-                                  genericResult.type());
-        }
-        else
-        {
-            throw SgAttrValueError(attrName);
+            throw SgAttrTypeError(attrName,
+                                  error.what());
         }
     }
 
@@ -747,21 +732,16 @@ const bool Entity::getAttrValueAsBool(const std::string &attrName,
 
     xmlrpc_c::value genericResult = getAttrValue(attrName);
 
-    if (genericResult.type() == xmlrpc_c::value::TYPE_BOOLEAN)
+    try
     {
-        result = bool(xmlrpc_c::value_boolean(genericResult));
+        fromXmlrpcValue(genericResult, result);
     }
-    else if (m_invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
+    catch (SgXmlrpcValueTypeError &error)
     {
-        if (genericResult.type() != xmlrpc_c::value::TYPE_NIL)
+        if (m_invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
         {
-            throw SgAttrTypeError(attrName, 
-                                  xmlrpc_c::value::TYPE_BOOLEAN, 
-                                  genericResult.type());
-        }
-        else
-        {
-            throw SgAttrValueError(attrName);
+            throw SgAttrTypeError(attrName,
+                                  error.what());
         }
     }
 
@@ -779,21 +759,16 @@ const bool Entity::getAttrValueAsBool(const std::string &attrName,
 
     xmlrpc_c::value genericResult = getAttrValue(attrName, attrsMap);
 
-    if (genericResult.type() == xmlrpc_c::value::TYPE_BOOLEAN)
+    try
     {
-        result = bool(xmlrpc_c::value_boolean(genericResult));
+        fromXmlrpcValue(genericResult, result);
     }
-    else if (invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
+    catch (SgXmlrpcValueTypeError &error)
     {
-        if (genericResult.type() != xmlrpc_c::value::TYPE_NIL)
+        if (invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
         {
-            throw SgAttrTypeError(attrName, 
-                                  xmlrpc_c::value::TYPE_BOOLEAN, 
-                                  genericResult.type());
-        }
-        else
-        {
-            throw SgAttrValueError(attrName);
+            throw SgAttrTypeError(attrName,
+                                  error.what());
         }
     }
 
@@ -808,21 +783,16 @@ const double Entity::getAttrValueAsDouble(const std::string &attrName,
 
     xmlrpc_c::value genericResult = getAttrValue(attrName);
 
-    if (genericResult.type() == xmlrpc_c::value::TYPE_DOUBLE)
+    try
     {
-        result = double(xmlrpc_c::value_double(genericResult));
+        fromXmlrpcValue(genericResult, result);
     }
-    else if (m_invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
+    catch (SgXmlrpcValueTypeError &error)
     {
-        if (genericResult.type() != xmlrpc_c::value::TYPE_NIL)
+        if (m_invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
         {
-            throw SgAttrTypeError(attrName, 
-                                  xmlrpc_c::value::TYPE_DOUBLE, 
-                                  genericResult.type());
-        }
-        else
-        {
-            throw SgAttrValueError(attrName);
+            throw SgAttrTypeError(attrName,
+                                  error.what());
         }
     }
 
@@ -840,21 +810,16 @@ const double Entity::getAttrValueAsDouble(const std::string &attrName,
 
     xmlrpc_c::value genericResult = getAttrValue(attrName, attrsMap);
 
-    if (genericResult.type() == xmlrpc_c::value::TYPE_DOUBLE)
+    try
     {
-        result = double(xmlrpc_c::value_double(genericResult));
+        fromXmlrpcValue(genericResult, result);
     }
-    else if (invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
+    catch (SgXmlrpcValueTypeError &error)
     {
-        if (genericResult.type() != xmlrpc_c::value::TYPE_NIL)
+        if (invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
         {
-            throw SgAttrTypeError(attrName, 
-                                  xmlrpc_c::value::TYPE_DOUBLE, 
-                                  genericResult.type());
-        }
-        else
-        {
-            throw SgAttrValueError(attrName);
+            throw SgAttrTypeError(attrName,
+                                  error.what());
         }
     }
 
@@ -869,21 +834,16 @@ const time_t Entity::getAttrValueAsDatetime(const std::string &attrName,
 
     xmlrpc_c::value genericResult = getAttrValue(attrName);
 
-    if (genericResult.type() == xmlrpc_c::value::TYPE_DATETIME)
+    try
     {
-        result = time_t(xmlrpc_c::value_datetime(genericResult));
+        fromXmlrpcValue(genericResult, result);
     }
-    else if (m_invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
+    catch (SgXmlrpcValueTypeError &error)
     {
-        if (genericResult.type() != xmlrpc_c::value::TYPE_NIL)
+        if (m_invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
         {
-            throw SgAttrTypeError(attrName, 
-                                  xmlrpc_c::value::TYPE_DATETIME, 
-                                  genericResult.type());
-        }
-        else
-        {
-            throw SgAttrValueError(attrName);
+            throw SgAttrTypeError(attrName,
+                                  error.what());
         }
     }
 
@@ -901,21 +861,16 @@ const time_t Entity::getAttrValueAsDatetime(const std::string &attrName,
 
     xmlrpc_c::value genericResult = getAttrValue(attrName, attrsMap);
 
-    if (genericResult.type() == xmlrpc_c::value::TYPE_DATETIME)
+    try
     {
-        result = time_t(xmlrpc_c::value_datetime(genericResult));
+        fromXmlrpcValue(genericResult, result);
     }
-    else if (invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
+    catch (SgXmlrpcValueTypeError &error)
     {
-        if (genericResult.type() != xmlrpc_c::value::TYPE_NIL)
+        if (invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
         {
-            throw SgAttrTypeError(attrName, 
-                                  xmlrpc_c::value::TYPE_DATETIME, 
-                                  genericResult.type());
-        }
-        else
-        {
-            throw SgAttrValueError(attrName);
+            throw SgAttrTypeError(attrName,
+                                  error.what());
         }
     }
 
@@ -930,25 +885,25 @@ const std::string Entity::getAttrValueAsString(const std::string &attrName,
 
     xmlrpc_c::value genericResult = getAttrValue(attrName);
 
-    if (genericResult.type() == xmlrpc_c::value::TYPE_STRING)
+    try
     {
-        result = std::string(xmlrpc_c::value_string(genericResult));
+        fromXmlrpcValue(genericResult, result);
     }
-    else if (m_invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
+    catch (SgXmlrpcValueTypeError &error)
     {
-        if (genericResult.type() != xmlrpc_c::value::TYPE_NIL)
+        if (m_invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
         {
-            throw SgAttrTypeError(attrName, 
-                                  xmlrpc_c::value::TYPE_STRING, 
-                                  genericResult.type());
-        }
-        else
-        {
-            //throw SgAttrValueError(attrName);
-
-            // String type can have a default value (i.e. an empty string)
-            // to represent an empty value instead of throwing an exception.
-            result = "";
+            if (genericResult.type() != xmlrpc_c::value::TYPE_NIL)
+            {
+                throw SgAttrTypeError(attrName,
+                                      error.what());
+            }
+            else
+            {
+                // String type can have a default value (i.e. an empty string)
+                // to represent an empty value instead of throwing an exception.
+                result = "";
+            }
         }
     }
 
@@ -966,23 +921,25 @@ const std::string Entity::getAttrValueAsString(const std::string &attrName,
 
     xmlrpc_c::value genericResult = getAttrValue(attrName, attrsMap);
 
-    if (genericResult.type() == xmlrpc_c::value::TYPE_STRING)
+    try
     {
-        result = std::string(xmlrpc_c::value_string(genericResult));
+        fromXmlrpcValue(genericResult, result);
     }
-    else if (invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
+    catch (SgXmlrpcValueTypeError &error)
     {
-        if (genericResult.type() != xmlrpc_c::value::TYPE_NIL)
+        if (invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
         {
-            throw SgAttrTypeError(attrName, 
-                                  xmlrpc_c::value::TYPE_STRING, 
-                                  genericResult.type());
-        }
-        else
-        {
-            //throw SgAttrValueError(attrName);
-
-            result = "";
+            if (genericResult.type() != xmlrpc_c::value::TYPE_NIL)
+            {
+                throw SgAttrTypeError(attrName,
+                                      error.what());
+            }
+            else
+            {
+                // String type can have a default value (i.e. an empty string)
+                // to represent an empty value instead of throwing an exception.
+                result = "";
+            }
         }
     }
 
@@ -997,25 +954,25 @@ const SgArray Entity::getAttrValueAsArray(const std::string &attrName,
 
     xmlrpc_c::value genericResult = getAttrValue(attrName);
 
-    if (genericResult.type() == xmlrpc_c::value::TYPE_ARRAY)
+    try
     {
-        result = (xmlrpc_c::value_array(genericResult)).vectorValueValue();
+        fromXmlrpcValue(genericResult, result);
     }
-    else if (m_invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
+    catch (SgXmlrpcValueTypeError &error)
     {
-        if (genericResult.type() != xmlrpc_c::value::TYPE_NIL)
+        if (m_invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
         {
-            throw SgAttrTypeError(attrName, 
-                                  xmlrpc_c::value::TYPE_ARRAY, 
-                                  genericResult.type());
-        }
-        else
-        {
-            //throw SgAttrValueError(attrName);
-
-            // SgArray type can have a default value (i.e. an empty array)
-            // to represent an empty value instead of throwing an exception.
-            result = SgArray();
+            if (genericResult.type() != xmlrpc_c::value::TYPE_NIL)
+            {
+                throw SgAttrTypeError(attrName,
+                                      error.what());
+            }
+            else
+            {
+                // SgArray type can have a default value (i.e. an empty array)
+                // to represent an empty value instead of throwing an exception.
+                result = SgArray();
+            }
         }
     }
 
@@ -1033,23 +990,25 @@ const SgArray Entity::getAttrValueAsArray(const std::string &attrName,
 
     xmlrpc_c::value genericResult = getAttrValue(attrName, attrsMap);
 
-    if (genericResult.type() == xmlrpc_c::value::TYPE_ARRAY)
+    try
     {
-        result = (xmlrpc_c::value_array(genericResult)).vectorValueValue();
+        fromXmlrpcValue(genericResult, result);
     }
-    else if (invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
+    catch (SgXmlrpcValueTypeError &error)
     {
-        if (genericResult.type() != xmlrpc_c::value::TYPE_NIL)
+        if (invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
         {
-            throw SgAttrTypeError(attrName, 
-                                  xmlrpc_c::value::TYPE_ARRAY, 
-                                  genericResult.type());
-        }
-        else
-        {
-            //throw SgAttrValueError(attrName);
-
-            result = SgArray();
+            if (genericResult.type() != xmlrpc_c::value::TYPE_NIL)
+            {
+                throw SgAttrTypeError(attrName,
+                                      error.what());
+            }
+            else
+            {
+                // SgArray type can have a default value (i.e. an empty array)
+                // to represent an empty value instead of throwing an exception.
+                result = SgArray();
+            }
         }
     }
 
@@ -1064,25 +1023,25 @@ const SgMap Entity::getAttrValueAsMap(const std::string &attrName) const
 
     xmlrpc_c::value genericResult = getAttrValue(attrName);
 
-    if (genericResult.type() == xmlrpc_c::value::TYPE_STRUCT)
+    try
     {
-        result = SgMap(xmlrpc_c::value_struct(genericResult));
+        fromXmlrpcValue(genericResult, result);
     }
-    else if (m_invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
+    catch (SgXmlrpcValueTypeError &error)
     {
-        if (genericResult.type() != xmlrpc_c::value::TYPE_NIL)
+        if (m_invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
         {
-            throw SgAttrTypeError(attrName, 
-                                  xmlrpc_c::value::TYPE_STRUCT, 
-                                  genericResult.type());
-        }
-        else
-        {
-            //throw SgAttrValueError(attrName);
-
-            // SgMap type can have a default value (i.e. an empty map)
-            // to represent an empty value instead of throwing an exception.
-            result = SgMap();
+            if (genericResult.type() != xmlrpc_c::value::TYPE_NIL)
+            {
+                throw SgAttrTypeError(attrName,
+                                      error.what());
+            }
+            else
+            {
+                // SgMap type can have a default value (i.e. an empty map)
+                // to represent an empty value instead of throwing an exception.
+                result = SgMap();
+            }
         }
     }
 
@@ -1100,22 +1059,25 @@ const SgMap Entity::getAttrValueAsMap(const std::string &attrName,
 
     xmlrpc_c::value genericResult = getAttrValue(attrName, attrsMap);
 
-    if (genericResult.type() == xmlrpc_c::value::TYPE_STRUCT)
+    try
     {
-        result = SgMap(xmlrpc_c::value_struct(genericResult));
+        fromXmlrpcValue(genericResult, result);
     }
-    else if (invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
+    catch (SgXmlrpcValueTypeError &error)
     {
-        if (genericResult.type() != xmlrpc_c::value::TYPE_NIL)
+        if (invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
         {
-            throw SgAttrTypeError(attrName, 
-                                  xmlrpc_c::value::TYPE_STRUCT, 
-                                  genericResult.type());
-        }
-        else
-        {
-            //throw SgAttrValueError(attrName);
-            result = SgMap();
+            if (genericResult.type() != xmlrpc_c::value::TYPE_NIL)
+            {
+                throw SgAttrTypeError(attrName,
+                                      error.what());
+            }
+            else
+            {
+                // SgMap type can have a default value (i.e. an empty map)
+                // to represent an empty value instead of throwing an exception.
+                result = SgMap();
+            }
         }
     }
 
@@ -1285,9 +1247,6 @@ const EntityPtrs Entity::getAttrValueAsMultiEntityPtr(Shotgun *sg,
 // *****************************************************************************
 const std::string Entity::getAttrValueAsUserLogin(const std::string &attrName) const 
 {
-//    HumanUser user(m_sg, getAttrValueAsEntityAttrMap(attrName));
-//    return user.sgLogin();
-
     const Entity *entity = getAttrValueAsEntityPtr(attrName);
     if (const HumanUser *user = dynamic_cast<const HumanUser *>(entity))
     {
@@ -1309,9 +1268,6 @@ const std::string Entity::getAttrValueAsUserLogin(Shotgun *sg,
                                                   const std::string &attrName,
                                                   const SgMap &attrsMap) 
 {
-//     HumanUser user(sg, getAttrValueAsEntityAttrMap(sg, attrName, attrsMap));
-//     return user.sgLogin();
-
     const Entity *entity = getAttrValueAsEntityPtr(sg, attrName, attrsMap);
     if (const HumanUser *user = dynamic_cast<const HumanUser *>(entity))
     {

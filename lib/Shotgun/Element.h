@@ -84,7 +84,7 @@ protected:
                            const std::string &elementName,
                            const std::string &elementType);
 
-    static SgArray populateReturnFields(const SgArray &extraReturnFields = SgArray());
+    static SgArray populateReturnFields();
 };
 
 } // End namespace Shotgun

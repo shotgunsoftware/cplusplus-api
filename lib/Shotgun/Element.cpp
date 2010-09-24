@@ -87,9 +87,9 @@ Element *Element::create(Shotgun *sg,
 }
 
 // *****************************************************************************
-SgArray Element::populateReturnFields(const SgArray &extraReturnFields)
+SgArray Element::populateReturnFields()
 {
-    SgArray returnFields = extraReturnFields;
+    SgArray returnFields;
 
     returnFields.push_back(toXmlrpcValue("id"));
     returnFields.push_back(toXmlrpcValue("project"));

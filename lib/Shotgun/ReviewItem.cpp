@@ -85,9 +85,9 @@ ReviewItem *ReviewItem::create(Shotgun *sg,
 }
 
 // *****************************************************************************
-SgArray ReviewItem::populateReturnFields(const SgArray &extraReturnFields)
+SgArray ReviewItem::populateReturnFields()
 {
-    SgArray returnFields = extraReturnFields;
+    SgArray returnFields;
 
     returnFields.push_back(toXmlrpcValue("id"));
     returnFields.push_back(toXmlrpcValue("project"));

@@ -78,7 +78,7 @@ protected:
                              const std::string &userEmail);
 
 
-    static SgArray populateReturnFields(const SgArray &extraReturnFields = SgArray());
+    static SgArray populateReturnFields();
 };
 
 } // End namespace Shotgun

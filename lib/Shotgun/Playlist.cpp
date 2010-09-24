@@ -86,9 +86,9 @@ Playlist *Playlist::create(Shotgun *sg,
 }
 
 // *****************************************************************************
-SgArray Playlist::populateReturnFields(const SgArray &extraReturnFields)
+SgArray Playlist::populateReturnFields()
 {
-    SgArray returnFields = extraReturnFields;
+    SgArray returnFields;
 
     returnFields.push_back(toXmlrpcValue("id"));
     returnFields.push_back(toXmlrpcValue("project"));

@@ -82,7 +82,7 @@ protected:
                             const std::string &projectCode,
                             const std::string &playlistName);
 
-    static SgArray populateReturnFields(const SgArray &extraReturnFields = SgArray());
+    static SgArray populateReturnFields();
 };
 
 } // End namespace Shotgun

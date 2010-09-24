@@ -194,33 +194,24 @@ public:
 protected:
     Entity(Shotgun *sg);
 
-    // Create a new entity
-#warning This should be obsoleted
-    static xmlrpc_c::value createSGEntity(Shotgun *sg, 
-                                          const std::string &entityType, 
-                                          const SgMap &data);
-
+    // Create a new Shotgun entity
     static xmlrpc_c::value createSGEntity(Shotgun *sg, const SgMap &createMap);
 
-    // Update an attribute of an existing entity
+    // Find a list of Shotgun entities that match the search map
+    static SgArray findSGEntities(Shotgun *sg, SgMap &findMap);
+
+    // Update an attribute of an existing Shotgun entity
+//     static xmlrpc_c::value updateSGEntity(Shotgun *sg, const SgMap &updateMap);
+
     static xmlrpc_c::value updateSGEntity(Shotgun *sg,
                                           const std::string &entityType,
                                           const int entityId,
                                           const SgArray &fieldsToUpdate);
 
-    // Find a list of entities that match the search map
-    static SgArray findSGEntities(Shotgun *sg, SgMap &findMap);
-
-    // Delete an existing entity
+    // Delete an existing Shotgun entity
     static bool deleteSGEntity(Shotgun *sg, 
                                const std::string &entityType,
                                const int id);
-
-#if 0
-    static Dict buildCreateMap(const std::string &entityType,
-                               const Dict &data,
-                               const List &returnFields = List());
-#endif
 
     static SgMap buildCreateMap(const std::string &entityType,
                                 const SgMap &data,

@@ -79,7 +79,7 @@ protected:
                          const std::string &assetType,
                          const std::string &assetSource = "");
 
-    static SgArray populateReturnFields(const SgArray &extraReturnFields = SgArray());
+    static SgArray populateReturnFields();
 };
 
 } // End namespace Shotgun

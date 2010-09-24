@@ -92,9 +92,9 @@ Project *Project::create(Shotgun *sg,
 }
 
 // *****************************************************************************
-SgArray Project::populateReturnFields(const SgArray &extraReturnFields)
+SgArray Project::populateReturnFields()
 {
-    SgArray returnFields = extraReturnFields;
+    SgArray returnFields;
 
     returnFields.push_back(toXmlrpcValue("id"));
     returnFields.push_back(toXmlrpcValue("project"));
