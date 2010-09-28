@@ -82,48 +82,42 @@ Version *Version::create(Shotgun *sg, const std::string &versionName)
 // 
 //         // Create a very basic Version entity with most of its attributes 
 //         // be filled later from the Python side.
-//         SgMap attrsMap;
-//         attrsMap["project"] = toXmlrpcValue(sg->getProjectLink(projectCode));
-//         attrsMap["code"] = toXmlrpcValue(versionName);
-//         attrsMap["sg_sequence"] = toXmlrpcValue(dn.sequence());
-//         attrsMap["sg_rev"] = toXmlrpcValue(dn.versionStr());
+//         Dict attrsMap = Dict("project", sg->getProjectLink(projectCode))
+//                         .add("code", versionName)
+//                         .add("sg_sequence", dn.sequence())
+//                         .add("sg_rev", dn.versionStr());
 // 
-//         return sg->createEntity<Version>(Dict(attrsMap));
+//         return sg->createEntity<Version>(attrsMap);
     }
 }
 
 // *****************************************************************************
-SgArray Version::populateReturnFields()
+List Version::populateReturnFields()
 {
-    SgArray returnFields;
-
-    returnFields.push_back(toXmlrpcValue("id"));
-    returnFields.push_back(toXmlrpcValue("project"));
-    returnFields.push_back(toXmlrpcValue("created_at"));
-    returnFields.push_back(toXmlrpcValue("updated_at"));
-
-    returnFields.push_back(toXmlrpcValue("code"));
-    returnFields.push_back(toXmlrpcValue("sg_department"));
-    returnFields.push_back(toXmlrpcValue("description"));
-    returnFields.push_back(toXmlrpcValue("sg_sequence"));
-    returnFields.push_back(toXmlrpcValue("entity"));
-    returnFields.push_back(toXmlrpcValue("sg_rev"));
-    returnFields.push_back(toXmlrpcValue("frame_count"));
-    returnFields.push_back(toXmlrpcValue("frame_range"));
-    returnFields.push_back(toXmlrpcValue("sg_source"));
-    returnFields.push_back(toXmlrpcValue("sg_source_2k"));
-    returnFields.push_back(toXmlrpcValue("sg_daily_hd"));
-    returnFields.push_back(toXmlrpcValue("image"));
-    returnFields.push_back(toXmlrpcValue("sg_status"));
-    returnFields.push_back(toXmlrpcValue("sg_status_list"));
-    returnFields.push_back(toXmlrpcValue("sg_epk_"));
-    returnFields.push_back(toXmlrpcValue("sg_dailies_date"));
-    returnFields.push_back(toXmlrpcValue("sg_view_order"));
-    returnFields.push_back(toXmlrpcValue("sg_preview_qt"));
-    returnFields.push_back(toXmlrpcValue("sg_preview_hd_qt"));
-    returnFields.push_back(toXmlrpcValue("user"));
-
-    return returnFields;
+    return List("id")
+           .append("project")
+           .append("created_at")
+           .append("updated_at")
+           .append("code")
+           .append("sg_department")
+           .append("description")
+           .append("sg_sequence")
+           .append("entity")
+           .append("sg_rev")
+           .append("frame_count")
+           .append("frame_range")
+           .append("sg_source")
+           .append("sg_source_2k")
+           .append("sg_daily_hd")
+           .append("image")
+           .append("sg_status")
+           .append("sg_status_list")
+           .append("sg_epk_")
+           .append("sg_dailies_date")
+           .append("sg_view_order")
+           .append("sg_preview_qt")
+           .append("sg_preview_hd_qt")
+           .append("user");
 }
 
 // *****************************************************************************
@@ -147,13 +141,13 @@ std::string toStdString(const Shotgun::Version &version)
 // *****************************************************************************
 std::string toStdString(const Shotgun::Versions &versions)
 {
-    Shotgun::SgArray array;
+    Shotgun::List list;
     for (size_t i = 0; i < versions.size(); i++)
     {
-        array.push_back(versions[i].attrs());
+        list.append(versions[i].attrs());
     }
     
-    return toStdString(Shotgun::toXmlrpcValue(array));
+    return toStdString(list);
 }
 
 // *****************************************************************************

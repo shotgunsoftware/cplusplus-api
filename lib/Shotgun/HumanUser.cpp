@@ -90,36 +90,29 @@ HumanUser *HumanUser::create(Shotgun *sg,
         }
         catch (SgEntityNotFoundError)
         {
-            SgMap attrsMap;
+            Dict attrsMap = Dict("name", userName)
+                            .add("login", userLogin)
+                            .add("email", userEmail);
 
-            attrsMap["name"] = toXmlrpcValue(userName);
-            attrsMap["login"] = toXmlrpcValue(userLogin);
-            attrsMap["email"] = toXmlrpcValue(userEmail);
-
-            return sg->createEntity<HumanUser>(Dict(attrsMap));
+            return sg->createEntity<HumanUser>(attrsMap);
         }
     }
 }
 
 // *****************************************************************************
-SgArray HumanUser::populateReturnFields()
+List HumanUser::populateReturnFields()
 {
-    SgArray returnFields;
-
-    returnFields.push_back(toXmlrpcValue("id"));
-    returnFields.push_back(toXmlrpcValue("project"));
-    returnFields.push_back(toXmlrpcValue("created_at"));
-    returnFields.push_back(toXmlrpcValue("updated_at"));
-
-    returnFields.push_back(toXmlrpcValue("name"));
-    returnFields.push_back(toXmlrpcValue("admin"));
-    returnFields.push_back(toXmlrpcValue("sg_department"));
-    returnFields.push_back(toXmlrpcValue("email"));
-    returnFields.push_back(toXmlrpcValue("login"));
-    returnFields.push_back(toXmlrpcValue("sg_role"));
-    returnFields.push_back(toXmlrpcValue("permission_rule_set"));
-
-    return returnFields;
+    return List("id")
+           .append("project")
+           .append("created_at")
+           .append("updated_at")
+           .append("name")
+           .append("admin")
+           .append("sg_department")
+           .append("email")
+           .append("login")
+           .append("sg_role")
+           .append("permission_rule_set");
 }
 
 } // End namespace Shotgun
@@ -134,13 +127,13 @@ std::string toStdString(const Shotgun::HumanUser &user)
 // *****************************************************************************
 std::string toStdString(const Shotgun::HumanUsers &users)
 {
-    Shotgun::SgArray array;
+    Shotgun::List list;
     for (size_t i = 0; i < users.size(); i++)
     {
-        array.push_back(users[i].attrs());
+        list.append(users[i].attrs());
     }
     
-    return toStdString(Shotgun::toXmlrpcValue(array));
+    return toStdString(list);
 }
 
 // *****************************************************************************

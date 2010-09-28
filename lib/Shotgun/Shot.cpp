@@ -93,71 +93,66 @@ Shot *Shot::create(Shotgun *sg,
 //         }
 
         // Other attributes will be filled by the python code
-        SgMap attrsMap;
-        attrsMap["project"] = toXmlrpcValue(sg->getProjectLink(projectCode));
-        attrsMap["code"] = toXmlrpcValue(shotName);
-//         attrsMap["sg_sequence"] = toXmlrpcValue(seq->asLink());
+        Dict attrsMap = Dict("project", sg->getProjectLink(projectCode))
+                        .add("code", shotName);
+
+//         attrsMap.add("sg_sequence", seq->asLink());
 //         delete seq;
         
-        return sg->createEntity<Shot>(Dict(attrsMap));
+        return sg->createEntity<Shot>(attrsMap);
     }
 }
 
 // *****************************************************************************
-SgArray Shot::populateReturnFields()
+List Shot::populateReturnFields()
 {
-    SgArray returnFields;
-
-    returnFields.push_back(toXmlrpcValue("id"));
-    returnFields.push_back(toXmlrpcValue("project"));
-    returnFields.push_back(toXmlrpcValue("created_at"));
-    returnFields.push_back(toXmlrpcValue("updated_at"));
-
-    returnFields.push_back(toXmlrpcValue("code"));
-    returnFields.push_back(toXmlrpcValue("sg_continuity"));
-    returnFields.push_back(toXmlrpcValue("description"));
-    returnFields.push_back(toXmlrpcValue("elements"));
-    returnFields.push_back(toXmlrpcValue("sg_estimated_frame_render_hours"));
-    returnFields.push_back(toXmlrpcValue("sg_final_daily"));
-    returnFields.push_back(toXmlrpcValue("sg_latest_daily"));
-    returnFields.push_back(toXmlrpcValue("sg_lens"));
-    returnFields.push_back(toXmlrpcValue("sg_prod_vfx__"));
-    returnFields.push_back(toXmlrpcValue("sg_sequence"));
-    returnFields.push_back(toXmlrpcValue("sg_shot_notifications"));
-    returnFields.push_back(toXmlrpcValue("project_names"));
-    returnFields.push_back(toXmlrpcValue("sg_status_list"));
-    returnFields.push_back(toXmlrpcValue("sg_turnover_"));
-    returnFields.push_back(toXmlrpcValue("sg_type"));
-    returnFields.push_back(toXmlrpcValue("sg_omit_"));
-    returnFields.push_back(toXmlrpcValue("sg_on_hold_"));
-    returnFields.push_back(toXmlrpcValue("sg_cbb_"));
-    returnFields.push_back(toXmlrpcValue("smart_cut_duration"));
-    returnFields.push_back(toXmlrpcValue("smart_cut_in"));
-    returnFields.push_back(toXmlrpcValue("smart_cut_out"));
-    returnFields.push_back(toXmlrpcValue("smart_cut_summary_display"));
-    returnFields.push_back(toXmlrpcValue("smart_duration_summary_display"));
-    returnFields.push_back(toXmlrpcValue("smart_head_duration"));
-    returnFields.push_back(toXmlrpcValue("smart_head_in"));
-    returnFields.push_back(toXmlrpcValue("smart_head_out"));
-    returnFields.push_back(toXmlrpcValue("smart_tail_duration"));
-    returnFields.push_back(toXmlrpcValue("smart_tail_in"));
-    returnFields.push_back(toXmlrpcValue("smart_tail_out"));
-    returnFields.push_back(toXmlrpcValue("smart_working_duration"));
-    returnFields.push_back(toXmlrpcValue("sg_tippett_working_length"));
-    returnFields.push_back(toXmlrpcValue("sg_actual_plate_resolution"));
-    returnFields.push_back(toXmlrpcValue("sg_storage___tier"));
-    returnFields.push_back(toXmlrpcValue("sg_storage___filesystem"));
-    returnFields.push_back(toXmlrpcValue("sg_storage___filesystem_used_percentage"));
-    returnFields.push_back(toXmlrpcValue("sg_storage___size_gb"));
-    returnFields.push_back(toXmlrpcValue("sg_slate_burnin_info"));
-    returnFields.push_back(toXmlrpcValue("sg_slate_header_info"));
-    returnFields.push_back(toXmlrpcValue("sg_pixel_aspect"));
-
-    return returnFields;
+    return List("id")
+           .append("project")
+           .append("created_at")
+           .append("updated_at")
+           .append("code")
+           .append("sg_continuity")
+           .append("description")
+           .append("elements")
+           .append("sg_estimated_frame_render_hours")
+           .append("sg_final_daily")
+           .append("sg_latest_daily")
+           .append("sg_lens")
+           .append("sg_prod_vfx__")
+           .append("sg_sequence")
+           .append("sg_shot_notifications")
+           .append("project_names")
+           .append("sg_status_list")
+           .append("sg_turnover_")
+           .append("sg_type")
+           .append("sg_omit_")
+           .append("sg_on_hold_")
+           .append("sg_cbb_")
+           .append("smart_cut_duration")
+           .append("smart_cut_in")
+           .append("smart_cut_out")
+           .append("smart_cut_summary_display")
+           .append("smart_duration_summary_display")
+           .append("smart_head_duration")
+           .append("smart_head_in")
+           .append("smart_head_out")
+           .append("smart_tail_duration")
+           .append("smart_tail_in")
+           .append("smart_tail_out")
+           .append("smart_working_duration")
+           .append("sg_tippett_working_length")
+           .append("sg_actual_plate_resolution")
+           .append("sg_storage___tier")
+           .append("sg_storage___filesystem")
+           .append("sg_storage___filesystem_used_percentage")
+           .append("sg_storage___size_gb")
+           .append("sg_slate_burnin_info")
+           .append("sg_slate_header_info")
+           .append("sg_pixel_aspect");
 }
 
 // *****************************************************************************
-void Shot::sgSequence(const SgMap &val)
+void Shot::sgSequence(const Dict &val)
 {
     try
     {
@@ -191,18 +186,18 @@ const ElementPtrs Shot::sgElements() const
 // *****************************************************************************
 void Shot::sgElements(const Elements &val)
 {
-    SgArray elementLinkArray;
+    List elementLinkArray;
 
     for (size_t i = 0; i < val.size(); i++)
     {
-        elementLinkArray.push_back(toXmlrpcValue(val[i].asLink()));
+        elementLinkArray.append(val[i].asLink());
     }
 
     setAttrValue("elements", toXmlrpcValue(elementLinkArray));
 }
 
 // *****************************************************************************
-void Shot::sgElements(const SgArray &val)
+void Shot::sgElements(const List &val)
 {
     for (size_t i = 0; i < val.size(); i++)
     {
@@ -245,13 +240,13 @@ std::string toStdString(const Shotgun::Shot &shot)
 // *****************************************************************************
 std::string toStdString(const Shotgun::Shots &shots)
 {
-    Shotgun::SgArray array;
+    Shotgun::List list;
     for (size_t i = 0; i < shots.size(); i++)
     {
-        array.push_back(shots[i].attrs());
+        list.append(shots[i].attrs());
     }
     
-    return toStdString(Shotgun::toXmlrpcValue(array));
+    return toStdString(list);
 }
 
 // *****************************************************************************

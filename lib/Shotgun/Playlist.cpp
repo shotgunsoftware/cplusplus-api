@@ -77,33 +77,27 @@ Playlist *Playlist::create(Shotgun *sg,
     }
     catch (SgEntityNotFoundError)
     {
-        SgMap attrsMap;
-        attrsMap["project"] = toXmlrpcValue(sg->getProjectLink(projectCode));
-        attrsMap["code"] = toXmlrpcValue(playlistName);
+        Dict attrsMap = Dict("project", sg->getProjectLink(projectCode))
+                        .add("code", playlistName);
 
-        return sg->createEntity<Playlist>(Dict(attrsMap));
+        return sg->createEntity<Playlist>(attrsMap);
     }
 }
 
 // *****************************************************************************
-SgArray Playlist::populateReturnFields()
+List Playlist::populateReturnFields()
 {
-    SgArray returnFields;
-
-    returnFields.push_back(toXmlrpcValue("id"));
-    returnFields.push_back(toXmlrpcValue("project"));
-    returnFields.push_back(toXmlrpcValue("created_at"));
-    returnFields.push_back(toXmlrpcValue("updated_at"));
-
-    returnFields.push_back(toXmlrpcValue("code"));
-    returnFields.push_back(toXmlrpcValue("sg_date_and_time"));
-    returnFields.push_back(toXmlrpcValue("description"));
-    returnFields.push_back(toXmlrpcValue("notes"));
-    returnFields.push_back(toXmlrpcValue("tag_list"));
-    returnFields.push_back(toXmlrpcValue("image"));
-    returnFields.push_back(toXmlrpcValue("versions"));
-
-    return returnFields;
+    return List("id")
+           .append("project")
+           .append("created_at")
+           .append("updated_at")
+           .append("code")
+           .append("sg_date_and_time")
+           .append("description")
+           .append("notes")
+           .append("tag_list")
+           .append("image")
+           .append("versions");
 }
 
 // *****************************************************************************
@@ -143,18 +137,18 @@ const VersionPtrs Playlist::sgVersions() const
 // *****************************************************************************
 void Playlist::sgNotes(const Notes &val)
 {
-    SgArray noteLinkArray;
+    List noteLinkArray;
 
     for (size_t i = 0; i < val.size(); i++)
     {
-        noteLinkArray.push_back(toXmlrpcValue(val[i].asLink()));
+        noteLinkArray.append(val[i].asLink());
     }
 
     setAttrValue("notes", toXmlrpcValue(noteLinkArray));
 }
 
 // *****************************************************************************
-void Playlist::sgNotes(const SgArray &val)
+void Playlist::sgNotes(const List &val)
 {
     for (size_t i = 0; i < val.size(); i++)
     {
@@ -174,18 +168,18 @@ void Playlist::sgNotes(const SgArray &val)
 // *****************************************************************************
 void Playlist::sgVersions(const Versions &val)
 {
-    SgArray versionLinkArray;
+    List versionLinkArray;
 
     for (size_t i = 0; i < val.size(); i++)
     {
-        versionLinkArray.push_back(toXmlrpcValue(val[i].asLink()));
+        versionLinkArray.append(val[i].asLink());
     }
 
     setAttrValue("versions", toXmlrpcValue(versionLinkArray));
 }
 
 // *****************************************************************************
-void Playlist::sgVersions(const SgArray &val)
+void Playlist::sgVersions(const List &val)
 {
     for (size_t i = 0; i < val.size(); i++)
     {
@@ -213,13 +207,13 @@ std::string toStdString(const Shotgun::Playlist &playlist)
 // *****************************************************************************
 std::string toStdString(const Shotgun::Playlists &playlists)
 {
-    Shotgun::SgArray array;
+    Shotgun::List list;
     for (size_t i = 0; i < playlists.size(); i++)
     {
-        array.push_back(playlists[i].attrs());
+        list.append(playlists[i].attrs());
     }
     
-    return toStdString(Shotgun::toXmlrpcValue(array));
+    return toStdString(list);
 }
 
 // *****************************************************************************

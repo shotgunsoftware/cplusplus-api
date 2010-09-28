@@ -71,18 +71,17 @@ Task *Task::create(Shotgun *sg,
                    const std::string &taskStatus,
                    const std::string &taskColor,
                    const bool taskMilestone,
-                   const SgMap &taskEntityLink)
+                   const Dict &taskEntityLink)
 {
-    SgMap attrsMap;
-    attrsMap["project"] = toXmlrpcValue(sg->getProjectLink(projectCode));
-    attrsMap["content"] = toXmlrpcValue(taskName);
-    attrsMap["sg_system_task_type"] = toXmlrpcValue(taskType); // This field seems no longer exist
-    attrsMap["milestone"] = toXmlrpcValue(taskMilestone);
+    Dict attrsMap = Dict("project", sg->getProjectLink(projectCode))
+                    .add("content", taskName)
+                    .add("sg_system_task_type", taskType) // This field seems no longer exist
+                    .add("milestone", taskMilestone);
 
     // taskEntityLink
     if (taskEntityLink.size() > 0)
     {
-        attrsMap["entity"] = toXmlrpcValue(taskEntityLink);
+        attrsMap.add("entity", taskEntityLink);
     }
 
     // taskAssignee - could be a HumanUser or a Group
@@ -91,10 +90,7 @@ Task *Task::create(Shotgun *sg,
         try
         {
             HumanUser *user = sg->findHumanUserByLogin(taskAssignee);
-
-            SgArray assignees;
-            assignees.push_back(toXmlrpcValue(user->asLink()));
-            attrsMap["task_assignees"] = toXmlrpcValue(assignees);
+            attrsMap.add("task_assignees", List(user->asLink()));
 
             delete user;
         }
@@ -103,10 +99,7 @@ Task *Task::create(Shotgun *sg,
             try
             {
                 Group *group = sg->findGroupByName(taskAssignee);
-
-                SgArray assignees;
-                assignees.push_back(toXmlrpcValue(group->asLink()));
-                attrsMap["task_assignees"] = toXmlrpcValue(assignees);
+                attrsMap.add("task_assignees", List(group->asLink()));
 
                 delete group;
             }
@@ -122,11 +115,11 @@ Task *Task::create(Shotgun *sg,
     {
         if (taskStartDate == "now")
         {
-            attrsMap["start_date"] = toXmlrpcValue(currDateStr());
+            attrsMap.add("start_date", currDateStr());
         }
         else
         {
-            attrsMap["start_date"] = toXmlrpcValue(taskStartDate);
+            attrsMap.add("start_date", taskStartDate);
         }
     }
 
@@ -135,52 +128,47 @@ Task *Task::create(Shotgun *sg,
     {
         if (taskEndDate == "now")
         {
-            attrsMap["due_date"] = toXmlrpcValue(currDateStr());
+            attrsMap.add("due_date", currDateStr());
         }
         else
         {
-            attrsMap["due_date"] = toXmlrpcValue(taskEndDate);
+            attrsMap.add("due_date", taskEndDate);
         }
     }
 
     // taskStatus
     if (taskStatus != "")
     {
-        attrsMap["sg_status_list"] = toXmlrpcValue(taskStatus);
+        attrsMap.add("sg_status_list", taskStatus);
     }
 
     // taskColor
     if (taskColor != "")
     {
-        attrsMap["color"] = toXmlrpcValue(taskColor);
+        attrsMap.add("color", taskColor);
     }
 
-    return sg->createEntity<Task>(Dict(attrsMap));
+    return sg->createEntity<Task>(attrsMap);
 }
 
 // *****************************************************************************
-SgArray Task::populateReturnFields()
+List Task::populateReturnFields()
 {
-    SgArray returnFields;
-
-    returnFields.push_back(toXmlrpcValue("id"));
-    returnFields.push_back(toXmlrpcValue("project"));
-    returnFields.push_back(toXmlrpcValue("created_at"));
-    returnFields.push_back(toXmlrpcValue("updated_at"));
-
-    returnFields.push_back(toXmlrpcValue("content"));
-    returnFields.push_back(toXmlrpcValue("task_assignees"));
-    returnFields.push_back(toXmlrpcValue("color"));
-    returnFields.push_back(toXmlrpcValue("due_date"));
-    returnFields.push_back(toXmlrpcValue("duration"));
-    returnFields.push_back(toXmlrpcValue("entity"));
-    returnFields.push_back(toXmlrpcValue("milestone"));
-    returnFields.push_back(toXmlrpcValue("start_date"));
-    returnFields.push_back(toXmlrpcValue("sg_status_list"));
-//    returnFields.push_back(toXmlrpcValue("sg_system_task_type")); // Seems no longer exist
-    returnFields.push_back(toXmlrpcValue("sg_view_order"));
-
-    return returnFields;
+    return List("id")
+           .append("project")
+           .append("created_at")
+           .append("updated_at")
+           .append("content")
+           .append("task_assignees")
+           .append("color")
+           .append("due_date")
+           .append("duration")
+           .append("entity")
+           .append("milestone")
+           .append("start_date")
+           .append("sg_status_list")
+           //.append("sg_system_task_type") // Seems no longer exist
+           .append("sg_view_order");
 }
 
 // *****************************************************************************
@@ -193,14 +181,14 @@ const EntityPtrs Task::sgAssignees() const
 // *****************************************************************************
 void Task::sgAssignees(const Strings &val)
 {
-    SgArray assigneeLinkArray;
+    List assigneeLinkArray;
 
     for (size_t i = 0; i < val.size(); i++)
     {
         try
         {
             HumanUser *user = m_sg->findHumanUserByLogin(val[i]);
-            assigneeLinkArray.push_back(toXmlrpcValue(user->asLink()));
+            assigneeLinkArray.append(user->asLink());
    
             delete user;
         }
@@ -209,7 +197,7 @@ void Task::sgAssignees(const Strings &val)
             try
             {
                 Group *group = m_sg->findGroupByName(val[i]);
-                assigneeLinkArray.push_back(toXmlrpcValue(group->asLink()));
+                assigneeLinkArray.append(group->asLink());
 
                 delete group;
             }
@@ -236,13 +224,13 @@ std::string toStdString(const Shotgun::Task &task)
 // *****************************************************************************
 std::string toStdString(const Shotgun::Tasks &tasks)
 {
-    Shotgun::SgArray array;
+    Shotgun::List list;
     for (size_t i = 0; i < tasks.size(); i++)
     {
-        array.push_back(tasks[i].attrs());
+        list.append(tasks[i].attrs());
     }
     
-    return toStdString(Shotgun::toXmlrpcValue(array));
+    return toStdString(list);
 }
 
 // *****************************************************************************

@@ -64,7 +64,7 @@ namespace Shotgun {
 
 // Define the ClassRegistry
 typedef Entity* (*FactoryFunc)(Shotgun *, const xmlrpc_c::value &);
-typedef SgArray (*PopulateReturnFieldsFunc) ();
+typedef List (*PopulateReturnFieldsFunc) ();
 typedef std::pair<FactoryFunc, PopulateReturnFieldsFunc> RegistryFuncPair;
 typedef std::map<std::string, RegistryFuncPair> ClassRegistry;
 
@@ -74,7 +74,7 @@ class NoteMixin;
 // *****************************************************************************
 class Shotgun
 {
-    friend class Entity; // So that Entity class can call its protected findEntity(..).
+    friend class Entity; 
     friend class TaskMixin;
     friend class NoteMixin;
 
@@ -87,7 +87,7 @@ public:
     const std::string &serverURL() const { return m_serverURL; }
     const std::string &authKey() const { return m_authKey; }
     const std::string &api() const { return m_api; }
-    const SgMap &authMap() const { return m_authMap; } 
+    const Dict &authMap() const { return m_authMap; } 
 
     Method *method(const std::string &methodName) 
         { return new Method(this, methodName); }
@@ -96,7 +96,6 @@ public:
                        const FactoryFunc &factoryFunc,
                        const PopulateReturnFieldsFunc &populateFunc);
 
-#warning Should the create**(..) functions be removed from this lib?
     //-----------------------------------------------------------------------
     // Project Entity
     Project *createProject(const std::string &projectName, const std::string &projectCode) 
@@ -104,8 +103,7 @@ public:
     Project *findProjectByCode(const std::string &projectCode);
     Project *findProjectByName(const std::string &projectName);
     ProjectPtrs allProjects();
-    bool deleteProjectById(const int id) { return Entity::deleteSGEntity(this, "Project", id); }
-    SgMap getProjectLink(const std::string &projectCode);
+    Dict getProjectLink(const std::string &projectCode);
 
     //------------------------------------------------------------------------
     // Sequence Entity
@@ -113,7 +111,6 @@ public:
         { return Sequence::create(this, projectCode, sequenceName); }
     Sequence *findSequenceByName(const std::string &projectCode, const std::string &sequenceName);
     SequencePtrs findSequencesByProject(const std::string &projectCode, const int limit = 0);
-    bool deleteSequenceById(const int id) { return Entity::deleteSGEntity(this, "Sequence", id); }
 
     //------------------------------------------------------------------------
     // Shot Entity
@@ -121,7 +118,6 @@ public:
         { return Shot::create(this, shotName, shotType); }
     Shot *findShotByName(const std::string &shotName);
     ShotPtrs findShotsByProject(const std::string &projectCode, const int limit = 0);
-    bool deleteShotById(const int id) { return Entity::deleteSGEntity(this, "Shot", id); }
 
     //------------------------------------------------------------------------
     // Version Entity
@@ -135,7 +131,6 @@ public:
     VersionPtrs findVersionsByReviewStatus(const std::string &projectCode, 
                                            const std::string &reviewStatus,
                                            const int limit = 0);
-    bool deleteVersionById(const int id) { return Entity::deleteSGEntity(this, "Version", id); }
 
     //-----------------------------------------------------------------------
     // HumanUser Entity
@@ -146,7 +141,6 @@ public:
     HumanUser *findHumanUserById(const int userId);
     HumanUser *findHumanUserByLogin(const std::string &userLogin);
     HumanUser *findRetiredHumanUser(const std::string &userLogin);
-    bool deleteHumanUserById(const int id) { return Entity::deleteSGEntity(this, "HumanUser", id); }
 
     //------------------------------------------------------------------------
     // Element Entity
@@ -158,7 +152,6 @@ public:
     ElementPtrs findElementsByProject(const std::string &projectCode, 
                                       const std::string &elementType = "",
                                       const int limit = 0);
-    bool deleteElementById(const int id) { return Entity::deleteSGEntity(this, "Element", id); }
 
     //------------------------------------------------------------------------
     // Asset Entity
@@ -171,7 +164,6 @@ public:
     AssetPtrs findAssetsByProject(const std::string &projectCode, 
                                   const std::string &assetType = "",
                                   const int limit = 0);
-    bool deleteAssetById(const int id) { return Entity::deleteSGEntity(this, "Asset", id); }
 
     //------------------------------------------------------------------------
     // Delivery Entity
@@ -182,7 +174,6 @@ public:
     DeliveryPtrs findDeliveriesByProject(const std::string &projectCode, 
                                          const std::string &deliveryStatus = "",
                                          const int limit = 0);
-    bool deleteDeliveryById(const int id) { return Entity::deleteSGEntity(this, "Delivery", id); }
 
     //------------------------------------------------------------------------
     // PublishEvent Entity
@@ -196,7 +187,6 @@ public:
     PublishEventPtrs findPublishEventsByProject(const std::string &projectCode, 
                                                 const std::string &publishEventType = "",
                                                 const int limit = 0);
-    bool deletePublishEventById(const int id) { return Entity::deleteSGEntity(this, "PublishEvent", id); }
 
     //------------------------------------------------------------------------
     // Review Entity
@@ -209,7 +199,6 @@ public:
     Review *findReviewById(const int &reviewId);
     ReviewPtrs findReviewsByProject(const std::string &projectCode,
                                     const int limit = 0);
-    bool deleteReviewById(const int id) { return Entity::deleteSGEntity(this, "Review", id); }
 
     //------------------------------------------------------------------------
     // ReviewItem Entity
@@ -223,10 +212,9 @@ public:
     ReviewItem *findReviewItemById(const int &reviewItemId);
     ReviewItemPtrs findReviewItemsByProject(const std::string &projectCode, 
                                             const int limit = 0);
-    bool deleteReviewItemById(const int id) { return Entity::deleteSGEntity(this, "ReviewItem", id); }
 
     //------------------------------------------------------------------------
-    // Task
+    // Task Entity
     Task *createTask(const std::string &projectCode,
                     const std::string &taskName,
                     const std::string &taskType,
@@ -236,7 +224,7 @@ public:
                     const std::string &taskStatus = "",
                     const std::string &taskColor = "",
                     const bool taskMilestone = false,
-                    const SgMap &taskEntityLink = SgMap())
+                    const Dict &taskEntityLink = Dict())
         { return Task::create(this, 
                               projectCode,
                               taskName,
@@ -254,14 +242,13 @@ public:
                              const std::string &linkEntityType = "",
                              const int limit = 0);
     TaskPtrs findTasksByLinkEntity(const std::string &projectCode,
-                                   const SgMap &linkEntity,
+                                   const Dict &linkEntity,
                                    const int limit = 0);
     TaskPtrs findTasksByMilestone(const std::string &projectCode,
                                   const std::string &shotName,
                                   const int limit = 0);
     TaskPtrs findTasksByProject(const std::string &projectCode,
                                 const int limit = 0);
-    bool deleteTaskById(const int id) { return Entity::deleteSGEntity(this, "Task", id); }
 
     //------------------------------------------------------------------------
     // Group Entity
@@ -269,10 +256,9 @@ public:
         { return Group::create(this, groupName); }
     Group *findGroupByName(const std::string &groupName);
     Group *findGroupById(const int &groupId);
-    bool deleteGroupById(const int id) { return Entity::deleteSGEntity(this, "Group", id); }
 
     //------------------------------------------------------------------------
-    // Note
+    // Note Entity
     Note *createNote(const std::string &projectCode,
                     const std::string &noteFromUserName,
                     const Strings &noteToUserNames = Strings(),
@@ -280,7 +266,7 @@ public:
                     const std::string &noteSubject = "",
                     const std::string &noteBody = "",
                     const std::string &noteType = "",
-                    const SgArray &noteLinks = SgArray(),
+                    const List &noteLinks = List(),
                     const std::string &noteOrigin = "")
         { return Note::create(this, 
                               projectCode,
@@ -300,10 +286,9 @@ public:
                                const std::string &userName,
                                const int limit = 0);
     NotePtrs findNotesByLinks(const std::string &projectCode,
-                              const SgArray &noteLinks = SgArray(),
+                              const List &noteLinks = List(),
                               const std::string &noteType = "",
                               const int limit = 0);
-    bool deleteNoteById(const int id) { return Entity::deleteSGEntity(this, "Note", id); }
 
     //------------------------------------------------------------------------
     // Playlist Entity
@@ -312,22 +297,23 @@ public:
         { return Playlist::create(this, projectCode, playlistName); }
     Playlist *findPlaylistByName(const std::string &projectCode, const std::string &playlistName);
     PlaylistPtrs findPlaylistsByProject(const std::string &projectCode, const int limit = 0);
-    bool deletePlaylistById(const int id) { return Entity::deleteSGEntity(this, "Playlist", id); }
 
     //------------------------------------------------------------------------
-    // Generic find function by entity type and id
-    Entity *findEntityById(const std::string &entityType, const int &id);
-
     template <class T>
     T *createEntity(const Dict &data,
                     const List &extraReturnFields = List());
 
+    //------------------------------------------------------------------------
+    Entity *findEntityById(const std::string &entityType, const int &id);
+
+    //------------------------------------------------------------------------
     template <class T>
     T *findEntity(const FilterBy &filterList = FilterBy(),
                   const List &extraReturnFields = List(),
                   const bool retiredOnly = false,
                   const SortBy &order = SortBy());
 
+    //------------------------------------------------------------------------
     template <class T>
     std::vector<T *> findEntities(const FilterBy &filterList = FilterBy(),
                                   const int limit = 0,
@@ -335,23 +321,22 @@ public:
                                   const bool retiredOnly = false,
                                   const SortBy &order = SortBy());
 
-#if 0
+    //------------------------------------------------------------------------
     template <class T>
-    T *updateEntity(const int entityId,
-                    const List &fieldsToUpdate);
-#endif
+    bool deleteEntity(const int id);
 
 protected:
     //----------------------------------------------------------------------
     // This factory function creates an array of entity object pointers which 
     // link to the existing Shotgun entities. The size of the array can be 0. 
-    EntityPtrs entityFactoryFind(const std::string &entityType, SgMap &findMap);
+    EntityPtrs entityFactoryFind(const std::string &entityType, Dict &findMap);
 
     //----------------------------------------------------------------------
     // This factory function creates an entity object pointer which links to 
     // a newly-created Shotgun entity.
-    Entity *entityFactoryCreate(const std::string &entityType, SgMap &data);
+    Entity *entityFactoryCreate(const std::string &entityType, Dict &data);
 
+    //----------------------------------------------------------------------
     // Overloaded function that is used within this library
     Entity *findEntity(const std::string &entityType,
                        const FilterBy &filterList = FilterBy(),
@@ -364,7 +349,7 @@ protected:
     std::string m_api;
     xmlrpc_c::clientXmlTransport_curl m_transport;
     xmlrpc_c::client_xml *m_client;
-    SgMap m_authMap;
+    Dict m_authMap;
 
 private:
     ClassRegistry m_classRegistry;
@@ -379,9 +364,9 @@ template <class T>
 T *Shotgun::createEntity(const Dict &data,
                          const List &extraReturnFields)
 {
-    SgMap createMap = Entity::buildCreateMap(T::type(),
-                                             data.value(),
-                                             extraReturnFields.value());
+    Dict createMap = Entity::buildCreateMap(T::type(),
+                                            data,
+                                            extraReturnFields);
 
     Entity *entity = this->entityFactoryCreate(T::type(), createMap);
     if (T *t = dynamic_cast<T *>(entity))
@@ -403,7 +388,7 @@ T *Shotgun::findEntity(const FilterBy &filterList,
 {
     Entity *entity = findEntity(T::type(),
                                 filterList,
-                                extraReturnFields.value(),
+                                extraReturnFields,
                                 retiredOnly,
                                 order);
 
@@ -413,7 +398,7 @@ T *Shotgun::findEntity(const FilterBy &filterList,
     }
     else
     {
-        throw SgEntityDynamicCastError("template type in function: Entity::findEntity(..)");
+        throw SgEntityDynamicCastError(T::type());
     }
 
                             
@@ -427,49 +412,38 @@ std::vector<T *> Shotgun::findEntities(const FilterBy &filterList,
                                        const bool retiredOnly,
                                        const SortBy &order)
 {
-    SgMap findMap = Entity::buildFindMap(T::type(),
-                                         filterList,
-                                         extraReturnFields.value(),
-                                         retiredOnly,
-                                         limit,
-                                         order);
+    Dict findMap = Entity::buildFindMap(T::type(),
+                                        filterList,
+                                        extraReturnFields,
+                                        retiredOnly,
+                                        limit,
+                                        order);
 
     EntityPtrs entities = this->entityFactoryFind(T::type(), findMap);
     std::vector<T *> outEntities;
 
-#warning May consider throwing error if casting fails
     for (size_t i = 0; i < entities.size(); i++)
     {
         if (T *t = dynamic_cast<T *>(entities[i]))
         {
              outEntities.push_back(t);
         }
+        else
+        {
+             throw SgEntityDynamicCastError(T::type());
+        }
     }
 
     return outEntities;
 }
 
-#if 0
+
 // *****************************************************************************
 template <class T>
-T *Shotgun::updateEntity(const int entityId,
-                         const List &fieldsToUpdate)
+bool Shotgun::deleteEntity(const int id)
 {
-    SgMap updateMap = Entity::buildUpdateMap(T::type(),
-                                             entityId,
-                                             fieldsToUpdate.value());
-
-    Entity *entity = this->entityFactoryUpdate(T::type(), updateMap);
-    if (T *t = dynamic_cast<T *>(entity))
-    {
-        return t;
-    }
-    else
-    {
-        throw SgEntityDynamicCastError(T::type());
-    }
+    return Entity::deleteSGEntity(this, T::type(), id);
 }
-#endif
 
 // *****************************************************************************
 } // End namespace Shotgun

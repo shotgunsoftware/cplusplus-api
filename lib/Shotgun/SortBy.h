@@ -36,6 +36,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <string>
 
 #include <Shotgun/types.h>
+#include <Shotgun/List.h>
+#include <Shotgun/Dict.h>
 
 namespace Shotgun {
 
@@ -44,7 +46,7 @@ class SortBy
 {
 public:
     SortBy();
-    SortBy(const SgArray &sorts);
+    SortBy(const List &sorts);
 
     SortBy(const std::string &fieldName,
            const std::string &direction = "asc")
@@ -52,9 +54,10 @@ public:
          then(fieldName, direction);      
     }
 
-    const SgArray &sorts() const { return m_sorts; }
+    const List &sorts() const { return m_sorts; }
     const bool empty() const { return m_sorts.empty(); }
     const int size() const { return m_sorts.size(); }
+    void clear() { m_sorts.clear(); }
 
     SortBy &operator=(const SortBy &that)
     {
@@ -71,7 +74,7 @@ public:
     SortBy &then(const SortBy &that);
 
 protected:
-    SgArray m_sorts;
+    List m_sorts;
 };
 
 } // End namespace Shotgun

@@ -77,34 +77,28 @@ PublishEvent *PublishEvent::create(Shotgun *sg,
     }
     catch (SgEntityNotFoundError)
     {
-        SgMap attrsMap;
-        attrsMap["project"] = toXmlrpcValue(sg->getProjectLink(projectCode));
-        attrsMap["code"] = toXmlrpcValue(publishEventName);
+        Dict attrsMap = Dict("project", sg->getProjectLink(projectCode))
+                        .add("code", publishEventName);
 
-        return sg->createEntity<PublishEvent>(Dict(attrsMap));
+        return sg->createEntity<PublishEvent>(attrsMap);
     }
 }
 
 // *****************************************************************************
-SgArray PublishEvent::populateReturnFields()
+List PublishEvent::populateReturnFields()
 {
-    SgArray returnFields;
-
-    returnFields.push_back(toXmlrpcValue("id"));
-    returnFields.push_back(toXmlrpcValue("project"));
-    returnFields.push_back(toXmlrpcValue("created_at"));
-    returnFields.push_back(toXmlrpcValue("updated_at"));
-
-    returnFields.push_back(toXmlrpcValue("code"));
-    returnFields.push_back(toXmlrpcValue("sg_file"));
-    //returnFields.push_back(toXmlrpcValue("sg_format"));
-    returnFields.push_back(toXmlrpcValue("sg_preview_hd_qt"));
-    returnFields.push_back(toXmlrpcValue("sg_preview_qt"));
-    returnFields.push_back(toXmlrpcValue("sg_rev"));
-    returnFields.push_back(toXmlrpcValue("sg_resolution"));
-    returnFields.push_back(toXmlrpcValue("sg_type"));
-
-    return returnFields;
+    return List("id")
+           .append("project")
+           .append("created_at")
+           .append("updated_at")
+           .append("code")
+           .append("sg_file")
+           //.append("sg_format")
+           .append("sg_preview_hd_qt")
+           .append("sg_preview_qt")
+           .append("sg_rev")
+           .append("sg_resolution")
+           .append("sg_type");
 }
 
 } // End namespace Shotgun
@@ -119,13 +113,13 @@ std::string toStdString(const Shotgun::PublishEvent &publishEvent)
 // *****************************************************************************
 std::string toStdString(const Shotgun::PublishEvents &publishEvents)
 {
-    Shotgun::SgArray array;
+    Shotgun::List list;
     for (size_t i = 0; i < publishEvents.size(); i++)
     {
-        array.push_back(publishEvents[i].attrs());
+        list.append(publishEvents[i].attrs());
     }
     
-    return toStdString(Shotgun::toXmlrpcValue(array));
+    return toStdString(list);
 }
 
 // *****************************************************************************

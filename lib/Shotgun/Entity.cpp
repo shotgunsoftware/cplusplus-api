@@ -44,7 +44,6 @@ namespace Shotgun {
 // *****************************************************************************
 Entity::Entity(Shotgun *sg)
     : m_sg(sg), m_invalidAttrMode(INVALID_ATTR_THROW_EXCEPTION)
-    //: m_sg(sg), m_invalidAttrMode(INVALID_ATTR_USE_DEFAULT)
 {
     m_attrs = NULL;
 
@@ -57,7 +56,7 @@ Entity::~Entity()
 }
 
 // *****************************************************************************
-xmlrpc_c::value Entity::createSGEntity(Shotgun *sg, const SgMap &createMap)
+xmlrpc_c::value Entity::createSGEntity(Shotgun *sg, const Dict &createMap)
 {
     Method *md = sg->method("create");
 
@@ -70,26 +69,29 @@ xmlrpc_c::value Entity::createSGEntity(Shotgun *sg, const SgMap &createMap)
 
     if (rawResult.type() != xmlrpc_c::value::TYPE_NIL)
     {
-        results = toXmlrpcValue(getAttrValueAsMap("results",
-                                                  SgMap(xmlrpc_c::value_struct(rawResult))));
+        results = getAttrValue("results", Dict(rawResult));
     }
 
     return results;
 }
 
 // *****************************************************************************
-SgArray Entity::findSGEntities(Shotgun *sg, SgMap &findMap)
+List Entity::findSGEntities(Shotgun *sg, Dict &findMap)
 {
     Method *md = sg->method("read");
 
-    SgArray entityArray;
+    List entityList;
 
     // Retrieve "limit" from the findMap because it is a field unrecognized
     // by Shotgun and we merely attach it to findMap to pass it over from
     // buildFindMap(..) to this function. So need to remove it from findMap
     // afterwards.
-    int limit = getAttrValueAsInt("limit", findMap, 0, INVALID_ATTR_USE_DEFAULT);
-    findMap.erase("limit");
+    int limit = 0;
+    if (findMap.find("limit"))
+    {
+        limit = findMap.value<int>("limit");
+        findMap.erase("limit");
+    }
 
     bool done = false;
     while (!done)
@@ -101,7 +103,7 @@ SgArray Entity::findSGEntities(Shotgun *sg, SgMap &findMap)
         // api3 returns a struct - so convert it to an array of entities
         xmlrpc_c::value rawResult = md->call(params);
 
-        SgArray entities = Entity::getFindResultEntityList(rawResult);
+        List entities = Entity::getFindResultEntityList(rawResult);
 
         if (entities.size() == 0)
         {
@@ -109,74 +111,51 @@ SgArray Entity::findSGEntities(Shotgun *sg, SgMap &findMap)
         }
         else
         {
-            entityArray.insert(entityArray.end(), entities.begin(), entities.end());
+            entityList.extend(entities);
 
-            SgMap resultPaging = Entity::getResultPagingInfo(rawResult);
+            Dict resultPaging = Entity::getResultPagingInfo(rawResult);
             int entityCount = getAttrValueAsInt("entity_count", resultPaging);
 
-            if (limit > 0 && entityArray.size() >= limit)
+            if (limit > 0 && entityList.size() >= limit)
             {
-                entityArray.erase(entityArray.begin()+limit, entityArray.end());
+                entityList.erase(limit, entityList.size());
                 done = true;
             }
-            else if (entityArray.size() == entityCount)
+            else if (entityList.size() == entityCount)
             {
                 done = true;
             }
             else
             {
                 // Erase the current "paging" field in the findMap
-                SgMap findMapPaging = getAttrValueAsMap("paging", 
-                                                        findMap,
-                                                        SgMap(),
-                                                        Entity::INVALID_ATTR_USE_DEFAULT);
-                if (findMapPaging.size() > 0) findMap.erase("paging");
-
+                Dict findMapPaging;
+                if (findMap.find("paging"))
+                {
+                    findMapPaging = findMap.value<Dict>("paging");
+                    findMap.erase("paging");
+                }
 
                 // Increase the "current_page" for the findMap "paging".
-                SgMap newFindMapPaging;
-                newFindMapPaging["current_page"] = toXmlrpcValue(getAttrValueAsInt("current_page", findMapPaging)+1);
-                newFindMapPaging["entities_per_page"] = toXmlrpcValue(getAttrValueAsInt("entities_per_page", findMapPaging));
-                findMap["paging"] = toXmlrpcValue(newFindMapPaging);
+                findMap.add("paging", Dict("current_page", getAttrValueAsInt("current_page", findMapPaging)+1)
+                                      .add("entities_per_page", getAttrValueAsInt("entities_per_page", findMapPaging)));
             }
         }
     }
 
-    return entityArray;
+    return entityList;
 }
-
-#if 0
-// *****************************************************************************
-xmlrpc_c::value Entity::updateSGEntity(Shotgun *sg, const SgMap &updateMap)
-{
-    Method *md = sg->method("update");
-
-    xmlrpc_c::paramList params;
-    params.add(toXmlrpcValue(sg->authMap()));
-    params.add(toXmlrpcValue(updateMap));
-
-    xmlrpc_c::value rawResult = md->call(params); 
-    xmlrpc_c::value results;
-
-    if (rawResult.type() != xmlrpc_c::value::TYPE_NIL)
-    {
-        results = toXmlrpcValue(getAttrValueAsMap("results",
-                                                  SgMap(xmlrpc_c::value_struct(rawResult))));
-    }
-
-    return results;
-}
-#endif
 
 // *****************************************************************************
 xmlrpc_c::value Entity::updateSGEntity(Shotgun *sg, 
                                        const std::string &entityType, 
                                        const int entityId,
-                                       const SgArray &fieldsToUpdate)
+                                       const List &fieldsToUpdate)
 {
     Method *md = sg->method("update");
 
-    SgMap updateMap = buildUpdateMap(entityType, entityId, fieldsToUpdate);
+    Dict updateMap = Dict("type", entityType)
+                     .add("id", entityId)
+                     .add("fields", fieldsToUpdate);
 
     xmlrpc_c::paramList params;
     params.add(toXmlrpcValue(sg->authMap()));
@@ -187,8 +166,8 @@ xmlrpc_c::value Entity::updateSGEntity(Shotgun *sg,
 
     if (rawResult.type() != xmlrpc_c::value::TYPE_NIL)
     {
-        results = toXmlrpcValue(getAttrValueAsMap("results",
-                                                  SgMap(xmlrpc_c::value_struct(rawResult))));
+        results = getAttrValue("results",
+                               Dict(rawResult));
     }
 
     return results;
@@ -197,13 +176,12 @@ xmlrpc_c::value Entity::updateSGEntity(Shotgun *sg,
 // *****************************************************************************
 bool Entity::deleteSGEntity(Shotgun *sg,
                             const std::string &entityType,
-                            const int id)
+                            const int entityId)
 {
     Method *md = sg->method("delete");
 
-    SgMap deleteMap;
-    deleteMap["type"] = toXmlrpcValue(entityType);
-    deleteMap["id"] = toXmlrpcValue(id);
+    Dict deleteMap = Dict("type", entityType)
+                     .add("id", entityId);
 
     xmlrpc_c::paramList params;
     params.add(toXmlrpcValue(sg->authMap()));
@@ -211,45 +189,39 @@ bool Entity::deleteSGEntity(Shotgun *sg,
 
     xmlrpc_c::value rawResult = md->call(params); 
 
-    return getAttrValueAsBool("results", SgMap(xmlrpc_c::value_struct(rawResult)));
+    return getAttrValueAsBool("results", Dict(rawResult));
 }
 
 // *****************************************************************************
-SgArray Entity::getFindResultEntityList(xmlrpc_c::value &rawResult)
+List Entity::getFindResultEntityList(xmlrpc_c::value &rawResult)
 {
-    SgArray entityArray;
+    List entityList;
 
     if (rawResult.type() != xmlrpc_c::value::TYPE_NIL)
     {
-        xmlrpc_c::value results = toXmlrpcValue(getAttrValueAsMap("results", 
-                                                                  SgMap(xmlrpc_c::value_struct(rawResult))));
-        xmlrpc_c::value entities = toXmlrpcValue(getAttrValueAsArray("entities", 
-                                                                     SgMap(xmlrpc_c::value_struct(results))));
-        entityArray = xmlrpc_c::value_array(entities).vectorValueValue();
+        Dict results = getAttrValueAsDict("results", Dict(rawResult));
+        entityList = getAttrValueAsList("entities", results);
     }
 
-    return entityArray;
+    return entityList;
 }
 
 // *****************************************************************************
-SgMap Entity::getResultPagingInfo(xmlrpc_c::value &rawResult)
+Dict Entity::getResultPagingInfo(xmlrpc_c::value &rawResult)
 {
-    SgMap pagingInfoMap;
+    Dict pagingInfoMap;
 
     if (rawResult.type() != xmlrpc_c::value::TYPE_NIL)
     {
-        xmlrpc_c::value results = toXmlrpcValue(getAttrValueAsMap("results", 
-                                                                  SgMap(xmlrpc_c::value_struct(rawResult))));
-        xmlrpc_c::value pagingInfo = toXmlrpcValue(getAttrValueAsMap("paging_info", 
-                                                                     SgMap(xmlrpc_c::value_struct(results))));
-        pagingInfoMap = SgMap(xmlrpc_c::value_struct(pagingInfo));
+        Dict results = getAttrValueAsDict("results", Dict(rawResult));
+        pagingInfoMap = getAttrValueAsDict("paging_info", results);
     }
 
     return pagingInfoMap;
 }
 
 // *****************************************************************************
-void Entity::validateLink(const SgMap &link)
+void Entity::validateLink(const Dict &link)
 {
     try
     {
@@ -259,7 +231,7 @@ void Entity::validateLink(const SgMap &link)
     }
     catch (SgAttrError)
     {
-        // TODO: is "name" field mandatory or can it be omitted?
+        // TODO: is "name" field mandatory or optional?
         throw SgAttrLinkError(link);
     }
 }
@@ -269,9 +241,10 @@ void Entity::validateLink(const xmlrpc_c::value &link)
 {
     if (link.type() == xmlrpc_c::value::TYPE_STRUCT)
     {
-        SgMap linkAsMap = SgMap(xmlrpc_c::value_struct(link));
+        Dict linkAsDict;
+        fromXmlrpcValue(link, linkAsDict);
 
-        validateLink(linkAsMap);
+        validateLink(linkAsDict);
     }
     else
     {
@@ -282,8 +255,8 @@ void Entity::validateLink(const xmlrpc_c::value &link)
 // *****************************************************************************
 const std::string Entity::getProjectName() const
 {
-    SgMap project = getAttrValueAsMap("project");
-    std::string projectName = getAttrValueAsString("name", project);
+    Dict projectMap = getAttrValueAsDict("project");
+    std::string projectName = getAttrValueAsString("name", projectMap);
 
     return projectName;
 }
@@ -291,7 +264,7 @@ const std::string Entity::getProjectName() const
 // *****************************************************************************
 const std::string Entity::getProjectCode() const
 {
-    SgMap projectMap = getAttrValueAsMap("project");
+    Dict projectMap = getAttrValueAsDict("project");
     std::string projectName = getAttrValueAsString("name", projectMap);
 
     Project *project = m_sg->findProjectByName(projectName);
@@ -299,20 +272,17 @@ const std::string Entity::getProjectCode() const
 }
 
 // *****************************************************************************
-const SgMap Entity::asLink() const
+const Dict Entity::asLink() const
 {
-    SgMap link;
-    link["type"] = toXmlrpcValue(entityType());
-    link["id"] = toXmlrpcValue(sgId());
-    link["name"] = toXmlrpcValue(sgName());
-
-    return link;
+    return Dict("type", entityType())
+           .add("id", sgId())
+           .add("name", sgName());
 }
 
 // *****************************************************************************
 const std::string Entity::linkEntityType(const std::string &linkName) const
 {
-    SgMap entity = getAttrValueAsMap(linkName);
+    Dict entity = getAttrValueAsDict(linkName);
 
     if (!entity.empty())
     {
@@ -326,90 +296,68 @@ const std::string Entity::linkEntityType(const std::string &linkName) const
 }
 
 // *****************************************************************************
-SgMap Entity::buildCreateMap(const std::string &entityType,
-                             const SgMap &data,
-                             const SgArray &extraReturnFields)
+Dict Entity::buildCreateMap(const std::string &entityType,
+                            const Dict &data,
+                            const List &extraReturnFields)
 {
-    SgMap createMap;
+    Dict createMap;
 
     // -------------------------------------------------------------------
     // "type"
-    createMap["type"] = toXmlrpcValue(entityType);
+    createMap.add("type", entityType);
 
     // -------------------------------------------------------------------
     // "fields"
-    SgArray fields;
-
-    for(SgMap::const_iterator dataIter = data.begin(); dataIter != data.end(); ++dataIter)
+    List fields;
+    for(SgMap::const_iterator dataIter = data.value().begin(); dataIter != data.value().end(); ++dataIter)
     {
-        SgMap field;
-        field["field_name"] = toXmlrpcValue((*dataIter).first);
-        field["value"] = toXmlrpcValue((*dataIter).second);
-
-        fields.push_back(toXmlrpcValue(field));
+        fields.append(Dict("field_name", (*dataIter).first)
+                      .add("value", (*dataIter).second));
     }
     
-    createMap["fields"] = toXmlrpcValue(fields);
+    createMap.add("fields", fields);
 
     // ---------------------------------------------------------------------
     // "return_fields" - the default return fields will be populated in 
     // Shotgun class' entityFactoryCreate(..)
     if (!extraReturnFields.empty())
     {
-        createMap["return_fields"] = toXmlrpcValue(extraReturnFields);
+        createMap.add("return_fields", extraReturnFields);
     } 
 
     return createMap;
 }
 
 // *****************************************************************************
-SgMap Entity::buildUpdateMap(const std::string &entityType,
-                             const int entityId,
-                             const SgArray &fieldsToUpdate)
+Dict Entity::buildFindMap(const std::string &entityType,
+                          const FilterBy &filterList,
+                          const List &extraReturnFields,
+                          const bool retiredOnly,
+                          const int limit,
+                          const SortBy &order)
 {
-    SgMap updateMap;
-
-    updateMap["type"] = toXmlrpcValue(entityType);
-    updateMap["id"] = toXmlrpcValue(entityId);
-    updateMap["fields"] = toXmlrpcValue(fieldsToUpdate);
-
-    return updateMap;
-}
-
-// *****************************************************************************
-SgMap Entity::buildFindMap(const std::string &entityType,
-                           const FilterBy &filterList,
-                           const SgArray &extraReturnFields,
-                           const bool retiredOnly,
-                           const int limit,
-                           const SortBy &order)
-{
-    SgMap findMap;
+    Dict findMap;
 
     // -------------------------------------------------------------------
     // "type"
-    findMap["type"] = toXmlrpcValue(entityType);
+    findMap.add("type", entityType);
 
     // -------------------------------------------------------------------
     // "filters"
     if (!filterList.empty())
     {
-        findMap["filters"] = toXmlrpcValue(filterList.filters());
+        findMap.add("filters", filterList);
     }
     else
     {
         // The "logic_operator" is required, so give some default value       
-        SgMap filters;
-        filters["logical_operator"] = toXmlrpcValue("and");
-        filters["conditions"] = toXmlrpcValue(SgArray());
-
-        findMap["filters"] = toXmlrpcValue(filters);
+        findMap.add("filters", Dict("logical_operator", "and")
+                               .add("conditions", List()));
     }
 
     // -------------------------------------------------------------------
     // "return_only"
-    std::string returnOnly = retiredOnly ? "retired" : "active";
-    findMap["return_only"] = toXmlrpcValue(returnOnly);
+    findMap.add("return_only", retiredOnly ? "retired" : "active");
 
     // -------------------------------------------------------------------
     // "paging"
@@ -433,38 +381,37 @@ SgMap Entity::buildFindMap(const std::string &entityType,
     // but to be safe use 100 for potential large entity data set.
     int maxEntitiesPerPage = 100;
 
-    SgMap paging;
-    paging["current_page"] = toXmlrpcValue(1);
+    Dict paging = Dict("current_page", 1);
     if (limit && limit > 0 && limit < maxEntitiesPerPage) 
     {
-        paging["entities_per_page"] = toXmlrpcValue(limit);
+        paging.add("entities_per_page", limit);
     }
     else
     {
-        paging["entities_per_page"] = toXmlrpcValue(maxEntitiesPerPage);
+        paging.add("entities_per_page", maxEntitiesPerPage);
     }
-    findMap["paging"] = toXmlrpcValue(paging);
+    findMap.add("paging", paging);
 
     // -------------------------------------------------------------------
     // "return_fields" - the default return fields will be populated in 
     // Shotgun class' entityFactoryFind(..)
     if (!extraReturnFields.empty())
     {
-        findMap["return_fields"] = toXmlrpcValue(extraReturnFields);
+        findMap.add("return_fields", extraReturnFields);
     } 
 
     // -------------------------------------------------------------------
     // "sorts" 
     if (!order.empty())
     {
-        findMap["sorts"] = toXmlrpcValue(order.sorts());
+        findMap.add("sorts", order);
     }
 
     // -------------------------------------------------------------------
     // "limit" - This is a field that is not recognized by Shotgun. But we
-    // add it to findMap so that it can be passed to findEntities(..) where
+    // add it to findMap so that it can be passed to findSGEntities(..) where
     // we need to remove it from the findMap.
-    findMap["limit"] = toXmlrpcValue(limit);
+    findMap.add("limit", limit);
 
     return findMap;
 }
@@ -472,41 +419,35 @@ SgMap Entity::buildFindMap(const std::string &entityType,
 // *****************************************************************************
 const xmlrpc_c::value Entity::getAttrValue(const std::string &attrName) const
 {
-    SgMap attrMap;
+    Dict attrMap;
 
     // First check to see if the attrName exists in m_attrs, which contains a
     // list of default return fields for this entity type. 
     if (m_attrs->type() != xmlrpc_c::value::TYPE_NIL)
     {
-        attrMap = SgMap(xmlrpc_c::value_struct(*m_attrs));
+        attrMap = Dict(*m_attrs);
 
-        SgMap::const_iterator foundIter = attrMap.find(attrName);
-
-        if (foundIter != attrMap.end())
+        if (attrMap.find(attrName))
         {
-            return (*foundIter).second;
+            return attrMap[attrName];
         }
     }
     
     // If attrName is not in m_attrs, do a fresh search in Shotgun using the
-    // entity's id because id is a required return field of all entity types
+    // entity's id because id is a default return field of all entity types
     // and it has already been retrieved at this point.
     // ------------------------------------------------------------------
-    // "return fields" - add attrName to the list of return fields
-    SgArray returnFields;
-    returnFields.push_back(toXmlrpcValue(attrName));
-
+    // Add attrName to the list of return fields
     Entity *entity = m_sg->findEntity(m_type,
                                       FilterBy("id", "is", sgId()),
-                                      returnFields);
+                                      List(attrName));
 
-    attrMap = SgMap(xmlrpc_c::value_struct(entity->attrs()));
+    attrMap = Dict(entity->attrs());
     delete entity;
 
-    SgMap::const_iterator foundIter = attrMap.find(attrName);
-    if (foundIter != attrMap.end())
+    if (attrMap.find(attrName))
     {
-        return (*foundIter).second;
+        return attrMap[attrName];
     }
     else
     {
@@ -517,34 +458,31 @@ const xmlrpc_c::value Entity::getAttrValue(const std::string &attrName) const
 // *****************************************************************************
 // static
 const xmlrpc_c::value Entity::getAttrValue(const std::string &attrName, 
-                                           const SgMap &attrsMap)
+                                           const Dict &attrsMap)
 {
-    SgMap map;
     if (!attrsMap.empty())
     {
-        map = attrsMap;
+        if (attrsMap.find(attrName))
+        {
+            return attrsMap[attrName];
+        }
+        else
+        {
+            throw SgAttrNotFoundError(attrName);
+        }
     }
     else
     {
         throw SgEmptyAttrMapError();
     }
 
-    SgMap::const_iterator foundIter = map.find(attrName);
-
-    if (foundIter != map.end())
-    {
-        return (*foundIter).second;
-    }
-    else
-    {
-        throw SgAttrNotFoundError(attrName);
-    }
 }
 
 // *****************************************************************************
-void Entity::setAttrValue(const std::string &attrName, 
-                          const xmlrpc_c::value &attrValue,
-                          const SgArray &multiValues)
+void Entity::setAttrValue(const std::string &fieldName, 
+                          const xmlrpc_c::value &fieldValue,
+                          const std::string &multiEntityUpdateMode,
+                          const Dict &parentEntity)
 {
     // This involves two steps:
     // (1) Update the Shotgun records
@@ -554,61 +492,51 @@ void Entity::setAttrValue(const std::string &attrName,
     {
         // -------------------------------------------------------------------------
         // Update the Shotgun records
-        SgArray fields;
+        Dict field = Dict("field_name", fieldName)
+                     .add("value", fieldValue);
 
-        SgMap field;
-        field["field_name"] = toXmlrpcValue(attrName); 
-        field["value"] = toXmlrpcValue(attrValue); 
-        fields.push_back(toXmlrpcValue(field));
-
-        // TODO: check if this is the correct way of doing it.
-        for (size_t i = 0; i < multiValues.size(); i++)
+        if (multiEntityUpdateMode != "")
         {
-            field.clear();
-            field["field_name"] = toXmlrpcValue(attrName);
-            field["value"] = toXmlrpcValue(multiValues[i]);
-            field["multi_entity_update_mode"] = toXmlrpcValue("add");
-            fields.push_back(toXmlrpcValue(field));
+            field.add("multi_entity_update_mode", multiEntityUpdateMode);
         }
-    
-        // TODO: currently it omits the optional "parent_entity" field.
-        // Don't know if it's needed ever.
-
+        
+        if (!parentEntity.empty())
+        {
+            field.add("parent_entity", parentEntity);
+        }
+        
         xmlrpc_c::value result = updateSGEntity(m_sg,
                                                 m_type,
                                                 sgId(),
-                                                fields);
+                                                List(field));
 
         // -------------------------------------------------------------------------
         // Update the attrbute if it is already in m_attrs. If it's not already
         // there, don't add it.
         if (m_attrs->type() != xmlrpc_c::value::TYPE_NIL)
         {
-            SgMap attrMap = SgMap(xmlrpc_c::value_struct(*m_attrs));
-
-            SgMap::iterator foundIter = attrMap.find(attrName);
-
-            if (foundIter != attrMap.end())
+            Dict attrMap = Dict(*m_attrs);
+            if (attrMap.find(fieldName))
             {
                 // xmlrpc_c::value does not allow re-assignment except for its
                 // pointer type. So erase this entry first, then add a new one.
-                attrMap.erase(foundIter);
-                attrMap[attrName] = toXmlrpcValue(attrValue);
+                attrMap.erase(fieldName);
+                attrMap.add(fieldName, fieldValue);
 
                 // Update the m_attrs as a whole
                 delete m_attrs;
-                m_attrs = new xmlrpc_c::value(xmlrpc_c::value_struct(attrMap));
+                m_attrs = new xmlrpc_c::value(xmlrpc_c::value_struct(attrMap.value()));
             }
         }
     }
     catch (SgEntityXmlrpcError &error)
     {
-        throw SgAttrSetValueError(attrName, error.what());
+        throw SgAttrSetValueError(fieldName, error.what());
     }
 }
 
 // *****************************************************************************
-void Entity::setAttrValue(const SgMap &attrPairs)
+void Entity::setAttrValue(const Dict &fieldNameValuePairs)
 {
     // This involves two steps:
     // (1) Update the Shotgun records
@@ -618,19 +546,17 @@ void Entity::setAttrValue(const SgMap &attrPairs)
     {
         // -------------------------------------------------------------------------
         // Update the Shotgun records
-        SgArray fields;
+        List fields;
 
-        for (SgMap::const_iterator attrIter = attrPairs.begin(); attrIter != attrPairs.end(); ++attrIter)
+        for (SgMap::const_iterator attrIter = fieldNameValuePairs.value().begin(); 
+                                   attrIter != fieldNameValuePairs.value().end(); 
+                                   ++attrIter)
         {
-            SgMap field;
-            field["field_name"] = toXmlrpcValue((*attrIter).first); 
-            field["value"] = toXmlrpcValue((*attrIter).second); 
-            fields.push_back(toXmlrpcValue(field));
+            fields.append(Dict("field_name", (*attrIter).first)
+                          .add("value", (*attrIter).second));
         }
 
-        // TODO: ignored multi_values and "parent_entity" field for now.
-
-        // Update all the field in one call
+        // Update all the fields in one call
         xmlrpc_c::value result = updateSGEntity(m_sg,
                                                 m_type,
                                                 sgId(),
@@ -641,19 +567,19 @@ void Entity::setAttrValue(const SgMap &attrPairs)
         // add them to m_attrs.
         if (m_attrs->type() != xmlrpc_c::value::TYPE_NIL)
         {
-            SgMap attrMap = SgMap(xmlrpc_c::value_struct(*m_attrs));
+            Dict attrMap = Dict(*m_attrs);
             bool updated = false;
         
-            for (SgMap::const_iterator attrIter = attrPairs.begin(); attrIter != attrPairs.end(); ++attrIter)
+            for (SgMap::const_iterator attrIter = fieldNameValuePairs.value().begin(); 
+                                       attrIter != fieldNameValuePairs.value().end(); 
+                                       ++attrIter)
             {
-                SgMap::iterator foundIter = attrMap.find((*attrIter).first);
-
-                if (foundIter != attrMap.end())
+                if (attrMap.find((*attrIter).first))
                 {
                     // xmlrpc_c::value does not allow re-assignment except for its
                     // pointer type. So erase this entry first, then add a new one.
-                    attrMap.erase(foundIter);
-                    attrMap[(*attrIter).first] = toXmlrpcValue((*attrIter).second);
+                    attrMap.erase((*attrIter).first);
+                    attrMap.add((*attrIter).first, (*attrIter).second);
 
                     updated = true;
                 }
@@ -663,13 +589,78 @@ void Entity::setAttrValue(const SgMap &attrPairs)
             if (updated)
             {
                 delete m_attrs;
-                m_attrs = new xmlrpc_c::value(xmlrpc_c::value_struct(attrMap));
+                m_attrs = new xmlrpc_c::value(xmlrpc_c::value_struct(attrMap.value()));
             }
         }
     }
     catch (SgEntityXmlrpcError &error)
     {
-        throw SgAttrSetValueError(attrPairs, error.what());
+        throw SgAttrSetValueError(fieldNameValuePairs, error.what());
+    }
+}
+
+// *****************************************************************************
+void Entity::setAttrValue(const List &fields)
+{
+    // This involves two steps:
+    // (1) Update the Shotgun records
+    // (2) Update the attribute that is already in m_attrs
+
+    try
+    {
+        // -------------------------------------------------------------------------
+        // Update the Shotgun records - update all the fields in one call
+        xmlrpc_c::value result = updateSGEntity(m_sg,
+                                                m_type,
+                                                sgId(),
+                                                fields);
+
+        // -------------------------------------------------------------------------
+        // Update the attrbutes if they are already in m_attrs. If not there, don't 
+        // add them to m_attrs.
+        if (m_attrs->type() != xmlrpc_c::value::TYPE_NIL)
+        {
+            Dict attrMap = Dict(*m_attrs);
+            bool updated = false;
+        
+            for (size_t i = 0; i < fields.size(); i++)
+            {
+                Dict field = Dict(fields[i]);
+
+                if (field.find("field_name") && field.find("value"))
+                {
+                    // ------------------------------------------------------------
+                    // Note that the syntax to get the "field_name" and "value" from
+                    // the Dict type field is different. They all work, but the value()
+                    // func and the operator[] for getting "field_name" uses template,
+                    // but the operator[] for getting "value" is the regular func.
+                    // 
+                    //     std::string fieldName = field.operator[]<std::string>("field_name");
+                    //     std::string fieldName = field.value<std::string>("field_name");
+                    //
+                    //     xmlrpc_c::value fieldValue = field["value"];
+                    // ------------------------------------------------------------
+                    std::string fieldName = field.value<std::string>("field_name");
+                    if (attrMap.find(fieldName))
+                    {
+                        attrMap.erase(fieldName);
+                        attrMap.add(fieldName, field["value"]);
+
+                        updated = true;
+                    }
+                }
+            }
+            // Update the m_attrs as a whole
+            if (updated)
+            {
+                delete m_attrs;
+                m_attrs = new xmlrpc_c::value(xmlrpc_c::value_struct(attrMap.value()));
+            }
+        }
+    }
+    catch (SgEntityXmlrpcError &error)
+    {
+        throw SgAttrSetValueError(fields, error.what());
     }
 }
 
@@ -677,411 +668,172 @@ void Entity::setAttrValue(const SgMap &attrPairs)
 const int Entity::getAttrValueAsInt(const std::string &attrName, 
                                     const int defaultVal) const
 {
-    int result = defaultVal;
-
-    xmlrpc_c::value genericResult = getAttrValue(attrName);
-
-    try
-    {
-        fromXmlrpcValue(genericResult, result);
-    }
-    catch (SgXmlrpcValueTypeError &error)
-    {
-        if (m_invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
-        {
-            throw SgAttrTypeError(attrName,
-                                  error.what());
-        }
-    }
-
-    return result;
+    return getAttrValue<int>(attrName, defaultVal);
 }
 
 // *****************************************************************************
 // static
 const int Entity::getAttrValueAsInt(const std::string &attrName, 
-                                    const SgMap &attrsMap,
+                                    const Dict &attrsMap,
                                     const int defaultVal,
                                     const InvalidAttrMode invalidAttrMode)
 {
-    int result = defaultVal;
-
-    xmlrpc_c::value genericResult = getAttrValue(attrName, attrsMap);
-
-    try
-    {
-        fromXmlrpcValue(genericResult, result);
-    }
-    catch (SgXmlrpcValueTypeError &error)
-    {
-        if (invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
-        {
-            throw SgAttrTypeError(attrName,
-                                  error.what());
-        }
-    }
-
-    return result;
+    return getAttrValue<int>(attrName, attrsMap, defaultVal, invalidAttrMode);
 }
 
 // *****************************************************************************
 const bool Entity::getAttrValueAsBool(const std::string &attrName, 
                                       const bool defaultVal) const
 {
-    bool result = defaultVal;
-
-    xmlrpc_c::value genericResult = getAttrValue(attrName);
-
-    try
-    {
-        fromXmlrpcValue(genericResult, result);
-    }
-    catch (SgXmlrpcValueTypeError &error)
-    {
-        if (m_invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
-        {
-            throw SgAttrTypeError(attrName,
-                                  error.what());
-        }
-    }
-
-    return result;
+    return getAttrValue<bool>(attrName, defaultVal);
 }
 
 // *****************************************************************************
 // static
 const bool Entity::getAttrValueAsBool(const std::string &attrName, 
-                                      const SgMap &attrsMap,
+                                      const Dict &attrsMap,
                                       const bool defaultVal, 
                                       const InvalidAttrMode invalidAttrMode)
 {
-    bool result = defaultVal;
-
-    xmlrpc_c::value genericResult = getAttrValue(attrName, attrsMap);
-
-    try
-    {
-        fromXmlrpcValue(genericResult, result);
-    }
-    catch (SgXmlrpcValueTypeError &error)
-    {
-        if (invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
-        {
-            throw SgAttrTypeError(attrName,
-                                  error.what());
-        }
-    }
-
-    return result;
+    return getAttrValue<bool>(attrName, attrsMap, defaultVal, invalidAttrMode);
 }
 
 // *****************************************************************************
 const double Entity::getAttrValueAsDouble(const std::string &attrName, 
                                           const double defaultVal) const
 {
-    double result = defaultVal;
-
-    xmlrpc_c::value genericResult = getAttrValue(attrName);
-
-    try
-    {
-        fromXmlrpcValue(genericResult, result);
-    }
-    catch (SgXmlrpcValueTypeError &error)
-    {
-        if (m_invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
-        {
-            throw SgAttrTypeError(attrName,
-                                  error.what());
-        }
-    }
-
-    return result;
+    return getAttrValue<double>(attrName, defaultVal);
 }
 
 // *****************************************************************************
 // static
 const double Entity::getAttrValueAsDouble(const std::string &attrName, 
-                                          const SgMap &attrsMap,
+                                          const Dict &attrsMap,
                                           const double defaultVal, 
                                           const InvalidAttrMode invalidAttrMode)
 {
-    double result = defaultVal;
-
-    xmlrpc_c::value genericResult = getAttrValue(attrName, attrsMap);
-
-    try
-    {
-        fromXmlrpcValue(genericResult, result);
-    }
-    catch (SgXmlrpcValueTypeError &error)
-    {
-        if (invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
-        {
-            throw SgAttrTypeError(attrName,
-                                  error.what());
-        }
-    }
-
-    return result;
+    return getAttrValue<double>(attrName, attrsMap, defaultVal, invalidAttrMode);
 }
 
 // *****************************************************************************
 const time_t Entity::getAttrValueAsDatetime(const std::string &attrName, 
                                            const time_t defaultVal) const
 {
-    time_t result = defaultVal;
-
-    xmlrpc_c::value genericResult = getAttrValue(attrName);
-
-    try
-    {
-        fromXmlrpcValue(genericResult, result);
-    }
-    catch (SgXmlrpcValueTypeError &error)
-    {
-        if (m_invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
-        {
-            throw SgAttrTypeError(attrName,
-                                  error.what());
-        }
-    }
-
-    return result;
+    return getAttrValue<time_t>(attrName, defaultVal);
 }
 
 // *****************************************************************************
 // static
 const time_t Entity::getAttrValueAsDatetime(const std::string &attrName, 
-                                            const SgMap &attrsMap,
+                                            const Dict &attrsMap,
                                             const time_t defaultVal, 
                                             const InvalidAttrMode invalidAttrMode)                                          
 {
-    time_t result = defaultVal;
-
-    xmlrpc_c::value genericResult = getAttrValue(attrName, attrsMap);
-
-    try
-    {
-        fromXmlrpcValue(genericResult, result);
-    }
-    catch (SgXmlrpcValueTypeError &error)
-    {
-        if (invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
-        {
-            throw SgAttrTypeError(attrName,
-                                  error.what());
-        }
-    }
-
-    return result;
+    return getAttrValue<time_t>(attrName, attrsMap, defaultVal, invalidAttrMode);
 }
 
 // *****************************************************************************
 const std::string Entity::getAttrValueAsString(const std::string &attrName, 
                                                const std::string &defaultVal) const
 {
-    std::string result = defaultVal;
-
-    xmlrpc_c::value genericResult = getAttrValue(attrName);
-
     try
     {
-        fromXmlrpcValue(genericResult, result);
+        return getAttrValue<std::string>(attrName, defaultVal);
     }
-    catch (SgXmlrpcValueTypeError &error)
+    catch (SgXmlrpcValueIsNilError)
     {
-        if (m_invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
-        {
-            if (genericResult.type() != xmlrpc_c::value::TYPE_NIL)
-            {
-                throw SgAttrTypeError(attrName,
-                                      error.what());
-            }
-            else
-            {
-                // String type can have a default value (i.e. an empty string)
-                // to represent an empty value instead of throwing an exception.
-                result = "";
-            }
-        }
+        // String type can have a default value (i.e. an empty string)
+        // to represent an empty value instead of throwing an exception.
+        return std::string("");
     }
-
-    return result;
 }
 
 // *****************************************************************************
 // static
 const std::string Entity::getAttrValueAsString(const std::string &attrName, 
-                                               const SgMap &attrsMap,
+                                               const Dict &attrsMap,
                                                const std::string &defaultVal, 
                                                const InvalidAttrMode invalidAttrMode)
 {
-    std::string result = defaultVal;
-
-    xmlrpc_c::value genericResult = getAttrValue(attrName, attrsMap);
-
     try
     {
-        fromXmlrpcValue(genericResult, result);
+        return getAttrValue<std::string>(attrName, attrsMap, defaultVal, invalidAttrMode);
     }
-    catch (SgXmlrpcValueTypeError &error)
+    catch (SgXmlrpcValueIsNilError)
     {
-        if (invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
-        {
-            if (genericResult.type() != xmlrpc_c::value::TYPE_NIL)
-            {
-                throw SgAttrTypeError(attrName,
-                                      error.what());
-            }
-            else
-            {
-                // String type can have a default value (i.e. an empty string)
-                // to represent an empty value instead of throwing an exception.
-                result = "";
-            }
-        }
+        // String type can have a default value (i.e. an empty string)
+        // to represent an empty value instead of throwing an exception.
+        return std::string("");
     }
-
-    return result;
 }
 
 // *****************************************************************************
-const SgArray Entity::getAttrValueAsArray(const std::string &attrName, 
-                                          const SgArray &defaultVal) const
+const List Entity::getAttrValueAsList(const std::string &attrName, 
+                                      const List &defaultVal) const
 {
-    SgArray result = defaultVal;
-
-    xmlrpc_c::value genericResult = getAttrValue(attrName);
-
     try
     {
-        fromXmlrpcValue(genericResult, result);
+        return getAttrValue<List>(attrName, defaultVal);
     }
-    catch (SgXmlrpcValueTypeError &error)
+    catch (SgXmlrpcValueIsNilError)
     {
-        if (m_invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
-        {
-            if (genericResult.type() != xmlrpc_c::value::TYPE_NIL)
-            {
-                throw SgAttrTypeError(attrName,
-                                      error.what());
-            }
-            else
-            {
-                // SgArray type can have a default value (i.e. an empty array)
-                // to represent an empty value instead of throwing an exception.
-                result = SgArray();
-            }
-        }
+        // List type can have a default value (i.e. an empty list)
+        // to represent an empty value instead of throwing an exception.
+        return List();
     }
-
-    return result;
 }
 
 // *****************************************************************************
 // static
-const SgArray Entity::getAttrValueAsArray(const std::string &attrName, 
-                                          const SgMap &attrsMap,
-                                          const SgArray &defaultVal, 
-                                          const InvalidAttrMode invalidAttrMode)
-{
-    SgArray result = defaultVal;
-
-    xmlrpc_c::value genericResult = getAttrValue(attrName, attrsMap);
-
-    try
-    {
-        fromXmlrpcValue(genericResult, result);
-    }
-    catch (SgXmlrpcValueTypeError &error)
-    {
-        if (invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
-        {
-            if (genericResult.type() != xmlrpc_c::value::TYPE_NIL)
-            {
-                throw SgAttrTypeError(attrName,
-                                      error.what());
-            }
-            else
-            {
-                // SgArray type can have a default value (i.e. an empty array)
-                // to represent an empty value instead of throwing an exception.
-                result = SgArray();
-            }
-        }
-    }
-
-    return result;
-}
-
-// *****************************************************************************
-const SgMap Entity::getAttrValueAsMap(const std::string &attrName) const
-{
-    //SgMap result = defaultVal;
-    SgMap result;
-
-    xmlrpc_c::value genericResult = getAttrValue(attrName);
-
-    try
-    {
-        fromXmlrpcValue(genericResult, result);
-    }
-    catch (SgXmlrpcValueTypeError &error)
-    {
-        if (m_invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
-        {
-            if (genericResult.type() != xmlrpc_c::value::TYPE_NIL)
-            {
-                throw SgAttrTypeError(attrName,
-                                      error.what());
-            }
-            else
-            {
-                // SgMap type can have a default value (i.e. an empty map)
-                // to represent an empty value instead of throwing an exception.
-                result = SgMap();
-            }
-        }
-    }
-
-    return result;
-}
-
-// *****************************************************************************
-// static
-const SgMap Entity::getAttrValueAsMap(const std::string &attrName, 
-                                      const SgMap &attrsMap,
-                                      const SgMap &defaultVal, 
+const List Entity::getAttrValueAsList(const std::string &attrName, 
+                                      const Dict &attrsMap,
+                                      const List &defaultVal, 
                                       const InvalidAttrMode invalidAttrMode)
 {
-    SgMap result = defaultVal;
-
-    xmlrpc_c::value genericResult = getAttrValue(attrName, attrsMap);
-
     try
     {
-        fromXmlrpcValue(genericResult, result);
+        return getAttrValue<List>(attrName, attrsMap, defaultVal, invalidAttrMode);
     }
-    catch (SgXmlrpcValueTypeError &error)
+    catch (SgXmlrpcValueIsNilError)
     {
-        if (invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
-        {
-            if (genericResult.type() != xmlrpc_c::value::TYPE_NIL)
-            {
-                throw SgAttrTypeError(attrName,
-                                      error.what());
-            }
-            else
-            {
-                // SgMap type can have a default value (i.e. an empty map)
-                // to represent an empty value instead of throwing an exception.
-                result = SgMap();
-            }
-        }
+        // List type can have a default value (i.e. an empty list)
+        // to represent an empty value instead of throwing an exception.
+        return List();
     }
+}
 
-    return result;
+// *****************************************************************************
+const Dict Entity::getAttrValueAsDict(const std::string &attrName) const
+{
+    try
+    {
+        return getAttrValue<Dict>(attrName, Dict());
+    }
+    catch (SgXmlrpcValueIsNilError)
+    {
+        // Dict type can have a default value (i.e. an empty dict)
+        // to represent an empty value instead of throwing an exception.
+        return Dict();
+    }
+}
+
+// *****************************************************************************
+// static
+const Dict Entity::getAttrValueAsDict(const std::string &attrName, 
+                                      const Dict &attrsMap,
+                                      const Dict &defaultVal, 
+                                      const InvalidAttrMode invalidAttrMode)
+{
+    try
+    {
+        return getAttrValue<Dict>(attrName, attrsMap, defaultVal, invalidAttrMode);
+    }
+    catch (SgXmlrpcValueIsNilError)
+    {
+        // Dict type can have a default value (i.e. an empty dict)
+        // to represent an empty value instead of throwing an exception.
+        return Dict();
+    }
 }
 
 // *****************************************************************************
@@ -1093,24 +845,24 @@ const Strings Entity::getAttrValueAsTags(const std::string &attrName) const
 
     if (genericResult.type() == xmlrpc_c::value::TYPE_ARRAY)
     {
-        SgArray array = (xmlrpc_c::value_array(genericResult)).vectorValueValue();
+        List list;
+        fromXmlrpcValue(genericResult, list);
     
-        for (size_t i = 0; i < array.size(); i++)
+        for (size_t i = 0; i < list.size(); i++)
         {
-            if (array[i].type() == xmlrpc_c::value::TYPE_STRUCT)
+            if (list[i].type() == xmlrpc_c::value::TYPE_STRUCT)
             {
-                SgMap map = SgMap(xmlrpc_c::value_struct(array[i]));
+                Dict dict;
+                fromXmlrpcValue(list[i], dict);
 
-                SgMap::const_iterator foundIter = map.find("name");
-
-                if (foundIter != map.end())
+                if (dict.find("name"))
                 {
-                    tags.push_back(std::string(xmlrpc_c::value_string((*foundIter).second)));
+                    tags.push_back(dict.value<std::string>("name"));
                 }
             }
-            else if (array[i].type() == xmlrpc_c::value::TYPE_STRING)
+            else if (list[i].type() == xmlrpc_c::value::TYPE_STRING)
             {
-                tags.push_back(std::string(xmlrpc_c::value_string(array[i])));
+                tags.push_back(std::string(xmlrpc_c::value_string(list[i])));
             }
         }
     }
@@ -1121,7 +873,7 @@ const Strings Entity::getAttrValueAsTags(const std::string &attrName) const
 // *****************************************************************************
 // static
 const Strings Entity::getAttrValueAsTags(const std::string &attrName,
-                                         const SgMap &attrsMap)
+                                         const Dict &attrsMap)
 {
     Strings tags;
 
@@ -1129,24 +881,24 @@ const Strings Entity::getAttrValueAsTags(const std::string &attrName,
 
     if (genericResult.type() == xmlrpc_c::value::TYPE_ARRAY)
     {
-        SgArray array = (xmlrpc_c::value_array(genericResult)).vectorValueValue();
-    
-        for (size_t i = 0; i < array.size(); i++)
+        List list;
+        fromXmlrpcValue(genericResult, list);
+
+        for (size_t i = 0; i < list.size(); i++)
         {
-            if (array[i].type() == xmlrpc_c::value::TYPE_STRUCT)
+            if (list[i].type() == xmlrpc_c::value::TYPE_STRUCT)
             {
-                SgMap map = SgMap(xmlrpc_c::value_struct(array[i]));
+                Dict dict;
+                fromXmlrpcValue(list[i], dict);
 
-                SgMap::const_iterator foundIter = map.find("name");
-
-                if (foundIter != map.end())
+                if (dict.find("name"))
                 {
-                    tags.push_back(std::string(xmlrpc_c::value_string((*foundIter).second)));
+                    tags.push_back(dict.value<std::string>("name"));
                 }
             }
-            else if (array[i].type() == xmlrpc_c::value::TYPE_STRING)
+            else if (list[i].type() == xmlrpc_c::value::TYPE_STRING)
             {
-                tags.push_back(std::string(xmlrpc_c::value_string(array[i])));
+                tags.push_back(std::string(xmlrpc_c::value_string(list[i])));
             }
         }
     }
@@ -1157,7 +909,7 @@ const Strings Entity::getAttrValueAsTags(const std::string &attrName,
 // *****************************************************************************
 const Entity *Entity::getAttrValueAsEntityPtr(const std::string &attrName) const
 {
-    SgMap entity = getAttrValueAsMap(attrName);
+    Dict entity = getAttrValueAsDict(attrName);
 
     if (!entity.empty())
     {
@@ -1177,9 +929,9 @@ const Entity *Entity::getAttrValueAsEntityPtr(const std::string &attrName) const
 // static
 const Entity *Entity::getAttrValueAsEntityPtr(Shotgun *sg, 
                                               const std::string &attrName,
-                                              const SgMap &attrsMap)
+                                              const Dict &attrsMap)
 {
-    SgMap entity = getAttrValueAsMap(attrName, attrsMap);
+    Dict entity = getAttrValueAsDict(attrName, attrsMap);
 
     if (!entity.empty())
     {
@@ -1200,10 +952,10 @@ const EntityPtrs Entity::getAttrValueAsMultiEntityPtr(const std::string &attrNam
 {
     EntityPtrs entities;
 
-    SgArray entityList = getAttrValueAsArray(attrName);
+    List entityList = getAttrValueAsList(attrName);
     for (size_t i = 0; i < entityList.size(); i++)
     {
-        SgMap entity = SgMap(xmlrpc_c::value_struct(entityList[i]));
+        Dict entity = Dict(entityList[i]);
 
         if (!entity.empty())
         {
@@ -1222,14 +974,14 @@ const EntityPtrs Entity::getAttrValueAsMultiEntityPtr(const std::string &attrNam
 // static
 const EntityPtrs Entity::getAttrValueAsMultiEntityPtr(Shotgun *sg, 
                                                       const std::string &attrName,
-                                                      const SgMap &attrsMap)
+                                                      const Dict &attrsMap)
 {
     EntityPtrs entities;
 
-    SgArray entityList = getAttrValueAsArray(attrName, attrsMap);
+    List entityList = getAttrValueAsList(attrName, attrsMap);
     for (size_t i = 0; i < entityList.size(); i++)
     {
-        SgMap entity = SgMap(xmlrpc_c::value_struct(entityList[i]));
+        Dict entity = Dict(entityList[i]);
 
         if (!entity.empty())
         {
@@ -1266,7 +1018,7 @@ const std::string Entity::getAttrValueAsUserLogin(const std::string &attrName) c
 // static
 const std::string Entity::getAttrValueAsUserLogin(Shotgun *sg,
                                                   const std::string &attrName,
-                                                  const SgMap &attrsMap) 
+                                                  const Dict &attrsMap) 
 {
     const Entity *entity = getAttrValueAsEntityPtr(sg, attrName, attrsMap);
     if (const HumanUser *user = dynamic_cast<const HumanUser *>(entity))
@@ -1281,16 +1033,6 @@ const std::string Entity::getAttrValueAsUserLogin(Shotgun *sg,
         delete entity;
         throw SgEntityDynamicCastError("HumanUser");
     }
-}
-
-
-// *****************************************************************************
-void Entity::printAttrs() const
-{
-#warning Fix this: 'toStdString' was not declared in this scope
-#if 0
-    std::cout << toStdString(*m_attrs) << std::endl;
-#endif
 }
 
 } // End namespace Shotgun

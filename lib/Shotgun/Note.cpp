@@ -67,34 +67,33 @@ Note *Note::create(Shotgun *sg,
                    const std::string &noteSubject,
                    const std::string &noteBody,
                    const std::string &noteType,
-                   const SgArray &noteLinks,
+                   const List &noteLinks,
                    const std::string &noteOrigin)
 {
     HumanUser *user = sg->findHumanUserByLogin(noteFromUserName);
 
-    SgMap attrsMap;
-    attrsMap["project"] = toXmlrpcValue(sg->getProjectLink(projectCode));
-    attrsMap["user"] = toXmlrpcValue(user->asLink());
-    attrsMap["subject"] = toXmlrpcValue(noteSubject);
-    attrsMap["content"] = toXmlrpcValue(noteBody);
-    attrsMap["sg_note_type"] = toXmlrpcValue(noteType);
-    attrsMap["sg_note_origin"] = toXmlrpcValue(noteOrigin);
+    Dict attrsMap = Dict("project", sg->getProjectLink(projectCode))
+                    .add("user", user->asLink())
+                    .add("subject", noteSubject)
+                    .add("content", noteBody)
+                    .add("sg_note_type", noteType)
+                    .add("sg_note_origin", noteOrigin);
     
     delete user;
 
     if (noteLinks.size() > 0)
     {
-        attrsMap["note_links"] = toXmlrpcValue(noteLinks);
+        attrsMap.add("note_links", noteLinks);
     }
 
     // "addressings_to"
-    SgArray addressingsTo;
+    List addressingsTo;
     for (size_t i = 0; i < noteToUserNames.size(); i++)
     {
         try
         {
             HumanUser *toUser = sg->findHumanUserByLogin(noteToUserNames[i]);
-            addressingsTo.push_back(toXmlrpcValue(toUser->asLink()));
+            addressingsTo.append(toUser->asLink());
 
             delete toUser;
         }
@@ -103,16 +102,16 @@ Note *Note::create(Shotgun *sg,
             // Do nothing
         }
     }
-    attrsMap["addressings_to"] = toXmlrpcValue(addressingsTo);
+    attrsMap.add("addressings_to", addressingsTo);
 
     // "addressings_cc"
-    SgArray addressingsCc;
+    List addressingsCc;
     for (size_t i = 0; i < noteCcUserNames.size(); i++)
     {
         try
         {
             HumanUser *toUser = sg->findHumanUserByLogin(noteCcUserNames[i]);
-            addressingsCc.push_back(toXmlrpcValue(toUser->asLink()));
+            addressingsCc.append(toUser->asLink());
 
             delete toUser;
         }
@@ -121,42 +120,39 @@ Note *Note::create(Shotgun *sg,
             // Do nothing
         }
     }
-    attrsMap["addressings_cc"] = toXmlrpcValue(addressingsCc);
+    attrsMap.add("addressings_cc", addressingsCc);
 
-    return sg->createEntity<Note>(Dict(attrsMap));
+    return sg->createEntity<Note>(attrsMap);
 }
 
 // *****************************************************************************
-SgArray Note::populateReturnFields()
+List Note::populateReturnFields()
 {
-    SgArray returnFields;
-
-    returnFields.push_back(toXmlrpcValue("id"));
-    returnFields.push_back(toXmlrpcValue("project"));
-    returnFields.push_back(toXmlrpcValue("created_at"));
-    returnFields.push_back(toXmlrpcValue("updated_at"));
-
-    returnFields.push_back(toXmlrpcValue("user"));
-    returnFields.push_back(toXmlrpcValue("content"));
-    returnFields.push_back(toXmlrpcValue("addressings_cc"));
-    returnFields.push_back(toXmlrpcValue("addressings_to"));
-    returnFields.push_back(toXmlrpcValue("sg_status_list"));
-    returnFields.push_back(toXmlrpcValue("subject"));
-    returnFields.push_back(toXmlrpcValue("sg_note_type"));
-    returnFields.push_back(toXmlrpcValue("note_links"));
-
-    return returnFields;
+    return List("id")
+           .append("project")
+           .append("created_at")
+           .append("updated_at")
+           .append("user")
+           .append("content")
+           .append("addressings_cc")
+           .append("addressings_to")
+           .append("sg_status_list")
+           .append("subject")
+           .append("sg_note_type")
+           .append("note_links");
 }
 
 // *****************************************************************************
 Review *Note::getLinkedReview()
 {
-    SgArray links = sgLinks();
+    List links = sgLinks();
 
     for (size_t i = 0; i < links.size(); i++)
     {
-        SgMap linkAsMap = SgMap(xmlrpc_c::value_struct(links[i]));
-        int id = Entity::getAttrValueAsInt("id", linkAsMap);
+        Dict linkAsDict;
+        fromXmlrpcValue(links[i], linkAsDict);
+
+        int id = Entity::getAttrValueAsInt("id", linkAsDict);
 
         return m_sg->findEntity<Review>(FilterBy("id", "is", id));
     }
@@ -167,12 +163,14 @@ Review *Note::getLinkedReview()
 // *****************************************************************************
 Shot *Note::getLinkedShot()
 {
-    SgArray links = sgLinks();
+    List links = sgLinks();
 
     for (size_t i = 0; i < links.size(); i++)
     {
-        SgMap linkAsMap = SgMap(xmlrpc_c::value_struct(links[i]));
-        int id = Entity::getAttrValueAsInt("id", linkAsMap);
+        Dict linkAsDict;
+        fromXmlrpcValue(links[i], linkAsDict);
+
+        int id = Entity::getAttrValueAsInt("id", linkAsDict);
 
         return m_sg->findEntity<Shot>(FilterBy("id", "is", id));
     }
@@ -183,12 +181,14 @@ Shot *Note::getLinkedShot()
 // *****************************************************************************
 Version *Note::getLinkedVersion() 
 {
-    SgArray links = sgLinks();
+    List links = sgLinks();
 
     for (size_t i = 0; i < links.size(); i++)
     {
-        SgMap linkAsMap = SgMap(xmlrpc_c::value_struct(links[i]));
-        int id = Entity::getAttrValueAsInt("id", linkAsMap);
+        Dict linkAsDict;
+        fromXmlrpcValue(links[i], linkAsDict);
+
+        int id = Entity::getAttrValueAsInt("id", linkAsDict);
 
         return m_sg->findEntity<Version>(FilterBy("id", "is", id));
     }
@@ -208,13 +208,13 @@ std::string toStdString(const Shotgun::Note &note)
 // *****************************************************************************
 std::string toStdString(const Shotgun::Notes &notes)
 {
-    Shotgun::SgArray array;
+    Shotgun::List list;
     for (size_t i = 0; i < notes.size(); i++)
     {
-        array.push_back(notes[i].attrs());
+        list.append(notes[i].attrs());
     }
     
-    return toStdString(Shotgun::toXmlrpcValue(array));
+    return toStdString(list);
 }
 
 // *****************************************************************************

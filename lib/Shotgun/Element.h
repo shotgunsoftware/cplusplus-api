@@ -61,9 +61,9 @@ public:
 
     // Set an attribute's value
     void sgAssets(const Assets &val);
-    void sgAssets(const SgArray &val);
+    void sgAssets(const List &val);
     void sgShots(const Shots &val);
-    void sgShots(const SgArray &val); // An array of entity links
+    void sgShots(const List &val); // An array of entity links
     void sgTags(const Strings &val) { setAttrValue("tag_list", toXmlrpcValue(val)); }
     void sgType(const std::string &val) { setAttrValue("sg_element_type", toXmlrpcValue(val)); }
 
@@ -84,7 +84,7 @@ protected:
                            const std::string &elementName,
                            const std::string &elementType);
 
-    static SgArray populateReturnFields();
+    static List populateReturnFields();
 };
 
 } // End namespace Shotgun

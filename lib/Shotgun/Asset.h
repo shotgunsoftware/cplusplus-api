@@ -56,7 +56,7 @@ public:
 
     // Get an attribute's value
     virtual const std::string sgCode() const { return getAttrValueAsString("code"); }
-    virtual const SgArray sgParents() const { return getAttrValueAsArray("parents"); }
+    virtual const List sgParents() const { return getAttrValueAsList("parents"); }
     virtual const ElementPtrs sgElements() const;
     virtual const AssetPtrs sgAssets() const;
     virtual const ShotPtrs sgShots() const;
@@ -79,7 +79,7 @@ protected:
                          const std::string &assetType,
                          const std::string &assetSource = "");
 
-    static SgArray populateReturnFields();
+    static List populateReturnFields();
 };
 
 } // End namespace Shotgun

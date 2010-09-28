@@ -53,7 +53,7 @@ public:
     const std::string sgName() const { return getAttrValueAsString("name"); }
     const std::string sgEmail() const { return getAttrValueAsString("email"); }
     const std::string sgLogin() const { return getAttrValueAsString("login"); }
-    const SgMap sgPermissionGroup() const { return getAttrValueAsMap("permission_rule_set"); }
+    const Dict sgPermissionGroup() const { return getAttrValueAsDict("permission_rule_set"); }
 
     // Set an attribute's value
     void sgName(const std::string &val) { setAttrValue("name", toXmlrpcValue(val)); }
@@ -78,7 +78,7 @@ protected:
                              const std::string &userEmail);
 
 
-    static SgArray populateReturnFields();
+    static List populateReturnFields();
 };
 
 } // End namespace Shotgun

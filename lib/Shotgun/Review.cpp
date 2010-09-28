@@ -78,36 +78,30 @@ Review *Review::create(Shotgun *sg,
     }
     catch (SgEntityNotFoundError)
     {
-        SgMap attrsMap;
-        attrsMap["project"] = toXmlrpcValue(sg->getProjectLink(projectCode));
-        attrsMap["code"] = toXmlrpcValue(reviewName);
+        Dict attrsMap = Dict("project", sg->getProjectLink(projectCode))
+                        .add("code", reviewName);
 
-        return sg->createEntity<Review>(Dict(attrsMap));
+        return sg->createEntity<Review>(attrsMap);
     }
 }
 
 // *****************************************************************************
-SgArray Review::populateReturnFields()
+List Review::populateReturnFields()
 {
-    SgArray returnFields;
-
-    returnFields.push_back(toXmlrpcValue("id"));
-    returnFields.push_back(toXmlrpcValue("project"));
-    returnFields.push_back(toXmlrpcValue("created_at"));
-    returnFields.push_back(toXmlrpcValue("updated_at"));
-
-    returnFields.push_back(toXmlrpcValue("code"));
-    returnFields.push_back(toXmlrpcValue("sg_review_type"));
-    returnFields.push_back(toXmlrpcValue("sg_review_media"));
-    returnFields.push_back(toXmlrpcValue("sg_review_date_sent"));
-    returnFields.push_back(toXmlrpcValue("sg_review_sent_to"));
-    returnFields.push_back(toXmlrpcValue("sg_review_date_reviewed"));
-    returnFields.push_back(toXmlrpcValue("sg_review_reviewed_by"));
-    returnFields.push_back(toXmlrpcValue("sg_review_disclaimers"));
-    returnFields.push_back(toXmlrpcValue("sg_review_tipsupe_notes"));
-    returnFields.push_back(toXmlrpcValue("sg_review_client_notes"));
-
-    return returnFields;
+    return List("id")
+           .append("project")
+           .append("created_at")
+           .append("updated_at")
+           .append("code")
+           .append("sg_review_type")
+           .append("sg_review_media")
+           .append("sg_review_date_sent")
+           .append("sg_review_sent_to")
+           .append("sg_review_date_reviewed")
+           .append("sg_review_reviewed_by")
+           .append("sg_review_disclaimers")
+           .append("sg_review_tipsupe_notes")
+           .append("sg_review_client_notes");
 }
 
 } // End namespace Shotgun
@@ -121,13 +115,13 @@ std::string toStdString(const Shotgun::Review &review)
 // *****************************************************************************
 std::string toStdString(const Shotgun::Reviews &reviews)
 {
-    Shotgun::SgArray array;
+    Shotgun::List list;
     for (size_t i = 0; i < reviews.size(); i++)
     {
-        array.push_back(reviews[i].attrs());
+        list.append(reviews[i].attrs());
     }
     
-    return toStdString(Shotgun::toXmlrpcValue(array));
+    return toStdString(list);
 }
 
 // *****************************************************************************

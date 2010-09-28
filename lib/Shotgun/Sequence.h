@@ -74,7 +74,7 @@ protected:
                             const std::string &projectCode,
                             const std::string &sequenceName);
 
-    static SgArray populateReturnFields();
+    static List populateReturnFields();
 };
 
 } // End namespace Shotgun

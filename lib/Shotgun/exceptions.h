@@ -37,6 +37,9 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace Shotgun {
 
+class Dict;
+class List;
+
 // *****************************************************************************
 class SgError : public std::exception
 {
@@ -71,10 +74,7 @@ public:
 class SgAttrNotFoundError : public SgAttrError
 {
 public:
-    SgAttrNotFoundError(const std::string &attrName) : SgAttrError("SgAttrNotFoundError: ")
-    {
-        m_msg += "Attribute, '" + attrName + "', is not found.";
-    }
+    SgAttrNotFoundError(const std::string &attrName);
 
     virtual ~SgAttrNotFoundError() throw() {}
 };
@@ -85,19 +85,9 @@ class SgAttrTypeError : public SgAttrError
 public:
     SgAttrTypeError(const std::string &attrName,
                     const xmlrpc_c::value::type_t wrongType,
-                    const xmlrpc_c::value::type_t correctType) : SgAttrError("SgAttrTypeError: ")
-    {
-        m_msg += "Attribute, '" + attrName + ", ";
-        m_msg += "is not of '" + xmlrpcValueTypeStr(wrongType) + "'. ";
-        m_msg += "It is of '" + xmlrpcValueTypeStr(correctType) + "'.";
-    }
-
+                    const xmlrpc_c::value::type_t correctType);
     SgAttrTypeError(const std::string &attrName,
-                    const std::string &msg = "") : SgAttrError("SgAttrTypeError: ")
-    {
-        m_msg += "Type error for attribute, '" + attrName + ".\n ";
-        m_msg += msg;
-    }
+                    const std::string &msg = "");
 
     virtual ~SgAttrTypeError() throw() {}
 };
@@ -106,10 +96,7 @@ public:
 class SgAttrValueError : public SgAttrError
 {
 public:
-    SgAttrValueError(const std::string &attrName) : SgAttrError("SgAttrValueError: ")
-    {
-        m_msg += "Attribute, '" + attrName + "', does not have a valid value.";
-    }
+    SgAttrValueError(const std::string &attrName);
 
     virtual ~SgAttrValueError() throw() {}
 };
@@ -119,19 +106,9 @@ public:
 class SgAttrLinkError : public SgAttrError
 {
 public:
-    SgAttrLinkError(const SgMap &link) : SgAttrError("SgAttrLinkError: ")
-    {
-        m_msg += "The given link is missing one or more of the required fields: \"id\", \"type\", \"name\"\n";
-        m_msg += toStdString(link);
-    }
-
+    SgAttrLinkError(const Dict &link);
     SgAttrLinkError(const xmlrpc_c::value &link,
-                    const xmlrpc_c::value::type_t &type) : SgAttrError("SgAttrLinkError: ")
-    {
-        m_msg += "The given link has the wrong type: \"" + xmlrpcValueTypeStr(type);
-        m_msg += "\", it should be type of \"TYPE_STRUCT\"\n";
-        m_msg += toStdString(link);
-    }
+                    const xmlrpc_c::value::type_t &type);
 
     virtual ~SgAttrLinkError() throw() {}
 };
@@ -141,25 +118,14 @@ public:
 class SgAttrSetValueError : public SgAttrError
 {
 public:
-    SgAttrSetValueError(const std::string &attrName,
-                        const std::string &errMsg = "") : SgAttrError("SgAttrSetValueError: ")
-    {
-        m_msg += "Failed to set value for attribute, '" + attrName + "'";
-        if (errMsg != "")
-        {
-            m_msg += "\n" + errMsg;
-        }
-    }
-
-    SgAttrSetValueError(const SgMap &attrPairs,
-                        const std::string &errMsg = "") : SgAttrError("SgAttrSetValueError: ")
-    {
-        m_msg += "Failed to set values for attribute list, " + toStdString(attrPairs);
-        if (errMsg != "")
-        {
-            m_msg += "\n" + errMsg;
-        }
-    }
+    SgAttrSetValueError(const std::string &fieldName,
+                        const std::string &errMsg = "");
+    SgAttrSetValueError(const char *fieldName,
+                        const std::string &errMsg = "");
+    SgAttrSetValueError(const Dict &fieldNameValuePairs,
+                        const std::string &errMsg = "");
+    SgAttrSetValueError(const List &fields,
+                        const std::string &errMsg = "");
 
     virtual ~SgAttrSetValueError() throw() {}
 };
@@ -168,10 +134,7 @@ public:
 class SgEmptyAttrMapError : public SgAttrError
 {
 public:
-    SgEmptyAttrMapError() : SgAttrError("SgEmptyAttrMapError: ")
-    {
-        m_msg += "Empty attribute map.";
-    }
+    SgEmptyAttrMapError();
 
     virtual ~SgEmptyAttrMapError() throw() {}
 };
@@ -190,10 +153,7 @@ public:
 class SgEntityXmlrpcError : public SgEntityError
 {
 public:
-    SgEntityXmlrpcError(const std::string &msg) : SgEntityError("SgEntityXmlrpcError: ") 
-    {
-        m_msg += msg;
-    }
+    SgEntityXmlrpcError(const std::string &msg);
 
     virtual ~SgEntityXmlrpcError() throw() {}
 };
@@ -202,17 +162,7 @@ public:
 class SgEntityNotFoundError : public SgEntityError
 {
 public:
-    SgEntityNotFoundError(const std::string &entityType = "" ) : SgEntityError("SgEntityNotFoundError: ")
-    {
-        if (entityType == "")
-        {
-            m_msg += "entity not found.";
-        }
-        else
-        {
-            m_msg += "Shotgun \"" + entityType + "\" entity not found.";
-        }
-    }
+    SgEntityNotFoundError(const std::string &entityType = "" );
 
     virtual ~SgEntityNotFoundError() throw() {}
 };
@@ -222,11 +172,7 @@ class SgEntityFunctionNotFoundError : public SgEntityError
 {
 public:
     SgEntityFunctionNotFoundError(const std::string &entityType, 
-                                  const std::string &funcMapName) : SgEntityError("SgEntityFunctionNotFoundError: ")
-    {
-        m_msg += "Can't find entry for \"" + entityType + "\" entity in function map \"";
-        m_msg += funcMapName + "\". Check Shotgun class' constructor.";
-    }
+                                  const std::string &funcMapName);
 
     virtual ~SgEntityFunctionNotFoundError() throw() {}
 };
@@ -235,10 +181,7 @@ public:
 class SgEntityDynamicCastError : public SgEntityError
 {
 public:
-    SgEntityDynamicCastError(const std::string &castType) : SgEntityError("SgEntityDynamicCastError: ")
-    {
-        m_msg += "dynamic_casting to type \"" + castType + "\" failed.";
-    }
+    SgEntityDynamicCastError(const std::string &castType);
 
     virtual ~SgEntityDynamicCastError() throw() {}
 };
@@ -247,10 +190,7 @@ public:
 class SgEntityCreateError : public SgEntityError
 {
 public:
-    SgEntityCreateError(const std::string &err) : SgEntityError("SgEntityCreateError: ")
-    {
-        m_msg += err;
-    }
+    SgEntityCreateError(const std::string &err);
 
     virtual ~SgEntityCreateError() throw() {}
 };
@@ -259,28 +199,61 @@ public:
 class SgApiError : public SgError
 {
 public:
-    SgApiError(const std::string &api) : SgError("SgApiError: ")
-    {
-        m_msg += api + " is not supported.";
-    }
+    SgApiError(const std::string &api);
 
     virtual ~SgApiError() throw() {}
 };
 
 // *****************************************************************************
-class SgXmlrpcValueTypeError : public SgError
+class SgXmlrpcValueError : public SgError
+{
+public:
+    SgXmlrpcValueError(const std::string &msg = "") : SgError(msg) {}
+    SgXmlrpcValueError(const char *msg = "") : SgError(msg) {}
+
+    virtual ~SgXmlrpcValueError() throw() {}
+};
+
+// *****************************************************************************
+class SgXmlrpcValueTypeError : public SgXmlrpcValueError
 {
 public:
     SgXmlrpcValueTypeError(const xmlrpc_c::value &value,
                            const xmlrpc_c::value::type_t wrongType,
-                           const xmlrpc_c::value::type_t correctType) : SgError("SgXmlrpcValueTypeError: ")
-    {
-        m_msg += toStdString(value) + ", ";
-        m_msg += "is not of '" + xmlrpcValueTypeStr(wrongType) + "'. ";
-        m_msg += "It is of '" + xmlrpcValueTypeStr(correctType) + "'.";
-    }
+                           const xmlrpc_c::value::type_t correctType);
 
     virtual ~SgXmlrpcValueTypeError() throw() {}
+};
+
+// *****************************************************************************
+class SgXmlrpcValueIsNilError : public SgXmlrpcValueError
+{
+public:
+    SgXmlrpcValueIsNilError();
+
+    virtual ~SgXmlrpcValueIsNilError() throw() {}
+};
+
+// *****************************************************************************
+class SgListError : public SgError
+{
+public:
+    SgListError(const int index,
+                const int first,
+                const int last);
+    SgListError(const xmlrpc_c::value &value);
+
+    virtual ~SgListError() throw() {}
+};
+
+// *****************************************************************************
+class SgDictError : public SgError
+{
+public:
+    SgDictError(const std::string &key);
+    SgDictError(const xmlrpc_c::value &value);
+
+    virtual ~SgDictError() throw() {}
 };
 
 } // End namespace Shotgun

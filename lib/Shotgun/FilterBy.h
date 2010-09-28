@@ -36,6 +36,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <string>
 
 #include <Shotgun/types.h>
+#include <Shotgun/List.h>
+#include <Shotgun/Dict.h>
 
 namespace Shotgun {
 
@@ -44,7 +46,7 @@ class FilterBy
 {
 public:
     FilterBy();
-    FilterBy(const SgMap &filters);
+    FilterBy(const Dict &filters);
 
     template <typename T>
     FilterBy(const std::string &path,
@@ -85,9 +87,10 @@ public:
     }
 
 
-    const SgMap &filters() const { return m_filters; }
+    const Dict &filters() const { return m_filters; }
     const bool empty() const { return m_filters.empty(); }
     const int size() const { return m_filters.size(); }
+    void clear() { m_filters.clear(); }
 
     FilterBy &operator=(const FilterBy &that)
     {
@@ -107,7 +110,7 @@ protected:
     FilterBy &op(const std::string &logicOperator,
                  const FilterBy &that);
 
-    SgMap m_filters;
+    Dict m_filters;
 };
 
 } // End namespace Shotgun

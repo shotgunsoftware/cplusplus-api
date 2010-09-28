@@ -80,27 +80,21 @@ Sequence *Sequence::create(Shotgun *sg,
     }
     catch (SgEntityNotFoundError)
     {
-        SgMap attrsMap;
-        attrsMap["project"] = toXmlrpcValue(sg->getProjectLink(projectCode));
-        attrsMap["code"] = toXmlrpcValue(sequenceNameUpper);
+        Dict attrsMap = Dict("project", sg->getProjectLink(projectCode))
+                        .add("code", sequenceNameUpper);
 
-        return sg->createEntity<Sequence>(Dict(attrsMap));
+        return sg->createEntity<Sequence>(attrsMap);
     }
 }
 
 // *****************************************************************************
-SgArray Sequence::populateReturnFields()
+List Sequence::populateReturnFields()
 {
-    SgArray returnFields;
-
-    returnFields.push_back(toXmlrpcValue("id"));
-    returnFields.push_back(toXmlrpcValue("project"));
-    returnFields.push_back(toXmlrpcValue("created_at"));
-    returnFields.push_back(toXmlrpcValue("updated_at"));
-
-    returnFields.push_back(toXmlrpcValue("code"));
-
-    return returnFields;
+    return List("id")
+           .append("project")
+           .append("created_at")
+           .append("updated_at")
+           .append("code");
 }
 
 } // End namespace Shotgun
@@ -115,13 +109,13 @@ std::string toStdString(const Shotgun::Sequence &sequence)
 // *****************************************************************************
 std::string toStdString(const Shotgun::Sequences &sequences)
 {
-    Shotgun::SgArray array;
+    Shotgun::List list;
     for (size_t i = 0; i < sequences.size(); i++)
     {
-        array.push_back(sequences[i].attrs());
+        list.append(sequences[i].attrs());
     }
     
-    return toStdString(Shotgun::toXmlrpcValue(array));
+    return toStdString(list);
 }
 
 // *****************************************************************************

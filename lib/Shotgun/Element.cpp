@@ -77,32 +77,26 @@ Element *Element::create(Shotgun *sg,
     }
     catch (SgEntityNotFoundError)
     {
-        SgMap attrsMap;
-        attrsMap["project"] = toXmlrpcValue(sg->getProjectLink(projectCode));
-        attrsMap["code"] = toXmlrpcValue(elementName);
-        attrsMap["sg_element_type"] = toXmlrpcValue(elementType);
+        Dict attrsMap = Dict("project", sg->getProjectLink(projectCode))
+                        .add("code", elementName)
+                        .add("sg_element_type", elementType);
 
-        return sg->createEntity<Element>(Dict(attrsMap));
+        return sg->createEntity<Element>(attrsMap);
     }
 }
 
 // *****************************************************************************
-SgArray Element::populateReturnFields()
+List Element::populateReturnFields()
 {
-    SgArray returnFields;
-
-    returnFields.push_back(toXmlrpcValue("id"));
-    returnFields.push_back(toXmlrpcValue("project"));
-    returnFields.push_back(toXmlrpcValue("created_at"));
-    returnFields.push_back(toXmlrpcValue("updated_at"));
-
-    returnFields.push_back(toXmlrpcValue("code"));
-    returnFields.push_back(toXmlrpcValue("assets"));
-    returnFields.push_back(toXmlrpcValue("shots"));
-    returnFields.push_back(toXmlrpcValue("tag_list"));
-    returnFields.push_back(toXmlrpcValue("sg_element_type"));
-
-    return returnFields;
+    return List("id")
+           .append("project")
+           .append("created_at")
+           .append("updated_at")
+           .append("code")
+           .append("assets")
+           .append("shots")
+           .append("tag_list")
+           .append("sg_element_type");
 }
 
 // *****************************************************************************
@@ -144,18 +138,18 @@ const ShotPtrs Element::sgShots() const
 // *****************************************************************************
 void Element::sgAssets(const Assets &val)
 {
-    SgArray assetLinkArray;
+    List assetLinkList;
 
     for (size_t i = 0; i < val.size(); i++)
     {
-        assetLinkArray.push_back(toXmlrpcValue(val[i].asLink()));
+        assetLinkList.append(val[i].asLink());
     }
 
-    setAttrValue("assets", toXmlrpcValue(assetLinkArray));
+    setAttrValue("assets", toXmlrpcValue(assetLinkList));
 }
 
 // *****************************************************************************
-void Element::sgAssets(const SgArray &val)
+void Element::sgAssets(const List &val)
 {
     for (size_t i = 0; i < val.size(); i++)
     {
@@ -175,18 +169,18 @@ void Element::sgAssets(const SgArray &val)
 // *****************************************************************************
 void Element::sgShots(const Shots &val)
 {
-    SgArray shotLinkArray;
+    List shotLinkList;
 
     for (size_t i = 0; i < val.size(); i++)
     {
-        shotLinkArray.push_back(toXmlrpcValue(val[i].asLink()));
+        shotLinkList.append(val[i].asLink());
     }
 
-    setAttrValue("shots", toXmlrpcValue(shotLinkArray));
+    setAttrValue("shots", toXmlrpcValue(shotLinkList));
 }
 
 // *****************************************************************************
-void Element::sgShots(const SgArray &val)
+void Element::sgShots(const List &val)
 {
     for (size_t i = 0; i < val.size(); i++)
     {
@@ -215,13 +209,13 @@ std::string toStdString(const Shotgun::Element &element)
 // *****************************************************************************
 std::string toStdString(const Shotgun::Elements &elements)
 {
-    Shotgun::SgArray array;
+    Shotgun::List list;
     for (size_t i = 0; i < elements.size(); i++)
     {
-        array.push_back(elements[i].attrs());
+        list.append(elements[i].attrs());
     }
     
-    return toStdString(Shotgun::toXmlrpcValue(array));
+    return toStdString(list);
 }
 
 // *****************************************************************************

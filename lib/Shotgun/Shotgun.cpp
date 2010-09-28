@@ -34,7 +34,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <map>
 
 #include <Shotgun/Shotgun.h>
-#include <Shotgun/FilterBy.h>
 #include <Shotgun/utils.h>
 
 namespace Shotgun {
@@ -61,8 +60,8 @@ Shotgun::Shotgun(const std::string &serverURL,
         m_api = "api3";
 
         m_authMap.clear();
-        m_authMap["script_name"] = toXmlrpcValue("shotgun.main.Shotgun");
-        m_authMap["script_key"] = toXmlrpcValue(m_authKey);
+        m_authMap.add("script_name", "shotgun.main.Shotgun")
+                 .add("script_key", m_authKey);
     }
 
     // Register the classes
@@ -97,7 +96,7 @@ void Shotgun::registerClass(const std::string &entityType,
 }
 
 // *****************************************************************************
-EntityPtrs Shotgun::entityFactoryFind(const std::string &entityType, SgMap &findMap)
+EntityPtrs Shotgun::entityFactoryFind(const std::string &entityType, Dict &findMap)
 {
     EntityPtrs entities;
 
@@ -112,37 +111,35 @@ EntityPtrs Shotgun::entityFactoryFind(const std::string &entityType, SgMap &find
     FactoryFunc factorFunc = (*foundRegistryIter).second.first;
     PopulateReturnFieldsFunc populateFunc = (*foundRegistryIter).second.second;
 
+    // ------------------------------------------------------------------------
     // If the given findMap already has a "return_fields", merge its contents 
     // with the poupulated default return Fields of the given entity type. 
     // Shotgun will ignore the duplicated fields when it returns the search result. 
     // To update the findMap's "return_fields", erase it first since the 
     // xmlrpc_c::value type can't be reassigned once it's been instantiated. 
-    SgArray extraReturnFields = SgArray();
-    SgMap::iterator foundReturnFieldsIter = findMap.find("return_fields");
-    if (foundReturnFieldsIter != findMap.end())
-    {
-        extraReturnFields = (xmlrpc_c::value_array((*foundReturnFieldsIter).second)).vectorValueValue();
-        findMap.erase(foundReturnFieldsIter);
-    }
+    // ------------------------------------------------------------------------
 
     // Populate the default return fields and add the extra return fields
     // before passing them to the findMap
-    SgArray returnFields = (*populateFunc)();
-    returnFields.insert(returnFields.end(), extraReturnFields.begin(), extraReturnFields.end());
-    findMap["return_fields"] = toXmlrpcValue(returnFields);
+    List returnFields = (*populateFunc)();
+    if (findMap.find("return_fields"))
+    {
+        returnFields.extend(findMap.value<List>("return_fields"));
+        findMap.erase("return_fields");
+    }
+    findMap.add("return_fields", returnFields);
 
     // If the findMap already has a "type" field, override it with the
     // given "entityType" to ensure the type will not conflict with the
     // factory function.
-    SgMap::iterator foundTypeIter = findMap.find("type");
-    if (foundTypeIter != findMap.end())
+    if (findMap.find("type"))
     {
-        findMap.erase(foundTypeIter);
+        findMap.erase("type");
     }
-    findMap["type"] = toXmlrpcValue(entityType);
+    findMap.add("type", entityType);
 
     // Find the shotgun entities by the findMap
-    SgArray xmlrpcFindResult = Entity::findSGEntities(this, findMap); 
+    List xmlrpcFindResult = Entity::findSGEntities(this, findMap); 
     
     // Create entity class object.
     for (size_t i = 0; i < xmlrpcFindResult.size(); i++)
@@ -154,7 +151,7 @@ EntityPtrs Shotgun::entityFactoryFind(const std::string &entityType, SgMap &find
 }
 
 // *****************************************************************************
-Entity *Shotgun::entityFactoryCreate(const std::string &entityType, SgMap &createMap)
+Entity *Shotgun::entityFactoryCreate(const std::string &entityType, Dict &createMap)
 {
     // Find the factory func and the populateReturnFields func for the given type of entity
     ClassRegistry::iterator foundRegistryIter = m_classRegistry.find(entityType);
@@ -167,35 +164,32 @@ Entity *Shotgun::entityFactoryCreate(const std::string &entityType, SgMap &creat
     FactoryFunc factorFunc = (*foundRegistryIter).second.first;
     PopulateReturnFieldsFunc populateFunc = (*foundRegistryIter).second.second;
 
+    // ------------------------------------------------------------------------
     // If the given createMap already has a "return_fields", merge its contents 
     // with the poupulated default return fields of the given entity type. 
     // Shotgun will ignore the duplicated fields when it returns the search result. 
     // To update the createMap's "return_fields", erase it first since the 
     // xmlrpc_c::value type can't be reassigned once it's been instantiated. 
-    SgArray extraReturnFields = SgArray();
-    SgMap::iterator foundReturnFieldsIter = createMap.find("return_fields");
-    if (foundReturnFieldsIter != createMap.end())
-    {
-        extraReturnFields = (xmlrpc_c::value_array((*foundReturnFieldsIter).second)).vectorValueValue();
-        createMap.erase(foundReturnFieldsIter);
-    }
+    // ------------------------------------------------------------------------
 
     // Populate the default return fields and add the extra return fields
     // before passing them to the createMap
-    SgArray returnFields = (*populateFunc)();
-    returnFields.insert(returnFields.end(), extraReturnFields.begin(), extraReturnFields.end());
-    createMap["return_fields"] = toXmlrpcValue(returnFields);
-
+    List returnFields = (*populateFunc)();
+    if (createMap.find("return_fields"))
+    {
+        returnFields.extend(createMap.value<List>("return_fields"));
+        createMap.erase("return_fields");
+    }
+    createMap.add("return_fields", returnFields);
 
     // If the createMap already has a "type" field, override it with the
     // given "entityType" to ensure the type will not conflict with the
     // factory function.
-    SgMap::iterator foundTypeIter = createMap.find("type");
-    if (foundTypeIter != createMap.end())
+    if (createMap.find("type"))
     {
-        createMap.erase(foundTypeIter);
+        createMap.erase("type");
     }
-    createMap["type"] = toXmlrpcValue(entityType);
+    createMap.add("type", entityType);
 
     // Create the shotgun entity by the createMap
     xmlrpc_c::value xmlrpcCreateResult = Entity::createSGEntity(this, createMap); 
@@ -230,10 +224,10 @@ ProjectPtrs Shotgun::allProjects()
 }
     
 // *****************************************************************************
-SgMap Shotgun::getProjectLink(const std::string &projectCode)
+Dict Shotgun::getProjectLink(const std::string &projectCode)
 {
     Project *project = findProjectByCode(projectCode);
-    SgMap link = project->asLink();
+    Dict link = project->asLink();
     delete project;
 
     return link;
@@ -308,7 +302,7 @@ VersionPtrs Shotgun::findVersionsByShot(const std::string &projectCode,
 #if 0
     std::string theShotName = TipUtil::ShotName(projectCode, shotName).shot(true, true);
     Shot *shot = findShotByName(theShotName);
-    SgMap shotLink = shot->asLink();
+    Dict shotLink = shot->asLink();
     delete shot;
  
     return findEntities<Version>(FilterBy("entity", "is", shotLink)
@@ -345,7 +339,7 @@ HumanUser *Shotgun::findHumanUserByLogin(const std::string &userLogin)
 HumanUser *Shotgun::findRetiredHumanUser(const std::string &userLogin)
 {
     return findEntity<HumanUser>(FilterBy("login", "is", userLogin),
-                                 SgArray(), // extraReturnFields
+                                 List(), // extraReturnFields
                                  true); // retiredOnly
 }
 
@@ -549,7 +543,7 @@ Task *Shotgun::findTaskByName(const std::string &projectCode,
 
 // *****************************************************************************
 TaskPtrs Shotgun::findTasksByLinkEntity(const std::string &projectCode,
-                                        const SgMap &linkEntity,
+                                        const Dict &linkEntity,
                                         const int limit)
 {
     return findEntities<Task>(FilterBy("entity", "is", linkEntity)
@@ -563,7 +557,7 @@ TaskPtrs Shotgun::findTasksByMilestone(const std::string &projectCode,
                                        const int limit)
 {
     Shot *shot = findShotByName(shotName);
-    SgMap shotLink = shot->asLink();
+    Dict shotLink = shot->asLink();
     delete shot;
 
     return findEntities<Task>(FilterBy("entity", "is", shotLink)
@@ -609,7 +603,7 @@ NotePtrs Shotgun::findNotesByAuthor(const std::string &projectCode,
                                     const int limit)
 {
     HumanUser *user = findHumanUserByLogin(userName);
-    SgMap userLink = user->asLink();
+    Dict userLink = user->asLink();
     delete user;
 
     return findEntities<Note>(FilterBy("user", "is", userLink)
@@ -619,7 +613,7 @@ NotePtrs Shotgun::findNotesByAuthor(const std::string &projectCode,
 
 // *****************************************************************************
 NotePtrs Shotgun::findNotesByLinks(const std::string &projectCode,
-                                   const SgArray &noteLinks,
+                                   const List &noteLinks,
                                    const std::string &noteType,
                                    const int limit)
 {
@@ -666,9 +660,9 @@ Entity *Shotgun::findEntity(const std::string &entityType,
                             const bool retiredOnly,
                             const SortBy &order)
 {
-    SgMap findMap = Entity::buildFindMap(entityType,
+    Dict findMap = Entity::buildFindMap(entityType,
                                          filterList,
-                                         extraReturnFields.value(),
+                                         extraReturnFields,
                                          retiredOnly,
                                          0,
                                          order);

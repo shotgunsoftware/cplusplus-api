@@ -78,41 +78,35 @@ Asset *Asset::create(Shotgun *sg,
     }
     catch (SgEntityNotFoundError)
     {
-        SgMap attrsMap;
-        attrsMap["project"] = toXmlrpcValue(sg->getProjectLink(projectCode));
-        attrsMap["code"] = toXmlrpcValue(assetName);
-        attrsMap["sg_asset_type"] = toXmlrpcValue(assetType);
+        Dict attrsMap = Dict("project", sg->getProjectLink(projectCode))
+                        .add("code", assetName)
+                        .add("sg_asset_type", assetType);
 
         if (assetSource != "")
         {
-            attrsMap["sg_asset_source"] = toXmlrpcValue(assetSource);
+            attrsMap.add("sg_asset_source", assetSource);
         }
 
-        return sg->createEntity<Asset>(Dict(attrsMap));
+        return sg->createEntity<Asset>(attrsMap);
     }
 }
 
 // *****************************************************************************
-SgArray Asset::populateReturnFields()
+List Asset::populateReturnFields()
 {
-    SgArray returnFields;
-    
-    returnFields.push_back(toXmlrpcValue("id"));
-    returnFields.push_back(toXmlrpcValue("project"));
-    returnFields.push_back(toXmlrpcValue("created_at"));
-    returnFields.push_back(toXmlrpcValue("updated_at"));
-
-    returnFields.push_back(toXmlrpcValue("code"));
-    returnFields.push_back(toXmlrpcValue("sg_asset_type"));
-    returnFields.push_back(toXmlrpcValue("sg_status_list"));
-    returnFields.push_back(toXmlrpcValue("sg_asset_preview_qt"));
-    returnFields.push_back(toXmlrpcValue("sg_asset_source"));
-    returnFields.push_back(toXmlrpcValue("elements"));
-    returnFields.push_back(toXmlrpcValue("parents"));
-    returnFields.push_back(toXmlrpcValue("assets"));
-    returnFields.push_back(toXmlrpcValue("shots"));
-
-    return returnFields;
+    return List("id")
+           .append("project")
+           .append("created_at")
+           .append("updated_at")
+           .append("code")
+           .append("sg_asset_type")
+           .append("sg_status_list")
+           .append("sg_asset_preview_qt")
+           .append("sg_asset_source")
+           .append("elements")
+           .append("parents")
+           .append("assets")
+           .append("shots");
 }
 
 // *****************************************************************************
@@ -178,13 +172,13 @@ std::string toStdString(const Shotgun::Asset &asset)
 // *****************************************************************************
 std::string toStdString(const Shotgun::Assets &assets)
 {
-    Shotgun::SgArray array;
+    Shotgun::List list;
     for (size_t i = 0; i < assets.size(); i++)
     {
-        array.push_back(assets[i].attrs());
+        list.append(assets[i].attrs());
     }
     
-    return toStdString(Shotgun::toXmlrpcValue(array));
+    return toStdString(list);
 }
 
 // *****************************************************************************

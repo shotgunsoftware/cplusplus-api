@@ -76,35 +76,29 @@ ReviewItem *ReviewItem::create(Shotgun *sg,
     }
     catch (SgEntityNotFoundError)
     {
-        SgMap attrsMap;
-        attrsMap["project"] = toXmlrpcValue(sg->getProjectLink(projectCode));
-        attrsMap["code"] = toXmlrpcValue(reviewItemName); 
+        Dict attrsMap = Dict("project", sg->getProjectLink(projectCode))
+                        .add("code", reviewItemName); 
 
-        return sg->createEntity<ReviewItem>(Dict(attrsMap));
+        return sg->createEntity<ReviewItem>(attrsMap);
     }
 }
 
 // *****************************************************************************
-SgArray ReviewItem::populateReturnFields()
+List ReviewItem::populateReturnFields()
 {
-    SgArray returnFields;
-
-    returnFields.push_back(toXmlrpcValue("id"));
-    returnFields.push_back(toXmlrpcValue("project"));
-    returnFields.push_back(toXmlrpcValue("created_at"));
-    returnFields.push_back(toXmlrpcValue("updated_at"));
-
-    returnFields.push_back(toXmlrpcValue("code"));
-    returnFields.push_back(toXmlrpcValue("sg_version"));
-    returnFields.push_back(toXmlrpcValue("sg_link"));
-    returnFields.push_back(toXmlrpcValue("sg_review"));
-    returnFields.push_back(toXmlrpcValue("sg_purpose"));
-    returnFields.push_back(toXmlrpcValue("sg_order"));
-    returnFields.push_back(toXmlrpcValue("sg_reviewed_by"));
-    returnFields.push_back(toXmlrpcValue("sg_date_reviewed"));
-    returnFields.push_back(toXmlrpcValue("sg_approved_"));
-
-    return returnFields;
+    return List("id")
+           .append("project")
+           .append("created_at")
+           .append("updated_at")
+           .append("code")
+           .append("sg_version")
+           .append("sg_link")
+           .append("sg_review")
+           .append("sg_purpose")
+           .append("sg_order")
+           .append("sg_reviewed_by")
+           .append("sg_date_reviewed")
+           .append("sg_approved_");
 }
 
 } // End namespace Shotgun
@@ -119,13 +113,13 @@ std::string toStdString(const Shotgun::ReviewItem &reviewItem)
 // *****************************************************************************
 std::string toStdString(const Shotgun::ReviewItems &reviewItems)
 {
-    Shotgun::SgArray array;
+    Shotgun::List list;
     for (size_t i = 0; i < reviewItems.size(); i++)
     {
-        array.push_back(reviewItems[i].attrs());
+        list.append(reviewItems[i].attrs());
     }
     
-    return toStdString(Shotgun::toXmlrpcValue(array));
+    return toStdString(list);
 }
 
 // *****************************************************************************

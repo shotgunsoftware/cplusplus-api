@@ -117,10 +117,10 @@ xmlrpc_c::value toXmlrpcValue(const SgArray &in);
 xmlrpc_c::value toXmlrpcValue(const SgMap &in);
 xmlrpc_c::value toXmlrpcValue(const Strings &in);
 xmlrpc_c::value toXmlrpcValue(const MethodSignatures &in);
-xmlrpc_c::value toXmlrpcValue(const FilterBy &in);
-xmlrpc_c::value toXmlrpcValue(const SortBy &in);
 xmlrpc_c::value toXmlrpcValue(const List &in);
 xmlrpc_c::value toXmlrpcValue(const Dict &in);
+xmlrpc_c::value toXmlrpcValue(const FilterBy &in);
+xmlrpc_c::value toXmlrpcValue(const SortBy &in);
 xmlrpc_c::value toXmlrpcValue(const xmlrpc_c::value &in);
 
 // *****************************************************************************
@@ -141,10 +141,10 @@ void fromXmlrpcValue(const xmlrpc_c::value &value, SgArray &out);
 void fromXmlrpcValue(const xmlrpc_c::value &value, SgMap &out);
 void fromXmlrpcValue(const xmlrpc_c::value &value, Strings &out);
 //void fromXmlrpcValue(const xmlrpc_c::value &value, MethodSignatures &out);
-void fromXmlrpcValue(const xmlrpc_c::value &value, FilterBy &out);
-void fromXmlrpcValue(const xmlrpc_c::value &value, SortBy &out);
 void fromXmlrpcValue(const xmlrpc_c::value &value, List &out);
 void fromXmlrpcValue(const xmlrpc_c::value &value, Dict &out);
+void fromXmlrpcValue(const xmlrpc_c::value &value, FilterBy &out);
+void fromXmlrpcValue(const xmlrpc_c::value &value, SortBy &out);
 void fromXmlrpcValue(const xmlrpc_c::value &value, xmlrpc_c::value &out);
 
 // *****************************************************************************
@@ -155,6 +155,10 @@ std::string currDateStr();
 
 // *****************************************************************************
 // *****************************************************************************
+std::string toStdString(const int val);
+std::string toStdString(const bool val);
+std::string toStdString(const double val);
+std::string toStdString(const time_t val);
 std::string toStdString(const xmlrpc_c::value &value);
 std::string toStdString(const Shotgun::SgArray &array);
 std::string toStdString(const Shotgun::SgMap &map);

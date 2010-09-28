@@ -45,9 +45,36 @@ Dict::Dict(const SgMap &map) : m_value(map)
 }
 
 // *****************************************************************************
-const bool Dict::find(const std::string &key)
+Dict::Dict(const xmlrpc_c::value &value)
 {
-    SgMap::iterator foundIter = m_value.find(key);
+    if (value.type() == xmlrpc_c::value::TYPE_STRUCT)
+    {
+        m_value = SgMap(xmlrpc_c::value_struct(value));
+    }
+    else
+    {
+        throw SgDictError(value);
+    }
+}
+
+// *****************************************************************************
+const xmlrpc_c::value &Dict::operator[](const std::string &key) const
+{
+    SgMap::const_iterator foundIter = m_value.find(key);
+    if (foundIter != m_value.end())
+    {
+        return (*foundIter).second;
+    }
+    else
+    {
+        throw SgDictError(key);
+    }
+}
+ 
+// *****************************************************************************
+const bool Dict::find(const std::string &key) const
+{
+    SgMap::const_iterator foundIter = m_value.find(key);
     if (foundIter != m_value.end())
     {
         return true;
@@ -57,7 +84,7 @@ const bool Dict::find(const std::string &key)
 }
 
 // *****************************************************************************
-Dict &Dict::remove(const std::string &key)
+Dict &Dict::erase(const std::string &key)
 {
     m_value.erase(key);
 

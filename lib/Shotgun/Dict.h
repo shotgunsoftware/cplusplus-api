@@ -36,6 +36,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <string>
 
 #include <Shotgun/types.h>
+#include <Shotgun/exceptions.h>
 
 namespace Shotgun {
 
@@ -45,6 +46,7 @@ class Dict
 public:
     Dict();
     Dict(const SgMap &map);
+    Dict(const xmlrpc_c::value &value);
 
     template <typename T>
     Dict(const std::string &key, const T &value)
@@ -55,7 +57,6 @@ public:
     template <typename T>
     Dict &add(const std::string &key, const T &value);
 
-    // Return the value of a given key
     template <typename  T>
     const T value(const std::string &key) const;
 
@@ -69,12 +70,14 @@ public:
     // --------------------------------------------------------------------
     template <typename  T>
     const T operator[](const std::string &key) const;
+    const xmlrpc_c::value &operator[](const std::string &key) const;
 
     const SgMap &value() const { return m_value; }
     const bool empty() const { return m_value.empty(); }
     const int size() const { return m_value.size(); }
-    const bool find(const std::string &key);
-    Dict &remove(const std::string &key);
+    const bool find(const std::string &key) const;
+    void clear() { m_value.clear(); }
+    Dict &erase(const std::string &key);
 
     Dict &operator=(const Dict &that)
     {
@@ -96,7 +99,7 @@ Dict &Dict::add(const std::string &key, const T &value)
 {
     // Remove the (key, value) pair first if the key is found since 
     // xmlrpc_c::value type can't be reassigned once it's instantiated.
-    remove(key);
+    erase(key);
     m_value[key] = toXmlrpcValue(value);
 
     return *this;
@@ -106,27 +109,23 @@ Dict &Dict::add(const std::string &key, const T &value)
 template <typename  T>
 const T Dict::value(const std::string &key) const
 {
-    xmlrpc_c::value value;
-
     SgMap::const_iterator foundIter = m_value.find(key);
     if (foundIter != m_value.end())
     {
-        value = (*foundIter).second;
+        T outVal;
+        fromXmlrpcValue((*foundIter).second, outVal);
+        return outVal;
+
+#if 0
+        // The template function doesn't work since xmlrpc_c::value has to be casted to a
+        // specific derived xmlrpc_c::value type first, which the compiler doesn't like.
+        return fromXmlrpcValue<T>(value);
+#endif
     }
     else
     {
-        value = xmlrpc_c::value_nil();           
+        throw SgDictError(key);           
     }
-
-    T outVal;
-    fromXmlrpcValue(value, outVal);
-    return outVal;
-
-#if 0
-    // The template function doesn't work since xmlrpc_c::value has to be casted to a
-    // specific derived xmlrpc_c::value type first, which the compiler doesn't like.
-    return fromXmlrpcValue<T>(value);
-#endif
 }
 
 // *****************************************************************************

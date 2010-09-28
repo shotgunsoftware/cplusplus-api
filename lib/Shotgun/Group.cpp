@@ -73,26 +73,20 @@ Group *Group::create(Shotgun *sg, const std::string &groupName)
     }
     catch (SgEntityNotFoundError)
     {
-        SgMap attrsMap;
-        attrsMap["code"] = toXmlrpcValue(groupName);
+        Dict attrsMap = Dict("code", groupName);
 
-        return sg->createEntity<Group>(Dict(attrsMap));
+        return sg->createEntity<Group>(attrsMap);
     }
 }
 
 // *****************************************************************************
-SgArray Group::populateReturnFields()
+List Group::populateReturnFields()
 {
-    SgArray returnFields;
-
-    returnFields.push_back(toXmlrpcValue("id"));
-    returnFields.push_back(toXmlrpcValue("project"));
-    returnFields.push_back(toXmlrpcValue("created_at"));
-    returnFields.push_back(toXmlrpcValue("updated_at"));
-
-    returnFields.push_back(toXmlrpcValue("code"));
-
-    return returnFields;
+    return List("id")
+           .append("project")
+           .append("created_at")
+           .append("updated_at")
+           .append("code");
 }
 
 } // End namespace Shotgun
@@ -107,13 +101,13 @@ std::string toStdString(const Shotgun::Group &group)
 // *****************************************************************************
 std::string toStdString(const Shotgun::Groups &groups)
 {
-    Shotgun::SgArray array;
+    Shotgun::List list;
     for (size_t i = 0; i < groups.size(); i++)
     {
-        array.push_back(groups[i].attrs());
+        list.append(groups[i].attrs());
     }
     
-    return toStdString(Shotgun::toXmlrpcValue(array));
+    return toStdString(list);
 }
 
 // *****************************************************************************

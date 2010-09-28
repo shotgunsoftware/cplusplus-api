@@ -163,18 +163,6 @@ xmlrpc_c::value toXmlrpcValue(const MethodSignatures &in)
 }
 
 // *****************************************************************************
-xmlrpc_c::value toXmlrpcValue(const FilterBy &in)
-{
-    return xmlrpc_c::value(xmlrpc_c::value_struct(in.filters()));
-}
-
-// *****************************************************************************
-xmlrpc_c::value toXmlrpcValue(const SortBy &in)
-{
-    return xmlrpc_c::value(xmlrpc_c::value_array(in.sorts()));
-}
-
-// *****************************************************************************
 xmlrpc_c::value toXmlrpcValue(const List &in)
 {
     return xmlrpc_c::value(xmlrpc_c::value_array(in.value()));
@@ -184,6 +172,18 @@ xmlrpc_c::value toXmlrpcValue(const List &in)
 xmlrpc_c::value toXmlrpcValue(const Dict &in)
 {
     return xmlrpc_c::value(xmlrpc_c::value_struct(in.value()));
+}
+
+// *****************************************************************************
+xmlrpc_c::value toXmlrpcValue(const FilterBy &in)
+{
+    return toXmlrpcValue(in.filters());
+}
+
+// *****************************************************************************
+xmlrpc_c::value toXmlrpcValue(const SortBy &in)
+{
+    return toXmlrpcValue(in.sorts());
 }
 
 // *****************************************************************************
@@ -235,8 +235,7 @@ T Dict::fromXmlrpcValue(const xmlrpc_c::value &value)
     }
     else if (value.type() == xmlrpc_c::value::TYPE_NIL)
     {
-        // TODO: Should it be an exception or just some presumed nil value ???
-        return T("nil");
+        throw SgXmlrpcValueIsNilError();
     }
 }
 #endif
@@ -247,6 +246,10 @@ void fromXmlrpcValue(const xmlrpc_c::value &value, char *out)
     if (value.type() == xmlrpc_c::value::TYPE_STRING)
     {
         out = strdup((std::string(xmlrpc_c::value_string(value))).c_str());
+    }
+    else if (value.type() == xmlrpc_c::value::TYPE_NIL)
+    {
+        throw SgXmlrpcValueIsNilError();
     }
     else
     {
@@ -263,6 +266,10 @@ void fromXmlrpcValue(const xmlrpc_c::value &value, std::string &out)
     {
         out = std::string(xmlrpc_c::value_string(value));
     }
+    else if (value.type() == xmlrpc_c::value::TYPE_NIL)
+    {
+        throw SgXmlrpcValueIsNilError();
+    }
     else
     {
         throw SgXmlrpcValueTypeError(value,
@@ -277,6 +284,10 @@ void fromXmlrpcValue(const xmlrpc_c::value &value, int &out)
     if (value.type() == xmlrpc_c::value::TYPE_INT)
     {
         out = int(xmlrpc_c::value_int(value));
+    }
+    else if (value.type() == xmlrpc_c::value::TYPE_NIL)
+    {
+        throw SgXmlrpcValueIsNilError();
     }
     else
     {
@@ -293,6 +304,10 @@ void fromXmlrpcValue(const xmlrpc_c::value &value, double &out)
     {
         out = double(xmlrpc_c::value_double(value));
     }
+    else if (value.type() == xmlrpc_c::value::TYPE_NIL)
+    {
+        throw SgXmlrpcValueIsNilError();
+    }
     else
     {
         throw SgXmlrpcValueTypeError(value,
@@ -307,6 +322,10 @@ void fromXmlrpcValue(const xmlrpc_c::value &value, bool &out)
     if (value.type() == xmlrpc_c::value::TYPE_BOOLEAN)
     {
         out = bool(xmlrpc_c::value_boolean(value));
+    }
+    else if (value.type() == xmlrpc_c::value::TYPE_NIL)
+    {
+        throw SgXmlrpcValueIsNilError();
     }
     else
     {
@@ -323,6 +342,10 @@ void fromXmlrpcValue(const xmlrpc_c::value &value, time_t &out)
     {
         out = time_t(xmlrpc_c::value_datetime(value));
     }
+    else if (value.type() == xmlrpc_c::value::TYPE_NIL)
+    {
+        throw SgXmlrpcValueIsNilError();
+    }
     else
     {
         throw SgXmlrpcValueTypeError(value,
@@ -338,6 +361,10 @@ void fromXmlrpcValue(const xmlrpc_c::value &value, SgArray &out)
     {
         out = SgArray((xmlrpc_c::value_array(value)).vectorValueValue());
     }
+    else if (value.type() == xmlrpc_c::value::TYPE_NIL)
+    {
+        throw SgXmlrpcValueIsNilError();
+    }
     else
     {
         throw SgXmlrpcValueTypeError(value,
@@ -352,6 +379,10 @@ void fromXmlrpcValue(const xmlrpc_c::value &value, SgMap &out)
     if (value.type() == xmlrpc_c::value::TYPE_STRUCT)
     {
         out = SgMap(xmlrpc_c::value_struct(value));
+    }
+    else if (value.type() == xmlrpc_c::value::TYPE_NIL)
+    {
+        throw SgXmlrpcValueIsNilError();
     }
     else
     {
@@ -385,35 +416,9 @@ void fromXmlrpcValue(const xmlrpc_c::value &value, Strings &out)
 
         out = strings;
     }
-    else
+    else if (value.type() == xmlrpc_c::value::TYPE_NIL)
     {
-        throw SgXmlrpcValueTypeError(value,
-                                     xmlrpc_c::value::TYPE_ARRAY,
-                                     value.type());
-    }
-}
-
-// *****************************************************************************
-void fromXmlrpcValue(const xmlrpc_c::value &value, FilterBy &out)
-{
-    if (value.type() == xmlrpc_c::value::TYPE_STRUCT)
-    {
-        out = FilterBy(SgMap(xmlrpc_c::value_struct(value)));
-    }
-    else
-    {
-        throw SgXmlrpcValueTypeError(value,
-                                     xmlrpc_c::value::TYPE_STRUCT,
-                                     value.type());
-    }
-}
-
-// *****************************************************************************
-void fromXmlrpcValue(const xmlrpc_c::value &value, SortBy &out)
-{
-    if (value.type() == xmlrpc_c::value::TYPE_ARRAY)
-    {
-        out = SortBy(SgArray((xmlrpc_c::value_array(value)).vectorValueValue()));
+        throw SgXmlrpcValueIsNilError();
     }
     else
     {
@@ -430,6 +435,10 @@ void fromXmlrpcValue(const xmlrpc_c::value &value, List &out)
     {
         out = List(SgArray((xmlrpc_c::value_array(value)).vectorValueValue()));
     }
+    else if (value.type() == xmlrpc_c::value::TYPE_NIL)
+    {
+        throw SgXmlrpcValueIsNilError();
+    }
     else
     {
         throw SgXmlrpcValueTypeError(value,
@@ -445,10 +454,52 @@ void fromXmlrpcValue(const xmlrpc_c::value &value, Dict &out)
     {
         out = Dict(SgMap(xmlrpc_c::value_struct(value)));
     }
+    else if (value.type() == xmlrpc_c::value::TYPE_NIL)
+    {
+        throw SgXmlrpcValueIsNilError();
+    }
     else
     {
         throw SgXmlrpcValueTypeError(value,
                                      xmlrpc_c::value::TYPE_STRUCT,
+                                     value.type());
+    }
+}
+
+// *****************************************************************************
+void fromXmlrpcValue(const xmlrpc_c::value &value, FilterBy &out)
+{
+    if (value.type() == xmlrpc_c::value::TYPE_STRUCT)
+    {
+        out = FilterBy(SgMap(xmlrpc_c::value_struct(value)));
+    }
+    else if (value.type() == xmlrpc_c::value::TYPE_NIL)
+    {
+        throw SgXmlrpcValueIsNilError();
+    }
+    else
+    {
+        throw SgXmlrpcValueTypeError(value,
+                                     xmlrpc_c::value::TYPE_STRUCT,
+                                     value.type());
+    }
+}
+
+// *****************************************************************************
+void fromXmlrpcValue(const xmlrpc_c::value &value, SortBy &out)
+{
+    if (value.type() == xmlrpc_c::value::TYPE_ARRAY)
+    {
+        out = SortBy(SgArray((xmlrpc_c::value_array(value)).vectorValueValue()));
+    }
+    else if (value.type() == xmlrpc_c::value::TYPE_NIL)
+    {
+        throw SgXmlrpcValueIsNilError();
+    }
+    else
+    {
+        throw SgXmlrpcValueTypeError(value,
+                                     xmlrpc_c::value::TYPE_ARRAY,
                                      value.type());
     }
 }
@@ -477,6 +528,34 @@ std::string currDateStr()
 
 // *****************************************************************************
 // *****************************************************************************
+std::string toStdString(const int val)
+{
+    char str[1024];
+    sprintf(str, "%d", val);
+    return std::string(str);
+}
+
+std::string toStdString(const bool val)
+{
+    char str[1024];
+    sprintf(str, "%d", val);
+    return std::string(str);
+}
+
+std::string toStdString(const double val)
+{
+    char str[1024];
+    sprintf(str, "%f", val);
+    return std::string(str);
+}
+
+std::string toStdString(const time_t val)
+{
+    char str[1024];
+    sprintf(str, "%u", val);
+    return std::string(str);
+}
+
 std::string toStdString(const xmlrpc_c::value &value)
 {
     static int depth = 0;

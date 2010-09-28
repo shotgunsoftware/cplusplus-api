@@ -60,13 +60,13 @@ public:
                   const std::string &taskColor = "",
                   const bool taskMilestone = false);
 
-    Task updateTask(const std::string &taskName,
-                    const std::string &taskAssignee = "",
-                    const std::string &taskStartDate = "",
-                    const std::string &taskEndDate = "",
-                    const std::string &taskStatus = "",
-                    const std::string &taskColor = "",
-                    const bool taskMilestone = false);
+    Task *updateTask(const std::string &taskName,
+                     const std::string &taskAssignee = "",
+                     const std::string &taskStartDate = "",
+                     const std::string &taskEndDate = "",
+                     const std::string &taskStatus = "",
+                     const std::string &taskColor = "",
+                     const bool taskMilestone = false);
 
     bool removeTask(const std::string &taskName);
 

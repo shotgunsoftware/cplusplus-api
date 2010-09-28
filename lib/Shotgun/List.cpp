@@ -45,11 +45,49 @@ List::List(const SgArray &array) : m_value(array)
 }
 
 // *****************************************************************************
+List::List(const xmlrpc_c::value &value)
+{
+    if (value.type() == xmlrpc_c::value::TYPE_ARRAY)
+    {
+        m_value = xmlrpc_c::value_array(value).vectorValueValue();
+    }
+    else
+    {
+        throw SgListError(value);
+    }
+}
+
+// *****************************************************************************
 List &List::extend(const List &that)
 {
     m_value.insert(m_value.end(), that.m_value.begin(), that.m_value.end());
 
     return *this;
+}
+
+// *****************************************************************************
+const xmlrpc_c::value &List::operator[](const int index) const
+{
+    if (index >= 0 && index < m_value.size())
+    {
+        return m_value[index];
+    }
+    else
+    {
+        throw SgListError(index, 0, m_value.size());
+    }
+}
+
+// *****************************************************************************
+void List::erase(const int index)
+{
+    m_value.erase(m_value.begin() + index);
+}
+
+// *****************************************************************************
+void List::erase(const int first, const int last)
+{
+    m_value.erase(m_value.begin() + first, m_value.begin() + last);
 }
 
 } // End namespace Shotgun

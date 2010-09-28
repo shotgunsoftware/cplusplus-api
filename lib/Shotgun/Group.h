@@ -67,7 +67,7 @@ protected:
     static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Group(sg, attrs); }
     static Group *create(Shotgun *sg, const std::string &groupName);
 
-    static SgArray populateReturnFields();
+    static List populateReturnFields();
 };
 
 } // End namespace Shotgun

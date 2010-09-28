@@ -55,7 +55,7 @@ public:
                   const std::string &noteSubject = "",
                   const std::string &noteBody = "",
                   const std::string &noteType = "",
-                  const SgArray &noteLinks = SgArray(),
+                  const List &noteLinks = List(),
                   const std::string &noteOrigin = "");
 
 protected:

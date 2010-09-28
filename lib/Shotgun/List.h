@@ -36,6 +36,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <string>
 
 #include <Shotgun/types.h>
+#include <Shotgun/exceptions.h>
 
 namespace Shotgun {
 
@@ -45,6 +46,7 @@ class List
 public:
     List();
     List(const SgArray &array);
+    List(const xmlrpc_c::value &value);
 
     template <typename T>
     List(const T &value)
@@ -59,12 +61,22 @@ public:
 
         return *this;
     }
-
+    
     List &extend(const List &that);
+
+    template <typename T>
+    const T value(const int index) const;
+    
+    template <typename T>
+    const T operator[](const int index) const;
+    const xmlrpc_c::value &operator[](const int index) const;
 
     const SgArray &value() const { return m_value; }
     const bool empty() const { return m_value.empty(); }
     const int size() const { return m_value.size(); }
+    void clear() { m_value.clear(); }
+    void erase(const int index);
+    void erase(const int first, const int last);
 
     List &operator=(const List &that)
     {
@@ -79,6 +91,29 @@ public:
 protected:
     SgArray m_value;
 };
+
+// *****************************************************************************
+template <typename T>
+const T List::value(const int index) const
+{
+    if (index >= 0 && index < m_value.size())
+    {
+        T outVal;
+        fromXmlrpcValue(m_value[index], outVal);
+        return outVal;
+    }
+    else
+    {
+        throw SgListError(index, 0, m_value.size());
+    }
+}
+
+// *****************************************************************************
+template <typename T>
+const T List::operator[](const int index) const
+{
+    return value<T>(index);    
+}
 
 } // End namespace Shotgun
 

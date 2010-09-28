@@ -133,7 +133,6 @@ Task *TaskMixin::addTask(const std::string &taskName,
     // Check if the task already exists
     try
     {
-        // TODO: check "task_mixin.py"
         return getTaskByName(taskName);
     }
     catch (SgEntityNotFoundError)
@@ -159,17 +158,17 @@ Task *TaskMixin::addTask(const std::string &taskName,
 }
 
 // *****************************************************************************
-Task TaskMixin::updateTask(const std::string &taskName,
-                           const std::string &taskAssignee,
-                           const std::string &taskStartDate,
-                           const std::string &taskEndDate,
-                           const std::string &taskStatus,
-                           const std::string &taskColor,
-                           const bool taskMilestone)
+Task *TaskMixin::updateTask(const std::string &taskName,
+                            const std::string &taskAssignee,
+                            const std::string &taskStartDate,
+                            const std::string &taskEndDate,
+                            const std::string &taskStatus,
+                            const std::string &taskColor,
+                            const bool taskMilestone)
 {
     Task *task = getTaskByName(taskName);
 
-    SgMap updateMap;
+    Dict updateMap;
 
     // taskAssignee
     if (taskAssignee != "")
@@ -177,10 +176,7 @@ Task TaskMixin::updateTask(const std::string &taskName,
         try
         {
             HumanUser *user = task->sg()->findHumanUserByLogin(taskAssignee);
-
-            SgArray assignees;
-            assignees.push_back(toXmlrpcValue(user->asLink()));
-            updateMap["task_assignees"] = toXmlrpcValue(assignees);
+            updateMap.add("task_assignees", List(user->asLink()));
 
             delete user;
         }
@@ -189,10 +185,7 @@ Task TaskMixin::updateTask(const std::string &taskName,
             try
             {
                 Group *group = task->sg()->findGroupByName(taskAssignee);
-
-                SgArray assignees;
-                assignees.push_back(toXmlrpcValue(group->asLink()));
-                updateMap["task_assignees"] = toXmlrpcValue(assignees);
+                updateMap.add("task_assignees", List(group->asLink()));
 
                 delete group;
             }
@@ -208,11 +201,11 @@ Task TaskMixin::updateTask(const std::string &taskName,
     {
         if (taskStartDate == "now")
         {
-            updateMap["start_date"] = toXmlrpcValue(currDateStr());
+            updateMap.add("start_date", currDateStr());
         }
         else
         {
-            updateMap["start_date"] = toXmlrpcValue(taskStartDate);
+            updateMap.add("start_date", taskStartDate);
         }
     }
 
@@ -221,40 +214,33 @@ Task TaskMixin::updateTask(const std::string &taskName,
     {
         if (taskEndDate == "now")
         {
-            updateMap["due_date"] = toXmlrpcValue(currDateStr());
+            updateMap.add("due_date", currDateStr());
         }
         else
         {
-            updateMap["due_date"] = toXmlrpcValue(taskEndDate);
+            updateMap.add("due_date", taskEndDate);
         }
     }
 
     // taskStatus
     if (taskStatus != "")
     {
-        updateMap["sg_status_list"] = toXmlrpcValue(taskStatus);
+        updateMap.add("sg_status_list", taskStatus);
     }
 
     // taskColor
     if (taskColor != "")
     {
-        updateMap["color"] = toXmlrpcValue(taskColor);
+        updateMap.add("color", taskColor);
     }
 
     // taskMilestone
-    updateMap["milestone"] = toXmlrpcValue(taskMilestone);
+    updateMap.add("milestone", taskMilestone);
 
     // update the task's attributes
     task->setAttrValue(updateMap);
 
-#warning This needs to be fixed as soon as the return type is changed to pointer
-#if 0
     return task;
-#else
-    Task out = *task;
-    delete task;
-    return out;
-#endif
 }
 
 // *****************************************************************************
@@ -264,7 +250,7 @@ bool TaskMixin::removeTask(const std::string &taskName)
     {
         Task *task = getTaskByName(taskName);
 
-        task->sg()->deleteTaskById(task->sgId());
+        task->sg()->deleteEntity<Task>(task->sgId());
 
         delete task;
         return true;

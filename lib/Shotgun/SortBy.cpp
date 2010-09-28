@@ -35,12 +35,12 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace Shotgun {
 
 // *****************************************************************************
-SortBy::SortBy() : m_sorts(SgArray())
+SortBy::SortBy() : m_sorts(List())
 {
 }
 
 // *****************************************************************************
-SortBy::SortBy(const SgArray &sorts) : m_sorts(sorts)
+SortBy::SortBy(const List &sorts) : m_sorts(sorts)
 {
 }
 
@@ -48,11 +48,8 @@ SortBy::SortBy(const SgArray &sorts) : m_sorts(sorts)
 SortBy &SortBy::then(const std::string &fieldName,
                      const std::string &direction)
 {
-    SgMap sort;
-    sort["field_name"] = toXmlrpcValue(fieldName);
-    sort["direction"] = toXmlrpcValue(direction);
-
-    m_sorts.push_back(toXmlrpcValue(sort));
+    m_sorts.append(Dict("field_name", fieldName)
+                   .add("direction", direction));
 
     return *this;
 }
@@ -60,10 +57,7 @@ SortBy &SortBy::then(const std::string &fieldName,
 // *****************************************************************************
 SortBy &SortBy::then(const SortBy &that)
 {
-    for (size_t i = 0; i < that.size(); i++)
-    {
-        m_sorts.push_back(toXmlrpcValue((that.sorts())[i]));
-    }
+    m_sorts.extend(that.sorts());
 
     return *this;
 }

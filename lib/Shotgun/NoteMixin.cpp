@@ -46,11 +46,8 @@ NotePtrs NoteMixin::getNotes(const int limit)
     // derived class.
     if (Entity *entity = dynamic_cast<Entity *>(this))
     {
-        SgArray noteLinks;
-        noteLinks.push_back(toXmlrpcValue(entity->asLink()));
-
         return entity->sg()->findNotesByLinks("", // projectCode - unnecessary in this case
-                                              noteLinks, 
+                                              List(entity->asLink()), 
                                               "", // noteType
                                               limit);
     }
@@ -105,13 +102,13 @@ Note *NoteMixin::addNote(const std::string &noteFromUserName,
                          const std::string &noteSubject,
                          const std::string &noteBody,
                          const std::string &noteType,
-                         const SgArray &noteLinks,
+                         const List &noteLinks,
                          const std::string &noteOrigin)
 {
     if (Entity *entity = dynamic_cast<Entity *>(this))
     {
         // Add extra entity-specific note links
-        SgArray links = noteLinks;
+        List links = noteLinks;
 
         if (entity->entityType() == "Version")
         {
@@ -120,7 +117,7 @@ Note *NoteMixin::addNote(const std::string &noteFromUserName,
                 try
                 {
                     const Shot *shot = version->sgShot();
-                    links.push_back(toXmlrpcValue(shot->asLink()));
+                    links.append(shot->asLink());
                     delete shot;
                 }
                 catch (SgEntityNotFoundError)
@@ -135,7 +132,7 @@ Note *NoteMixin::addNote(const std::string &noteFromUserName,
         }
         else if (entity->entityType() == "Asset")
         {
-            links.push_back(toXmlrpcValue(entity->asLink()));
+            links.append(entity->asLink());
         }
 
         return entity->sg()->createNote(entity->sgProjectCode(),

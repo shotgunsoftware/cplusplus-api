@@ -62,9 +62,9 @@ public:
     void sgDescription(const std::string &val) { setAttrValue("description", toXmlrpcValue(val)); }
     void sgTags(const Strings &val) { setAttrValue("tag_list", toXmlrpcValue(val)); }
     void sgNotes(const Notes &val);  // An array of Note entities
-    void sgNotes(const SgArray &val);  // An array of entity links
+    void sgNotes(const List &val);  // An array of entity links
     void sgVersions(const Versions &val);  // An array of Version entities
-    void sgVersions(const SgArray &val);  // An array of entity links
+    void sgVersions(const List &val);  // An array of entity links
 
     static std::string type() { return std::string("Playlist"); }
 
@@ -82,7 +82,7 @@ protected:
                             const std::string &projectCode,
                             const std::string &playlistName);
 
-    static SgArray populateReturnFields();
+    static List populateReturnFields();
 };
 
 } // End namespace Shotgun

@@ -98,9 +98,9 @@ protected:
                         const std::string &taskStatus = "",
                         const std::string &taskColor = "",
                         const bool taskMilestone = false,
-                        const SgMap &taskEntityLink = SgMap());
+                        const Dict &taskEntityLink = Dict());
 
-    static SgArray populateReturnFields();
+    static List populateReturnFields();
 };
 
 } // End namespace Shotgun

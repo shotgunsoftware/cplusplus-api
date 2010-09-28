@@ -65,8 +65,7 @@ public:
         INVALID_ATTR_USE_DEFAULT
     };
 
-#warning This needs to be re-done.  There are NO attributes that are common to ALL entities!
-    // These are the generic entity attributes shared by all entities
+    // These are the few common attributes shared by all entities
     virtual const int sgId() const { return getAttrValueAsInt("id"); }
     virtual const time_t sgDateCreated() const { return getAttrValueAsDatetime("created_at"); }
     virtual const time_t sgDateUpdated() const { return getAttrValueAsDatetime("updated_at"); }
@@ -74,106 +73,153 @@ public:
     // These two have to be overridden for Project entity
     virtual const std::string sgProjectName() const { return getProjectName(); }
     virtual const std::string sgProjectCode() const { return getProjectCode(); }
+
     // Has to define a virtual sgName() here since it's called within sgLink().
     virtual const std::string sgName() const { return std::string(""); }
 
     const Shotgun *sg() const { return m_sg; }
     Shotgun *sg() { return m_sg; }
 
+    // When the attribute doesn't have a valid value, this mode decides whether
+    // to throw an exception or provide a default value.
     void setInvalidAttrMode(InvalidAttrMode mode) { m_invalidAttrMode = mode; }
     const InvalidAttrMode getInvalidAttrMode() const { return m_invalidAttrMode; }
-    void printAttrs() const;
+
     const std::string entityType() const { return m_type; }
     const xmlrpc_c::value &attrs() const { return *m_attrs; }
     const std::string str() const { return toStdString(*m_attrs); }
-    const SgMap asLink() const;
 
-    // If an entity has a link attribute, this returns the entity type 
-    // of the link.
+    // -------------------------------------------------------------------------
+    // This returns a mini link map of the entity. It looks like this:
+    //     { 
+    //         "type" : "Project",
+    //         "id" : 68,
+    //         "name" : "TEST PROJECT"
+    //     }
+    // -------------------------------------------------------------------------
+    const Dict asLink() const;
+
+    // If an entity has a link attribute, this returns the entity type of the link.
     const std::string linkEntityType(const std::string &linkName) const;
     
-    // Get a attribute's value of a generic data type
+    // Get a attribute's value as a generic xmlrpc_c::value type
     virtual const xmlrpc_c::value getAttrValue(const std::string &attrName) const;
     static const xmlrpc_c::value getAttrValue(const std::string &attrName, 
-                                              const SgMap &attrsMap);
+                                              const Dict &attrsMap);
 
     // Get a attribute's value of a specific data type
     virtual const int getAttrValueAsInt(const std::string &attrName, 
                                         const int defaultVal = 0) const; 
     static const int getAttrValueAsInt(const std::string &attrName, 
-                                       const SgMap &attrsMap,
+                                       const Dict &attrsMap,
                                        const int defaultVal = 0, 
                                        const InvalidAttrMode invalidAttrMode = INVALID_ATTR_THROW_EXCEPTION);
 
     virtual const bool getAttrValueAsBool(const std::string &attrName, 
                                           const bool defaultVal = false) const; 
     static const bool getAttrValueAsBool(const std::string &attrName, 
-                                         const SgMap &attrsMap,
+                                         const Dict &attrsMap,
                                          const bool defaultVal = false, 
                                          const InvalidAttrMode invalidAttrMode = INVALID_ATTR_THROW_EXCEPTION);
 
     virtual const double getAttrValueAsDouble(const std::string &attrName, 
                                               const double defaultVal = 0.0) const; 
     static const double getAttrValueAsDouble(const std::string &attrName, 
-                                             const SgMap &attrsMap,
+                                             const Dict &attrsMap,
                                              const double defaultVal = 0.0, 
                                              const InvalidAttrMode invalidAttrMode = INVALID_ATTR_THROW_EXCEPTION);
 
     virtual const time_t getAttrValueAsDatetime(const std::string &attrName, 
                                                 const time_t defaultVal = 0) const;
     static const time_t getAttrValueAsDatetime(const std::string &attrName, 
-                                               const SgMap &attrsMap,
+                                               const Dict &attrsMap,
                                                const time_t defaultVal = 0, 
                                                const InvalidAttrMode invalidAttrMode = INVALID_ATTR_THROW_EXCEPTION);
 
     virtual const std::string getAttrValueAsString(const std::string &attrName, 
                                                    const std::string &defaultVal = "") const;
     static const std::string getAttrValueAsString(const std::string &attrName, 
-                                                  const SgMap &attrsMap,
+                                                  const Dict &attrsMap,
                                                   const std::string &defaultVal = "", 
                                                   const InvalidAttrMode invalidAttrMode = INVALID_ATTR_THROW_EXCEPTION);
 
-    virtual const SgArray getAttrValueAsArray(const std::string &attrName, 
-                                              const SgArray &defaultVal = SgArray()) const;
-    static const SgArray getAttrValueAsArray(const std::string &attrName, 
-                                             const SgMap &attrsMap,
-                                             const SgArray &defaultVal = SgArray(), 
-                                             const InvalidAttrMode invalidAttrMode = INVALID_ATTR_THROW_EXCEPTION);
+    virtual const List getAttrValueAsList(const std::string &attrName, 
+                                          const List &defaultVal = List()) const;
+    static const List getAttrValueAsList(const std::string &attrName, 
+                                         const Dict &attrsMap,
+                                         const List &defaultVal = List(), 
+                                         const InvalidAttrMode invalidAttrMode = INVALID_ATTR_THROW_EXCEPTION);
 
     // This member function can't take a default value because it has the same 
     // type as the attrsMap, and therefore creates an ambiguous overload.
-    //const SgMap getAttrValueAsMap(const std::string &attrName, 
-    //                              const SgMap &defaultVal = SgMap()) const;
-    virtual const SgMap getAttrValueAsMap(const std::string &attrName) const;
-    static const SgMap getAttrValueAsMap(const std::string &attrName, 
-                                         const SgMap &attrsMap,
-                                         const SgMap &defaultVal = SgMap(), 
+    //const Dict getAttrValueAsDict(const std::string &attrName, 
+    //                              const Dict &defaultVal = Dict()) const;
+    virtual const Dict getAttrValueAsDict(const std::string &attrName) const;
+    static const Dict getAttrValueAsDict(const std::string &attrName, 
+                                         const Dict &attrsMap,
+                                         const Dict &defaultVal = Dict(), 
                                          const InvalidAttrMode invalidAttrMode = INVALID_ATTR_THROW_EXCEPTION);
 
     virtual const Strings getAttrValueAsTags(const std::string &attrName) const;
     static const Strings getAttrValueAsTags(const std::string &attrName,
-                                            const SgMap &attrsMap);
+                                            const Dict &attrsMap);
 
     virtual const Entity *getAttrValueAsEntityPtr(const std::string &attrName) const;
     static const Entity *getAttrValueAsEntityPtr(Shotgun *sg,
                                                  const std::string &attrName,
-                                                 const SgMap &attrsMap);
+                                                 const Dict &attrsMap);
 
     virtual const EntityPtrs getAttrValueAsMultiEntityPtr(const std::string &attrName) const;
     static const EntityPtrs getAttrValueAsMultiEntityPtr(Shotgun *sg,
                                                    const std::string &attrName,
-                                                   const SgMap &attrsMap);
+                                                   const Dict &attrsMap);
 
     virtual const std::string getAttrValueAsUserLogin(const std::string &attrName) const;
     static const std::string getAttrValueAsUserLogin(Shotgun *sg,
                                                      const std::string &attrName,
-                                                     const SgMap &attrsMap);
+                                                     const Dict &attrsMap);
 
-    // Set a attribute's value - Omitted the optional "parent_entity" for now
-    virtual void setAttrValue(const std::string &attrName, 
-                              const xmlrpc_c::value &attrValue,
-                              const SgArray &multiValues = SgArray());
-    virtual void setAttrValue(const SgMap &attrPairs); 
+    // -------------------------------------------------------------------------
+    // The structure to set a field's value is like this:
+    //     "fields" : [
+    //            {
+    //                "field_name" : <string>,            // Required
+    //                "value" : <field_value>,            // Required
+    //                "multi_entity_update_mode" : "set" | "add" | "remove",   // Optional
+    //                "parent_entity": {"type" : <string>, "id" : <int>}       // Optional
+    //            },
+    //            ...
+    //      ]
+    // -------------------------------------------------------------------------
+
+    // Set values for only one field
+    virtual void setAttrValue(const std::string &fieldName, 
+                              const xmlrpc_c::value &fieldValue,
+                              const std::string &multiEntityUpdateMode = "",
+                              const Dict &parentEntity = Dict());
+
+    // Set values for one or more fields at once - omitted the optional 
+    // "multi_entity_update_mode" and "parent_entity" in this version.
+    // For example,
+    //
+    //     myProject->setAttrValue(Shotgun::Dict("name",                   "TEST PROJECT")
+    //                                      .add("sg_default_start_frame", 101));
+    //
+    virtual void setAttrValue(const Dict &fieldNameValuePairs); 
+
+    // Set values for one or more fields at once - with the optional
+    // "multi_entity_update_mode" and "parent_entity".
+    // For example,
+    //
+    //     myProject->setAttrValue(Shotgun::List(Shotgun::Dict("field_name",               "name")
+    //                                                    .add("value",                    "TEST PROJECT")
+    //                                                    .add("multi_entity_update_mode", "set")
+    //                                                    .add("parent_entity",            Shotgun::Dict("type" : "Project")
+    //                                                                                               .add("id"   : 78))
+    //                                   .append(Shotgun::Dict("field_name", "sg_default_start_frame")
+    //                                                    .add("value",      106)));
+    //
+    virtual void setAttrValue(const List &fields); 
 
     // TODO: Explore making this operator overload virtual
     Entity &operator=(const Entity &that)
@@ -195,54 +241,58 @@ protected:
     Entity(Shotgun *sg);
 
     // Create a new Shotgun entity
-    static xmlrpc_c::value createSGEntity(Shotgun *sg, const SgMap &createMap);
+    static xmlrpc_c::value createSGEntity(Shotgun *sg, const Dict &createMap);
 
     // Find a list of Shotgun entities that match the search map
-    static SgArray findSGEntities(Shotgun *sg, SgMap &findMap);
+    static List findSGEntities(Shotgun *sg, Dict &findMap);
 
     // Update an attribute of an existing Shotgun entity
-//     static xmlrpc_c::value updateSGEntity(Shotgun *sg, const SgMap &updateMap);
-
     static xmlrpc_c::value updateSGEntity(Shotgun *sg,
                                           const std::string &entityType,
                                           const int entityId,
-                                          const SgArray &fieldsToUpdate);
+                                          const List &fieldsToUpdate);
 
     // Delete an existing Shotgun entity
     static bool deleteSGEntity(Shotgun *sg, 
                                const std::string &entityType,
-                               const int id);
+                               const int entityId);
 
-    static SgMap buildCreateMap(const std::string &entityType,
-                                const SgMap &data,
-                                const SgArray &returnFields = SgArray());
+    // Build a data map for creating a new Shotgun entity
+    static Dict buildCreateMap(const std::string &entityType,
+                               const Dict &data,
+                               const List &extraReturnFields = List());
 
-    static SgMap buildUpdateMap(const std::string &entityType,
-                                const int entityId,
-                                const SgArray &fieldsToUpdate);
+    // Build a filter map for finding one or more Shotgun entities
+    static Dict buildFindMap(const std::string &entityType,
+                             const FilterBy &filterList = FilterBy(),
+                             const List &extraReturnFields = List(),
+                             const bool retiredOnly = false,
+                             const int limit = 0,
+                             const SortBy &order = SortBy());
 
-    // Construct a search map based on the given data
-    static SgMap buildFindMap(const std::string &entityType,
-                              const FilterBy &filterList = FilterBy(), // Update .sip for the line
-                              const SgArray &returnFields = SgArray(),
-                              const bool retiredOnly = false,
-                              const int limit = 0,
-                              const SortBy &order = SortBy());
+    // Get the value for a given attribute. If the attribute is not included in
+    // the entity's return fields, fetch its value directly from Shotgun.
+    template <typename T>
+    const T getAttrValue(const std::string &attrName,
+                         const T defaultVal) const;
+
+    // Get the value for a given attribute from the given attribute map.
+    template <typename T>
+    static const T getAttrValue(const std::string &attrName,
+                                const Dict &attrsMap,
+                                const T defaultVal,
+                                const InvalidAttrMode invalidAttrMode = INVALID_ATTR_THROW_EXCEPTION);
 
     // The result of the method call is a struct. This function is to extract 
     // a list of entities from the find result struct.
-    static SgArray getFindResultEntityList(xmlrpc_c::value &rawResult);
+    static List getFindResultEntityList(xmlrpc_c::value &rawResult);
 
     // Get the paging info from the raw result of the method calls
-    static SgMap getResultPagingInfo(xmlrpc_c::value &rawResult);
+    static Dict getResultPagingInfo(xmlrpc_c::value &rawResult);
 
-    // Convert an entity's attr map of xmlrpc_c::value type to an Entity pointer type.
-    // This is simply a helper function
-//     static Entity *entityAttrMapToEntityPtr(Shotgun *sg,
-//                                             const xmlrpc_c::value &entityAttrMap);
-
-    // Validate a link map and see if it contains the required fields
-    static void validateLink(const SgMap &link);
+    // Validate a link map and see if it contains the required fields, such as
+    // "type", "id" and "name" - (Not sure if "name" is mandatory or optional?)
+    static void validateLink(const Dict &link);
     static void validateLink(const xmlrpc_c::value &link);
 
     const std::string getProjectName() const;
@@ -258,6 +308,58 @@ protected:
     // see: http://xmlrpc-c.sourceforge.net/doc/libxmlrpc++.html
     xmlrpc_c::value *m_attrs;
 };
+
+// *****************************************************************************
+template <typename T>
+const T Entity::getAttrValue(const std::string &attrName,
+                             const T defaultVal) const
+{
+    T result = defaultVal;
+
+    xmlrpc_c::value genericResult = getAttrValue(attrName);
+
+    try
+    {
+        fromXmlrpcValue(genericResult, result);
+    }
+    catch (SgXmlrpcValueTypeError &error)
+    {
+        if (m_invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
+        {
+            throw SgAttrTypeError(attrName,
+                                  error.what());
+        }
+    }
+
+    return result;
+}
+
+// *****************************************************************************
+template <typename T>
+const T Entity::getAttrValue(const std::string &attrName,
+                             const Dict &attrsMap,
+                             const T defaultVal,
+                             InvalidAttrMode invalidAttrMode)
+{
+    T result = defaultVal;
+
+    xmlrpc_c::value genericResult = getAttrValue(attrName, attrsMap);
+
+    try
+    {
+        fromXmlrpcValue(genericResult, result);
+    }
+    catch (SgXmlrpcValueTypeError &error)
+    {
+        if (invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
+        {
+            throw SgAttrTypeError(attrName,
+                                  error.what());
+        }
+    }
+
+    return result;
+}
 
 } // End namespace Shotgun
 

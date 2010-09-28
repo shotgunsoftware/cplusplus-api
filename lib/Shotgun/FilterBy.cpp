@@ -35,12 +35,12 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace Shotgun {
 
 // *****************************************************************************
-FilterBy::FilterBy() : m_filters(SgMap())
+FilterBy::FilterBy() : m_filters(Dict())
 {
 }
 
 // *****************************************************************************
-FilterBy::FilterBy(const SgMap &filters) : m_filters(filters)
+FilterBy::FilterBy(const Dict &filters) : m_filters(filters)
 {
 }
 
@@ -52,37 +52,36 @@ FilterBy &FilterBy::op(const std::string &logicOperator,
 {
     // -------------------------------------------------------------------
     // The new simple condition
-    SgMap newCondition;
-    newCondition["path"] = toXmlrpcValue(path);
-    newCondition["relation"] = toXmlrpcValue(relation);
+    Dict newCondition = Dict("path", path)
+                        .add("relation", relation);
 
     // The value has to be converted to an array
-    SgArray valueArray;
+    List valueList;
     if (value.type() == xmlrpc_c::value::TYPE_ARRAY)
     {
-        valueArray = xmlrpc_c::value_array(value).vectorValueValue();
+        fromXmlrpcValue(value, valueList);
     }
     else
     {
-        valueArray.push_back(value);
+        valueList.append(value);
     }
-    newCondition["values"] = toXmlrpcValue(valueArray);
+    newCondition.add("values", valueList);
  
     // -------------------------------------------------------------------
     // Add the new simple condition to the conditions list
-    SgArray conditions;
+    List conditions;
     if (!m_filters.empty()) 
     {
         // The Original m_filters map now becomes a condition
-        conditions.push_back(toXmlrpcValue(m_filters));
+        conditions.append(m_filters);
     }
-    conditions.push_back(toXmlrpcValue(newCondition));
+    conditions.append(newCondition);
 
     // -------------------------------------------------------------------
     // Update the filters
     m_filters.clear();
-    m_filters["logical_operator"] = toXmlrpcValue(logicOperator);
-    m_filters["conditions"] = toXmlrpcValue(conditions);
+    m_filters.add("logical_operator", logicOperator)
+             .add("conditions", conditions);
 
     return *this;
 }
@@ -91,15 +90,15 @@ FilterBy &FilterBy::op(const std::string &logicOperator,
 FilterBy &FilterBy::op(const std::string &logicOperator,
                        const FilterBy &that)
 {
-    SgArray conditions;
-    conditions.push_back(toXmlrpcValue(m_filters));
-    conditions.push_back(toXmlrpcValue(that.m_filters));
+    List conditions;
+    conditions.append(m_filters);
+    conditions.append(that.m_filters);
 
     // -------------------------------------------------------------------
     // Update the filters
     m_filters.clear();
-    m_filters["logical_operator"] = toXmlrpcValue(logicOperator);
-    m_filters["conditions"] = toXmlrpcValue(conditions);
+    m_filters.add("logical_operator", logicOperator)
+             .add("conditions", conditions);
 
     return *this;
 }

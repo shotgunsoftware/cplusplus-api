@@ -65,9 +65,9 @@ public:
     // sgLinks() is a list of mixed types of entities. If we want to these 
     // functions to return a list of entities instead of a list of mini maps, 
     // check function, sgAssignees() in "Task.h".
-    const SgArray sgCc() const { return getAttrValueAsArray("addressings_cc"); } 
-    const SgArray sgTo() const { return getAttrValueAsArray("addressings_to"); } 
-    const SgArray sgLinks() const { return getAttrValueAsArray("note_links"); } 
+    const List sgCc() const { return getAttrValueAsList("addressings_cc"); } 
+    const List sgTo() const { return getAttrValueAsList("addressings_to"); } 
+    const List sgLinks() const { return getAttrValueAsList("note_links"); } 
 
     static std::string type() { return std::string("Note"); }
 
@@ -89,10 +89,10 @@ protected:
                         const std::string &noteSubject = "",
                         const std::string &noteBody = "",
                         const std::string &noteType = "",
-                        const SgArray &noteLinks = SgArray(),
+                        const List &noteLinks = List(),
                         const std::string &noteOrigin = "");
 
-    static SgArray populateReturnFields();
+    static List populateReturnFields();
 };
 
 } // End namespace Shotgun

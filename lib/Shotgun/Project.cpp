@@ -82,38 +82,31 @@ Project *Project::create(Shotgun *sg,
     }
     catch (SgEntityNotFoundError)
     {
-        SgMap attrsMap;
+        Dict attrsMap = Dict("code", projectCode)
+                        .add("name", projectName);
 
-        attrsMap["code"] = toXmlrpcValue(projectCode);
-        attrsMap["name"] = toXmlrpcValue(projectName);
-
-        return sg->createEntity<Project>(Dict(attrsMap));
+        return sg->createEntity<Project>(attrsMap);
     }
 }
 
 // *****************************************************************************
-SgArray Project::populateReturnFields()
+List Project::populateReturnFields()
 {
-    SgArray returnFields;
-
-    returnFields.push_back(toXmlrpcValue("id"));
-    returnFields.push_back(toXmlrpcValue("project"));
-    returnFields.push_back(toXmlrpcValue("created_at"));
-    returnFields.push_back(toXmlrpcValue("updated_at"));
-
-    returnFields.push_back(toXmlrpcValue("name"));
-    returnFields.push_back(toXmlrpcValue("code"));
-    returnFields.push_back(toXmlrpcValue("sg_status"));
-    returnFields.push_back(toXmlrpcValue("sg_archive_watcher"));
-    returnFields.push_back(toXmlrpcValue("sg_pub_stills_watcher"));
-    returnFields.push_back(toXmlrpcValue("sg_generate_shot_aliases"));
-    returnFields.push_back(toXmlrpcValue("sg_send_dailies_notices"));
-    returnFields.push_back(toXmlrpcValue("sg_polish_shot_notifications"));
-    returnFields.push_back(toXmlrpcValue("sg_report_storage_information"));
-    returnFields.push_back(toXmlrpcValue("sg_default_start_frame"));
-    returnFields.push_back(toXmlrpcValue("sg_ms_project_schedule"));
-
-    return returnFields;
+    return List("id")
+           .append("project")
+           .append("created_at")
+           .append("updated_at")
+           .append("name")
+           .append("code")
+           .append("sg_status")
+           .append("sg_archive_watcher")
+           .append("sg_pub_stills_watcher")
+           .append("sg_generate_shot_aliases")
+           .append("sg_send_dailies_notices")
+           .append("sg_polish_shot_notifications")
+           .append("sg_report_storage_information")
+           .append("sg_default_start_frame")
+           .append("sg_ms_project_schedule");
 }
 
 } // End namespace Shotgun
@@ -130,13 +123,13 @@ std::string toStdString(const Shotgun::Projects &projects)
 {
     // The std::string of xmlrpc_c::value type has been formatted very well.
     // So convert it to xmlrpc_c::value first.
-    Shotgun::SgArray array;
+    Shotgun::List list;
     for (size_t i = 0; i < projects.size(); i++)
     {
-        array.push_back(projects[i].attrs());
+        list.append(projects[i].attrs());
     }
     
-    return toStdString(Shotgun::toXmlrpcValue(array));
+    return toStdString(list);
 }
 
 // *****************************************************************************

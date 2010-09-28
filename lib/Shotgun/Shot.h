@@ -82,9 +82,9 @@ public:
     const int sgWorkingDuration() const { return getAttrValueAsInt("smart_working_duration"); }
 
     // Set an attribute's value
-    void sgSequence(const SgMap &val);
+    void sgSequence(const Dict &val);
     void sgElements(const Elements &val); // An array of Element entities
-    void sgElements(const SgArray &val); // An array of entity links
+    void sgElements(const List &val); // An array of entity links
 
     static std::string type() { return std::string("Shot"); }
 
@@ -103,7 +103,7 @@ protected:
                         const std::string &shotName,
                         const std::string &sequenceName="");
 
-    static SgArray populateReturnFields();
+    static List populateReturnFields();
 };
 
 } // End namespace Shotgun

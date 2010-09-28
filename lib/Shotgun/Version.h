@@ -63,7 +63,7 @@ public:
     const std::string sgDescription() const { return getAttrValueAsString("description"); }
     const size_t sgFrameCount() const { return getAttrValueAsInt("frame_count"); }
     const std::string sgFrameRange() const { return getAttrValueAsString("frame_range"); }
-    const std::string sgThumbnailPath() const { return getAttrValueAsString("image"); /*TODO: This doesn't work yet.*/ }
+    const std::string sgThumbnailPath() const { return getAttrValueAsString("image"); }
 
     // ------------------------------------------------------------------------
     // IMPORTANT:
@@ -88,7 +88,7 @@ protected:
     static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Version(sg, attrs); }
     static Version *create(Shotgun *sg, const std::string &versionName);
 
-    static SgArray populateReturnFields();
+    static List populateReturnFields();
 };
 
 } // End namespace Shotgun

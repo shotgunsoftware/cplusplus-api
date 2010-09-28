@@ -77,35 +77,29 @@ Delivery *Delivery::create(Shotgun *sg,
     }
     catch (SgEntityNotFoundError)
     {
-        SgMap attrsMap;
-        attrsMap["project"] = toXmlrpcValue(sg->getProjectLink(projectCode));
-        attrsMap["title"] = toXmlrpcValue(deliveryName);
+        Dict attrsMap = Dict("project", sg->getProjectLink(projectCode))
+                        .add("title", deliveryName);
 
-        return sg->createEntity<Delivery>(Dict(attrsMap));
+        return sg->createEntity<Delivery>(attrsMap);
     }
 }
 
 // *****************************************************************************
-SgArray Delivery::populateReturnFields()
+List Delivery::populateReturnFields()
 {
-    SgArray returnFields;
-
-    returnFields.push_back(toXmlrpcValue("id"));
-    returnFields.push_back(toXmlrpcValue("project"));
-    returnFields.push_back(toXmlrpcValue("created_at"));
-    returnFields.push_back(toXmlrpcValue("updated_at"));
-
-    returnFields.push_back(toXmlrpcValue("title"));
-    returnFields.push_back(toXmlrpcValue("sg_delivery_data_size"));
-    returnFields.push_back(toXmlrpcValue("sg_delivery_notes"));
-    returnFields.push_back(toXmlrpcValue("sg_delivery_path"));
-    returnFields.push_back(toXmlrpcValue("sg_delivery_staged_path"));
-    returnFields.push_back(toXmlrpcValue("sg_delivery_status"));
-    returnFields.push_back(toXmlrpcValue("sg_delivery_type"));
-    returnFields.push_back(toXmlrpcValue("sg_wrangler"));
-    returnFields.push_back(toXmlrpcValue("sg_wrangler_notes"));
- 
-    return returnFields;
+    return List("id")
+           .append("project")
+           .append("created_at")
+           .append("updated_at")
+           .append("title")
+           .append("sg_delivery_data_size")
+           .append("sg_delivery_notes")
+           .append("sg_delivery_path")
+           .append("sg_delivery_staged_path")
+           .append("sg_delivery_status")
+           .append("sg_delivery_type")
+           .append("sg_wrangler")
+           .append("sg_wrangler_notes");
 }
 
 } // End namespace Shotgun
@@ -120,13 +114,13 @@ std::string toStdString(const Shotgun::Delivery &delivery)
 // *****************************************************************************
 std::string toStdString(const Shotgun::Deliveries &deliveries)
 {
-    Shotgun::SgArray array;
+    Shotgun::List list;
     for (size_t i = 0; i < deliveries.size(); i++)
     {
-        array.push_back(deliveries[i].attrs());
+        list.append(deliveries[i].attrs());
     }
     
-    return toStdString(Shotgun::toXmlrpcValue(array));
+    return toStdString(list);
 }
 
 // *****************************************************************************
