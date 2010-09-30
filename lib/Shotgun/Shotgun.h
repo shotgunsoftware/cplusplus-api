@@ -92,10 +92,6 @@ public:
     Method *method(const std::string &methodName) 
         { return new Method(this, methodName); }
 
-    void registerClass(const std::string &entityType,
-                       const FactoryFunc &factoryFunc,
-                       const PopulateReturnFieldsFunc &populateFunc);
-
     //-----------------------------------------------------------------------
     // Project Entity
     Project *createProject(const std::string &projectName, const std::string &projectCode) 
@@ -326,6 +322,10 @@ public:
     bool deleteEntity(const int id);
 
 protected:
+    void registerClass(const std::string &entityType,
+                       const FactoryFunc &factoryFunc,
+                       const PopulateReturnFieldsFunc &populateFunc);
+
     //----------------------------------------------------------------------
     // This factory function creates an array of entity object pointers which 
     // link to the existing Shotgun entities. The size of the array can be 0. 
