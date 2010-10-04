@@ -43,23 +43,47 @@ public:
     Note(const Shotgun::Note &ref);
     virtual ~Note();
 
-    const std::string sgAuthor() const throw(Shotgun::SgAttrError);
-    const std::string sgBody() const throw(Shotgun::SgAttrError);
-    const Shotgun::SgArray sgCc() const throw(Shotgun::SgAttrError);
-    const Shotgun::SgArray sgTo() const throw(Shotgun::SgAttrError);
-    const std::string sgStatus() const throw(Shotgun::SgAttrError);
-    const std::string sgSubject() const throw(Shotgun::SgAttrError);
-    const std::string sgName() const throw(Shotgun::SgAttrError);
-    const std::string sgType() const throw(Shotgun::SgAttrError);
-    const Shotgun::SgArray sgLinks() const throw(Shotgun::SgAttrError);
+    // Get an attribute's value
+    const std::string sgAuthor() const throw(Shotgun::SgError);
+    const std::string sgBody() const throw(Shotgun::SgError);
+    const std::string sgStatus() const throw(Shotgun::SgError);
+    const std::string sgSubject() const throw(Shotgun::SgError);
+    const std::string sgType() const throw(Shotgun::SgError);
+    Shotgun::Review *getLinkedReview() throw(Shotgun::SgError) /Factory/;
+    Shotgun::Shot *getLinkedShot() throw(Shotgun::SgError) /Factory/;
+    Shotgun::Version *getLinkedVersion() throw(Shotgun::SgError) /Factory/;
 
-    const Shotgun::Review getLinkedReview() const throw(Shotgun::SgAttrError, Shotgun::SgEntityError);
-    const Shotgun::Shot getLinkedShot() const throw(Shotgun::SgAttrError, Shotgun::SgEntityError);
-    const Shotgun::Version getLinkedVersion() const throw(Shotgun::SgAttrError, Shotgun::SgEntityError);
+    // Both sgCc() and sgTo() could be a mixed list of HumanUser and Group entities.
+    // sgLinks() is a list of mixed types of entities. If we want to these 
+    // functions to return a list of entities instead of a list of mini maps, 
+    // check function, sgAssignees() in "Task.h".
+    const Shotgun::List sgCc() const throw(Shotgun::SgError);
+    const Shotgun::List sgTo() const throw(Shotgun::SgError);
+    const Shotgun::List sgLinks() const throw(Shotgun::SgError);
+
+    static std::string type();
+
+    // ===================================================================
+    // This dynamicCast SIP function that has %MethodCode directive is not
+    // defined in C++. It should only provide the type of the input argument,
+    // but not its name in the header.
+    // ===================================================================
+
+    // This function should not have the /Factory/ annotation.
+    static Shotgun::Note *dynamicCast(Shotgun::Entity *) throw(Shotgun::SgError);
+%MethodCode
+    if (Shotgun::Note *p = dynamic_cast<Shotgun::Note *>(a0))
+    {
+        sipRes = p;
+    }
+    else
+    {
+        throw Shotgun::SgEntityDynamicCastError("Note");
+    }
+%End
 
 protected:
     Note(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
-
 };
 
-}; // End namespace Shotgun - IMPORTANT: has to have the semi-colon
+}; // End namespace Shotgun

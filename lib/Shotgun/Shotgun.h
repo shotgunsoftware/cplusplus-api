@@ -85,12 +85,17 @@ public:
 
     xmlrpc_c::client_xml *client() const { return m_client; }
     const std::string &serverURL() const { return m_serverURL; }
+    //const std::string &serverURL() const { throw SgError("JEAN EXCEPTION TEST!!!"); }
     const std::string &authKey() const { return m_authKey; }
     const std::string &api() const { return m_api; }
     const Dict &authMap() const { return m_authMap; } 
 
     Method *method(const std::string &methodName) 
         { return new Method(this, methodName); }
+
+    void registerClass(const std::string &entityType,
+                       const FactoryFunc &factoryFunc,
+                       const PopulateReturnFieldsFunc &populateFunc);
 
     //-----------------------------------------------------------------------
     // Project Entity
@@ -166,7 +171,7 @@ public:
     Delivery *createDelivery(const std::string &projectCode, const std::string &deliveryName) 
         { return Delivery::create(this, projectCode, deliveryName); }
     Delivery *findDeliveryByName(const std::string &projectCode, const std::string &deliveryName);
-    Delivery *findDeliveryById(const int &deliveryId);
+    Delivery *findDeliveryById(const int deliveryId);
     DeliveryPtrs findDeliveriesByProject(const std::string &projectCode, 
                                          const std::string &deliveryStatus = "",
                                          const int limit = 0);
@@ -192,7 +197,7 @@ public:
     Review *findReviewByName(const std::string &projectCode, 
                              const std::string &reviewName,
                              const std::string &dateSent = "");
-    Review *findReviewById(const int &reviewId);
+    Review *findReviewById(const int reviewId);
     ReviewPtrs findReviewsByProject(const std::string &projectCode,
                                     const int limit = 0);
 
@@ -205,7 +210,7 @@ public:
                                     reviewItemName); }
     ReviewItem *findReviewItemByName(const std::string &projectCode, 
                                      const std::string &reviewItemName);
-    ReviewItem *findReviewItemById(const int &reviewItemId);
+    ReviewItem *findReviewItemById(const int reviewItemId);
     ReviewItemPtrs findReviewItemsByProject(const std::string &projectCode, 
                                             const int limit = 0);
 
@@ -251,7 +256,7 @@ public:
     Group *createGroup(const std::string &groupName) 
         { return Group::create(this, groupName); }
     Group *findGroupByName(const std::string &groupName);
-    Group *findGroupById(const int &groupId);
+    Group *findGroupById(const int groupId);
 
     //------------------------------------------------------------------------
     // Note Entity
@@ -300,9 +305,6 @@ public:
                     const List &extraReturnFields = List());
 
     //------------------------------------------------------------------------
-    Entity *findEntityById(const std::string &entityType, const int &id);
-
-    //------------------------------------------------------------------------
     template <class T>
     T *findEntity(const FilterBy &filterList = FilterBy(),
                   const List &extraReturnFields = List(),
@@ -321,11 +323,33 @@ public:
     template <class T>
     bool deleteEntity(const int id);
 
-protected:
-    void registerClass(const std::string &entityType,
-                       const FactoryFunc &factoryFunc,
-                       const PopulateReturnFieldsFunc &populateFunc);
+    //------------------------------------------------------------------------
+    Entity *createEntity(const std::string &entityType,
+                         const Dict &data,
+                         const List &extraReturnFields = List());
 
+    //----------------------------------------------------------------------
+    Entity *findEntity(const std::string &entityType,
+                       const FilterBy &filterList = FilterBy(),
+                       const List &extraReturnFields = List(),
+                       const bool retiredOnly = false,
+                       const SortBy &order = SortBy());
+
+    //----------------------------------------------------------------------
+    EntityPtrs findEntities(const std::string &entityType,
+                            const FilterBy &filterList = FilterBy(),
+                            const int limit = 0,
+                            const List &extraReturnFields = List(),
+                            const bool retiredOnly = false,
+                            const SortBy &order = SortBy());
+
+    //------------------------------------------------------------------------
+    Entity *findEntityById(const std::string &entityType, const int id);
+
+    //------------------------------------------------------------------------
+    bool deleteEntity(const std::string &entityType, const int id);
+
+protected:
     //----------------------------------------------------------------------
     // This factory function creates an array of entity object pointers which 
     // link to the existing Shotgun entities. The size of the array can be 0. 
@@ -335,14 +359,6 @@ protected:
     // This factory function creates an entity object pointer which links to 
     // a newly-created Shotgun entity.
     Entity *entityFactoryCreate(const std::string &entityType, Dict &data);
-
-    //----------------------------------------------------------------------
-    // Overloaded function that is used within this library
-    Entity *findEntity(const std::string &entityType,
-                       const FilterBy &filterList = FilterBy(),
-                       const List &extraReturnFields = List(),
-                       const bool retiredOnly = false,
-                       const SortBy &order = SortBy());
 
     std::string m_serverURL;
     std::string m_authKey;
@@ -364,11 +380,10 @@ template <class T>
 T *Shotgun::createEntity(const Dict &data,
                          const List &extraReturnFields)
 {
-    Dict createMap = Entity::buildCreateMap(T::type(),
-                                            data,
-                                            extraReturnFields);
+    Entity *entity = createEntity(T::type(),
+                                  data,
+                                  extraReturnFields);
 
-    Entity *entity = this->entityFactoryCreate(T::type(), createMap);
     if (T *t = dynamic_cast<T *>(entity))
     {
         return t;
@@ -412,14 +427,12 @@ std::vector<T *> Shotgun::findEntities(const FilterBy &filterList,
                                        const bool retiredOnly,
                                        const SortBy &order)
 {
-    Dict findMap = Entity::buildFindMap(T::type(),
-                                        filterList,
-                                        extraReturnFields,
-                                        retiredOnly,
-                                        limit,
-                                        order);
-
-    EntityPtrs entities = this->entityFactoryFind(T::type(), findMap);
+    EntityPtrs entities = findEntities(T::type(),
+                                       filterList,
+                                       limit,
+                                       extraReturnFields,
+                                       retiredOnly,
+                                       order);
     std::vector<T *> outEntities;
 
     for (size_t i = 0; i < entities.size(); i++)

@@ -44,23 +44,43 @@ public:
     virtual ~Element();
 
     // Get an attribute's value
-    const std::string sgName() const throw(Shotgun::SgAttrError);
-    const Shotgun::Assets sgAssets() const throw(Shotgun::SgAttrError, Shotgun::SgEntityError);
-    const Shotgun::Shots sgShots() const throw(Shotgun::SgAttrError, Shotgun::SgEntityError);
-    const Shotgun::Strings sgTags() const throw(Shotgun::SgAttrError);
-    const std::string sgType() const throw(Shotgun::SgAttrError);
+    const std::string sgName() const throw(Shotgun::SgError);
+    const Shotgun::AssetPtrs sgAssets() const throw(Shotgun::SgError) /Factory/;
+    const Shotgun::ShotPtrs sgShots() const throw(Shotgun::SgError) /Factory/;
+    const Shotgun::Strings sgTags() const throw(Shotgun::SgError);
+    const std::string sgType() const throw(Shotgun::SgError);
 
     // Set an attribute's value
-    void sgAssets(const Shotgun::Assets &val) throw(Shotgun::SgAttrError); 
-    void sgAssets(const Shotgun::SgArray &val) throw(Shotgun::SgAttrError); 
-    void sgShots(const Shotgun::Shots &val) throw(Shotgun::SgAttrError); 
-    void sgShots(const Shotgun::SgArray &val) throw(Shotgun::SgAttrError); 
-    void sgTags(const Shotgun::Strings &val) throw(Shotgun::SgAttrError);
-    void sgType(const std::string &val) throw(Shotgun::SgAttrError);
+    void sgAssets(const Shotgun::Assets &val) throw(Shotgun::SgError);
+    void sgAssets(const Shotgun::List &val) throw(Shotgun::SgError);
+    void sgShots(const Shotgun::Shots &val) throw(Shotgun::SgError);
+    void sgShots(const Shotgun::List &val) throw(Shotgun::SgError);
+    void sgTags(const Shotgun::Strings &val) throw(Shotgun::SgError);
+    void sgType(const std::string &val) throw(Shotgun::SgError);
 
+    static std::string type();
+
+    // ===================================================================
+    // This dynamicCast SIP function that has %MethodCode directive is not
+    // defined in C++. It should only provide the type of the input argument,
+    // but not its name in the header.
+    // ===================================================================
+
+    // This function should not have the /Factory/ annotation.
+    static Shotgun::Element *dynamicCast(Shotgun::Entity *) throw(Shotgun::SgError);
+%MethodCode
+    if (Shotgun::Element *p = dynamic_cast<Shotgun::Element *>(a0))
+    {
+        sipRes = p;
+    }
+    else
+    {
+        throw Shotgun::SgEntityDynamicCastError("Element");
+    }
+%End
 
 protected:
     Element(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
 };
 
-}; // End namespace Shotgun - IMPORTANT: must have the semi-colon
+}; // End namespace Shotgun

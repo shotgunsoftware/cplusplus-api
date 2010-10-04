@@ -58,8 +58,7 @@ public:
     const bool sgMilestone() const { return getAttrValueAsBool("milestone"); } 
     const std::string sgStartDate() const { return getAttrValueAsString("start_date"); } 
     const std::string sgStatus() const { return getAttrValueAsString("sg_status_list"); } 
-    // The "sg_system_task_type" field seems no longer exist
-    //const std::string sgType() const { return getAttrValueAsString("sg_system_task_type"); } 
+    //const std::string sgType() const { return getAttrValueAsString("sg_system_task_type"); } // The "sg_system_task_type" field seems no longer exist
     
     // ------------------------------------------------------------------------
     // IMPORTANT: 
@@ -68,8 +67,7 @@ public:
     //     /Factory/ annotation.
     // ------------------------------------------------------------------------
     const Entity *sgLink() const { return getAttrValueAsEntityPtr("entity"); }
-    // The return value is a mixed list of HumanUsers & Groups
-    const EntityPtrs sgAssignees() const; 
+    const EntityPtrs sgAssignees() const; // The return value is a mixed list of HumanUsers & Groups
     const std::string sgLinkEntityType() const { return linkEntityType("entity"); }
 
     // Set an attribute's value

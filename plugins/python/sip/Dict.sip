@@ -33,56 +33,48 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace Shotgun {
 
 // *****************************************************************************
-class Playlist : Shotgun::Entity
+class Dict
 {
 %TypeHeaderCode
-    #include <Shotgun/Playlist.h>
+    #include <Shotgun/Dict.h>
 %End
 
 public:
-    Playlist(const Shotgun::Playlist &ref);
-    virtual ~Playlist();
-
-    // Get an attribute's value
-    const std::string sgName() const throw(Shotgun::SgError);
-    const std::string sgDescription() const throw(Shotgun::SgError);
-    const std::string sgThumbnail() const throw(Shotgun::SgError);
-    const Shotgun::Strings sgTags() const throw(Shotgun::SgError);
-    const Shotgun::NotePtrs sgNotes() const throw(Shotgun::SgError) /Factory/;
-    const Shotgun::VersionPtrs sgVersions() const throw(Shotgun::SgError) /Factory/;
-
-    // Set an attribute's value
-    void sgName(const std::string &val) throw(Shotgun::SgError);
-    void sgDescription(const std::string &val) throw(Shotgun::SgError);
-    void sgTags(const Shotgun::Strings &val) throw(Shotgun::SgError);
-    void sgNotes(const Shotgun::Notes &val) throw(Shotgun::SgError);
-    void sgNotes(const Shotgun::List &val) throw(Shotgun::SgError);
-    void sgVersions(const Shotgun::Versions &val) throw(Shotgun::SgError);
-    void sgVersions(const Shotgun::List &val) throw(Shotgun::SgError);
-
-    static std::string type();
+    Dict();
+    Dict(const Shotgun::SgMap &map);
+    Dict(const xmlrpc_c::value &value);
 
     // ===================================================================
-    // This dynamicCast SIP function that has %MethodCode directive is not
-    // defined in C++. It should only provide the type of the input argument,
-    // but not its name in the header.
+    // These SIP functions that have %MethodCode directive are not defined
+    // in C++. They are actually calling the C++ template functions. The
+    // functions defined in SIP should only provide the types of the arguments,
+    // but not their names in the header.
     // ===================================================================
 
-    // This function should not have the /Factory/ annotation.
-    static Shotgun::Playlist *dynamicCast(Shotgun::Entity *) throw(Shotgun::SgError);
+    // -------------------------------------------------------------------
+    Dict(const std::string &, const xmlrpc_c::value &);
 %MethodCode
-    if (Shotgun::Playlist *p = dynamic_cast<Shotgun::Playlist *>(a0))
-    {
-        sipRes = p;
-    }
-    else
-    {
-        throw Shotgun::SgEntityDynamicCastError("Playlist");
-    }
+    sipCpp = new Shotgun::Dict(*a0, *a1);
 %End
 
-protected:
-    Playlist(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
+    // -------------------------------------------------------------------
+    Shotgun::Dict &add(const std::string &, const xmlrpc_c::value &);
+%MethodCode
+    sipRes = &sipCpp->add(*a0, *a1);
+%End
+
+    // -------------------------------------------------------------------
+    const xmlrpc_c::value value(const std::string &key) const;
+    const xmlrpc_c::value operator[](const std::string &key) const;
+
+    // -------------------------------------------------------------------
+    const Shotgun::SgMap &value() const;
+    const bool empty() const;
+    const int size() const;
+    const bool find(const std::string &key) const;
+    void clear();
+    Shotgun::Dict &erase(const std::string &key);
 };
 
 }; // End namespace Shotgun
+

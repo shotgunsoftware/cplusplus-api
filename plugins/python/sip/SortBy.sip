@@ -33,51 +33,28 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace Shotgun {
 
 // *****************************************************************************
-class Version : Shotgun::Entity, Shotgun::NoteMixin
+class SortBy
 {
 %TypeHeaderCode
-    #include <Shotgun/Version.h>
+    #include <Shotgun/SortBy.h>
 %End
 
 public:
-    Version(const Shotgun::Version &ref);
-    virtual ~Version();
+    SortBy();
+    SortBy(const Shotgun::List &sorts);
 
-    // Get an attribute's value
-    const std::string sgName() const throw(Shotgun::SgError);
-    const std::string sgCode() const throw(Shotgun::SgError);
-    const std::string sgAuthor() const throw(Shotgun::SgError);
-    const Shotgun::Shot *sgShot() const throw(Shotgun::SgError) /Factory/; 
-    const std::string sgDescription() const throw(Shotgun::SgError);
-    const size_t sgFrameCount() const throw(Shotgun::SgError);
-    const std::string sgFrameRange() const throw(Shotgun::SgError);
-    const std::string sgThumbnailPath() const throw(Shotgun::SgError);
-    const Shotgun::Entity *sgLink() const throw(Shotgun::SgError) /Factory/;
-    const std::string sgLinkEntityType() const throw(Shotgun::SgError);
+    SortBy(const std::string &fieldName,
+           const std::string &direction = "asc");
 
-    static std::string type();
+    const Shotgun::List &sorts() const;
+    const bool empty() const;
+    const int size() const;
+    void clear();
 
-    // ===================================================================
-    // This dynamicCast SIP function that has %MethodCode directive is not
-    // defined in C++. It should only provide the type of the input argument,
-    // but not its name in the header.
-    // ===================================================================
-
-    // This function should not have the /Factory/ annotation.
-    static Shotgun::Version *dynamicCast(Shotgun::Entity *) throw(Shotgun::SgError);
-%MethodCode
-    if (Shotgun::Version *p = dynamic_cast<Shotgun::Version *>(a0))
-    {
-        sipRes = p;
-    }
-    else
-    {
-        throw Shotgun::SgEntityDynamicCastError("Version");
-    }
-%End
-
-protected:
-    Version(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
+    Shotgun::SortBy &then(const std::string &fieldName,
+                          const std::string &direction = "asc");
+    Shotgun::SortBy &then(const Shotgun::SortBy &that);
 };
 
 }; // End namespace Shotgun
+

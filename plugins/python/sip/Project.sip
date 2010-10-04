@@ -38,21 +38,42 @@ class Project : Shotgun::Entity
 %TypeHeaderCode
     #include <Shotgun/Project.h>
 %End
-
+ 
 public:
     Project(const Shotgun::Project &ref);
     virtual ~Project();
 
-    const std::string sgName() const throw(Shotgun::SgAttrError);
-    const std::string sgCode() const throw(Shotgun::SgAttrError);
+    virtual const std::string sgName() const throw(Shotgun::SgError);
+    virtual const std::string sgCode() const throw(Shotgun::SgError);
 
     // Overrides for base entity methods that don't work correctly 
     // for this entity type
-    virtual const std::string sgProjectName() const throw(Shotgun::SgAttrError);
-    virtual const std::string sgProjectCode() const throw(Shotgun::SgAttrError);
+    virtual const std::string sgProjectName() const throw(Shotgun::SgError);
+    virtual const std::string sgProjectCode() const throw(Shotgun::SgError);
+
+    static std::string type();
+
+    // ===================================================================
+    // This dynamicCast SIP function that has %MethodCode directive is not 
+    // defined in C++. It should only provide the type of the input argument,
+    // but not its name in the header.
+    // ===================================================================
+
+    // This function should not have the /Factory/ annotation.
+    static Shotgun::Project *dynamicCast(Shotgun::Entity *) throw(Shotgun::SgError);
+%MethodCode
+    if (Shotgun::Project *p = dynamic_cast<Shotgun::Project *>(a0))
+    {
+        sipRes = p;
+    }
+    else
+    {
+        throw Shotgun::SgEntityDynamicCastError("Project");
+    }
+%End
 
 protected:
     Project(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
 };
 
-}; // End namespace Shotgun - IMPORTANT: has to have the semi-colon
+}; // End namespace Shotgun

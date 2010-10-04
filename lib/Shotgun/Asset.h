@@ -55,11 +55,11 @@ public:
     virtual ~Asset();
 
     // Get an attribute's value
-    virtual const std::string sgCode() const { return getAttrValueAsString("code"); }
-    virtual const List sgParents() const { return getAttrValueAsList("parents"); }
-    virtual const ElementPtrs sgElements() const;
-    virtual const AssetPtrs sgAssets() const;
-    virtual const ShotPtrs sgShots() const;
+    const std::string sgCode() const { return getAttrValueAsString("code"); }
+    const List sgParents() const { return getAttrValueAsList("parents"); }
+    const ElementPtrs sgElements() const;
+    const AssetPtrs sgAssets() const;
+    const ShotPtrs sgShots() const;
 
     static std::string type() { return std::string("Asset"); }
 

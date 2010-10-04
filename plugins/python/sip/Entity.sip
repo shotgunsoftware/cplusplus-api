@@ -48,105 +48,58 @@ public:
         INVALID_ATTR_USE_DEFAULT
     };
 
-    const int sgId() const;
-    const time_t sgDateCreated() const;
-    const time_t sgDateUpdated() const;
-    virtual const std::string sgProjectName() const;
-    virtual const std::string sgProjectCode() const;
-    virtual const std::string sgName() const;
-    
-    // Can't use both version. Otherwise it will complain something like this:
-    // Shotgun::Entity::sg() has overloaded functions with the same Python signature
-    //
+    virtual const int sgId() const throw(Shotgun::SgError);
+    virtual const time_t sgDateCreated() const throw(Shotgun::SgError);
+    virtual const time_t sgDateUpdated() const throw(Shotgun::SgError);
+    virtual const std::string sgProjectName() const throw(Shotgun::SgError);
+    virtual const std::string sgProjectCode() const throw(Shotgun::SgError);
+    virtual const std::string sgName() const throw(Shotgun::SgError);
+
+    // Can't have both in SIP
     //const Shotgun::Shotgun *sg() const;
     Shotgun::Shotgun *sg();
 
     void setInvalidAttrMode(InvalidAttrMode mode);
     const InvalidAttrMode getInvalidAttrMode() const;
-    void printAttrs() const;
     const std::string entityType() const;
     const xmlrpc_c::value &attrs() const;
     const std::string str() const;
-    const Shotgun::SgMap asLink() const;
+    const Shotgun::Dict asLink() const;
 
     const std::string linkEntityType(const std::string &linkName) const;
-
-    // Get a attribute's value of a generic data type
-    const xmlrpc_c::value getAttrValue(const std::string &attrName) const throw(Shotgun::SgAttrError);
+    
+    // Get a attribute's value as a generic xmlrpc_c::value type
+    virtual const xmlrpc_c::value getAttrValue(const std::string &attrName) const throw(Shotgun::SgError);
     static const xmlrpc_c::value getAttrValue(const std::string &attrName, 
-                                              const Shotgun::SgMap &attrsMap) throw(Shotgun::SgAttrError);
+                                              const Shotgun::Dict &attrsMap) throw(Shotgun::SgError);
 
-    const Shotgun::Strings getAttrValueAsTags(const std::string &attrName) const throw(Shotgun::SgAttrError);
+    virtual const Shotgun::Strings getAttrValueAsTags(const std::string &attrName) const throw(Shotgun::SgError);
     static const Shotgun::Strings getAttrValueAsTags(const std::string &attrName,
-                                                        const Shotgun::SgMap &attrsMap) throw(Shotgun::SgAttrError);
+                                                     const Shotgun::Dict &attrsMap) throw(Shotgun::SgError);
 
-    Shotgun::Entity *getAttrValueAsEntityPtr(const std::string &attrName) 
-                            throw(Shotgun::SgAttrError, Shotgun::SgEntityError) /Factory/;
-    static Shotgun::Entity *getAttrValueAsEntityPtr(Shotgun::Shotgun *sg,
-                                                       const std::string &attrName,
-                                                       const Shotgun::SgMap &attrsMap) 
-                            throw(Shotgun::SgAttrError, Shotgun::SgEntityError) /Factory/;
+    virtual const Shotgun::Entity *getAttrValueAsEntityPtr(const std::string &attrName) const throw(Shotgun::SgError) /Factory/;
+    static const Shotgun::Entity *getAttrValueAsEntityPtr(Shotgun::Shotgun *sg,
+                                                          const std::string &attrName,
+                                                          const Shotgun::Dict &attrsMap) throw(Shotgun::SgError) /Factory/;
 
-    Shotgun::EntityPtrs getAttrValueAsMultiEntityPtr(const std::string &attrName) 
-                            throw(Shotgun::SgAttrError, Shotgun::SgEntityError) /Factory/;
-    static Shotgun::EntityPtrs getAttrValueAsMultiEntityPtr(Shotgun::Shotgun *sg,
-                                                               const std::string &attrName,
-                                                               const Shotgun::SgMap &attrsMap) 
-                            throw(Shotgun::SgAttrError, Shotgun::SgEntityError) /Factory/;
+    virtual const Shotgun::EntityPtrs getAttrValueAsMultiEntityPtr(const std::string &attrName) const throw(Shotgun::SgError) /Factory/;
+    static const Shotgun::EntityPtrs getAttrValueAsMultiEntityPtr(Shotgun::Shotgun *sg,
+                                                                  const std::string &attrName,
+                                                                  const Shotgun::Dict &attrsMap) throw(Shotgun::SgError) /Factory/;
 
-    const std::string getAttrValueAsUserLogin(const std::string &attrName) const 
-                            throw(Shotgun::SgAttrError, Shotgun::SgEntityError);
+    virtual const std::string getAttrValueAsUserLogin(const std::string &attrName) const throw(Shotgun::SgError);
     static const std::string getAttrValueAsUserLogin(Shotgun::Shotgun *sg,
                                                      const std::string &attrName,
-                                                     const Shotgun::SgMap &attrsMap) 
-                            throw(Shotgun::SgAttrError, Shotgun::SgEntityError);
+                                                     const Shotgun::Dict &attrsMap) throw(Shotgun::SgError);
 
-    // Set a attribute's value - Omitted the optional "parent_entity" for now
-    void setAttrValue(const std::string &attrName,
-                      const xmlrpc_c::value &attrValue,
-                      const Shotgun::SgArray &multiValues = Shotgun::SgArray()) throw(Shotgun::SgAttrError);
-    void setAttrValue(const Shotgun::SgMap &attrPairs) throw(Shotgun::SgAttrError);
+    // Set values for only one field
+    virtual void setAttrValue(const std::string &fieldName, 
+                              const xmlrpc_c::value &fieldValue,
+                              const std::string &multiEntityUpdateMode = "",
+                              const Shotgun::Dict &parentEntity = Shotgun::Dict()) throw(Shotgun::SgError);
 
-    // -----------------------------------------------------------------------------------
-    // The "In" or "Out" annotation is used to specify that the argument (which 
-    // should be a pointer type - reference is fine, too) is either used to 
-    // 
-    //     - pass a value to the function. ( /In/ ) 
-    // OR  - return a value as an element of a tuple. ( /Out/ )
-    // 
-    // Both "In" and "Out" are specified for the same argument here. In Python, 
-    // the syntax of using the following function should be like this as if it 
-    // has a return value:
-    // 
-    //     findMap = Shotgun.Entity.addOneConditionToFindMap(findMap,
-    //                                                          "login", "is", "jeanshen")
-    // -----------------------------------------------------------------------------------
-
-    // Add one more condition to the search map - this is a convenience function
-    static void addOneConditionToFindMap(Shotgun::SgMap &findMap /In, Out/,
-                                         const std::string &filterName,
-                                         const std::string &filterOp,
-                                         const xmlrpc_c::value &filterValue) throw(Shotgun::SgAttrError);
-
-    // Build a findMap with no condition - this is a convenience function
-    static Shotgun::SgMap buildFindMapWithNoFilter(Shotgun::Shotgun *sg,
-                                                      const std::string &entityType,
-                                                      const std::string &projectCode = "",
-                                                      const int limit = 0,
-                                                      const Shotgun::SgArray &extraReturnFields = Shotgun::SgArray(),
-                                                      const bool retiredOnly = false) throw(Shotgun::SgEntityError, Shotgun::SgAttrError);
-
-    // Build a findMap with just one condition - this is a convenience function
-    static Shotgun::SgMap buildFindMapWithSingleFilter(Shotgun::Shotgun *sg,
-                                                          const std::string &entityType,
-                                                          const std::string &filterName,
-                                                          const std::string &filterOp,
-                                                          const xmlrpc_c::value &filterValue,
-                                                          const std::string &projectCode = "",
-                                                          const int limit = 0,
-                                                          const Shotgun::SgArray &extraReturnFields = Shotgun::SgArray(),
-                                                          const bool retiredOnly = false) throw(Shotgun::SgEntityError, Shotgun::SgAttrError);
-
+    virtual void setAttrValue(const Shotgun::Dict &fieldNameValuePairs) throw(Shotgun::SgError);
+    virtual void setAttrValue(const Shotgun::List &fields) throw(Shotgun::SgError); 
 
     // ------------------------------------------------------------------------
     SIP_PYOBJECT __str__();
@@ -161,6 +114,7 @@ public:
 %End
 
 protected:
+    // ------------------------------------------------------------------------
     // (1) Even if this ctor is protected, it shoule be put here to prevent a
     //     default public ctor being generated. See the complex example in the
     //     "SIP reference guide".
@@ -169,6 +123,8 @@ protected:
     //
     // (2) The Shotgun type needs its namespace attached.
     // (3) TODO: may need a /TransferThis/ annotation
+    // ------------------------------------------------------------------------
+
     Entity(Shotgun::Shotgun *sg);
 };
 

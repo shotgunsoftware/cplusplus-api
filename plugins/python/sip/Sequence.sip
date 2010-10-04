@@ -44,14 +44,34 @@ public:
     virtual ~Sequence();
 
     // Get an attribute's value
-    const std::string sgName() const throw(Shotgun::SgAttrError);
+    const std::string sgName() const throw(Shotgun::SgError);
 
     // Set an attribute's value
-    void sgName(const std::string &name) throw(Shotgun::SgAttrError);
+    void sgName(const std::string &name) throw(Shotgun::SgError);
+
+    static std::string type();
+
+    // ===================================================================
+    // This dynamicCast SIP function that has %MethodCode directive is not
+    // defined in C++. It should only provide the type of the input argument,
+    // but not its name in the header.
+    // ===================================================================
+
+    // This function should not have the /Factory/ annotation.
+    static Shotgun::Sequence *dynamicCast(Shotgun::Entity *) throw(Shotgun::SgError);
+%MethodCode
+    if (Shotgun::Sequence *p = dynamic_cast<Shotgun::Sequence *>(a0))
+    {
+        sipRes = p;
+    }
+    else
+    {
+        throw Shotgun::SgEntityDynamicCastError("Sequence");
+    }
+%End
 
 protected:
     Sequence(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
-
 };
 
-}; // End namespace Shotgun - IMPORTANT: must have the semi-colon
+}; // End namespace Shotgun

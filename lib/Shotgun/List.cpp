@@ -45,19 +45,6 @@ List::List(const SgArray &array) : m_value(array)
 }
 
 // *****************************************************************************
-List::List(const xmlrpc_c::value &value)
-{
-    if (value.type() == xmlrpc_c::value::TYPE_ARRAY)
-    {
-        m_value = xmlrpc_c::value_array(value).vectorValueValue();
-    }
-    else
-    {
-        throw SgListError(value);
-    }
-}
-
-// *****************************************************************************
 List &List::extend(const List &that)
 {
     m_value.insert(m_value.end(), that.m_value.begin(), that.m_value.end());
@@ -66,7 +53,7 @@ List &List::extend(const List &that)
 }
 
 // *****************************************************************************
-const xmlrpc_c::value &List::operator[](const int index) const
+const xmlrpc_c::value List::value(const int index) const
 {
     if (index >= 0 && index < m_value.size())
     {
@@ -76,6 +63,12 @@ const xmlrpc_c::value &List::operator[](const int index) const
     {
         throw SgListError(index, 0, m_value.size());
     }
+}
+
+// *****************************************************************************
+const xmlrpc_c::value List::operator[](const int index) const
+{
+    return value(index);
 }
 
 // *****************************************************************************

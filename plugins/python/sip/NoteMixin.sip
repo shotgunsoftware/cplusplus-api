@@ -42,22 +42,22 @@ class NoteMixin
 public:
     virtual ~NoteMixin();
 
-    Shotgun::Notes getNotes(const int limit = 0) throw(Shotgun::SgAttrError, Shotgun::SgEntityError);
-    Shotgun::Notes getDisclaimerNotes(const int limit = 0) throw(Shotgun::SgAttrError, Shotgun::SgEntityError);
-    Shotgun::Notes getClientNotes(const int limit = 0) throw(Shotgun::SgAttrError, Shotgun::SgEntityError);
+    Shotgun::NotePtrs getNotes(const int limit = 0) throw(Shotgun::SgError) /Factory/;
+    Shotgun::NotePtrs getDisclaimerNotes(const int limit = 0) throw(Shotgun::SgError) /Factory/;
+    Shotgun::NotePtrs getClientNotes(const int limit = 0) throw(Shotgun::SgError) /Factory/;
 
-    Shotgun::Note addNote(const std::string &noteFromUserName,
-                             const Shotgun::Strings &noteToUserNames = Shotgun::Strings(),
-                             const Shotgun::Strings &noteCcUserNames = Shotgun::Strings(),
-                             const std::string &noteSubject = "",
-                             const std::string &noteBody = "",
-                             const std::string &noteType = "",
-                             const Shotgun::SgArray &noteLinks = Shotgun::SgArray(),
-                             const std::string &noteOrigin = "") throw(Shotgun::SgAttrError, Shotgun::SgEntityError);
+    Shotgun::Note *addNote(const std::string &noteFromUserName,
+                           const Shotgun::Strings &noteToUserNames = Shotgun::Strings(),
+                           const Shotgun::Strings &noteCcUserNames = Shotgun::Strings(),
+                           const std::string &noteSubject = "",
+                           const std::string &noteBody = "",
+                           const std::string &noteType = "",
+                           const Shotgun::List &noteLinks = Shotgun::List(),
+                           const std::string &noteOrigin = "") throw(Shotgun::SgError) /Factory/;
 
 protected:
     NoteMixin();
 
 };
 
-}; // End namespace Shotgun - must have the semi-colon
+}; // End namespace Shotgun

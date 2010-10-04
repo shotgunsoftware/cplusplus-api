@@ -44,30 +44,53 @@ public:
     virtual ~Shot();
 
     // Get an attribute's value
-    const std::string sgName() const throw(Shotgun::SgAttrError);
-    const std::string sgDescription() const throw(Shotgun::SgAttrError);
-    const Shotgun::Elements sgElements() const throw(Shotgun::SgAttrError);
-    const std::string sgProject() const throw(Shotgun::SgAttrError);
-    const int sgCutDuration() const throw(Shotgun::SgAttrError);
-    const int sgCutIn() const throw(Shotgun::SgAttrError);
-    const int sgCutOut() const throw(Shotgun::SgAttrError);
-    const std::string sgCutSummary() const throw(Shotgun::SgAttrError);
-    const std::string sgDurationSummary() const throw(Shotgun::SgAttrError);
-    const int sgHeadDuration() const throw(Shotgun::SgAttrError);
-    const int sgHeadIn() const throw(Shotgun::SgAttrError);
-    const int sgHeadOut() const throw(Shotgun::SgAttrError);
-    const int sgTailDuration() const throw(Shotgun::SgAttrError);
-    const int sgTailIn() const throw(Shotgun::SgAttrError);
-    const int sgTailOut() const throw(Shotgun::SgAttrError);
-    const int sgWorkingDuration() const throw(Shotgun::SgAttrError);
+    const std::string sgName() const throw(Shotgun::SgError);
+    const std::string sgDescription() const throw(Shotgun::SgError);
+    const Shotgun::ElementPtrs sgElements() const throw(Shotgun::SgError) /Factory/;
+    const Shotgun::Sequence *sgSequence() const throw(Shotgun::SgError) /Factory/;
+    const std::string sgProject() const throw(Shotgun::SgError);
+    const std::string sgStatus() const throw(Shotgun::SgError);
+    const int sgCutDuration() const throw(Shotgun::SgError);
+    const int sgCutIn() const throw(Shotgun::SgError);
+    const int sgCutOut() const throw(Shotgun::SgError);
+    const std::string sgCutSummary() const throw(Shotgun::SgError);
+    const std::string sgDurationSummary() const throw(Shotgun::SgError);
+    const int sgHeadDuration() const throw(Shotgun::SgError);
+    const int sgHeadIn() const throw(Shotgun::SgError);
+    const int sgHeadOut() const throw(Shotgun::SgError);
+    const int sgTailDuration() const throw(Shotgun::SgError);
+    const int sgTailIn() const throw(Shotgun::SgError);
+    const int sgTailOut() const throw(Shotgun::SgError);
+    const int sgWorkingDuration() const throw(Shotgun::SgError);
 
     // Set an attribute's value
-    void sgElements(const Shotgun::Elements &val) throw(Shotgun::SgAttrError); 
-    void sgElements(const Shotgun::SgArray &val) throw(Shotgun::SgAttrError); 
+    void sgSequence(const Shotgun::Dict &val) throw(Shotgun::SgError);
+    void sgElements(const Shotgun::Elements &val) throw(Shotgun::SgError); 
+    void sgElements(const Shotgun::List &val) throw(Shotgun::SgError); 
+
+    static std::string type();
+
+    // ===================================================================
+    // This dynamicCast SIP function that has %MethodCode directive is not
+    // defined in C++. It should only provide the type of the input argument,
+    // but not its name in the header.
+    // ===================================================================
+
+    // This function should not have the /Factory/ annotation.
+    static Shotgun::Shot *dynamicCast(Shotgun::Entity *) throw(Shotgun::SgError);
+%MethodCode
+    if (Shotgun::Shot *p = dynamic_cast<Shotgun::Shot *>(a0))
+    {
+        sipRes = p;
+    }
+    else
+    {
+        throw Shotgun::SgEntityDynamicCastError("Shot");
+    }
+%End
 
 protected:
     Shot(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
-    
 };
 
-}; // End namespace Shotgun - IMPORTANT: has to have the semi-colon
+}; // End namespace Shotgun

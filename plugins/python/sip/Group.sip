@@ -35,16 +35,39 @@ namespace Shotgun {
 // *****************************************************************************
 class Group : Shotgun::Entity
 {
+%TypeHeaderCode
+    #include <Shotgun/Group.h>
+%End
+
 public:
     Group(const Shotgun::Group &ref);
     virtual ~Group();
 
-    const std::string sgName() const throw(Shotgun::SgAttrError);
+    const std::string sgName() const throw(Shotgun::SgError);
+
+    static std::string type();
+
+    // ===================================================================
+    // This dynamicCast SIP function that has %MethodCode directive is not
+    // defined in C++. It should only provide the type of the input argument,
+    // but not its name in the header.
+    // ===================================================================
+
+    // This function should not have the /Factory/ annotation.
+    static Shotgun::Group *dynamicCast(Shotgun::Entity *) throw(Shotgun::SgError);
+%MethodCode
+    if (Shotgun::Group *p = dynamic_cast<Shotgun::Group *>(a0))
+    {
+        sipRes = p;
+    }
+    else
+    {
+        throw Shotgun::SgEntityDynamicCastError("Group");
+    }
+%End
 
 protected:
     Group(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
-
 };
 
-}; // End namespace Shotgun - IMPORTANT: must have a semi-colon
-
+}; // End namespace Shotgun

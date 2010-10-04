@@ -5,6 +5,10 @@ EXTRA_DIST = configure.py               \
              sip/_shotgun.sip           \
              sip/exceptions.sip         \
              sip/mappedTypes.sip        \
+             sip/List.sip               \
+             sip/Dict.sip               \
+             sip/FilterBy.sip           \
+             sip/SortBy.sip             \
              sip/Asset.sip              \
              sip/DeliveryItem.sip       \
              sip/Delivery.sip           \

@@ -58,7 +58,7 @@ Dict::Dict(const xmlrpc_c::value &value)
 }
 
 // *****************************************************************************
-const xmlrpc_c::value &Dict::operator[](const std::string &key) const
+const xmlrpc_c::value Dict::value(const std::string &key) const
 {
     SgMap::const_iterator foundIter = m_value.find(key);
     if (foundIter != m_value.end())
@@ -69,6 +69,12 @@ const xmlrpc_c::value &Dict::operator[](const std::string &key) const
     {
         throw SgDictError(key);
     }
+}
+
+// *****************************************************************************
+const xmlrpc_c::value Dict::operator[](const std::string &key) const
+{
+    return value(key);
 }
  
 // *****************************************************************************

@@ -38,7 +38,7 @@
 %Exception Shotgun::SgError(SIP_Exception) /PyName=SgError/
 {
 %TypeHeaderCode
-#include <Shotgun/Type.h>
+#include <Shotgun/exceptions.h>
 %End
 %RaiseCode
         const char *detail = sipExceptionRef.what();
@@ -55,7 +55,7 @@
 %Exception Shotgun::SgAttrError(SIP_Exception) /PyName=SgAttrError/
 {
 %TypeHeaderCode
-#include <Shotgun/Type.h>
+#include <Shotgun/exceptions.h>
 %End
 %RaiseCode
         const char *detail = sipExceptionRef.what();
@@ -72,7 +72,7 @@
 %Exception Shotgun::SgAttrNotFoundError(SIP_Exception) /PyName=SgAttrNotFoundError/
 {
 %TypeHeaderCode
-#include <Shotgun/Type.h>
+#include <Shotgun/exceptions.h>
 %End
 %RaiseCode
         const char *detail = sipExceptionRef.what();
@@ -89,7 +89,7 @@
 %Exception Shotgun::SgAttrTypeError(SIP_Exception) /PyName=SgAttrTypeError/
 {
 %TypeHeaderCode
-#include <Shotgun/Type.h>
+#include <Shotgun/exceptions.h>
 %End
 %RaiseCode
         const char *detail = sipExceptionRef.what();
@@ -106,7 +106,7 @@
 %Exception Shotgun::SgAttrValueError(SIP_Exception) /PyName=SgAttrValueError/
 {
 %TypeHeaderCode
-#include <Shotgun/Type.h>
+#include <Shotgun/exceptions.h>
 %End
 %RaiseCode
         const char *detail = sipExceptionRef.what();
@@ -123,7 +123,7 @@
 %Exception Shotgun::SgAttrLinkError(SIP_Exception) /PyName=SgAttrLinkError/
 {
 %TypeHeaderCode
-#include <Shotgun/Type.h>
+#include <Shotgun/exceptions.h>
 %End
 %RaiseCode
         const char *detail = sipExceptionRef.what();
@@ -140,7 +140,7 @@
 %Exception Shotgun::SgAttrSetValueError(SIP_Exception) /PyName=SgAttrSetValueError/
 {
 %TypeHeaderCode
-#include <Shotgun/Type.h>
+#include <Shotgun/exceptions.h>
 %End
 %RaiseCode
         const char *detail = sipExceptionRef.what();
@@ -157,7 +157,7 @@
 %Exception Shotgun::SgEmptyAttrMapError(SIP_Exception) /PyName=SgEmptyAttrMapError/
 {
 %TypeHeaderCode
-#include <Shotgun/Type.h>
+#include <Shotgun/exceptions.h>
 %End
 %RaiseCode
         const char *detail = sipExceptionRef.what();
@@ -174,7 +174,7 @@
 %Exception Shotgun::SgEntityError(SIP_Exception) /PyName=SgEntityError/
 {
 %TypeHeaderCode
-#include <Shotgun/Type.h>
+#include <Shotgun/exceptions.h>
 %End
 %RaiseCode
         const char *detail = sipExceptionRef.what();
@@ -191,7 +191,7 @@
 %Exception Shotgun::SgEntityXmlrpcError(SIP_Exception) /PyName=SgEntityXmlrpcError/
 {
 %TypeHeaderCode
-#include <Shotgun/Type.h>
+#include <Shotgun/exceptions.h>
 %End
 %RaiseCode
         const char *detail = sipExceptionRef.what();
@@ -208,7 +208,7 @@
 %Exception Shotgun::SgEntityNotFoundError(SIP_Exception) /PyName=SgEntityNotFoundError/
 {
 %TypeHeaderCode
-#include <Shotgun/Type.h>
+#include <Shotgun/exceptions.h>
 %End
 %RaiseCode
         const char *detail = sipExceptionRef.what();
@@ -220,12 +220,29 @@
 };
 
 // *******************************************************************
+// Shotgun::SgEntityFunctionNotFoundError
+// *******************************************************************
+%Exception Shotgun::SgEntityFunctionNotFoundError(SIP_Exception) /PyName=SgEntityFunctionNotFoundError/
+{
+%TypeHeaderCode
+#include <Shotgun/exceptions.h>
+%End
+%RaiseCode
+        const char *detail = sipExceptionRef.what();
+
+        SIP_BLOCK_THREADS
+        PyErr_SetString(sipException_Shotgun_SgEntityFunctionNotFoundError, detail);
+        SIP_UNBLOCK_THREADS
+%End
+};
+
+// *******************************************************************
 // Shotgun::SgEntityDynamicCastError
 // *******************************************************************
 %Exception Shotgun::SgEntityDynamicCastError(SIP_Exception) /PyName=SgEntityDynamicCastError/
 {
 %TypeHeaderCode
-#include <Shotgun/Type.h>
+#include <Shotgun/exceptions.h>
 %End
 %RaiseCode
         const char *detail = sipExceptionRef.what();
@@ -242,7 +259,7 @@
 %Exception Shotgun::SgEntityCreateError(SIP_Exception) /PyName=SgEntityCreateError/
 {
 %TypeHeaderCode
-#include <Shotgun/Type.h>
+#include <Shotgun/exceptions.h>
 %End
 %RaiseCode
         const char *detail = sipExceptionRef.what();
@@ -259,7 +276,7 @@
 %Exception Shotgun::SgApiError(SIP_Exception) /PyName=SgApiError/
 {
 %TypeHeaderCode
-#include <Shotgun/Type.h>
+#include <Shotgun/exceptions.h>
 %End
 %RaiseCode
         const char *detail = sipExceptionRef.what();
@@ -269,4 +286,90 @@
         SIP_UNBLOCK_THREADS
 %End
 };
+
+// *******************************************************************
+// Shotgun::SgXmlrpcValueError
+// *******************************************************************
+%Exception Shotgun::SgXmlrpcValueError(SIP_Exception) /PyName=SgXmlrpcValueError/
+{
+%TypeHeaderCode
+#include <Shotgun/exceptions.h>
+%End
+%RaiseCode
+        const char *detail = sipExceptionRef.what();
+
+        SIP_BLOCK_THREADS
+        PyErr_SetString(sipException_Shotgun_SgXmlrpcValueError, detail);
+        SIP_UNBLOCK_THREADS
+%End
+};
+
+// *******************************************************************
+// Shotgun::SgXmlrpcValueTypeError
+// *******************************************************************
+%Exception Shotgun::SgXmlrpcValueTypeError(SIP_Exception) /PyName=SgXmlrpcValueTypeError/
+{
+%TypeHeaderCode
+#include <Shotgun/exceptions.h>
+%End
+%RaiseCode
+        const char *detail = sipExceptionRef.what();
+
+        SIP_BLOCK_THREADS
+        PyErr_SetString(sipException_Shotgun_SgXmlrpcValueTypeError, detail);
+        SIP_UNBLOCK_THREADS
+%End
+};
+
+// *******************************************************************
+// Shotgun::SgXmlrpcValueIsNilError
+// *******************************************************************
+%Exception Shotgun::SgXmlrpcValueIsNilError(SIP_Exception) /PyName=SgXmlrpcValueIsNilError/
+{
+%TypeHeaderCode
+#include <Shotgun/exceptions.h>
+%End
+%RaiseCode
+        const char *detail = sipExceptionRef.what();
+
+        SIP_BLOCK_THREADS
+        PyErr_SetString(sipException_Shotgun_SgXmlrpcValueIsNilError, detail);
+        SIP_UNBLOCK_THREADS
+%End
+};
+
+// *******************************************************************
+// Shotgun::SgListError
+// *******************************************************************
+%Exception Shotgun::SgListError(SIP_Exception) /PyName=SgListError/
+{
+%TypeHeaderCode
+#include <Shotgun/exceptions.h>
+%End
+%RaiseCode
+        const char *detail = sipExceptionRef.what();
+
+        SIP_BLOCK_THREADS
+        PyErr_SetString(sipException_Shotgun_SgListError, detail);
+        SIP_UNBLOCK_THREADS
+%End
+};
+
+// *******************************************************************
+// Shotgun::SgDictError
+// *******************************************************************
+%Exception Shotgun::SgDictError(SIP_Exception) /PyName=SgDictError/
+{
+%TypeHeaderCode
+#include <Shotgun/exceptions.h>
+%End
+%RaiseCode
+        const char *detail = sipExceptionRef.what();
+
+        SIP_BLOCK_THREADS
+        PyErr_SetString(sipException_Shotgun_SgDictError, detail);
+        SIP_UNBLOCK_THREADS
+%End
+};
+
 

@@ -50,7 +50,6 @@ public:
     TaskPtrs getMilestoneTasks(const int limit = 0);
     Task *getNextIncompleteMilestoneTask();
 
-#warning Update these functions to return pointer type
     Task *addTask(const std::string &taskName,
                   const std::string &taskType,
                   const std::string &taskAssignee = "",

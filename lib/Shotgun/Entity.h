@@ -171,8 +171,8 @@ public:
 
     virtual const EntityPtrs getAttrValueAsMultiEntityPtr(const std::string &attrName) const;
     static const EntityPtrs getAttrValueAsMultiEntityPtr(Shotgun *sg,
-                                                   const std::string &attrName,
-                                                   const Dict &attrsMap);
+                                                         const std::string &attrName,
+                                                         const Dict &attrsMap);
 
     virtual const std::string getAttrValueAsUserLogin(const std::string &attrName) const;
     static const std::string getAttrValueAsUserLogin(Shotgun *sg,

@@ -44,21 +44,33 @@ public:
     virtual ~ReviewItem();
 
     // Get an attribute's value
-    const std::string sgName() const throw(Shotgun::SgAttrError);
+    const std::string sgName() const throw(Shotgun::SgError);
+    const Shotgun::Entity *sgLink() const throw(Shotgun::SgError) /Factory/;
+    const std::string sgLinkEntityType() const throw(Shotgun::SgError);
 
-    // ------------------------------------------------------------------------
-    // Add a /Factory/ annotation which specifies that the value returned by
-    // the function (which should be a wrapped C structure or C++ class instance)
-    // is a newly created instance and is owned by Python.
-    // ------------------------------------------------------------------------
-    Shotgun::Entity *sgLink() throw(Shotgun::SgAttrError, Shotgun::SgEntityError) /Factory/;
-    const std::string sgLinkEntityType() const throw(Shotgun::SgAttrError);
+    static std::string type();
 
+    // ===================================================================
+    // This dynamicCast SIP function that has %MethodCode directive is not
+    // defined in C++. It should only provide the type of the input argument,
+    // but not its name in the header.
+    // ===================================================================
+
+    // This function should not have the /Factory/ annotation.
+    static Shotgun::ReviewItem *dynamicCast(Shotgun::Entity *) throw(Shotgun::SgError);
+%MethodCode
+    if (Shotgun::ReviewItem *p = dynamic_cast<Shotgun::ReviewItem *>(a0))
+    {
+        sipRes = p;
+    }
+    else
+    {
+        throw Shotgun::SgEntityDynamicCastError("ReviewItem");
+    }
+%End
 
 protected:
     ReviewItem(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
-
-
 };
 
-}; // End namespace Shotgun - IMPORTANT: must have the semi-colon
+}; // End namespace Shotgun

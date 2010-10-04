@@ -33,56 +33,58 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace Shotgun {
 
 // *****************************************************************************
-class Playlist : Shotgun::Entity
+class FilterBy
 {
 %TypeHeaderCode
-    #include <Shotgun/Playlist.h>
+    #include <Shotgun/FilterBy.h>
 %End
 
 public:
-    Playlist(const Shotgun::Playlist &ref);
-    virtual ~Playlist();
-
-    // Get an attribute's value
-    const std::string sgName() const throw(Shotgun::SgError);
-    const std::string sgDescription() const throw(Shotgun::SgError);
-    const std::string sgThumbnail() const throw(Shotgun::SgError);
-    const Shotgun::Strings sgTags() const throw(Shotgun::SgError);
-    const Shotgun::NotePtrs sgNotes() const throw(Shotgun::SgError) /Factory/;
-    const Shotgun::VersionPtrs sgVersions() const throw(Shotgun::SgError) /Factory/;
-
-    // Set an attribute's value
-    void sgName(const std::string &val) throw(Shotgun::SgError);
-    void sgDescription(const std::string &val) throw(Shotgun::SgError);
-    void sgTags(const Shotgun::Strings &val) throw(Shotgun::SgError);
-    void sgNotes(const Shotgun::Notes &val) throw(Shotgun::SgError);
-    void sgNotes(const Shotgun::List &val) throw(Shotgun::SgError);
-    void sgVersions(const Shotgun::Versions &val) throw(Shotgun::SgError);
-    void sgVersions(const Shotgun::List &val) throw(Shotgun::SgError);
-
-    static std::string type();
+    FilterBy();
+    FilterBy(const Shotgun::Dict &filters);
 
     // ===================================================================
-    // This dynamicCast SIP function that has %MethodCode directive is not
-    // defined in C++. It should only provide the type of the input argument,
-    // but not its name in the header.
+    // These SIP functions that have %MethodCode directive are not defined 
+    // in C++. They are actually calling the C++ template functions. The 
+    // functions defined in SIP should only provide the types of the arguments, 
+    // but not their names in the header.
     // ===================================================================
 
-    // This function should not have the /Factory/ annotation.
-    static Shotgun::Playlist *dynamicCast(Shotgun::Entity *) throw(Shotgun::SgError);
+    // -------------------------------------------------------------------
+    FilterBy(const std::string &,
+             const std::string &,
+             const xmlrpc_c::value &);
 %MethodCode
-    if (Shotgun::Playlist *p = dynamic_cast<Shotgun::Playlist *>(a0))
-    {
-        sipRes = p;
-    }
-    else
-    {
-        throw Shotgun::SgEntityDynamicCastError("Playlist");
-    }
+    sipCpp = new Shotgun::FilterBy(*a0, *a1, *a2);
 %End
 
-protected:
-    Playlist(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
+    // -------------------------------------------------------------------
+    Shotgun::FilterBy &And(const std::string &,
+                           const std::string &,
+                           const xmlrpc_c::value &);
+%MethodCode
+    sipRes = &sipCpp->And(*a0, *a1, *a2);
+%End
+
+    // -------------------------------------------------------------------
+    Shotgun::FilterBy &And(const Shotgun::FilterBy &that);
+
+    // -------------------------------------------------------------------
+    Shotgun::FilterBy &Or(const std::string &,
+                          const std::string &,
+                          const xmlrpc_c::value &);
+%MethodCode
+    sipRes = &sipCpp->Or(*a0, *a1, *a2);
+%End
+
+    // -------------------------------------------------------------------
+    Shotgun::FilterBy &Or(const Shotgun::FilterBy &that);
+
+    // -------------------------------------------------------------------
+    const Shotgun::Dict &filters() const;
+    const bool empty() const;
+    const int size() const;
+    void clear();
 };
 
 }; // End namespace Shotgun

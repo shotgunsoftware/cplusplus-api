@@ -38,36 +38,50 @@ class Task : Shotgun::Entity
 %TypeHeaderCode
     #include <Shotgun/Task.h>
 %End
- 
+
 public:
     Task(const Shotgun::Task &ref);
     virtual ~Task();
 
     // Get an attribute's value
-    const std::string sgName() const throw(Shotgun::SgAttrError);
-    const std::string sgColor() const throw(Shotgun::SgAttrError);
-    const std::string sgEndDate() const throw(Shotgun::SgAttrError);
-    const int sgDuration() const throw(Shotgun::SgAttrError);
-    const bool sgMilestone() const throw(Shotgun::SgAttrError);
-    const std::string sgStartDate() const throw(Shotgun::SgAttrError);
-    const std::string sgStatus() const throw(Shotgun::SgAttrError);
-    const std::string sgType() const throw(Shotgun::SgAttrError);
-
-    // ------------------------------------------------------------------------
-    // Add a /Factory/ annotation which specifies that the value returned by 
-    // the function (which should be a wrapped C structure or C++ class instance) 
-    // is a newly created instance and is owned by Python.
-    // ------------------------------------------------------------------------
-    Shotgun::Entity *sgLink() throw(Shotgun::SgAttrError, Shotgun::SgEntityError) /Factory/;
-    const Shotgun::EntityPtrs sgAssignees() const throw(Shotgun::SgAttrError, Shotgun::SgEntityError) /Factory/;
-    const std::string sgLinkEntityType() const throw(Shotgun::SgAttrError);
+    const std::string sgName() const throw(Shotgun::SgError);
+    const std::string sgColor() const throw(Shotgun::SgError);
+    const std::string sgEndDate() const throw(Shotgun::SgError);
+    const int sgDuration() const throw(Shotgun::SgError);
+    const bool sgMilestone() const throw(Shotgun::SgError);
+    const std::string sgStartDate() const throw(Shotgun::SgError);
+    const std::string sgStatus() const throw(Shotgun::SgError);
+    const Shotgun::Entity *sgLink() const throw(Shotgun::SgError) /Factory/;
+    const Shotgun::EntityPtrs sgAssignees() const throw(Shotgun::SgError) /Factory/;
+    const std::string sgLinkEntityType() const throw(Shotgun::SgError);
 
     // Set an attribute's value
-    void sgStatus(const std::string &val) throw(Shotgun::SgAttrError);
-    void sgAssignees(const Shotgun::Strings &val) throw(Shotgun::SgAttrError);
+    void sgStatus(const std::string &val) throw(Shotgun::SgError);
+    void sgAssignees(const Shotgun::Strings &val) throw(Shotgun::SgError);
+
+    static std::string type();
+
+    // ===================================================================
+    // This dynamicCast SIP function that has %MethodCode directive is not
+    // defined in C++. It should only provide the type of the input argument,
+    // but not its name in the header.
+    // ===================================================================
+
+    // This function should not have the /Factory/ annotation.
+    static Shotgun::Task *dynamicCast(Shotgun::Entity *) throw(Shotgun::SgError);
+%MethodCode
+    if (Shotgun::Task *p = dynamic_cast<Shotgun::Task *>(a0))
+    {
+        sipRes = p;
+    }
+    else
+    {
+        throw Shotgun::SgEntityDynamicCastError("Task");
+    }
+%End
 
 protected:
     Task(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
 };
 
-}; // End namespace Shotgun - IMPORTANT: must have the semi-colon
+}; // End namespace Shotgun

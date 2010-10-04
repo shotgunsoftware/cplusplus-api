@@ -46,19 +46,19 @@ class Dict
 public:
     Dict();
     Dict(const SgMap &map);
+    // This constructor should only be used within the Shotgun lib.
     Dict(const xmlrpc_c::value &value);
 
     template <typename T>
-    Dict(const std::string &key, const T &value)
-    {
-         add(key, value);      
-    }
+    Dict(const std::string &key, const T &value);
 
     template <typename T>
     Dict &add(const std::string &key, const T &value);
 
     template <typename  T>
     const T value(const std::string &key) const;
+    // This function should only be used within the Shotgun lib
+    const xmlrpc_c::value value(const std::string &key) const;
 
     // --------------------------------------------------------------------
     // The [] operator that returns the value of a given key. The syntax of
@@ -70,7 +70,8 @@ public:
     // --------------------------------------------------------------------
     template <typename  T>
     const T operator[](const std::string &key) const;
-    const xmlrpc_c::value &operator[](const std::string &key) const;
+    // This function should only be used within the Shotgun lib
+    const xmlrpc_c::value operator[](const std::string &key) const;
 
     const SgMap &value() const { return m_value; }
     const bool empty() const { return m_value.empty(); }
@@ -92,6 +93,13 @@ public:
 protected:
     SgMap m_value;
 };
+
+// *****************************************************************************
+template <typename T>
+Dict::Dict(const std::string &key, const T &value)
+{
+     add<T>(key, value);      
+}
 
 // *****************************************************************************
 template <typename T>

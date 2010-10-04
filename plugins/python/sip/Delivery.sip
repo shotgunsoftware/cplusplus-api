@@ -38,24 +38,44 @@ class Delivery : Shotgun::Entity
 %TypeHeaderCode
     #include <Shotgun/Delivery.h>
 %End
-
+ 
 public:
     Delivery(const Shotgun::Delivery &ref);
     virtual ~Delivery();
 
     // Get an attribute's value
-    const std::string sgName() const throw(Shotgun::SgAttrError);
-    const std::string sgStatus() const throw(Shotgun::SgAttrError);
-    const std::string sgType() const throw(Shotgun::SgAttrError);
-
+    const std::string sgName() const throw(Shotgun::SgError);
+    const std::string sgStatus() const throw(Shotgun::SgError);
+    const std::string sgType() const throw(Shotgun::SgError);
+    
     // Set an attribute's value
-    void sgName(const std::string &val) throw(Shotgun::SgAttrError);
-    void sgStatus(const std::string &val) throw(Shotgun::SgAttrError);
-    void sgType(const std::string &val) throw(Shotgun::SgAttrError);
+    void sgName(const std::string &val) throw(Shotgun::SgError);
+    void sgStatus(const std::string &val) throw(Shotgun::SgError);
+    void sgType(const std::string &val) throw(Shotgun::SgError);
+
+    static std::string type();
+
+    // ===================================================================
+    // This dynamicCast SIP function that has %MethodCode directive is not
+    // defined in C++. It should only provide the type of the input argument,
+    // but not its name in the header.
+    // ===================================================================
+
+    // This function should not have the /Factory/ annotation.
+    static Shotgun::Delivery *dynamicCast(Shotgun::Entity *) throw(Shotgun::SgError);
+%MethodCode
+    if (Shotgun::Delivery *p = dynamic_cast<Shotgun::Delivery *>(a0))
+    {
+        sipRes = p;
+    }
+    else
+    {
+        throw Shotgun::SgEntityDynamicCastError("Delivery");
+    }
+%End
 
 protected:
     Delivery(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
-
 };
 
-}; // End namespace Shotgun - must have the semi-colon
+}; // End namespace Shotgun

@@ -51,40 +51,25 @@ public:
     template <typename T>
     FilterBy(const std::string &path,
              const std::string &relation,
-             const T &value)
-    {
-         op("and", path, relation, toXmlrpcValue(value));      
-    }
+             const T &value);
 
     // -------------------------------------------------------------------
     // logic "and"
     template <typename T>
     FilterBy &And(const std::string &path,
                   const std::string &relation,
-                  const T &value)
-    {
-        return op("and", path, relation, toXmlrpcValue(value));
-    }
+                  const T &value);
 
-    FilterBy &And(const FilterBy &that)
-    {
-        return op("and", that);
-    }
+    FilterBy &And(const FilterBy &that) { return op("and", that); }
 
     // -------------------------------------------------------------------
     // logic "or"
     template <typename T>
     FilterBy &Or(const std::string &path,
                  const std::string &relation,
-                 const T &value)
-    {
-        return op("or", path, relation, toXmlrpcValue(value));
-    }
+                 const T &value);
     
-    FilterBy &Or(const FilterBy &that)
-    {
-        return op("or", that);
-    }
+    FilterBy &Or(const FilterBy &that) { return op("or", that); }
 
 
     const Dict &filters() const { return m_filters; }
@@ -112,6 +97,33 @@ protected:
 
     Dict m_filters;
 };
+
+// *****************************************************************************
+template <typename T>
+FilterBy::FilterBy(const std::string &path,
+                   const std::string &relation,
+                   const T &value)
+{
+     op("and", path, relation, toXmlrpcValue(value));      
+}
+
+// *****************************************************************************
+template <typename T>
+FilterBy &FilterBy::And(const std::string &path,
+                        const std::string &relation,
+                        const T &value)
+{
+    return op("and", path, relation, toXmlrpcValue(value));
+}
+
+// *****************************************************************************
+template <typename T>
+FilterBy &FilterBy::Or(const std::string &path,
+                       const std::string &relation,
+                       const T &value)
+{
+    return op("or", path, relation, toXmlrpcValue(value));
+}
 
 } // End namespace Shotgun
 

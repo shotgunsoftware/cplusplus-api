@@ -507,6 +507,7 @@ void fromXmlrpcValue(const xmlrpc_c::value &value, SortBy &out)
 // *****************************************************************************
 void fromXmlrpcValue(const xmlrpc_c::value &value, xmlrpc_c::value &out)
 {
+    out = value;
 }
 
 // *****************************************************************************

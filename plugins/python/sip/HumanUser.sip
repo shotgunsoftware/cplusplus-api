@@ -43,49 +43,40 @@ public:
     HumanUser(const Shotgun::HumanUser &ref);
     virtual ~HumanUser();
 
-    // --------------------------------------------------------------------------
-    // NOTE: There are two ways of throwing the exceptions. Either one can be 
-    //       used to acheive the same exception handling in Python.
-    //
-    // (1) throw(Shotgun::SgAttrNotFoundError, Shotgun::SgAttrTypeError, 
-    //           Shotgun::SgAttrValueError, Shotgun::SgEmptyAttrMapError);
-    //
-    //    - More specific
-    //    - More typing in .sip code
-    //    - From Python side, can be used combined or separately
-    //      e.g.
-    //          except SgAttrValueError, err:  
-    //      OR
-    //          except (SgAttrNotFoundError, SgAttrTypeError, SgAttrValueError), err:
-    //
-    // (2) throw(Shotgun::SgAttrError);
-    //
-    //    - More generic to all attribute-related exceptions since it's the base
-    //      class for each of the attribute-specific exceptions.
-    //    - Less typing in .sip code
-    //    - From Python side, can't be more specific. But it should be okay in
-    //      this Shotgun case.
-    //      e.g.
-    //          except SgAttrError, err:
-    //
-    // We are using (2) in our .sip code.
-    // --------------------------------------------------------------------------
-
     // Get an attribute's value
-    const std::string sgName() const throw(Shotgun::SgAttrError);
-    const std::string sgEmail() const throw(Shotgun::SgAttrError);
-    const std::string sgLogin() const throw(Shotgun::SgAttrError);
-    const Shotgun::SgMap sgPermissionGroup() const throw(Shotgun::SgAttrError);
+    const std::string sgName() const throw(Shotgun::SgError);
+    const std::string sgEmail() const throw(Shotgun::SgError);
+    const std::string sgLogin() const throw(Shotgun::SgError);
+    const Shotgun::Dict sgPermissionGroup() throw(Shotgun::SgError);
 
     // Set an attribute's value
-    void sgName(const std::string &val) throw(Shotgun::SgAttrError);
-    void sgEmail(const std::string &val) throw(Shotgun::SgAttrError);
-    void sgLogin(const std::string &val) throw(Shotgun::SgAttrError);
+    void sgName(const std::string &val) throw(Shotgun::SgError);
+    void sgEmail(const std::string &val) throw(Shotgun::SgError);
+    void sgLogin(const std::string &val) throw(Shotgun::SgError);
+
+    static std::string type();
+
+    // ===================================================================
+    // This dynamicCast SIP function that has %MethodCode directive is not
+    // defined in C++. It should only provide the type of the input argument,
+    // but not its name in the header.
+    // ===================================================================
+
+    // This function should not have the /Factory/ annotation.
+    static Shotgun::HumanUser *dynamicCast(Shotgun::Entity *) throw(Shotgun::SgError);
+%MethodCode
+    if (Shotgun::HumanUser *p = dynamic_cast<Shotgun::HumanUser *>(a0))
+    {
+        sipRes = p;
+    }
+    else
+    {
+        throw Shotgun::SgEntityDynamicCastError("HumanUser");
+    }
+%End
 
 protected:
     HumanUser(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
-
 };
 
-}; // End namespace Shotgun - IMPORTANT: has to have the semi-colon
-
+}; // End namespace Shotgun

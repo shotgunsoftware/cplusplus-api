@@ -46,7 +46,6 @@ class List
 public:
     List();
     List(const SgArray &array);
-    List(const xmlrpc_c::value &value);
 
     template <typename T>
     List(const T &value)
@@ -66,10 +65,13 @@ public:
 
     template <typename T>
     const T value(const int index) const;
+    // This function should only be used within the Shotgun lib
+    const xmlrpc_c::value value(const int index) const;
     
     template <typename T>
     const T operator[](const int index) const;
-    const xmlrpc_c::value &operator[](const int index) const;
+    // This function should only be used within the Shotgun lib
+    const xmlrpc_c::value operator[](const int index) const;
 
     const SgArray &value() const { return m_value; }
     const bool empty() const { return m_value.empty(); }

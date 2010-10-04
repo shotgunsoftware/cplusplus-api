@@ -404,7 +404,7 @@ Delivery *Shotgun::findDeliveryByName(const std::string &projectCode,
 }
     
 // *****************************************************************************
-Delivery *Shotgun::findDeliveryById(const int &deliveryId)
+Delivery *Shotgun::findDeliveryById(const int deliveryId)
 {
     return findEntity<Delivery>(FilterBy("id", "is", deliveryId));
 }
@@ -472,7 +472,7 @@ Review *Shotgun::findReviewByName(const std::string &projectCode,
 }
     
 // *****************************************************************************
-Review *Shotgun::findReviewById(const int &reviewId)
+Review *Shotgun::findReviewById(const int reviewId)
 {
     return findEntity<Review>(FilterBy("id", "is", reviewId));
 }
@@ -497,7 +497,7 @@ ReviewItem *Shotgun::findReviewItemByName(const std::string &projectCode,
 }
     
 // *****************************************************************************
-ReviewItem *Shotgun::findReviewItemById(const int &reviewItemId)
+ReviewItem *Shotgun::findReviewItemById(const int reviewItemId)
 {
     return findEntity<ReviewItem>(FilterBy("id", "is", reviewItemId));
 }
@@ -582,7 +582,7 @@ Group *Shotgun::findGroupByName(const std::string &groupName)
 }
     
 // *****************************************************************************
-Group *Shotgun::findGroupById(const int &groupId)
+Group *Shotgun::findGroupById(const int groupId)
 {
     return findEntity<Group>(FilterBy("id", "is", groupId));
 }
@@ -651,9 +651,19 @@ PlaylistPtrs Shotgun::findPlaylistsByProject(const std::string &projectCode,
                                   limit);
 }
  
-
 // *****************************************************************************
-// protected - called within this library
+Entity *Shotgun::createEntity(const std::string &entityType,
+                              const Dict &data,
+                              const List &extraReturnFields)
+{
+    Dict createMap = Entity::buildCreateMap(entityType,
+                                            data,
+                                            extraReturnFields);
+
+    return this->entityFactoryCreate(entityType, createMap);
+}
+ 
+// *****************************************************************************
 Entity *Shotgun::findEntity(const std::string &entityType,
                             const FilterBy &filterList,
                             const List &extraReturnFields,
@@ -679,11 +689,35 @@ Entity *Shotgun::findEntity(const std::string &entityType,
 }
 
 // *****************************************************************************
-Entity *Shotgun::findEntityById(const std::string &entityType, const int &id)
+EntityPtrs Shotgun::findEntities(const std::string &entityType,
+                                 const FilterBy &filterList,
+                                 const int limit,
+                                 const List &extraReturnFields,
+                                 const bool retiredOnly,
+                                 const SortBy &order)
+{
+    Dict findMap = Entity::buildFindMap(entityType,
+                                        filterList,
+                                        extraReturnFields,
+                                        retiredOnly,
+                                        limit,
+                                        order);
+
+    return this->entityFactoryFind(entityType, findMap);
+}
+
+// *****************************************************************************
+Entity *Shotgun::findEntityById(const std::string &entityType, const int id)
 {
     return findEntity(entityType,
                       FilterBy("id", "is", id));
 
+}
+
+// *****************************************************************************
+bool Shotgun::deleteEntity(const std::string &entityType, const int id)
+{
+    return Entity::deleteSGEntity(this, entityType, id);
 }
     
 } // End namespace Shotgun
