@@ -3882,6 +3882,6 @@ typedef std::vector<Shotgun::Group *> GroupPtrs;
 typedef std::vector<Shotgun::Note *> NotePtrs;
 typedef std::vector<Shotgun::Playlist *> PlaylistPtrs;
 
-};
+}; // End namespace Shotgun
 
 

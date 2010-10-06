@@ -39,6 +39,74 @@ class Entity
     #include <Shotgun/Entity.h>
 %End
 
+%ConvertToSubClassCode
+    // Downcast to subclass
+    if (sipCpp->entityType() == "Asset")
+    {
+        sipType = sipType_Shotgun_Asset;
+    }
+    else if (sipCpp->entityType() == "Delivery")
+    {
+        sipType = sipType_Shotgun_Delivery;
+    }
+    else if (sipCpp->entityType() == "Element")
+    {
+        sipType = sipType_Shotgun_Element;
+    }
+    else if (sipCpp->entityType() == "Group")
+    {
+        sipType = sipType_Shotgun_Group;
+    }
+    else if (sipCpp->entityType() == "HumanUser")
+    {
+        sipType = sipType_Shotgun_HumanUser;
+    }
+    else if (sipCpp->entityType() == "Note")
+    {
+        sipType = sipType_Shotgun_Note;
+    }
+    else if (sipCpp->entityType() == "Playlist")
+    {
+        sipType = sipType_Shotgun_Playlist;
+    }
+    else if (sipCpp->entityType() == "Project")
+    {
+        sipType = sipType_Shotgun_Project;
+    }
+    else if (sipCpp->entityType() == "PublishEvent")
+    {
+        sipType = sipType_Shotgun_PublishEvent;
+    }
+    else if (sipCpp->entityType() == "ReviewItem")
+    {
+        sipType = sipType_Shotgun_ReviewItem;
+    }
+    else if (sipCpp->entityType() == "Review")
+    {
+        sipType = sipType_Shotgun_Review;
+    }
+    else if (sipCpp->entityType() == "Sequence")
+    {
+        sipType = sipType_Shotgun_Sequence;
+    }
+    else if (sipCpp->entityType() == "Shot")
+    {
+        sipType = sipType_Shotgun_Shot;
+    }
+    else if (sipCpp->entityType() == "Task")
+    {
+        sipType = sipType_Shotgun_Task;
+    }
+    else if (sipCpp->entityType() == "Version")
+    {
+        sipType = sipType_Shotgun_Version;
+    }
+    else
+    {
+        sipType = sipType_Shotgun_Entity;
+    }
+%End
+
 public:
     virtual ~Entity();
 

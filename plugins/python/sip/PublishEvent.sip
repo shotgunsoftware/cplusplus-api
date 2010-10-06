@@ -48,25 +48,6 @@ public:
 
     static std::string type();
 
-    // ===================================================================
-    // This dynamicCast SIP function that has %MethodCode directive is not
-    // defined in C++. It should only provide the type of the input argument,
-    // but not its name in the header.
-    // ===================================================================
-
-    // This function should not have the /Factory/ annotation.
-    static Shotgun::PublishEvent *dynamicCast(Shotgun::Entity *) throw(Shotgun::SgError);
-%MethodCode
-    if (Shotgun::PublishEvent *p = dynamic_cast<Shotgun::PublishEvent *>(a0))
-    {
-        sipRes = p;
-    }
-    else
-    {
-        throw Shotgun::SgEntityDynamicCastError("PublishEvent");
-    }
-%End
-
 protected:
     PublishEvent(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
 };

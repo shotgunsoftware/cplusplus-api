@@ -88,6 +88,7 @@ Shotgun::~Shotgun()
     delete m_client;
 }
 
+// *****************************************************************************
 void Shotgun::registerClass(const std::string &entityType,
                             const FactoryFunc &factoryFunc,
                             const PopulateReturnFieldsFunc &populateFunc)

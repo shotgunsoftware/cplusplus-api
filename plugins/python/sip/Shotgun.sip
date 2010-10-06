@@ -254,7 +254,6 @@ public:
 
     //------------------------------------------------------------------------
     bool deleteEntity(const std::string &entityType, const int id) throw(Shotgun::SgError);
-
 };
 
 }; // End namespace Shotgun
