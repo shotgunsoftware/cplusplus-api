@@ -47,9 +47,9 @@ TaskPtrs TaskMixin::getTasks(const int limit)
     // derived class.
     if (Entity *entity = dynamic_cast<Entity *>(this))
     {
-        return entity->sg()->findTasksByLinkEntity(entity->sgProjectCode(), 
-                                                   entity->asLink(),
-                                                   limit);
+        return entity->sg()->findEntities<Task>(FilterBy("entity", "is", entity->asLink())
+                                                    .And("project", "is", entity->sg()->getProjectLink(entity->sgProjectCode())),
+                                                limit);
     }
     else
     {
@@ -139,16 +139,76 @@ Task *TaskMixin::addTask(const std::string &taskName,
     {
         if (Entity *entity = dynamic_cast<Entity *>(this))
         {
-            return entity->sg()->createTask(entity->sgProjectCode(),
-                                            taskName,
-                                            taskType,
-                                            taskAssignee,
-                                            taskStartDate,
-                                            taskEndDate,
-                                            taskStatus,
-                                            taskColor,
-                                            taskMilestone,
-                                            entity->asLink());
+            Dict attrsMap = Dict("project", entity->sg()->getProjectLink(entity->sgProjectCode()))
+                            .add("content", taskName)
+                            .add("sg_system_task_type", taskType) // This field seems no longer exist
+                            .add("milestone", taskMilestone)
+                            .add("entity", entity->asLink());
+
+            // taskAssignee - could be a HumanUser or a Group
+            if (taskAssignee != "")
+            {
+                try
+                {
+                    HumanUser *user = entity->sg()->findEntity<HumanUser>(FilterBy("login", "is", taskAssignee));
+                    attrsMap.add("task_assignees", List(user->asLink()));
+
+                    delete user;
+                }
+                catch (SgEntityNotFoundError)
+                {
+                    try
+                    {
+                        Group *group = entity->sg()->findEntity<Group>(FilterBy("code", "is", taskAssignee));
+                        attrsMap.add("task_assignees", List(group->asLink()));
+
+                        delete group;
+                    }
+                    catch (SgEntityNotFoundError)
+                    {
+                    }
+                }
+            }
+
+            // taskStartDate
+                if (taskStartDate != "")
+            {
+                if (taskStartDate == "now")
+                {
+                    attrsMap.add("start_date", currDateStr());
+                }
+                else
+                {
+                    attrsMap.add("start_date", taskStartDate);
+                }
+            }
+
+            // taskEndDate
+            if (taskEndDate != "")
+            {
+                if (taskEndDate == "now")
+                {
+                    attrsMap.add("due_date", currDateStr());
+                }
+                else
+                {
+                    attrsMap.add("due_date", taskEndDate);
+                }
+            }
+
+            // taskStatus
+            if (taskStatus != "")
+            {
+                attrsMap.add("sg_status_list", taskStatus);
+            }
+
+            // taskColor
+            if (taskColor != "")
+            {
+                attrsMap.add("color", taskColor);
+            }
+
+            return entity->sg()->createEntity<Task>(attrsMap);
         }
         else
         {
@@ -175,7 +235,7 @@ Task *TaskMixin::updateTask(const std::string &taskName,
     {
         try
         {
-            HumanUser *user = task->sg()->findHumanUserByLogin(taskAssignee);
+            HumanUser *user = task->sg()->findEntity<HumanUser>(FilterBy("login", "is", taskAssignee));
             updateMap.add("task_assignees", List(user->asLink()));
 
             delete user;
@@ -184,7 +244,7 @@ Task *TaskMixin::updateTask(const std::string &taskName,
         {
             try
             {
-                Group *group = task->sg()->findGroupByName(taskAssignee);
+                Group *group = task->sg()->findEntity<Group>(FilterBy("code", "is", taskAssignee));
                 updateMap.add("task_assignees", List(group->asLink()));
 
                 delete group;

@@ -60,26 +60,6 @@ Group::~Group()
 }
 
 // *****************************************************************************
-Group *Group::create(Shotgun *sg, const std::string &groupName)
-{
-    // Check if the group already exists
-    try
-    {
-        Group *group = sg->findGroupByName(groupName);
-        delete group;
-
-        std::string err = "Group \"" + groupName + "\" already exists.";
-        throw SgEntityCreateError(err);
-    }
-    catch (SgEntityNotFoundError)
-    {
-        Dict attrsMap = Dict("code", groupName);
-
-        return sg->createEntity<Group>(attrsMap);
-    }
-}
-
-// *****************************************************************************
 List Group::populateReturnFields()
 {
     return List("id")

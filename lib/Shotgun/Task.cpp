@@ -61,97 +61,6 @@ Task::~Task()
 }
 
 // *****************************************************************************
-Task *Task::create(Shotgun *sg, 
-                   const std::string &projectCode,
-                   const std::string &taskName,
-                   const std::string &taskType,
-                   const std::string &taskAssignee,
-                   const std::string &taskStartDate,
-                   const std::string &taskEndDate,
-                   const std::string &taskStatus,
-                   const std::string &taskColor,
-                   const bool taskMilestone,
-                   const Dict &taskEntityLink)
-{
-    Dict attrsMap = Dict("project", sg->getProjectLink(projectCode))
-                    .add("content", taskName)
-                    .add("sg_system_task_type", taskType) // This field seems no longer exist
-                    .add("milestone", taskMilestone);
-
-    // taskEntityLink
-    if (taskEntityLink.size() > 0)
-    {
-        attrsMap.add("entity", taskEntityLink);
-    }
-
-    // taskAssignee - could be a HumanUser or a Group
-    if (taskAssignee != "")
-    {
-        try
-        {
-            HumanUser *user = sg->findHumanUserByLogin(taskAssignee);
-            attrsMap.add("task_assignees", List(user->asLink()));
-
-            delete user;
-        }
-        catch (SgEntityNotFoundError)
-        {
-            try
-            {
-                Group *group = sg->findGroupByName(taskAssignee);
-                attrsMap.add("task_assignees", List(group->asLink()));
-
-                delete group;
-            }
-            catch (SgEntityNotFoundError)
-            {
-                // Do nothing
-            }
-        }
-    }
-
-    // taskStartDate
-    if (taskStartDate != "")
-    {
-        if (taskStartDate == "now")
-        {
-            attrsMap.add("start_date", currDateStr());
-        }
-        else
-        {
-            attrsMap.add("start_date", taskStartDate);
-        }
-    }
-
-    // taskEndDate
-    if (taskEndDate != "")
-    {
-        if (taskEndDate == "now")
-        {
-            attrsMap.add("due_date", currDateStr());
-        }
-        else
-        {
-            attrsMap.add("due_date", taskEndDate);
-        }
-    }
-
-    // taskStatus
-    if (taskStatus != "")
-    {
-        attrsMap.add("sg_status_list", taskStatus);
-    }
-
-    // taskColor
-    if (taskColor != "")
-    {
-        attrsMap.add("color", taskColor);
-    }
-
-    return sg->createEntity<Task>(attrsMap);
-}
-
-// *****************************************************************************
 List Task::populateReturnFields()
 {
     return List("id")
@@ -187,7 +96,7 @@ void Task::sgAssignees(const Strings &val)
     {
         try
         {
-            HumanUser *user = m_sg->findHumanUserByLogin(val[i]);
+            HumanUser *user = m_sg->findEntity<HumanUser>(FilterBy("login", "is", val[i]));
             assigneeLinkArray.append(user->asLink());
    
             delete user;
@@ -196,7 +105,7 @@ void Task::sgAssignees(const Strings &val)
         {
             try
             {
-                Group *group = m_sg->findGroupByName(val[i]);
+                Group *group = m_sg->findEntity<Group>(FilterBy("code", "is", val[i]));
                 assigneeLinkArray.append(group->asLink());
 
                 delete group;

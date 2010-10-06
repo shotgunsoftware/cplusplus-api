@@ -62,29 +62,6 @@ Delivery::~Delivery()
 }
 
 // *****************************************************************************
-Delivery *Delivery::create(Shotgun *sg, 
-                           const std::string &projectCode,
-                           const std::string &deliveryName)
-{
-    // Check if the delivery already exists
-    try
-    {
-        Delivery *delivery = sg->findDeliveryByName(projectCode, deliveryName);
-        delete delivery;
-
-        std::string err = "Delivery \"" + deliveryName + "\" already exists.";
-        throw SgEntityCreateError(err);
-    }
-    catch (SgEntityNotFoundError)
-    {
-        Dict attrsMap = Dict("project", sg->getProjectLink(projectCode))
-                        .add("title", deliveryName);
-
-        return sg->createEntity<Delivery>(attrsMap);
-    }
-}
-
-// *****************************************************************************
 List Delivery::populateReturnFields()
 {
     return List("id")

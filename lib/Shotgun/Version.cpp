@@ -63,35 +63,6 @@ Version::~Version()
 }
 
 // *****************************************************************************
-Version *Version::create(Shotgun *sg, const std::string &versionName)
-{
-    // Check if the version already exists
-    try
-    {
-        Version *version = sg->findVersionByName(versionName);
-        delete version;
-
-        std::string err = "Version \"" + versionName + "\" already exists.";
-        throw SgEntityCreateError(err);
-    }
-    catch (SgEntityNotFoundError)
-    {
-        throw SgEntityCreateError("[Not implemented yet] Version::create(..)");
-#warning Implement in non-Tippett way
-//         TipUtil::VersionName dn = TipUtil::VersionName(versionName);
-// 
-//         // Create a very basic Version entity with most of its attributes 
-//         // be filled later from the Python side.
-//         Dict attrsMap = Dict("project", sg->getProjectLink(projectCode))
-//                         .add("code", versionName)
-//                         .add("sg_sequence", dn.sequence())
-//                         .add("sg_rev", dn.versionStr());
-// 
-//         return sg->createEntity<Version>(attrsMap);
-    }
-}
-
-// *****************************************************************************
 List Version::populateReturnFields()
 {
     return List("id")
@@ -126,7 +97,8 @@ const Shot *Version::sgShot() const
 #warning Implement in non-Tippett way
 //     std::string theShotName = TipUtil::ShotName(sgProjectCode(), sgShotName()).shot(true, true);
 // 
-//     return m_sg->findShotByName(theShotName);
+//     return m_sg->findEntity<Shot>(FilterBy("code", "is", sn.shot(true, true))
+//                                       .And("project", "is", getProjectLink(sn.project())));
 }
 
 } // End namespace Shotgun

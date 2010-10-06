@@ -67,10 +67,6 @@ protected:
     Review(Shotgun *sg, const xmlrpc_c::value &attrs);
 
     static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Review(sg, attrs); }
-    static Review *create(Shotgun *sg, 
-                          const std::string &projectCode,
-                          const std::string &reviewName);
-    
     static List populateReturnFields();
 };
 

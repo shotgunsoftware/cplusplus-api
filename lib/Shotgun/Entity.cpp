@@ -268,7 +268,7 @@ const std::string Entity::getProjectCode() const
     Dict projectMap = getAttrValueAsDict("project");
     std::string projectName = getAttrValueAsString("name", projectMap);
 
-    Project *project = m_sg->findProjectByName(projectName);
+    Project *project = m_sg->findEntity<Project>(FilterBy("name", "is", projectName));
     return project->sgCode();
 }
 

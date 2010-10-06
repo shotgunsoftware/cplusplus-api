@@ -46,10 +46,10 @@ NotePtrs NoteMixin::getNotes(const int limit)
     // derived class.
     if (Entity *entity = dynamic_cast<Entity *>(this))
     {
-        return entity->sg()->findNotesByLinks("", // projectCode - unnecessary in this case
-                                              List(entity->asLink()), 
-                                              "", // noteType
-                                              limit);
+        FilterBy filterList = FilterBy("project", "is", entity->sg()->getProjectLink(entity->sgProjectCode()))
+                                  .And("note_links", "is", entity->asLink());
+
+        return entity->sg()->findEntities<Note>(filterList, limit);
     }
     else
     {
@@ -135,15 +135,58 @@ Note *NoteMixin::addNote(const std::string &noteFromUserName,
             links.append(entity->asLink());
         }
 
-        return entity->sg()->createNote(entity->sgProjectCode(),
-                                        noteFromUserName,
-                                        noteToUserNames,
-                                        noteCcUserNames,
-                                        noteSubject,
-                                        noteBody,
-                                        noteType,
-                                        links,
-                                        noteOrigin);
+        HumanUser *user = entity->sg()->findEntity<HumanUser>(FilterBy("login", "is", noteFromUserName));
+        Dict attrsMap = Dict("project", entity->sg()->getProjectLink(entity->sgProjectCode()))
+                        .add("user", user->asLink())
+                        .add("subject", noteSubject)
+                        .add("content", noteBody)
+                        .add("sg_note_type", noteType)
+                        .add("sg_note_origin", noteOrigin);
+        delete user;
+
+        if (links.size() > 0)
+        {
+            attrsMap.add("note_links", links);
+        }
+
+
+        // "addressings_to"
+        List addressingsTo;
+        for (size_t i = 0; i < noteToUserNames.size(); i++)
+        {
+            try
+            {
+                HumanUser *toUser = entity->sg()->findEntity<HumanUser>(FilterBy("login", "is", noteToUserNames[i]));
+                addressingsTo.append(toUser->asLink());
+
+                delete toUser;
+            }
+            catch (SgEntityNotFoundError)
+            {
+                // Do nothing
+            }
+        }
+        attrsMap.add("addressings_to", addressingsTo);
+
+        // "addressings_cc"
+        List addressingsCc;
+        for (size_t i = 0; i < noteCcUserNames.size(); i++)
+        {
+            try
+            {
+                HumanUser *toUser = entity->sg()->findEntity<HumanUser>(FilterBy("login", "is", noteCcUserNames[i]));
+                addressingsCc.append(toUser->asLink());
+    
+                delete toUser;
+            }
+            catch (SgEntityNotFoundError)
+            {
+                // Do nothing
+            }
+        }
+        attrsMap.add("addressings_cc", addressingsCc);
+
+        return entity->sg()->createEntity<Note>(attrsMap);
     }
     else
     {

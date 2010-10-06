@@ -64,46 +64,6 @@ Shot::~Shot()
 }
 
 // *****************************************************************************
-Shot *Shot::create(Shotgun *sg, 
-                   const std::string &projectCode,
-                   const std::string &shotName,
-                   const std::string &sequenceName)
-{
-    // Check if the shot already exists
-    try
-    {
-#warning TODO: Include project (& sequence?) in search
-        Shot *shot = sg->findShotByName(shotName);
-        delete shot;
-
-        std::string err = "Shot \"" + shotName + "\" already exists.";
-        throw SgEntityCreateError(err);
-    }
-    catch (SgEntityNotFoundError)
-    {
-#warning TODO: Fix this
-//         Sequence *seq;
-//         try
-//         {
-//             seq = sg->findSequenceByName(projectCode, sequenceName);
-//         }
-//         catch (SgEntityNotFoundError)
-//         {
-//             seq = sg->createSequence(sn.project(), sn.sequence());
-//         }
-
-        // Other attributes will be filled by the python code
-        Dict attrsMap = Dict("project", sg->getProjectLink(projectCode))
-                        .add("code", shotName);
-
-//         attrsMap.add("sg_sequence", seq->asLink());
-//         delete seq;
-        
-        return sg->createEntity<Shot>(attrsMap);
-    }
-}
-
-// *****************************************************************************
 List Shot::populateReturnFields()
 {
     return List("id")

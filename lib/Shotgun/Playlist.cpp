@@ -62,29 +62,6 @@ Playlist::~Playlist()
 }
 
 // *****************************************************************************
-Playlist *Playlist::create(Shotgun *sg, 
-                           const std::string &projectCode,
-                           const std::string &playlistName)
-{
-    // Check if the playlist already exists
-    try
-    {
-        Playlist *playlist = sg->findPlaylistByName(projectCode, playlistName);
-        delete playlist;
-
-        std::string err = "Playlist \"" + playlistName + "\" already exists.";
-        throw SgEntityCreateError(err);
-    }
-    catch (SgEntityNotFoundError)
-    {
-        Dict attrsMap = Dict("project", sg->getProjectLink(projectCode))
-                        .add("code", playlistName);
-
-        return sg->createEntity<Playlist>(attrsMap);
-    }
-}
-
-// *****************************************************************************
 List Playlist::populateReturnFields()
 {
     return List("id")

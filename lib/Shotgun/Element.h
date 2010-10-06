@@ -79,11 +79,6 @@ protected:
     Element(Shotgun *sg, const xmlrpc_c::value &attrs);
 
     static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Element(sg, attrs); }
-    static Element *create(Shotgun *sg, 
-                           const std::string &projectCode,
-                           const std::string &elementName,
-                           const std::string &elementType);
-
     static List populateReturnFields();
 };
 

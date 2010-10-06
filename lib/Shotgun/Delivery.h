@@ -73,10 +73,6 @@ protected:
     Delivery(Shotgun *sg, const xmlrpc_c::value &attrs);
 
     static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Delivery(sg, attrs); }
-    static Delivery *create(Shotgun *sg, 
-                            const std::string &projectCode,
-                            const std::string &deliveryName);
-    
     static List populateReturnFields();
 };
 

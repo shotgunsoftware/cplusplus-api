@@ -61,31 +61,6 @@ Element::~Element()
 }
 
 // *****************************************************************************
-Element *Element::create(Shotgun *sg, 
-                         const std::string &projectCode,
-                         const std::string &elementName,
-                         const std::string &elementType)
-{
-    // Check if the element already exists
-    try
-    {
-        Element *element = sg->findElementByName(projectCode, elementName);
-        delete element;
-
-        std::string err = "Element \"" + elementName + "\" already exists.";
-        throw SgEntityCreateError(err);
-    }
-    catch (SgEntityNotFoundError)
-    {
-        Dict attrsMap = Dict("project", sg->getProjectLink(projectCode))
-                        .add("code", elementName)
-                        .add("sg_element_type", elementType);
-
-        return sg->createEntity<Element>(attrsMap);
-    }
-}
-
-// *****************************************************************************
 List Element::populateReturnFields()
 {
     return List("id")

@@ -62,29 +62,6 @@ PublishEvent::~PublishEvent()
 }
 
 // *****************************************************************************
-PublishEvent *PublishEvent::create(Shotgun *sg, 
-                                   const std::string &projectCode,
-                                   const std::string &publishEventName)
-{
-    // Check if the publishEvent already exists
-    try
-    {
-        PublishEvent *publishEvent = sg->findPublishEventByName(projectCode, publishEventName);
-        delete publishEvent;
-
-        std::string err = "PublishEvent \"" + publishEventName + "\" already exists.";
-        throw SgEntityCreateError(err);
-    }
-    catch (SgEntityNotFoundError)
-    {
-        Dict attrsMap = Dict("project", sg->getProjectLink(projectCode))
-                        .add("code", publishEventName);
-
-        return sg->createEntity<PublishEvent>(attrsMap);
-    }
-}
-
-// *****************************************************************************
 List PublishEvent::populateReturnFields()
 {
     return List("id")

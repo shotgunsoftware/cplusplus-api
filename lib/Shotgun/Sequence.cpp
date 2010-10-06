@@ -62,32 +62,6 @@ Sequence::~Sequence()
 }
 
 // *****************************************************************************
-Sequence *Sequence::create(Shotgun *sg, 
-                           const std::string &projectCode,
-                           const std::string &sequenceName)
-{
-    // By convention, the sequence name is in uppercase
-    std::string sequenceNameUpper = toupper(sequenceName);
-
-    // Check if the sequence already exists
-    try
-    {
-        Sequence *seq = sg->findSequenceByName(projectCode, sequenceNameUpper);
-        delete seq;
-
-        std::string err = "Sequence \"" + sequenceNameUpper + "\" already exists for project \"" + projectCode + "\"";
-        throw SgEntityCreateError(err);
-    }
-    catch (SgEntityNotFoundError)
-    {
-        Dict attrsMap = Dict("project", sg->getProjectLink(projectCode))
-                        .add("code", sequenceNameUpper);
-
-        return sg->createEntity<Sequence>(attrsMap);
-    }
-}
-
-// *****************************************************************************
 List Sequence::populateReturnFields()
 {
     return List("id")

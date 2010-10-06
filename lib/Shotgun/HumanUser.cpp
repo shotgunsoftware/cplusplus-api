@@ -61,45 +61,6 @@ HumanUser::~HumanUser()
 }
 
 // *****************************************************************************
-HumanUser *HumanUser::create(Shotgun *sg, 
-                             const std::string &userName,
-                             const std::string &userLogin,
-                             const std::string &userEmail)
-{
-    // Check if the user already exists
-    try
-    {
-        HumanUser *user = sg->findHumanUserByLogin(userLogin);
-        delete user;
-
-        std::string err = "HumanUser \"" + userLogin + "\" already exists.";
-        throw SgEntityCreateError(err);
-    }
-    catch (SgEntityNotFoundError)
-    {
-        // Check if there is a retired user with the same name
-        try
-        {
-            HumanUser *retiredHumanUser = sg->findRetiredHumanUser(userLogin);
-            delete retiredHumanUser;
-            
-            // TODO: need to reset the retired user's login
-           
-            std::string err = "Retired user \"" + userLogin + "\" already exists.";
-            throw SgEntityCreateError(err);
-        }
-        catch (SgEntityNotFoundError)
-        {
-            Dict attrsMap = Dict("name", userName)
-                            .add("login", userLogin)
-                            .add("email", userEmail);
-
-            return sg->createEntity<HumanUser>(attrsMap);
-        }
-    }
-}
-
-// *****************************************************************************
 List HumanUser::populateReturnFields()
 {
     return List("id")

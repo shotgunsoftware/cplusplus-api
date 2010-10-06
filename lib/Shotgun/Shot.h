@@ -98,11 +98,6 @@ protected:
     Shot(Shotgun *sg, const xmlrpc_c::value &attrs);
 
     static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Shot(sg, attrs); }
-    static Shot *create(Shotgun *sg, 
-                        const std::string &projectCode,
-                        const std::string &shotName,
-                        const std::string &sequenceName="");
-
     static List populateReturnFields();
 };
 

@@ -72,12 +72,6 @@ protected:
     HumanUser(Shotgun *sg, const xmlrpc_c::value &attrs);
 
     static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new HumanUser(sg, attrs); }
-    static HumanUser *create(Shotgun *sg,
-                             const std::string &userName,
-                             const std::string &userLogin,
-                             const std::string &userEmail);
-
-
     static List populateReturnFields();
 };
 

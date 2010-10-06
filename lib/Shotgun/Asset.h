@@ -73,12 +73,6 @@ protected:
     Asset(Shotgun *sg, const xmlrpc_c::value &attrs);
 
     static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Asset(sg, attrs); }
-    static Asset *create(Shotgun *sg, 
-                         const std::string &projectCode,
-                         const std::string &assetName,
-                         const std::string &assetType,
-                         const std::string &assetSource = "");
-
     static List populateReturnFields();
 };
 

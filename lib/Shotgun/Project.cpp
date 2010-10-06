@@ -67,29 +67,6 @@ Project::~Project()
 }
 
 // *****************************************************************************
-Project *Project::create(Shotgun *sg, 
-                         const std::string &projectName,
-                         const std::string &projectCode)
-{
-    // Check if the project already exists
-    try
-    {
-        Project *project = sg->findProjectByCode(projectCode);
-        delete project;
-
-        std::string err = "Project \"" + projectCode + "\" already exists.";
-        throw SgEntityCreateError(err);
-    }
-    catch (SgEntityNotFoundError)
-    {
-        Dict attrsMap = Dict("code", projectCode)
-                        .add("name", projectName);
-
-        return sg->createEntity<Project>(attrsMap);
-    }
-}
-
-// *****************************************************************************
 List Project::populateReturnFields()
 {
     return List("id")

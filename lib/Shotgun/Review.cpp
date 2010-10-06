@@ -63,29 +63,6 @@ Review::~Review()
 }
 
 // *****************************************************************************
-Review *Review::create(Shotgun *sg, 
-                       const std::string &projectCode,
-                       const std::string &reviewName)
-{
-    // Check if the review already exists
-    try
-    {
-        Review *review = sg->findReviewByName(projectCode, reviewName);
-        delete review;
-
-        std::string err = "Review \"" + reviewName + "\" already exists.";
-        throw SgEntityCreateError(err);
-    }
-    catch (SgEntityNotFoundError)
-    {
-        Dict attrsMap = Dict("project", sg->getProjectLink(projectCode))
-                        .add("code", reviewName);
-
-        return sg->createEntity<Review>(attrsMap);
-    }
-}
-
-// *****************************************************************************
 List Review::populateReturnFields()
 {
     return List("id")

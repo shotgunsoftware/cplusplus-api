@@ -78,10 +78,6 @@ protected:
     Playlist(Shotgun *sg, const xmlrpc_c::value &attrs);
 
     static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Playlist(sg, attrs); }
-    static Playlist *create(Shotgun *sg,
-                            const std::string &projectCode,
-                            const std::string &playlistName);
-
     static List populateReturnFields();
 };
 

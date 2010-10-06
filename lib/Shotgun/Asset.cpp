@@ -61,37 +61,6 @@ Asset::~Asset()
 }
 
 // *****************************************************************************
-Asset *Asset::create(Shotgun *sg, 
-                     const std::string &projectCode,
-                     const std::string &assetName,
-                     const std::string &assetType,
-                     const std::string &assetSource)
-{
-    // Check if the asset already exists
-    try
-    {
-        Asset *asset = sg->findAssetByName(projectCode, assetName);
-        delete asset;
-
-        std::string err = "Asset \"" + assetName + "\" already exists.";
-        throw SgEntityCreateError(err);
-    }
-    catch (SgEntityNotFoundError)
-    {
-        Dict attrsMap = Dict("project", sg->getProjectLink(projectCode))
-                        .add("code", assetName)
-                        .add("sg_asset_type", assetType);
-
-        if (assetSource != "")
-        {
-            attrsMap.add("sg_asset_source", assetSource);
-        }
-
-        return sg->createEntity<Asset>(attrsMap);
-    }
-}
-
-// *****************************************************************************
 List Asset::populateReturnFields()
 {
     return List("id")

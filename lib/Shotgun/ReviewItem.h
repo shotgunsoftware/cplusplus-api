@@ -77,10 +77,6 @@ protected:
     ReviewItem(Shotgun *sg, const xmlrpc_c::value &attrs);
 
     static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new ReviewItem(sg, attrs); }
-    static ReviewItem *create(Shotgun *sg, 
-                              const std::string &projectCode,
-                              const std::string &reviewItemName);
-    
     static List populateReturnFields();
 };
 
