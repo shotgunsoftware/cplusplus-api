@@ -9,6 +9,7 @@ EXTRA_DIST = configure.py               \
              sip/Dict.sip               \
              sip/FilterBy.sip           \
              sip/SortBy.sip             \
+             sip/Fields.sip             \
              sip/Asset.sip              \
              sip/DeliveryItem.sip       \
              sip/Delivery.sip           \

@@ -45,19 +45,17 @@ public:
 
     // ===================================================================
     // These SIP functions that have %MethodCode directive are not defined
-    // in C++. They are actually calling the C++ template functions. The
-    // functions defined in SIP should only provide the types of the arguments,
-    // but not their names in the header.
+    // in C++. They are actually calling the C++ template functions. 
     // ===================================================================
 
     // -------------------------------------------------------------------
-    List(const xmlrpc_c::value &);
+    List(const xmlrpc_c::value &value);
 %MethodCode
     sipCpp = new Shotgun::List(*a0);
 %End
 
     // -------------------------------------------------------------------
-    Shotgun::List &append(const xmlrpc_c::value &);
+    Shotgun::List &append(const xmlrpc_c::value &value);
 %MethodCode
     sipRes = &sipCpp->append(*a0);
 %End

@@ -160,14 +160,7 @@ public:
                                                      const std::string &attrName,
                                                      const Shotgun::Dict &attrsMap) throw(Shotgun::SgError);
 
-    // Set values for only one field
-    virtual void setAttrValue(const std::string &fieldName, 
-                              const xmlrpc_c::value &fieldValue,
-                              const std::string &multiEntityUpdateMode = "",
-                              const Shotgun::Dict &parentEntity = Shotgun::Dict()) throw(Shotgun::SgError);
-
-    virtual void setAttrValue(const Shotgun::Dict &fieldNameValuePairs) throw(Shotgun::SgError);
-    virtual void setAttrValue(const Shotgun::List &fields) throw(Shotgun::SgError); 
+    virtual void setAttrValue(const Shotgun::Fields &fields) throw(Shotgun::SgError); 
 
     // ------------------------------------------------------------------------
     SIP_PYOBJECT __str__();
@@ -183,14 +176,11 @@ public:
 
 protected:
     // ------------------------------------------------------------------------
-    // (1) Even if this ctor is protected, it shoule be put here to prevent a
-    //     default public ctor being generated. See the complex example in the
-    //     "SIP reference guide".
+    // Even if this ctor is protected, it shoule be put here to prevent a
+    // default public ctor being generated. See the complex example in the
+    // "SIP reference guide".
     //
-    //         http://www.riverbankcomputing.co.uk/static/Docs/sip4/index.html
-    //
-    // (2) The Shotgun type needs its namespace attached.
-    // (3) TODO: may need a /TransferThis/ annotation
+    //     http://www.riverbankcomputing.co.uk/static/Docs/sip4/index.html
     // ------------------------------------------------------------------------
 
     Entity(Shotgun::Shotgun *sg);

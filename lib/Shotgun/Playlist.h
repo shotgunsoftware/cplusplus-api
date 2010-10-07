@@ -58,9 +58,9 @@ public:
     const VersionPtrs sgVersions() const;
 
     // Set an attribute's value
-    void sgName(const std::string &val) { setAttrValue("code", toXmlrpcValue(val)); }
-    void sgDescription(const std::string &val) { setAttrValue("description", toXmlrpcValue(val)); }
-    void sgTags(const Strings &val) { setAttrValue("tag_list", toXmlrpcValue(val)); }
+    void sgName(const std::string &val);
+    void sgDescription(const std::string &val);
+    void sgTags(const Strings &val);
     void sgNotes(const Notes &val);  // An array of Note entities
     void sgNotes(const List &val);  // An array of entity links
     void sgVersions(const Versions &val);  // An array of Version entities

@@ -56,7 +56,7 @@ public:
     const std::string sgName() const { return getAttrValueAsString("code"); } 
 
     // Set an attribute's value
-    void sgName(const std::string &name) { setAttrValue("code", toXmlrpcValue(name)); }
+    void sgName(const std::string &name);
 
     static std::string type() { return std::string("Sequence"); }
 

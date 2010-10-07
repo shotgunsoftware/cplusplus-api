@@ -135,6 +135,7 @@ Note *NoteMixin::addNote(const std::string &noteFromUserName,
             links.append(entity->asLink());
         }
 
+        // Prepare the data for creating a Note entity
         HumanUser *user = entity->sg()->findEntity<HumanUser>(FilterBy("login", "is", noteFromUserName));
         Dict attrsMap = Dict("project", entity->sg()->getProjectLink(entity->sgProjectCode()))
                         .add("user", user->asLink())

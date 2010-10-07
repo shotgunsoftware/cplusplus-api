@@ -150,7 +150,7 @@ List Entity::findSGEntities(Shotgun *sg, Dict &findMap)
 xmlrpc_c::value Entity::updateSGEntity(Shotgun *sg, 
                                        const std::string &entityType, 
                                        const int entityId,
-                                       const List &fieldsToUpdate)
+                                       const Fields &fieldsToUpdate)
 {
     Method *md = sg->method("update");
 
@@ -480,128 +480,7 @@ const xmlrpc_c::value Entity::getAttrValue(const std::string &attrName,
 }
 
 // *****************************************************************************
-void Entity::setAttrValue(const std::string &fieldName, 
-                          const xmlrpc_c::value &fieldValue,
-                          const std::string &multiEntityUpdateMode,
-                          const Dict &parentEntity)
-{
-    // This involves two steps:
-    // (1) Update the Shotgun records
-    // (2) Update the attribute that is already in m_attrs
-
-    try
-    {
-        // -------------------------------------------------------------------------
-        // Update the Shotgun records
-        Dict field = Dict("field_name", fieldName)
-                     .add("value", fieldValue);
-
-        if (multiEntityUpdateMode != "")
-        {
-            field.add("multi_entity_update_mode", multiEntityUpdateMode);
-        }
-        
-        if (!parentEntity.empty())
-        {
-            field.add("parent_entity", parentEntity);
-        }
-        
-        xmlrpc_c::value result = updateSGEntity(m_sg,
-                                                m_type,
-                                                sgId(),
-                                                List(field));
-
-        // -------------------------------------------------------------------------
-        // Update the attrbute if it is already in m_attrs. If it's not already
-        // there, don't add it.
-        if (m_attrs->type() != xmlrpc_c::value::TYPE_NIL)
-        {
-            Dict attrMap = Dict(*m_attrs);
-            if (attrMap.find(fieldName))
-            {
-                // xmlrpc_c::value does not allow re-assignment except for its
-                // pointer type. So erase this entry first, then add a new one.
-                attrMap.erase(fieldName);
-                attrMap.add(fieldName, fieldValue);
-
-                // Update the m_attrs as a whole
-                delete m_attrs;
-                m_attrs = new xmlrpc_c::value(xmlrpc_c::value_struct(attrMap.value()));
-            }
-        }
-    }
-    catch (SgEntityXmlrpcError &error)
-    {
-        throw SgAttrSetValueError(fieldName, error.what());
-    }
-}
-
-// *****************************************************************************
-void Entity::setAttrValue(const Dict &fieldNameValuePairs)
-{
-    // This involves two steps:
-    // (1) Update the Shotgun records
-    // (2) Update the attribute that is already in m_attrs
-
-    try
-    {
-        // -------------------------------------------------------------------------
-        // Update the Shotgun records
-        List fields;
-
-        for (SgMap::const_iterator attrIter = fieldNameValuePairs.value().begin(); 
-                                   attrIter != fieldNameValuePairs.value().end(); 
-                                   ++attrIter)
-        {
-            fields.append(Dict("field_name", (*attrIter).first)
-                          .add("value", (*attrIter).second));
-        }
-
-        // Update all the fields in one call
-        xmlrpc_c::value result = updateSGEntity(m_sg,
-                                                m_type,
-                                                sgId(),
-                                                fields);
-
-        // -------------------------------------------------------------------------
-        // Update the attrbutes if they are already in m_attrs. If not there, don't 
-        // add them to m_attrs.
-        if (m_attrs->type() != xmlrpc_c::value::TYPE_NIL)
-        {
-            Dict attrMap = Dict(*m_attrs);
-            bool updated = false;
-        
-            for (SgMap::const_iterator attrIter = fieldNameValuePairs.value().begin(); 
-                                       attrIter != fieldNameValuePairs.value().end(); 
-                                       ++attrIter)
-            {
-                if (attrMap.find((*attrIter).first))
-                {
-                    // xmlrpc_c::value does not allow re-assignment except for its
-                    // pointer type. So erase this entry first, then add a new one.
-                    attrMap.erase((*attrIter).first);
-                    attrMap.add((*attrIter).first, (*attrIter).second);
-
-                    updated = true;
-                }
-            }
-
-            // Update the m_attrs as a whole
-            if (updated)
-            {
-                delete m_attrs;
-                m_attrs = new xmlrpc_c::value(xmlrpc_c::value_struct(attrMap.value()));
-            }
-        }
-    }
-    catch (SgEntityXmlrpcError &error)
-    {
-        throw SgAttrSetValueError(fieldNameValuePairs, error.what());
-    }
-}
-
-// *****************************************************************************
-void Entity::setAttrValue(const List &fields)
+void Entity::setAttrValue(const Fields &fields)
 {
     // This involves two steps:
     // (1) Update the Shotgun records
@@ -624,9 +503,9 @@ void Entity::setAttrValue(const List &fields)
             Dict attrMap = Dict(*m_attrs);
             bool updated = false;
         
-            for (size_t i = 0; i < fields.size(); i++)
+            for (size_t i = 0; i < fields.data().size(); i++)
             {
-                Dict field = Dict(fields[i]);
+                Dict field = Dict(fields.data()[i]);
 
                 if (field.find("field_name") && field.find("value"))
                 {

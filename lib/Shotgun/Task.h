@@ -71,7 +71,7 @@ public:
     const std::string sgLinkEntityType() const { return linkEntityType("entity"); }
 
     // Set an attribute's value
-    void sgStatus(const std::string &val) { setAttrValue("sg_status_list", toXmlrpcValue(val)); }
+    void sgStatus(const std::string &val);
     void sgAssignees(const Strings &val);
 
     static std::string type() { return std::string("Task"); }

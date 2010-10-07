@@ -88,6 +88,12 @@ const EntityPtrs Task::sgAssignees() const
 }
 
 // *****************************************************************************
+void Task::sgStatus(const std::string &val)
+{
+    setAttrValue(Fields("sg_status_list", val));
+}
+
+// *****************************************************************************
 void Task::sgAssignees(const Strings &val)
 {
     List assigneeLinkArray;
@@ -118,7 +124,7 @@ void Task::sgAssignees(const Strings &val)
         }
     }
 
-    setAttrValue("task_assignees", toXmlrpcValue(assigneeLinkArray));
+    setAttrValue(Fields("task_assignees", assigneeLinkArray));
 }
 
 } // End namespace Shotgun

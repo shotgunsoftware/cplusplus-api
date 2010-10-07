@@ -35,10 +35,11 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <time.h>
 
 #include <Shotgun/types.h>
-#include <Shotgun/FilterBy.h>
-#include <Shotgun/SortBy.h>
 #include <Shotgun/List.h>
 #include <Shotgun/Dict.h>
+#include <Shotgun/FilterBy.h>
+#include <Shotgun/SortBy.h>
+#include <Shotgun/Fields.h>
 #include <Shotgun/Project.h>
 #include <Shotgun/Sequence.h>
 #include <Shotgun/Shot.h>
@@ -184,6 +185,12 @@ xmlrpc_c::value toXmlrpcValue(const FilterBy &in)
 xmlrpc_c::value toXmlrpcValue(const SortBy &in)
 {
     return toXmlrpcValue(in.sorts());
+}
+
+// *****************************************************************************
+xmlrpc_c::value toXmlrpcValue(const Fields &in)
+{
+    return toXmlrpcValue(in.data());
 }
 
 // *****************************************************************************
@@ -491,6 +498,25 @@ void fromXmlrpcValue(const xmlrpc_c::value &value, SortBy &out)
     if (value.type() == xmlrpc_c::value::TYPE_ARRAY)
     {
         out = SortBy(SgArray((xmlrpc_c::value_array(value)).vectorValueValue()));
+    }
+    else if (value.type() == xmlrpc_c::value::TYPE_NIL)
+    {
+        throw SgXmlrpcValueIsNilError();
+    }
+    else
+    {
+        throw SgXmlrpcValueTypeError(value,
+                                     xmlrpc_c::value::TYPE_ARRAY,
+                                     value.type());
+    }
+}
+
+// *****************************************************************************
+void fromXmlrpcValue(const xmlrpc_c::value &value, Fields &out)
+{
+    if (value.type() == xmlrpc_c::value::TYPE_ARRAY)
+    {
+        out = Fields(SgArray((xmlrpc_c::value_array(value)).vectorValueValue()));
     }
     else if (value.type() == xmlrpc_c::value::TYPE_NIL)
     {

@@ -40,6 +40,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/SortBy.h>
 #include <Shotgun/List.h>
 #include <Shotgun/Dict.h>
+#include <Shotgun/Fields.h>
 
 int main( int argc, char **argv )
 {
@@ -59,13 +60,19 @@ int main( int argc, char **argv )
         Shotgun::Shotgun sg(shotgunURL);
 
         std::cout << std::endl << "allProjects: ***********************************************" << std::endl;
-        Shotgun::ProjectPtrs projects = sg.allProjects();
+        Shotgun::ProjectPtrs projects = sg.findEntities<Shotgun::Project>();
         for( size_t p = 0; p < projects.size(); ++p )
         {
             std::cout << *(projects[p]) << std::endl;
+
             std::cout << "-------------------" << std::endl;
             delete projects[p];
         }
+    }
+    catch (const Shotgun::SgError & e)
+    {
+        std::cerr << ">>> Shotgun::SgError: " << e.what() << std::endl;
+        return -1;
     }
     catch (const std::exception& e)
     {

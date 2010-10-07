@@ -45,23 +45,21 @@ public:
 
     // ===================================================================
     // These SIP functions that have %MethodCode directive are not defined 
-    // in C++. They are actually calling the C++ template functions. The 
-    // functions defined in SIP should only provide the types of the arguments, 
-    // but not their names in the header.
+    // in C++. They are actually calling the C++ template functions. 
     // ===================================================================
 
     // -------------------------------------------------------------------
-    FilterBy(const std::string &,
-             const std::string &,
-             const xmlrpc_c::value &);
+    FilterBy(const std::string &path,
+             const std::string &relation,
+             const xmlrpc_c::value &value);
 %MethodCode
     sipCpp = new Shotgun::FilterBy(*a0, *a1, *a2);
 %End
 
     // -------------------------------------------------------------------
-    Shotgun::FilterBy &And(const std::string &,
-                           const std::string &,
-                           const xmlrpc_c::value &);
+    Shotgun::FilterBy &And(const std::string &path,
+                           const std::string &relation,
+                           const xmlrpc_c::value &value);
 %MethodCode
     sipRes = &sipCpp->And(*a0, *a1, *a2);
 %End
@@ -70,9 +68,9 @@ public:
     Shotgun::FilterBy &And(const Shotgun::FilterBy &that);
 
     // -------------------------------------------------------------------
-    Shotgun::FilterBy &Or(const std::string &,
-                          const std::string &,
-                          const xmlrpc_c::value &);
+    Shotgun::FilterBy &Or(const std::string &path,
+                          const std::string &relation,
+                          const xmlrpc_c::value &value);
 %MethodCode
     sipRes = &sipCpp->Or(*a0, *a1, *a2);
 %End

@@ -10,6 +10,7 @@
 %Include Dict.sip
 %Include FilterBy.sip
 %Include SortBy.sip
+%Include Fields.sip
 
 %Include Shotgun.sip
 %Include Entity.sip

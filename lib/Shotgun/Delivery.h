@@ -57,9 +57,9 @@ public:
     
     
     // Set an attribute's value
-    void sgName(const std::string &val) { setAttrValue("title", toXmlrpcValue(val)); }
-    void sgStatus(const std::string &val) { setAttrValue("sg_delivery_status", toXmlrpcValue(val)); }
-    void sgType(const std::string &val) { setAttrValue("sg_delivery_type", toXmlrpcValue(val)); }
+    void sgName(const std::string &val);
+    void sgStatus(const std::string &val);
+    void sgType(const std::string &val);
 
     static std::string type() { return std::string("Delivery"); }
 

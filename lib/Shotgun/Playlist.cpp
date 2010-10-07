@@ -112,6 +112,24 @@ const VersionPtrs Playlist::sgVersions() const
 }
 
 // *****************************************************************************
+void Playlist::sgName(const std::string &val)
+{
+    setAttrValue(Fields("code", val));
+}
+
+// *****************************************************************************
+void Playlist::sgDescription(const std::string &val)
+{
+    setAttrValue(Fields("description", val));
+}
+
+// *****************************************************************************
+void Playlist::sgTags(const Strings &val)
+{
+    setAttrValue(Fields("tag_list", val));
+}
+
+// *****************************************************************************
 void Playlist::sgNotes(const Notes &val)
 {
     List noteLinkArray;
@@ -121,7 +139,7 @@ void Playlist::sgNotes(const Notes &val)
         noteLinkArray.append(val[i].asLink());
     }
 
-    setAttrValue("notes", toXmlrpcValue(noteLinkArray));
+    setAttrValue(Fields("notes", noteLinkArray));
 }
 
 // *****************************************************************************
@@ -139,7 +157,7 @@ void Playlist::sgNotes(const List &val)
         }
     }
 
-    setAttrValue("notes", toXmlrpcValue(val));
+    setAttrValue(Fields("notes", val));
 }
 
 // *****************************************************************************
@@ -152,7 +170,7 @@ void Playlist::sgVersions(const Versions &val)
         versionLinkArray.append(val[i].asLink());
     }
 
-    setAttrValue("versions", toXmlrpcValue(versionLinkArray));
+    setAttrValue(Fields("versions", versionLinkArray));
 }
 
 // *****************************************************************************
@@ -170,7 +188,7 @@ void Playlist::sgVersions(const List &val)
         }
     }
 
-    setAttrValue("versions", toXmlrpcValue(val));
+    setAttrValue(Fields("versions", val));
 }
 
 } // End namespace Shotgun

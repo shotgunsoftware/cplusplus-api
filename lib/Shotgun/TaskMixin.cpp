@@ -139,6 +139,7 @@ Task *TaskMixin::addTask(const std::string &taskName,
     {
         if (Entity *entity = dynamic_cast<Entity *>(this))
         {
+            // Prepare data for creating a Task entity
             Dict attrsMap = Dict("project", entity->sg()->getProjectLink(entity->sgProjectCode()))
                             .add("content", taskName)
                             .add("sg_system_task_type", taskType) // This field seems no longer exist
@@ -228,7 +229,7 @@ Task *TaskMixin::updateTask(const std::string &taskName,
 {
     Task *task = getTaskByName(taskName);
 
-    Dict updateMap;
+    Fields fieldData;
 
     // taskAssignee
     if (taskAssignee != "")
@@ -236,7 +237,7 @@ Task *TaskMixin::updateTask(const std::string &taskName,
         try
         {
             HumanUser *user = task->sg()->findEntity<HumanUser>(FilterBy("login", "is", taskAssignee));
-            updateMap.add("task_assignees", List(user->asLink()));
+            fieldData.add("task_assignees", List(user->asLink()));
 
             delete user;
         }
@@ -245,7 +246,7 @@ Task *TaskMixin::updateTask(const std::string &taskName,
             try
             {
                 Group *group = task->sg()->findEntity<Group>(FilterBy("code", "is", taskAssignee));
-                updateMap.add("task_assignees", List(group->asLink()));
+                fieldData.add("task_assignees", List(group->asLink()));
 
                 delete group;
             }
@@ -261,11 +262,11 @@ Task *TaskMixin::updateTask(const std::string &taskName,
     {
         if (taskStartDate == "now")
         {
-            updateMap.add("start_date", currDateStr());
+            fieldData.add("start_date", currDateStr());
         }
         else
         {
-            updateMap.add("start_date", taskStartDate);
+            fieldData.add("start_date", taskStartDate);
         }
     }
 
@@ -274,31 +275,31 @@ Task *TaskMixin::updateTask(const std::string &taskName,
     {
         if (taskEndDate == "now")
         {
-            updateMap.add("due_date", currDateStr());
+            fieldData.add("due_date", currDateStr());
         }
         else
         {
-            updateMap.add("due_date", taskEndDate);
+            fieldData.add("due_date", taskEndDate);
         }
     }
 
     // taskStatus
     if (taskStatus != "")
     {
-        updateMap.add("sg_status_list", taskStatus);
+        fieldData.add("sg_status_list", taskStatus);
     }
 
     // taskColor
     if (taskColor != "")
     {
-        updateMap.add("color", taskColor);
+        fieldData.add("color", taskColor);
     }
 
     // taskMilestone
-    updateMap.add("milestone", taskMilestone);
+    fieldData.add("milestone", taskMilestone);
 
     // update the task's attributes
-    task->setAttrValue(updateMap);
+    task->setAttrValue(fieldData);
 
     return task;
 }

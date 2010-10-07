@@ -120,7 +120,7 @@ void Element::sgAssets(const Assets &val)
         assetLinkList.append(val[i].asLink());
     }
 
-    setAttrValue("assets", toXmlrpcValue(assetLinkList));
+    setAttrValue(Fields("assets", assetLinkList));
 }
 
 // *****************************************************************************
@@ -138,7 +138,7 @@ void Element::sgAssets(const List &val)
         }
     }
 
-    setAttrValue("assets", toXmlrpcValue(val));
+    setAttrValue(Fields("assets", val));
 }
 
 // *****************************************************************************
@@ -151,7 +151,7 @@ void Element::sgShots(const Shots &val)
         shotLinkList.append(val[i].asLink());
     }
 
-    setAttrValue("shots", toXmlrpcValue(shotLinkList));
+    setAttrValue(Fields("shots", shotLinkList));
 }
 
 // *****************************************************************************
@@ -169,7 +169,19 @@ void Element::sgShots(const List &val)
         }
     }
 
-    setAttrValue("shots", toXmlrpcValue(val));
+    setAttrValue(Fields("shots", val));
+}
+
+// *****************************************************************************
+void Element::sgTags(const Strings &val)
+{
+    setAttrValue(Fields("tag_list", val));
+}
+
+// *****************************************************************************
+void Element::sgType(const std::string &val)
+{
+    setAttrValue(Fields("sg_element_type", val));
 }
 
 } // End namespace Shotgun

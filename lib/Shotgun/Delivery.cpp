@@ -79,6 +79,24 @@ List Delivery::populateReturnFields()
            .append("sg_wrangler_notes");
 }
 
+// *****************************************************************************
+void Delivery::sgName(const std::string &val)
+{
+    setAttrValue(Fields("title", val));
+}
+
+// *****************************************************************************
+void Delivery::sgStatus(const std::string &val)
+{
+    setAttrValue(Fields("sg_delivery_status", val));
+}
+
+// *****************************************************************************
+void Delivery::sgType(const std::string &val)
+{
+    setAttrValue(Fields("sg_delivery_type", val));
+}
+
 } // End namespace Shotgun
 
 // *****************************************************************************

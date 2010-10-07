@@ -56,9 +56,9 @@ public:
     const Dict sgPermissionGroup() const { return getAttrValueAsDict("permission_rule_set"); }
 
     // Set an attribute's value
-    void sgName(const std::string &val) { setAttrValue("name", toXmlrpcValue(val)); }
-    void sgEmail(const std::string &val) { setAttrValue("email", toXmlrpcValue(val)); }
-    void sgLogin(const std::string &val) { setAttrValue("login", toXmlrpcValue(val)); }
+    void sgName(const std::string &val);
+    void sgEmail(const std::string &val);
+    void sgLogin(const std::string &val);
 
     static std::string type() { return std::string("HumanUser"); }
 

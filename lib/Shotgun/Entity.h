@@ -43,6 +43,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/SortBy.h>
 #include <Shotgun/List.h>
 #include <Shotgun/Dict.h>
+#include <Shotgun/Fields.h>
 
 namespace Shotgun {
 
@@ -191,35 +192,7 @@ public:
     //            ...
     //      ]
     // -------------------------------------------------------------------------
-
-    // Set values for only one field
-    virtual void setAttrValue(const std::string &fieldName, 
-                              const xmlrpc_c::value &fieldValue,
-                              const std::string &multiEntityUpdateMode = "",
-                              const Dict &parentEntity = Dict());
-
-    // Set values for one or more fields at once - omitted the optional 
-    // "multi_entity_update_mode" and "parent_entity" in this version.
-    // For example,
-    //
-    //     myProject->setAttrValue(Shotgun::Dict("name",                   "TEST PROJECT")
-    //                                      .add("sg_default_start_frame", 101));
-    //
-    virtual void setAttrValue(const Dict &fieldNameValuePairs); 
-
-    // Set values for one or more fields at once - with the optional
-    // "multi_entity_update_mode" and "parent_entity".
-    // For example,
-    //
-    //     myProject->setAttrValue(Shotgun::List(Shotgun::Dict("field_name",               "name")
-    //                                                    .add("value",                    "TEST PROJECT")
-    //                                                    .add("multi_entity_update_mode", "set")
-    //                                                    .add("parent_entity",            Shotgun::Dict("type" : "Project")
-    //                                                                                               .add("id"   : 78))
-    //                                   .append(Shotgun::Dict("field_name", "sg_default_start_frame")
-    //                                                    .add("value",      106)));
-    //
-    virtual void setAttrValue(const List &fields); 
+    virtual void setAttrValue(const Fields &fields); 
 
     // TODO: Explore making this operator overload virtual
     Entity &operator=(const Entity &that)
@@ -250,7 +223,7 @@ protected:
     static xmlrpc_c::value updateSGEntity(Shotgun *sg,
                                           const std::string &entityType,
                                           const int entityId,
-                                          const List &fieldsToUpdate);
+                                          const Fields &fieldsToUpdate);
 
     // Delete an existing Shotgun entity
     static bool deleteSGEntity(Shotgun *sg, 

@@ -33,23 +33,47 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace Shotgun {
 
 // *****************************************************************************
-class Method
+class Fields
 {
 %TypeHeaderCode
-    #include <Shotgun/Method.h>
+    #include <Shotgun/Fields.h>
 %End
 
 public:
-    const std::string &methodName() const;
-    Shotgun::MethodSignatures &signature() throw (Shotgun::SgEntityXmlrpcError); 
-    std::string &help() throw (Shotgun::SgEntityXmlrpcError);
-    xmlrpc_c::value call() throw (Shotgun::SgEntityXmlrpcError);
-    xmlrpc_c::value call(const xmlrpc_c::paramList &params) throw (Shotgun::SgEntityXmlrpcError);
+    Fields();
+    Fields(const Shotgun::List &data);
 
-protected:
-    Method(Shotgun::Shotgun *sg, const std::string &methodName);
-    virtual ~Method();
+    // ===================================================================
+    // These SIP functions that have %MethodCode directive are not defined
+    // in C++. They are actually calling the C++ template functions. 
+    // ===================================================================
+
+    Fields(const std::string &fieldName,
+           const xmlrpc_c::value &fieldValue,
+           const std::string &multiEntityUpdateMode = "",
+           const Shotgun::Dict &parentEntity = Shotgun::Dict());
+%MethodCode
+    sipCpp = new Shotgun::Fields(*a0, *a1, *a2, *a3);
+%End
+
+    // -------------------------------------------------------------------
+    // Add one field
+    Shotgun::Fields &add(const std::string &fieldName,
+                const xmlrpc_c::value &fieldValue,
+                const std::string &multiEntityUpdateMode = "",
+                const Shotgun::Dict &parentEntity = Shotgun::Dict());
+%MethodCode
+    sipRes = &sipCpp->add(*a0, *a1, *a2, *a3);
+%End
+
+    // -------------------------------------------------------------------
+    Shotgun::Fields &add(const Shotgun::Fields &that);
+
+    // -------------------------------------------------------------------
+    const Shotgun::List &data() const;
+    const bool empty() const;
+    const int size() const;
+    void clear();
 };
 
-}; // End namespace Shotgun - IMPORTANT: has to have the semi-colon
-
+}; // End namespace Shotgun

@@ -113,19 +113,7 @@ SgAttrSetValueError::SgAttrSetValueError(const char *fieldName,
 }
 
 // *****************************************************************************
-SgAttrSetValueError::SgAttrSetValueError(const Dict &fieldNameValuePairs,
-                                         const std::string &errMsg) 
-    : SgAttrError("SgAttrSetValueError: ")
-{
-    m_msg += "Failed to set values for attribute list, " + toStdString(fieldNameValuePairs);
-    if (errMsg != "")
-    {
-        m_msg += "\n" + errMsg;
-    }
-}
-
-// *****************************************************************************
-SgAttrSetValueError::SgAttrSetValueError(const List &fields,
+SgAttrSetValueError::SgAttrSetValueError(const Fields &fields,
                                          const std::string &errMsg) 
     : SgAttrError("SgAttrSetValueError: ")
 {

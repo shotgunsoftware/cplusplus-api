@@ -57,10 +57,11 @@ class Group;
 class Note;
 class Playlist;
 
-class FilterBy;
-class SortBy;
 class List;
 class Dict;
+class FilterBy;
+class SortBy;
+class Fields;
 
 // *****************************************************************************
 typedef std::vector<std::string> Strings;
@@ -85,7 +86,6 @@ typedef std::vector<Group> Groups;
 typedef std::vector<Note> Notes;
 typedef std::vector<Playlist> Playlists;
 
-#warning Add these to sip's mappedTypes
 typedef std::vector<Entity *> EntityPtrs;
 typedef std::vector<Project *> ProjectPtrs;
 typedef std::vector<Sequence *> SequencePtrs;
@@ -121,6 +121,7 @@ xmlrpc_c::value toXmlrpcValue(const List &in);
 xmlrpc_c::value toXmlrpcValue(const Dict &in);
 xmlrpc_c::value toXmlrpcValue(const FilterBy &in);
 xmlrpc_c::value toXmlrpcValue(const SortBy &in);
+xmlrpc_c::value toXmlrpcValue(const Fields &in);
 xmlrpc_c::value toXmlrpcValue(const xmlrpc_c::value &in);
 
 // *****************************************************************************
@@ -145,6 +146,7 @@ void fromXmlrpcValue(const xmlrpc_c::value &value, List &out);
 void fromXmlrpcValue(const xmlrpc_c::value &value, Dict &out);
 void fromXmlrpcValue(const xmlrpc_c::value &value, FilterBy &out);
 void fromXmlrpcValue(const xmlrpc_c::value &value, SortBy &out);
+void fromXmlrpcValue(const xmlrpc_c::value &value, Fields &out);
 void fromXmlrpcValue(const xmlrpc_c::value &value, xmlrpc_c::value &out);
 
 // *****************************************************************************

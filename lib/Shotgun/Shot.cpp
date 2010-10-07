@@ -123,7 +123,7 @@ void Shot::sgSequence(const Dict &val)
         throw SgAttrSetValueError("sg_sequence", error.what());
     }
 
-    setAttrValue("sg_sequence", toXmlrpcValue(val));
+    setAttrValue(Fields("sg_sequence", val));
 }
 
 // *****************************************************************************
@@ -153,7 +153,7 @@ void Shot::sgElements(const Elements &val)
         elementLinkArray.append(val[i].asLink());
     }
 
-    setAttrValue("elements", toXmlrpcValue(elementLinkArray));
+    setAttrValue(Fields("elements", elementLinkArray));
 }
 
 // *****************************************************************************
@@ -171,7 +171,7 @@ void Shot::sgElements(const List &val)
         }
     }
 
-    setAttrValue("elements", toXmlrpcValue(val));
+    setAttrValue(Fields("elements", val));
 }
 
 // *****************************************************************************

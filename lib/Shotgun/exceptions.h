@@ -122,9 +122,7 @@ public:
                         const std::string &errMsg = "");
     SgAttrSetValueError(const char *fieldName,
                         const std::string &errMsg = "");
-    SgAttrSetValueError(const Dict &fieldNameValuePairs,
-                        const std::string &errMsg = "");
-    SgAttrSetValueError(const List &fields,
+    SgAttrSetValueError(const Fields &fields,
                         const std::string &errMsg = "");
 
     virtual ~SgAttrSetValueError() throw() {}

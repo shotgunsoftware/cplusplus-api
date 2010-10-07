@@ -62,6 +62,12 @@ Sequence::~Sequence()
 }
 
 // *****************************************************************************
+void Sequence::sgName(const std::string &name)
+{
+    setAttrValue(Fields("code", name));
+}
+
+// *****************************************************************************
 List Sequence::populateReturnFields()
 {
     return List("id")

@@ -30,26 +30,42 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
+#include <Shotgun/Fields.h>
+
 namespace Shotgun {
 
 // *****************************************************************************
-class Method
+Fields::Fields() : m_data(List())
 {
-%TypeHeaderCode
-    #include <Shotgun/Method.h>
-%End
+}
 
-public:
-    const std::string &methodName() const;
-    Shotgun::MethodSignatures &signature() throw (Shotgun::SgEntityXmlrpcError); 
-    std::string &help() throw (Shotgun::SgEntityXmlrpcError);
-    xmlrpc_c::value call() throw (Shotgun::SgEntityXmlrpcError);
-    xmlrpc_c::value call(const xmlrpc_c::paramList &params) throw (Shotgun::SgEntityXmlrpcError);
+// *****************************************************************************
+Fields::Fields(const List &data) : m_data(data)
+{
+}
 
-protected:
-    Method(Shotgun::Shotgun *sg, const std::string &methodName);
-    virtual ~Method();
-};
+// *****************************************************************************
+Fields &Fields::add(const Fields &that)
+{
+    m_data.extend(that.m_data);
 
-}; // End namespace Shotgun - IMPORTANT: has to have the semi-colon
+    return *this;
+}
+
+} // End namespace Shotgun
+
+// *****************************************************************************
+// *****************************************************************************
+std::string toStdString(const Shotgun::Fields &fields)
+{
+    return toStdString(fields.data());
+}
+
+// *****************************************************************************
+std::ostream& operator<<(std::ostream &output, const Shotgun::Fields &fields)
+{
+    output << toStdString(fields);
+
+    return output;
+}
 
