@@ -83,7 +83,6 @@ public:
 
     // Set an attribute's value
     void sgSequence(const Dict &val);
-    void sgElements(const Elements &val); // An array of Element entities
     void sgElements(const List &val); // An array of entity links
 
     static std::string type() { return std::string("Shot"); }
@@ -106,8 +105,6 @@ protected:
 // *****************************************************************************
 // *****************************************************************************
 std::string toStdString(const Shotgun::Shot &shot);
-std::string toStdString(const Shotgun::Shots &shots);
 std::ostream& operator<<(std::ostream &output, const Shotgun::Shot &shot);
-std::ostream& operator<<(std::ostream &output, const Shotgun::Shots &shots);
 
 #endif    // End #ifdef __SHOT_H__

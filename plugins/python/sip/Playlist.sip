@@ -55,9 +55,7 @@ public:
     void sgName(const std::string &val) throw(Shotgun::SgError);
     void sgDescription(const std::string &val) throw(Shotgun::SgError);
     void sgTags(const Shotgun::Strings &val) throw(Shotgun::SgError);
-    void sgNotes(const Shotgun::Notes &val) throw(Shotgun::SgError);
     void sgNotes(const Shotgun::List &val) throw(Shotgun::SgError);
-    void sgVersions(const Shotgun::Versions &val) throw(Shotgun::SgError);
     void sgVersions(const Shotgun::List &val) throw(Shotgun::SgError);
 
     static std::string type();

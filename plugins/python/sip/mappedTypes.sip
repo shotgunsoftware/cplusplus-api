@@ -2371,22 +2371,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //    - SgArray
 //    - SgMap
 //
-//    - Projects
-//    - Sequences
-//    - Shots
-//    - Versions
-//    - HumanUsers
-//    - Elements
-//    - Assets
-//    - Deliveries
-//    - PublishEvents
-//    - Reviews
-//    - ReviewItems
-//    - Tasks
-//    - Groups
-//    - Notes
-//    - Playlists
-//
 //    - EntityPtrs
 //    - ProjectPtrs;
 //    - SequencePtrs;
@@ -2416,27 +2400,7 @@ typedef std::map<std::string, xmlrpc_c::value> SgMap;
 
 // --------------------------------------------------------------------
 // In Python, the Entity object and its pointer are treated the same.
-// That is, the following two mapped types are actually the same.
-//     std::vector<Shotgun::Project>
-//     std::vector<Shotgun::Project *>
-// Define one OR the other, otherwise, SIP will complain.
 // --------------------------------------------------------------------
-typedef std::vector<Shotgun::Project> Projects;
-typedef std::vector<Shotgun::Sequence> Sequences;
-typedef std::vector<Shotgun::Shot> Shots;
-typedef std::vector<Shotgun::Version> Versions;
-typedef std::vector<Shotgun::HumanUser> HumanUsers;
-typedef std::vector<Shotgun::Element> Elements;
-typedef std::vector<Shotgun::Asset> Assets;
-typedef std::vector<Shotgun::Delivery> Deliveries;
-typedef std::vector<Shotgun::PublishEvent> PublishEvents;
-typedef std::vector<Shotgun::Review> Reviews;
-typedef std::vector<Shotgun::ReviewItem> ReviewItems;
-typedef std::vector<Shotgun::Task> Tasks;
-typedef std::vector<Shotgun::Group> Groups;
-typedef std::vector<Shotgun::Note> Notes;
-typedef std::vector<Shotgun::Playlist> Playlists;
-
 typedef std::vector<Shotgun::Entity *> EntityPtrs;
 typedef std::vector<Shotgun::Project *> ProjectPtrs;
 typedef std::vector<Shotgun::Sequence *> SequencePtrs;

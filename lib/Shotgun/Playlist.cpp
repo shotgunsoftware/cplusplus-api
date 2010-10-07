@@ -130,19 +130,6 @@ void Playlist::sgTags(const Strings &val)
 }
 
 // *****************************************************************************
-void Playlist::sgNotes(const Notes &val)
-{
-    List noteLinkArray;
-
-    for (size_t i = 0; i < val.size(); i++)
-    {
-        noteLinkArray.append(val[i].asLink());
-    }
-
-    setAttrValue(Fields("notes", noteLinkArray));
-}
-
-// *****************************************************************************
 void Playlist::sgNotes(const List &val)
 {
     for (size_t i = 0; i < val.size(); i++)
@@ -158,19 +145,6 @@ void Playlist::sgNotes(const List &val)
     }
 
     setAttrValue(Fields("notes", val));
-}
-
-// *****************************************************************************
-void Playlist::sgVersions(const Versions &val)
-{
-    List versionLinkArray;
-
-    for (size_t i = 0; i < val.size(); i++)
-    {
-        versionLinkArray.append(val[i].asLink());
-    }
-
-    setAttrValue(Fields("versions", versionLinkArray));
 }
 
 // *****************************************************************************
@@ -200,27 +174,8 @@ std::string toStdString(const Shotgun::Playlist &playlist)
 }
 
 // *****************************************************************************
-std::string toStdString(const Shotgun::Playlists &playlists)
-{
-    Shotgun::List list;
-    for (size_t i = 0; i < playlists.size(); i++)
-    {
-        list.append(playlists[i].attrs());
-    }
-    
-    return toStdString(list);
-}
-
-// *****************************************************************************
 std::ostream& operator<<(std::ostream &output, const Shotgun::Playlist &playlist)
 {
     output << toStdString(playlist);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream& operator<<(std::ostream &output, const Shotgun::Playlists &playlists)
-{
-    output << toStdString(playlists);
     return output;
 }

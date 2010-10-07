@@ -60,9 +60,7 @@ public:
     const std::string sgType() const { return getAttrValueAsString("sg_element_type"); }
 
     // Set an attribute's value
-    void sgAssets(const Assets &val);
-    void sgAssets(const List &val);
-    void sgShots(const Shots &val);
+    void sgAssets(const List &val); // An array of entity links
     void sgShots(const List &val); // An array of entity links
     void sgTags(const Strings &val);
     void sgType(const std::string &val);
@@ -87,8 +85,6 @@ protected:
 // *****************************************************************************
 // *****************************************************************************
 std::string toStdString(const Shotgun::Element &element);
-std::string toStdString(const Shotgun::Elements &elements);
 std::ostream& operator<<(std::ostream &output, const Shotgun::Element &element);
-std::ostream& operator<<(std::ostream &output, const Shotgun::Elements &elements);
 
 #endif    // End #ifdef __ELEMENT_H__

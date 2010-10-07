@@ -139,27 +139,8 @@ std::string toStdString(const Shotgun::Note &note)
 }
 
 // *****************************************************************************
-std::string toStdString(const Shotgun::Notes &notes)
-{
-    Shotgun::List list;
-    for (size_t i = 0; i < notes.size(); i++)
-    {
-        list.append(notes[i].attrs());
-    }
-    
-    return toStdString(list);
-}
-
-// *****************************************************************************
 std::ostream& operator<<(std::ostream &output, const Shotgun::Note &note)
 {
     output << toStdString(note);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream& operator<<(std::ostream &output, const Shotgun::Notes &notes)
-{
-    output << toStdString(notes);
     return output;
 }

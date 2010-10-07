@@ -70,22 +70,6 @@ typedef std::vector<Strings> MethodSignatures;
 typedef std::map<std::string, xmlrpc_c::value> SgMap;
 typedef std::vector<xmlrpc_c::value> SgArray;
 
-typedef std::vector<Project> Projects;
-typedef std::vector<Sequence> Sequences;
-typedef std::vector<Shot> Shots;
-typedef std::vector<Version> Versions;
-typedef std::vector<HumanUser> HumanUsers;
-typedef std::vector<Element> Elements;
-typedef std::vector<Asset> Assets;
-typedef std::vector<Delivery> Deliveries;
-typedef std::vector<PublishEvent> PublishEvents;
-typedef std::vector<Review> Reviews;
-typedef std::vector<ReviewItem> ReviewItems;
-typedef std::vector<Task> Tasks;
-typedef std::vector<Group> Groups;
-typedef std::vector<Note> Notes;
-typedef std::vector<Playlist> Playlists;
-
 typedef std::vector<Entity *> EntityPtrs;
 typedef std::vector<Project *> ProjectPtrs;
 typedef std::vector<Sequence *> SequencePtrs;

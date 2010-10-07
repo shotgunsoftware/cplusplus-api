@@ -65,7 +65,6 @@ public:
 
     // Set an attribute's value
     void sgSequence(const Shotgun::Dict &val) throw(Shotgun::SgError);
-    void sgElements(const Shotgun::Elements &val) throw(Shotgun::SgError); 
     void sgElements(const Shotgun::List &val) throw(Shotgun::SgError); 
 
     static std::string type();

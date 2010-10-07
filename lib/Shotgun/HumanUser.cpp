@@ -104,27 +104,8 @@ std::string toStdString(const Shotgun::HumanUser &user)
 }
 
 // *****************************************************************************
-std::string toStdString(const Shotgun::HumanUsers &users)
-{
-    Shotgun::List list;
-    for (size_t i = 0; i < users.size(); i++)
-    {
-        list.append(users[i].attrs());
-    }
-    
-    return toStdString(list);
-}
-
-// *****************************************************************************
 std::ostream& operator<<(std::ostream &output, const Shotgun::HumanUser &user)
 {
     output << toStdString(user);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream& operator<<(std::ostream &output, const Shotgun::HumanUsers &users)
-{
-    output << toStdString(users);
     return output;
 }

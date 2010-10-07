@@ -94,8 +94,6 @@ protected:
 // *****************************************************************************
 // *****************************************************************************
 std::string toStdString(const Shotgun::Version &version);
-std::string toStdString(const Shotgun::Versions &versions);
 std::ostream& operator<<(std::ostream &output, const Shotgun::Version &version);
-std::ostream& operator<<(std::ostream &output, const Shotgun::Versions &versions);
 
 #endif    // End #ifdef __VERSION_H__

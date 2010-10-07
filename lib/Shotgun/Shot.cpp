@@ -144,19 +144,6 @@ const ElementPtrs Shot::sgElements() const
 }
 
 // *****************************************************************************
-void Shot::sgElements(const Elements &val)
-{
-    List elementLinkArray;
-
-    for (size_t i = 0; i < val.size(); i++)
-    {
-        elementLinkArray.append(val[i].asLink());
-    }
-
-    setAttrValue(Fields("elements", elementLinkArray));
-}
-
-// *****************************************************************************
 void Shot::sgElements(const List &val)
 {
     for (size_t i = 0; i < val.size(); i++)
@@ -198,27 +185,9 @@ std::string toStdString(const Shotgun::Shot &shot)
 }
 
 // *****************************************************************************
-std::string toStdString(const Shotgun::Shots &shots)
-{
-    Shotgun::List list;
-    for (size_t i = 0; i < shots.size(); i++)
-    {
-        list.append(shots[i].attrs());
-    }
-    
-    return toStdString(list);
-}
-
-// *****************************************************************************
 std::ostream& operator<<(std::ostream &output, const Shotgun::Shot &shot)
 {
     output << toStdString(shot);
     return output;
 }
 
-// *****************************************************************************
-std::ostream& operator<<(std::ostream &output, const Shotgun::Shots &shots)
-{
-    output << toStdString(shots);
-    return output;
-}

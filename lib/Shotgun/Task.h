@@ -94,8 +94,6 @@ protected:
 // *****************************************************************************
 // *****************************************************************************
 std::string toStdString(const Shotgun::Task &task);
-std::string toStdString(const Shotgun::Tasks &tasks);
 std::ostream& operator<<(std::ostream &output, const Shotgun::Task &task);
-std::ostream& operator<<(std::ostream &output, const Shotgun::Tasks &tasks);
 
 #endif    // End #ifdef __TASK_H__

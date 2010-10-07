@@ -79,27 +79,8 @@ std::string toStdString(const Shotgun::Group &group)
 }
 
 // *****************************************************************************
-std::string toStdString(const Shotgun::Groups &groups)
-{
-    Shotgun::List list;
-    for (size_t i = 0; i < groups.size(); i++)
-    {
-        list.append(groups[i].attrs());
-    }
-    
-    return toStdString(list);
-}
-
-// *****************************************************************************
 std::ostream& operator<<(std::ostream &output, const Shotgun::Group &group)
 {
     output << toStdString(group);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream& operator<<(std::ostream &output, const Shotgun::Groups &groups)
-{
-    output << toStdString(groups);
     return output;
 }

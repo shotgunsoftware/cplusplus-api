@@ -85,8 +85,6 @@ protected:
 // *****************************************************************************
 // *****************************************************************************
 std::string toStdString(const Shotgun::ReviewItem &reviewItem);
-std::string toStdString(const Shotgun::ReviewItems &reviewItems);
 std::ostream& operator<<(std::ostream &output, const Shotgun::ReviewItem &reviewItem);
-std::ostream& operator<<(std::ostream &output, const Shotgun::ReviewItems &reviewItems);
 
 #endif    // End #ifdef __REVIEW_ITEM_H__

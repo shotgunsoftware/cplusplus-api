@@ -139,27 +139,8 @@ std::string toStdString(const Shotgun::Asset &asset)
 }
 
 // *****************************************************************************
-std::string toStdString(const Shotgun::Assets &assets)
-{
-    Shotgun::List list;
-    for (size_t i = 0; i < assets.size(); i++)
-    {
-        list.append(assets[i].attrs());
-    }
-    
-    return toStdString(list);
-}
-
-// *****************************************************************************
 std::ostream& operator<<(std::ostream &output, const Shotgun::Asset &asset)
 {
     output << toStdString(asset);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream& operator<<(std::ostream &output, const Shotgun::Assets &assets)
-{
-    output << toStdString(assets);
     return output;
 }

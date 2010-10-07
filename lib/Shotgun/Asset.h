@@ -81,8 +81,6 @@ protected:
 // *****************************************************************************
 // *****************************************************************************
 std::string toStdString(const Shotgun::Asset &asset);
-std::string toStdString(const Shotgun::Assets &assets);
 std::ostream& operator<<(std::ostream &output, const Shotgun::Asset &asset);
-std::ostream& operator<<(std::ostream &output, const Shotgun::Assets &assets);
 
 #endif    // End #ifdef __ASSET_H__

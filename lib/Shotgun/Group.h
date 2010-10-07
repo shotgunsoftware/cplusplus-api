@@ -73,8 +73,6 @@ protected:
 // *****************************************************************************
 // *****************************************************************************
 std::string toStdString(const Shotgun::Group &group);
-std::string toStdString(const Shotgun::Groups &groups);
 std::ostream& operator<<(std::ostream &output, const Shotgun::Group &group);
-std::ostream& operator<<(std::ostream &output, const Shotgun::Groups &groups);
 
 #endif    // End #ifdef __GROUP_H__

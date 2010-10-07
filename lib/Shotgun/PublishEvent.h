@@ -73,8 +73,6 @@ protected:
 // *****************************************************************************
 // *****************************************************************************
 std::string toStdString(const Shotgun::PublishEvent &publsihEvent);
-std::string toStdString(const Shotgun::PublishEvents &publsihEvents);
 std::ostream& operator<<(std::ostream &output, const Shotgun::PublishEvent &publishEvent);
-std::ostream& operator<<(std::ostream &output, const Shotgun::PublishEvents &publishEvents);
 
 #endif    // End #ifdef __PUBLISH_EVENT_H__

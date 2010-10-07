@@ -90,27 +90,8 @@ std::string toStdString(const Shotgun::Review &review)
 }
 
 // *****************************************************************************
-std::string toStdString(const Shotgun::Reviews &reviews)
-{
-    Shotgun::List list;
-    for (size_t i = 0; i < reviews.size(); i++)
-    {
-        list.append(reviews[i].attrs());
-    }
-    
-    return toStdString(list);
-}
-
-// *****************************************************************************
 std::ostream& operator<<(std::ostream &output, const Shotgun::Review &review)
 {
     output << toStdString(review);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream& operator<<(std::ostream &output, const Shotgun::Reviews &reviews)
-{
-    output << toStdString(reviews);
     return output;
 }

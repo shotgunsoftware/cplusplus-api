@@ -88,27 +88,8 @@ std::string toStdString(const Shotgun::PublishEvent &publishEvent)
 }
 
 // *****************************************************************************
-std::string toStdString(const Shotgun::PublishEvents &publishEvents)
-{
-    Shotgun::List list;
-    for (size_t i = 0; i < publishEvents.size(); i++)
-    {
-        list.append(publishEvents[i].attrs());
-    }
-    
-    return toStdString(list);
-}
-
-// *****************************************************************************
 std::ostream& operator<<(std::ostream &output, const Shotgun::PublishEvent &publishEvent)
 {
     output << toStdString(publishEvent);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream& operator<<(std::ostream &output, const Shotgun::PublishEvents &publishEvents)
-{
-    output << toStdString(publishEvents);
     return output;
 }

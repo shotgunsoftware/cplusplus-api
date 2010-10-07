@@ -51,9 +51,7 @@ public:
     const std::string sgType() const throw(Shotgun::SgError);
 
     // Set an attribute's value
-    void sgAssets(const Shotgun::Assets &val) throw(Shotgun::SgError);
     void sgAssets(const Shotgun::List &val) throw(Shotgun::SgError);
-    void sgShots(const Shotgun::Shots &val) throw(Shotgun::SgError);
     void sgShots(const Shotgun::List &val) throw(Shotgun::SgError);
     void sgTags(const Shotgun::Strings &val) throw(Shotgun::SgError);
     void sgType(const std::string &val) throw(Shotgun::SgError);

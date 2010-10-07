@@ -81,8 +81,6 @@ protected:
 // *****************************************************************************
 // *****************************************************************************
 std::string toStdString(const Shotgun::Delivery &delivery);
-std::string toStdString(const Shotgun::Deliveries &deliveries);
 std::ostream& operator<<(std::ostream &output, const Shotgun::Delivery &delivery);
-std::ostream& operator<<(std::ostream &output, const Shotgun::Deliveries &deliveries);
 
 #endif    // End #ifdef __DELIVERY_H__

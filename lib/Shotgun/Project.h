@@ -76,8 +76,6 @@ protected:
 // *****************************************************************************
 // *****************************************************************************
 std::string toStdString(const Shotgun::Project &project);
-std::string toStdString(const Shotgun::Projects &projects);
 std::ostream& operator<<(std::ostream &output, const Shotgun::Project &project);
-std::ostream& operator<<(std::ostream &output, const Shotgun::Projects &projects);
 
 #endif    // End #ifdef __PROJECT_H__

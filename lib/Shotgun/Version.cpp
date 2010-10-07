@@ -111,27 +111,8 @@ std::string toStdString(const Shotgun::Version &version)
 }
 
 // *****************************************************************************
-std::string toStdString(const Shotgun::Versions &versions)
-{
-    Shotgun::List list;
-    for (size_t i = 0; i < versions.size(); i++)
-    {
-        list.append(versions[i].attrs());
-    }
-    
-    return toStdString(list);
-}
-
-// *****************************************************************************
 std::ostream& operator<<(std::ostream &output, const Shotgun::Version &version)
 {
     output << toStdString(version);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream& operator<<(std::ostream &output, const Shotgun::Versions &versions)
-{
-    output << toStdString(versions);
     return output;
 }

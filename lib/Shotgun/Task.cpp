@@ -137,27 +137,8 @@ std::string toStdString(const Shotgun::Task &task)
 }
 
 // *****************************************************************************
-std::string toStdString(const Shotgun::Tasks &tasks)
-{
-    Shotgun::List list;
-    for (size_t i = 0; i < tasks.size(); i++)
-    {
-        list.append(tasks[i].attrs());
-    }
-    
-    return toStdString(list);
-}
-
-// *****************************************************************************
 std::ostream& operator<<(std::ostream &output, const Shotgun::Task &task)
 {
     output << toStdString(task);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream& operator<<(std::ostream &output, const Shotgun::Tasks &tasks)
-{
-    output << toStdString(tasks);
     return output;
 }

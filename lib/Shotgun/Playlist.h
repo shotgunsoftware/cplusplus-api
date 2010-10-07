@@ -61,9 +61,7 @@ public:
     void sgName(const std::string &val);
     void sgDescription(const std::string &val);
     void sgTags(const Strings &val);
-    void sgNotes(const Notes &val);  // An array of Note entities
     void sgNotes(const List &val);  // An array of entity links
-    void sgVersions(const Versions &val);  // An array of Version entities
     void sgVersions(const List &val);  // An array of entity links
 
     static std::string type() { return std::string("Playlist"); }
@@ -86,8 +84,6 @@ protected:
 // *****************************************************************************
 // *****************************************************************************
 std::string toStdString(const Shotgun::Playlist &playlist);
-std::string toStdString(const Shotgun::Playlists &playlists);
 std::ostream& operator<<(std::ostream &output, const Shotgun::Playlist &playlist);
-std::ostream& operator<<(std::ostream &output, const Shotgun::Playlists &playlists);
 
 #endif    // End #ifdef __PLAYLIST_H__

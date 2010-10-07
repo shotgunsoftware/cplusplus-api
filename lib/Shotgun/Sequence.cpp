@@ -87,27 +87,8 @@ std::string toStdString(const Shotgun::Sequence &sequence)
 }
 
 // *****************************************************************************
-std::string toStdString(const Shotgun::Sequences &sequences)
-{
-    Shotgun::List list;
-    for (size_t i = 0; i < sequences.size(); i++)
-    {
-        list.append(sequences[i].attrs());
-    }
-    
-    return toStdString(list);
-}
-
-// *****************************************************************************
 std::ostream& operator<<(std::ostream &output, const Shotgun::Sequence &sequence)
 {
     output << toStdString(sequence);
-    return output;
-}
-
-// *****************************************************************************
-std::ostream& operator<<(std::ostream &output, const Shotgun::Sequences &sequences)
-{
-    output << toStdString(sequences);
     return output;
 }

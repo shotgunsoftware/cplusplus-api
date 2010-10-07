@@ -96,29 +96,9 @@ std::string toStdString(const Shotgun::Project &project)
 }
 
 // *****************************************************************************
-std::string toStdString(const Shotgun::Projects &projects)
-{
-    // The std::string of xmlrpc_c::value type has been formatted very well.
-    // So convert it to xmlrpc_c::value first.
-    Shotgun::List list;
-    for (size_t i = 0; i < projects.size(); i++)
-    {
-        list.append(projects[i].attrs());
-    }
-    
-    return toStdString(list);
-}
-
-// *****************************************************************************
 std::ostream& operator<<(std::ostream &output, const Shotgun::Project &project)
 {
     output << toStdString(project);
     return output;
 }
 
-// *****************************************************************************
-std::ostream& operator<<(std::ostream &output, const Shotgun::Projects &projects)
-{
-    output << toStdString(projects);
-    return output;
-}

@@ -111,19 +111,6 @@ const ShotPtrs Element::sgShots() const
 }
 
 // *****************************************************************************
-void Element::sgAssets(const Assets &val)
-{
-    List assetLinkList;
-
-    for (size_t i = 0; i < val.size(); i++)
-    {
-        assetLinkList.append(val[i].asLink());
-    }
-
-    setAttrValue(Fields("assets", assetLinkList));
-}
-
-// *****************************************************************************
 void Element::sgAssets(const List &val)
 {
     for (size_t i = 0; i < val.size(); i++)
@@ -139,19 +126,6 @@ void Element::sgAssets(const List &val)
     }
 
     setAttrValue(Fields("assets", val));
-}
-
-// *****************************************************************************
-void Element::sgShots(const Shots &val)
-{
-    List shotLinkList;
-
-    for (size_t i = 0; i < val.size(); i++)
-    {
-        shotLinkList.append(val[i].asLink());
-    }
-
-    setAttrValue(Fields("shots", shotLinkList));
 }
 
 // *****************************************************************************
@@ -194,27 +168,9 @@ std::string toStdString(const Shotgun::Element &element)
 }
 
 // *****************************************************************************
-std::string toStdString(const Shotgun::Elements &elements)
-{
-    Shotgun::List list;
-    for (size_t i = 0; i < elements.size(); i++)
-    {
-        list.append(elements[i].attrs());
-    }
-    
-    return toStdString(list);
-}
-
-// *****************************************************************************
 std::ostream& operator<<(std::ostream &output, const Shotgun::Element &element)
 {
     output << toStdString(element);
     return output;
 }
 
-// *****************************************************************************
-std::ostream& operator<<(std::ostream &output, const Shotgun::Elements &elements)
-{
-    output << toStdString(elements);
-    return output;
-}
