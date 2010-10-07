@@ -55,7 +55,8 @@ public:
     virtual ~Asset();
 
     // Get an attribute's value
-    const std::string sgCode() const { return getAttrValueAsString("code"); }
+    const std::string sgName() const { return getAttrValueAsString("code"); }
+    const std::string sgCode() const { return sgName(); }
     const List sgParents() const { return getAttrValueAsList("parents"); }
     const ElementPtrs sgElements() const;
     const AssetPtrs sgAssets() const;

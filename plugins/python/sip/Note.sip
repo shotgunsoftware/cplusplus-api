@@ -48,6 +48,7 @@ public:
     const std::string sgBody() const throw(Shotgun::SgError);
     const std::string sgStatus() const throw(Shotgun::SgError);
     const std::string sgSubject() const throw(Shotgun::SgError);
+    const std::string sgName() const throw(Shotgun::SgError);
     const std::string sgType() const throw(Shotgun::SgError);
     Shotgun::Review *getLinkedReview() throw(Shotgun::SgError) /Factory/;
     Shotgun::Shot *getLinkedShot() throw(Shotgun::SgError) /Factory/;

@@ -56,6 +56,7 @@ public:
     const std::string sgBody() const { return getAttrValueAsString("content"); } 
     const std::string sgStatus() const { return getAttrValueAsString("sg_status_list"); } 
     const std::string sgSubject() const { return getAttrValueAsString("subject"); } 
+    const std::string sgName() const { return sgSubject(); } 
     const std::string sgType() const { return getAttrValueAsString("sg_note_type"); } 
     Review *getLinkedReview();
     Shot *getLinkedShot();
