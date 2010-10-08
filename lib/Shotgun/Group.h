@@ -57,22 +57,30 @@ public:
 
     Group &operator=(const Group &that)
     {
-        Entity::operator=(that);
+        if (this != &that)
+        {
+            Entity::operator=(that);
+        }
+
         return *this;
+    }
+
+    friend std::ostream& operator<<(std::ostream &output, const Group &group)
+    {
+        output << group.str();
+        return output;
     }
 
 protected:
     Group(Shotgun *sg, const xmlrpc_c::value &attrs);
 
     static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Group(sg, attrs); }
-    static List populateReturnFields();
+    static List defaultReturnFields();
 };
 
-} // End namespace Shotgun
+// *****************************************************************************
+typedef std::vector<Group *> GroupPtrs;
 
-// *****************************************************************************
-// *****************************************************************************
-std::string toStdString(const Shotgun::Group &group);
-std::ostream& operator<<(std::ostream &output, const Shotgun::Group &group);
+} // End namespace Shotgun
 
 #endif    // End #ifdef __GROUP_H__

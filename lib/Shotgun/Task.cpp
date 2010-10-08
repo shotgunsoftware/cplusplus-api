@@ -61,7 +61,7 @@ Task::~Task()
 }
 
 // *****************************************************************************
-List Task::populateReturnFields()
+List Task::defaultReturnFields()
 {
     return List("id")
            .append("project")
@@ -128,17 +128,3 @@ void Task::sgAssignees(const Strings &val)
 }
 
 } // End namespace Shotgun
-
-// *****************************************************************************
-// *****************************************************************************
-std::string toStdString(const Shotgun::Task &task)
-{
-    return toStdString(task.attrs());
-}
-
-// *****************************************************************************
-std::ostream& operator<<(std::ostream &output, const Shotgun::Task &task)
-{
-    output << toStdString(task);
-    return output;
-}

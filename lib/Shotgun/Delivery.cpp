@@ -62,7 +62,7 @@ Delivery::~Delivery()
 }
 
 // *****************************************************************************
-List Delivery::populateReturnFields()
+List Delivery::defaultReturnFields()
 {
     return List("id")
            .append("project")
@@ -98,18 +98,3 @@ void Delivery::sgType(const std::string &val)
 }
 
 } // End namespace Shotgun
-
-// *****************************************************************************
-// *****************************************************************************
-std::string toStdString(const Shotgun::Delivery &delivery)
-{
-    return toStdString(delivery.attrs());
-}
-
-// *****************************************************************************
-std::ostream& operator<<(std::ostream &output, const Shotgun::Delivery &delivery)
-{
-    output << toStdString(delivery);
-    return output;
-}
-

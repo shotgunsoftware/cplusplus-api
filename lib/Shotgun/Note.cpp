@@ -59,7 +59,7 @@ Note::~Note()
 }
 
 // *****************************************************************************
-List Note::populateReturnFields()
+List Note::defaultReturnFields()
 {
     return List("id")
            .append("project")
@@ -130,17 +130,3 @@ Version *Note::getLinkedVersion()
 }
 
 } // End namespace Shotgun
-
-// *****************************************************************************
-// *****************************************************************************
-std::string toStdString(const Shotgun::Note &note)
-{
-    return toStdString(note.attrs());
-}
-
-// *****************************************************************************
-std::ostream& operator<<(std::ostream &output, const Shotgun::Note &note)
-{
-    output << toStdString(note);
-    return output;
-}

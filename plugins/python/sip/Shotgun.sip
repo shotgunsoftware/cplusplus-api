@@ -46,7 +46,6 @@ public:
 
     const std::string &serverURL() const;
     const std::string &authKey() const;
-    const std::string &api() const;
     const Shotgun::Dict &authMap() const;
 
     Shotgun::Method *method(const std::string &methodName);
@@ -74,9 +73,6 @@ public:
                                      const Shotgun::List &extraReturnFields = Shotgun::List(),
                                      const bool retiredOnly = false,
                                      const Shotgun::SortBy &order = Shotgun::SortBy()) throw(Shotgun::SgError) /Factory/;
-
-    //------------------------------------------------------------------------
-    Shotgun::Entity *findEntityById(const std::string &entityType, const int id) throw(Shotgun::SgError) /Factory/;
 
     //------------------------------------------------------------------------
     bool deleteEntity(const std::string &entityType, const int id) throw(Shotgun::SgError);

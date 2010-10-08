@@ -64,22 +64,30 @@ public:
 
     HumanUser &operator=(const HumanUser &that)
     {
-        Entity::operator=(that);
+        if (this != &that)
+        {
+            Entity::operator=(that);
+        }
+
         return *this;
+    }
+
+    friend std::ostream& operator<<(std::ostream &output, const HumanUser &user)
+    {
+        output << user.str();
+        return output;
     }
 
 protected:
     HumanUser(Shotgun *sg, const xmlrpc_c::value &attrs);
 
     static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new HumanUser(sg, attrs); }
-    static List populateReturnFields();
+    static List defaultReturnFields();
 };
 
-} // End namespace Shotgun
+// *****************************************************************************
+typedef std::vector<HumanUser *> HumanUserPtrs;
 
-// *****************************************************************************
-// *****************************************************************************
-std::string toStdString(const Shotgun::HumanUser &user);
-std::ostream& operator<<(std::ostream &output, const Shotgun::HumanUser &user);
+} // End namespace Shotgun
 
 #endif    // End #ifdef __USER_H__

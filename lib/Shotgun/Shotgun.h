@@ -64,8 +64,8 @@ namespace Shotgun {
 
 // Define the ClassRegistry
 typedef Entity* (*FactoryFunc)(Shotgun *, const xmlrpc_c::value &);
-typedef List (*PopulateReturnFieldsFunc) ();
-typedef std::pair<FactoryFunc, PopulateReturnFieldsFunc> RegistryFuncPair;
+typedef List (*DefaultReturnFieldsFunc) ();
+typedef std::pair<FactoryFunc, DefaultReturnFieldsFunc> RegistryFuncPair;
 typedef std::map<std::string, RegistryFuncPair> ClassRegistry;
 
 class TaskMixin;
@@ -87,7 +87,6 @@ public:
     xmlrpc_c::client_xml *client() const { return m_client; }
     const std::string &serverURL() const { return m_serverURL; }
     const std::string &authKey() const { return m_authKey; }
-    const std::string &api() const { return m_api; }
     const Dict &authMap() const { return m_authMap; } 
 
     //------------------------------------------------------------------------
@@ -97,7 +96,7 @@ public:
     //------------------------------------------------------------------------
     void registerClass(const std::string &entityType,
                        const FactoryFunc &factoryFunc,
-                       const PopulateReturnFieldsFunc &populateFunc);
+                       const DefaultReturnFieldsFunc &defaultReturnFieldsFunc);
 
     //------------------------------------------------------------------------
     // This is used by most of the search filters, so keep it.
@@ -148,9 +147,6 @@ public:
                             const SortBy &order = SortBy());
 
     //------------------------------------------------------------------------
-    Entity *findEntityById(const std::string &entityType, const int id);
-
-    //------------------------------------------------------------------------
     bool deleteEntity(const std::string &entityType, const int id);
 
 protected:
@@ -166,7 +162,6 @@ protected:
 
     std::string m_serverURL;
     std::string m_authKey;
-    std::string m_api;
     xmlrpc_c::clientXmlTransport_curl m_transport;
     xmlrpc_c::client_xml *m_client;
     Dict m_authMap;

@@ -63,7 +63,7 @@ Version::~Version()
 }
 
 // *****************************************************************************
-List Version::populateReturnFields()
+List Version::defaultReturnFields()
 {
     return List("id")
            .append("project")
@@ -102,17 +102,3 @@ const Shot *Version::sgShot() const
 }
 
 } // End namespace Shotgun
-
-// *****************************************************************************
-// *****************************************************************************
-std::string toStdString(const Shotgun::Version &version)
-{
-    return toStdString(version.attrs());
-}
-
-// *****************************************************************************
-std::ostream& operator<<(std::ostream &output, const Shotgun::Version &version)
-{
-    output << toStdString(version);
-    return output;
-}

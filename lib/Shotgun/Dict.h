@@ -76,6 +76,7 @@ public:
     const SgMap &value() const { return m_value; }
     const bool empty() const { return m_value.empty(); }
     const int size() const { return m_value.size(); }
+    const std::string str() const { return toStdString(m_value); }
     const bool find(const std::string &key) const;
     void clear() { m_value.clear(); }
     Dict &erase(const std::string &key);
@@ -88,6 +89,12 @@ public:
         }
 
         return *this;
+    }
+
+    friend std::ostream& operator<<(std::ostream &output, const Dict &dict)
+    {
+        output << dict.str();
+        return output;
     }
 
 protected:
@@ -132,7 +139,7 @@ const T Dict::value(const std::string &key) const
     }
     else
     {
-        throw SgDictError(key);           
+        throw SgDictKeyNotFoundError(key);           
     }
 }
 
@@ -144,10 +151,5 @@ const T Dict::operator[](const std::string &key) const
 }
 
 } // End namespace Shotgun
-
-// *****************************************************************************
-// *****************************************************************************
-std::string toStdString(const Shotgun::Dict &dict);
-std::ostream& operator<<(std::ostream &output, const Shotgun::Dict &dict);
 
 #endif    // End #ifdef __DICT_H__

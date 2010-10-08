@@ -46,14 +46,27 @@ public:
     SortBy(const std::string &fieldName,
            const std::string &direction = "asc");
 
+    Shotgun::SortBy &then(const std::string &fieldName,
+                          const std::string &direction = "asc");
+    Shotgun::SortBy &then(const Shotgun::SortBy &that);
+
     const Shotgun::List &sorts() const;
     const bool empty() const;
     const int size() const;
     void clear();
 
-    Shotgun::SortBy &then(const std::string &fieldName,
-                          const std::string &direction = "asc");
-    Shotgun::SortBy &then(const Shotgun::SortBy &that);
+    // ------------------------------------------------------------------------
+    SIP_PYOBJECT __str__();
+%MethodCode
+    sipRes = PyString_FromString(sipCpp->str().c_str());
+%End
+
+    // ------------------------------------------------------------------------
+    SIP_PYOBJECT __repr__();
+%MethodCode
+    sipRes = PyString_FromString(sipCpp->str().c_str());
+%End
+
 };
 
 }; // End namespace Shotgun

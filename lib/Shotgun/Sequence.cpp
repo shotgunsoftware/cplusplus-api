@@ -68,7 +68,7 @@ void Sequence::sgName(const std::string &name)
 }
 
 // *****************************************************************************
-List Sequence::populateReturnFields()
+List Sequence::defaultReturnFields()
 {
     return List("id")
            .append("project")
@@ -78,17 +78,3 @@ List Sequence::populateReturnFields()
 }
 
 } // End namespace Shotgun
-
-// *****************************************************************************
-// *****************************************************************************
-std::string toStdString(const Shotgun::Sequence &sequence)
-{
-    return toStdString(sequence.attrs());
-}
-
-// *****************************************************************************
-std::ostream& operator<<(std::ostream &output, const Shotgun::Sequence &sequence)
-{
-    output << toStdString(sequence);
-    return output;
-}

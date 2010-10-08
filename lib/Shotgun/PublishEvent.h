@@ -57,22 +57,30 @@ public:
 
     PublishEvent &operator=(const PublishEvent &that)
     {
-        Entity::operator=(that);
+        if (this != &that)
+        {
+            Entity::operator=(that);
+        }
+
         return *this;
+    }
+
+    friend std::ostream& operator<<(std::ostream &output, const PublishEvent &publishEvent)
+    {
+        output << publishEvent.str();
+        return output;
     }
 
 protected:
     PublishEvent(Shotgun *sg, const xmlrpc_c::value &attrs);
 
     static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new PublishEvent(sg, attrs); }
-    static List populateReturnFields();
+    static List defaultReturnFields();
 };
 
-} // End namespace Shotgun
+// *****************************************************************************
+typedef std::vector<PublishEvent *> PublishEventPtrs;
 
-// *****************************************************************************
-// *****************************************************************************
-std::string toStdString(const Shotgun::PublishEvent &publsihEvent);
-std::ostream& operator<<(std::ostream &output, const Shotgun::PublishEvent &publishEvent);
+} // End namespace Shotgun
 
 #endif    // End #ifdef __PUBLISH_EVENT_H__

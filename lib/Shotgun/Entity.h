@@ -60,12 +60,6 @@ class Entity
 public:
     virtual ~Entity();
 
-    enum InvalidAttrMode
-    {
-        INVALID_ATTR_THROW_EXCEPTION = 0,
-        INVALID_ATTR_USE_DEFAULT
-    };
-
     // These are the few common attributes shared by all entities
     virtual const int sgId() const { return getAttrValueAsInt("id"); }
     virtual const time_t sgDateCreated() const { return getAttrValueAsDatetime("created_at"); }
@@ -80,11 +74,6 @@ public:
 
     const Shotgun *sg() const { return m_sg; }
     Shotgun *sg() { return m_sg; }
-
-    // When the attribute doesn't have a valid value, this mode decides whether
-    // to throw an exception or provide a default value.
-    void setInvalidAttrMode(InvalidAttrMode mode) { m_invalidAttrMode = mode; }
-    const InvalidAttrMode getInvalidAttrMode() const { return m_invalidAttrMode; }
 
     const std::string entityType() const { return m_type; }
     const xmlrpc_c::value &attrs() const { return *m_attrs; }
@@ -108,58 +97,71 @@ public:
     static const xmlrpc_c::value getAttrValue(const std::string &attrName, 
                                               const Dict &attrsMap);
 
-    // Get a attribute's value of a specific data type
+    // Get a attribute's value of a specific data type.
+    virtual const int getAttrValueAsInt(const std::string &attrName) const;
     virtual const int getAttrValueAsInt(const std::string &attrName, 
-                                        const int defaultVal = 0) const; 
+                                        const int defaultVal) const; 
+    static const int getAttrValueAsInt(const std::string &attrName, 
+                                       const Dict &attrsMap);
     static const int getAttrValueAsInt(const std::string &attrName, 
                                        const Dict &attrsMap,
-                                       const int defaultVal = 0, 
-                                       const InvalidAttrMode invalidAttrMode = INVALID_ATTR_THROW_EXCEPTION);
+                                       const int defaultVal); 
 
+    virtual const bool getAttrValueAsBool(const std::string &attrName) const; 
     virtual const bool getAttrValueAsBool(const std::string &attrName, 
-                                          const bool defaultVal = false) const; 
+                                          const bool defaultVal) const; 
+    static const bool getAttrValueAsBool(const std::string &attrName, 
+                                         const Dict &attrsMap);
     static const bool getAttrValueAsBool(const std::string &attrName, 
                                          const Dict &attrsMap,
-                                         const bool defaultVal = false, 
-                                         const InvalidAttrMode invalidAttrMode = INVALID_ATTR_THROW_EXCEPTION);
+                                         const bool defaultVal); 
 
+    virtual const double getAttrValueAsDouble(const std::string &attrName) const;
     virtual const double getAttrValueAsDouble(const std::string &attrName, 
-                                              const double defaultVal = 0.0) const; 
+                                              const double defaultVal) const; 
+    static const double getAttrValueAsDouble(const std::string &attrName, 
+                                             const Dict &attrsMap);
     static const double getAttrValueAsDouble(const std::string &attrName, 
                                              const Dict &attrsMap,
-                                             const double defaultVal = 0.0, 
-                                             const InvalidAttrMode invalidAttrMode = INVALID_ATTR_THROW_EXCEPTION);
+                                             const double defaultVal);
 
+    virtual const time_t getAttrValueAsDatetime(const std::string &attrName) const;
     virtual const time_t getAttrValueAsDatetime(const std::string &attrName, 
-                                                const time_t defaultVal = 0) const;
+                                                const time_t defaultVal) const;
+    static const time_t getAttrValueAsDatetime(const std::string &attrName, 
+                                               const Dict &attrsMap);
     static const time_t getAttrValueAsDatetime(const std::string &attrName, 
                                                const Dict &attrsMap,
-                                               const time_t defaultVal = 0, 
-                                               const InvalidAttrMode invalidAttrMode = INVALID_ATTR_THROW_EXCEPTION);
+                                               const time_t defaultVal);
 
+    virtual const std::string getAttrValueAsString(const std::string &attrName) const;
     virtual const std::string getAttrValueAsString(const std::string &attrName, 
-                                                   const std::string &defaultVal = "") const;
+                                                   const std::string &defaultVal) const;
+    static const std::string getAttrValueAsString(const std::string &attrName, 
+                                                  const Dict &attrsMap);
     static const std::string getAttrValueAsString(const std::string &attrName, 
                                                   const Dict &attrsMap,
-                                                  const std::string &defaultVal = "", 
-                                                  const InvalidAttrMode invalidAttrMode = INVALID_ATTR_THROW_EXCEPTION);
+                                                  const std::string &defaultVal);
 
+    virtual const List getAttrValueAsList(const std::string &attrName) const; 
     virtual const List getAttrValueAsList(const std::string &attrName, 
-                                          const List &defaultVal = List()) const;
+                                          const List &defaultVal) const;
+    static const List getAttrValueAsList(const std::string &attrName, 
+                                         const Dict &attrsMap);
     static const List getAttrValueAsList(const std::string &attrName, 
                                          const Dict &attrsMap,
-                                         const List &defaultVal = List(), 
-                                         const InvalidAttrMode invalidAttrMode = INVALID_ATTR_THROW_EXCEPTION);
+                                         const List &defaultVal);
 
     // This member function can't take a default value because it has the same 
     // type as the attrsMap, and therefore creates an ambiguous overload.
     //const Dict getAttrValueAsDict(const std::string &attrName, 
-    //                              const Dict &defaultVal = Dict()) const;
+    //                              const Dict &defaultVal) const;
     virtual const Dict getAttrValueAsDict(const std::string &attrName) const;
     static const Dict getAttrValueAsDict(const std::string &attrName, 
+                                         const Dict &attrsMap);
+    static const Dict getAttrValueAsDict(const std::string &attrName, 
                                          const Dict &attrsMap,
-                                         const Dict &defaultVal = Dict(), 
-                                         const InvalidAttrMode invalidAttrMode = INVALID_ATTR_THROW_EXCEPTION);
+                                         const Dict &defaultVal);
 
     virtual const Strings getAttrValueAsTags(const std::string &attrName) const;
     static const Strings getAttrValueAsTags(const std::string &attrName,
@@ -170,10 +172,10 @@ public:
                                                  const std::string &attrName,
                                                  const Dict &attrsMap);
 
-    virtual const EntityPtrs getAttrValueAsMultiEntityPtr(const std::string &attrName) const;
-    static const EntityPtrs getAttrValueAsMultiEntityPtr(Shotgun *sg,
-                                                         const std::string &attrName,
-                                                         const Dict &attrsMap);
+    virtual const std::vector<Entity *> getAttrValueAsMultiEntityPtr(const std::string &attrName) const;
+    static const std::vector<Entity *> getAttrValueAsMultiEntityPtr(Shotgun *sg,
+                                                                    const std::string &attrName,
+                                                                    const Dict &attrsMap);
 
     virtual const std::string getAttrValueAsUserLogin(const std::string &attrName) const;
     static const std::string getAttrValueAsUserLogin(Shotgun *sg,
@@ -200,7 +202,6 @@ public:
         if (this != &that)
         {
             m_sg = that.m_sg;
-            m_invalidAttrMode = that.m_invalidAttrMode;
             m_type = that.m_type;
 
             delete m_attrs;
@@ -245,6 +246,12 @@ protected:
 
     // Get the value for a given attribute. If the attribute is not included in
     // the entity's return fields, fetch its value directly from Shotgun.
+    // In the case where there is an error when retrieving the attribute value, 
+    // if the overloaded function is passed a "defaultVal", it will use it as 
+    // the default attribute value. Otherwise, an exception will be thrown.
+    template <typename T>
+    const T getAttrValue(const std::string &attrName) const;
+
     template <typename T>
     const T getAttrValue(const std::string &attrName,
                          const T defaultVal) const;
@@ -252,9 +259,12 @@ protected:
     // Get the value for a given attribute from the given attribute map.
     template <typename T>
     static const T getAttrValue(const std::string &attrName,
+                                const Dict &attrsMap);
+
+    template <typename T>
+    static const T getAttrValue(const std::string &attrName,
                                 const Dict &attrsMap,
-                                const T defaultVal,
-                                const InvalidAttrMode invalidAttrMode = INVALID_ATTR_THROW_EXCEPTION);
+                                const T defaultVal);
 
     // The result of the method call is a struct. This function is to extract 
     // a list of entities from the find result struct.
@@ -273,7 +283,6 @@ protected:
 
 protected:
     Shotgun *m_sg; 
-    InvalidAttrMode m_invalidAttrMode;
     std::string m_type;
 
     // This has to be an pointer since xmlrpc_c::value will not allow the
@@ -284,10 +293,9 @@ protected:
 
 // *****************************************************************************
 template <typename T>
-const T Entity::getAttrValue(const std::string &attrName,
-                             const T defaultVal) const
+const T Entity::getAttrValue(const std::string &attrName) const
 {
-    T result = defaultVal;
+    T result;
 
     xmlrpc_c::value genericResult = getAttrValue(attrName);
 
@@ -297,11 +305,8 @@ const T Entity::getAttrValue(const std::string &attrName,
     }
     catch (SgXmlrpcValueTypeError &error)
     {
-        if (m_invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
-        {
-            throw SgAttrTypeError(attrName,
-                                  error.what());
-        }
+        throw SgAttrTypeError(attrName,
+                              error.what());
     }
 
     return result;
@@ -310,11 +315,30 @@ const T Entity::getAttrValue(const std::string &attrName,
 // *****************************************************************************
 template <typename T>
 const T Entity::getAttrValue(const std::string &attrName,
-                             const Dict &attrsMap,
-                             const T defaultVal,
-                             InvalidAttrMode invalidAttrMode)
+                             const T defaultVal) const
 {
-    T result = defaultVal;
+    T result;
+
+    xmlrpc_c::value genericResult = getAttrValue(attrName);
+
+    try
+    {
+        fromXmlrpcValue(genericResult, result);
+    }
+    catch (SgXmlrpcValueTypeError &error)
+    {
+        result = defaultVal;
+    }
+
+    return result;
+}
+
+// *****************************************************************************
+template <typename T>
+const T Entity::getAttrValue(const std::string &attrName,
+                             const Dict &attrsMap)
+{
+    T result;
 
     xmlrpc_c::value genericResult = getAttrValue(attrName, attrsMap);
 
@@ -324,15 +348,37 @@ const T Entity::getAttrValue(const std::string &attrName,
     }
     catch (SgXmlrpcValueTypeError &error)
     {
-        if (invalidAttrMode == INVALID_ATTR_THROW_EXCEPTION)
-        {
-            throw SgAttrTypeError(attrName,
-                                  error.what());
-        }
+        throw SgAttrTypeError(attrName,
+                              error.what());
     }
 
     return result;
 }
+
+// *****************************************************************************
+template <typename T>
+const T Entity::getAttrValue(const std::string &attrName,
+                             const Dict &attrsMap,
+                             const T defaultVal)
+{
+    T result;
+
+    xmlrpc_c::value genericResult = getAttrValue(attrName, attrsMap);
+
+    try
+    {
+        fromXmlrpcValue(genericResult, result);
+    }
+    catch (SgXmlrpcValueTypeError &error)
+    {
+        result = defaultVal;
+    }
+
+    return result;
+}
+
+// *****************************************************************************
+typedef std::vector<Entity *> EntityPtrs;
 
 } // End namespace Shotgun
 

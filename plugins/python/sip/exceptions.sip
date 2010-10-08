@@ -271,23 +271,6 @@
 };
 
 // *******************************************************************
-// Shotgun::SgApiError
-// *******************************************************************
-%Exception Shotgun::SgApiError(SIP_Exception) /PyName=SgApiError/
-{
-%TypeHeaderCode
-#include <Shotgun/exceptions.h>
-%End
-%RaiseCode
-        const char *detail = sipExceptionRef.what();
-
-        SIP_BLOCK_THREADS
-        PyErr_SetString(sipException_Shotgun_SgApiError, detail);
-        SIP_UNBLOCK_THREADS
-%End
-};
-
-// *******************************************************************
 // Shotgun::SgXmlrpcValueError
 // *******************************************************************
 %Exception Shotgun::SgXmlrpcValueError(SIP_Exception) /PyName=SgXmlrpcValueError/
@@ -356,6 +339,40 @@
 };
 
 // *******************************************************************
+// Shotgun::SgListIndexOutOfRangeError
+// *******************************************************************
+%Exception Shotgun::SgListIndexOutOfRangeError(SIP_Exception) /PyName=SgListIndexOutOfRangeError/
+{
+%TypeHeaderCode
+#include <Shotgun/exceptions.h>
+%End
+%RaiseCode
+        const char *detail = sipExceptionRef.what();
+
+        SIP_BLOCK_THREADS
+        PyErr_SetString(sipException_Shotgun_SgListIndexOutOfRangeError, detail);
+        SIP_UNBLOCK_THREADS
+%End
+};
+
+// *******************************************************************
+// Shotgun::SgListConversionError
+// *******************************************************************
+%Exception Shotgun::SgListConversionError(SIP_Exception) /PyName=SgListConversionError/
+{
+%TypeHeaderCode
+#include <Shotgun/exceptions.h>
+%End
+%RaiseCode
+        const char *detail = sipExceptionRef.what();
+
+        SIP_BLOCK_THREADS
+        PyErr_SetString(sipException_Shotgun_SgListConversionError, detail);
+        SIP_UNBLOCK_THREADS
+%End
+};
+
+// *******************************************************************
 // Shotgun::SgDictError
 // *******************************************************************
 %Exception Shotgun::SgDictError(SIP_Exception) /PyName=SgDictError/
@@ -368,6 +385,40 @@
 
         SIP_BLOCK_THREADS
         PyErr_SetString(sipException_Shotgun_SgDictError, detail);
+        SIP_UNBLOCK_THREADS
+%End
+};
+
+// *******************************************************************
+// Shotgun::SgDictKeyNotFoundError
+// *******************************************************************
+%Exception Shotgun::SgDictKeyNotFoundError(SIP_Exception) /PyName=SgDictKeyNotFoundError/
+{
+%TypeHeaderCode
+#include <Shotgun/exceptions.h>
+%End
+%RaiseCode
+        const char *detail = sipExceptionRef.what();
+
+        SIP_BLOCK_THREADS
+        PyErr_SetString(sipException_Shotgun_SgDictKeyNotFoundError, detail);
+        SIP_UNBLOCK_THREADS
+%End
+};
+
+// *******************************************************************
+// Shotgun::SgDictConversionError
+// *******************************************************************
+%Exception Shotgun::SgDictConversionError(SIP_Exception) /PyName=SgDictConversionError/
+{
+%TypeHeaderCode
+#include <Shotgun/exceptions.h>
+%End
+%RaiseCode
+        const char *detail = sipExceptionRef.what();
+
+        SIP_BLOCK_THREADS
+        PyErr_SetString(sipException_Shotgun_SgDictConversionError, detail);
         SIP_UNBLOCK_THREADS
 %End
 };

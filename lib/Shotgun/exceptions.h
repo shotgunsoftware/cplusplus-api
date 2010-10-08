@@ -39,6 +39,7 @@ namespace Shotgun {
 
 class Dict;
 class List;
+class Fields;
 
 // *****************************************************************************
 class SgError : public std::exception
@@ -194,15 +195,6 @@ public:
 };
 
 // *****************************************************************************
-class SgApiError : public SgError
-{
-public:
-    SgApiError(const std::string &api);
-
-    virtual ~SgApiError() throw() {}
-};
-
-// *****************************************************************************
 class SgXmlrpcValueError : public SgError
 {
 public:
@@ -236,22 +228,58 @@ public:
 class SgListError : public SgError
 {
 public:
-    SgListError(const int index,
-                const int first,
-                const int last);
-    SgListError(const xmlrpc_c::value &value);
+    SgListError(const std::string &msg = "") : SgError(msg) {}
+    SgListError(const char *msg = "") : SgError(msg) {}
 
     virtual ~SgListError() throw() {}
+};
+
+// *****************************************************************************
+class SgListIndexOutOfRangeError : public SgListError
+{
+public:
+    SgListIndexOutOfRangeError(const int index,
+                               const int first,
+                               const int last);
+
+    virtual ~SgListIndexOutOfRangeError() throw() {}
+};
+
+// *****************************************************************************
+class SgListConversionError : public SgListError
+{
+public:
+    SgListConversionError(const xmlrpc_c::value &value);
+
+    virtual ~SgListConversionError() throw() {}
 };
 
 // *****************************************************************************
 class SgDictError : public SgError
 {
 public:
-    SgDictError(const std::string &key);
-    SgDictError(const xmlrpc_c::value &value);
+    SgDictError(const std::string &msg = "") : SgError(msg) {}
+    SgDictError(const char *msg = "") : SgError(msg) {}
 
     virtual ~SgDictError() throw() {}
+};
+
+// *****************************************************************************
+class SgDictKeyNotFoundError : public SgDictError
+{
+public:
+    SgDictKeyNotFoundError(const std::string &key);
+
+    virtual ~SgDictKeyNotFoundError() throw() {}
+};
+
+// *****************************************************************************
+class SgDictConversionError : public SgDictError
+{
+public:
+    SgDictConversionError(const xmlrpc_c::value &value);
+
+    virtual ~SgDictConversionError() throw() {}
 };
 
 } // End namespace Shotgun

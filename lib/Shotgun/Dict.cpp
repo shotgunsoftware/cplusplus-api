@@ -53,7 +53,7 @@ Dict::Dict(const xmlrpc_c::value &value)
     }
     else
     {
-        throw SgDictError(value);
+        throw SgDictConversionError(value);
     }
 }
 
@@ -67,7 +67,7 @@ const xmlrpc_c::value Dict::value(const std::string &key) const
     }
     else
     {
-        throw SgDictError(key);
+        throw SgDictKeyNotFoundError(key);
     }
 }
 
@@ -98,20 +98,3 @@ Dict &Dict::erase(const std::string &key)
 }
 
 } // End namespace Shotgun
-
-// *****************************************************************************
-// *****************************************************************************
-std::string toStdString(const Shotgun::Dict &dict)
-{
-    return toStdString(dict.value());
-}
-
-// *****************************************************************************
-std::ostream& operator<<(std::ostream &output, const Shotgun::Dict &dict)
-{
-    output << toStdString(dict);
-
-    return output;
-}
-
-

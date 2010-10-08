@@ -54,9 +54,14 @@ public:
          then(fieldName, direction);      
     }
 
+    SortBy &then(const std::string &fieldName,
+                 const std::string &direction = "asc");
+    SortBy &then(const SortBy &that);
+
     const List &sorts() const { return m_sorts; }
     const bool empty() const { return m_sorts.empty(); }
     const int size() const { return m_sorts.size(); }
+    const std::string str() const { return m_sorts.str(); }
     void clear() { m_sorts.clear(); }
 
     SortBy &operator=(const SortBy &that)
@@ -69,19 +74,16 @@ public:
         return *this;
     }
 
-    SortBy &then(const std::string &fieldName,
-                 const std::string &direction = "asc");
-    SortBy &then(const SortBy &that);
+    friend std::ostream& operator<<(std::ostream &output, const SortBy &sortBy)
+    {
+        output << sortBy.str();
+        return output;
+    }
 
 protected:
     List m_sorts;
 };
 
 } // End namespace Shotgun
-
-// *****************************************************************************
-// *****************************************************************************
-std::string toStdString(const Shotgun::SortBy &order);
-std::ostream& operator<<(std::ostream &output, const Shotgun::SortBy &order);
 
 #endif    // End #ifdef __SORTBY_H__

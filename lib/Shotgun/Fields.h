@@ -67,6 +67,7 @@ public:
     const List &data() const { return m_data; }
     const bool empty() const { return m_data.empty(); }
     const int size() const { return m_data.size(); }
+    const std::string str() const { return m_data.str(); }
     void clear() { m_data.clear(); }
 
     Fields &operator=(const Fields &that)
@@ -77,6 +78,12 @@ public:
         }
 
         return *this;
+    }
+
+    friend std::ostream& operator<<(std::ostream &output, const Fields &fields)
+    {
+        output << fields.str();
+        return output;
     }
 
 protected:
@@ -119,10 +126,5 @@ Fields &Fields::add(const std::string &fieldName,
 }
 
 } // End namespace Shotgun
-
-// *****************************************************************************
-// *****************************************************************************
-std::string toStdString(const Shotgun::Fields &fields);
-std::ostream& operator<<(std::ostream &output, const Shotgun::Fields &fields);
 
 #endif    // End #ifdef __FIELDS_H__

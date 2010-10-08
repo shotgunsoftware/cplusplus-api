@@ -64,7 +64,7 @@ Shot::~Shot()
 }
 
 // *****************************************************************************
-List Shot::populateReturnFields()
+List Shot::defaultReturnFields()
 {
     return List("id")
            .append("project")
@@ -176,18 +176,3 @@ const Sequence *Shot::sgSequence() const
 }
 
 } // End namespace Shotgun
-
-// *****************************************************************************
-// *****************************************************************************
-std::string toStdString(const Shotgun::Shot &shot)
-{
-    return toStdString(shot.attrs());
-}
-
-// *****************************************************************************
-std::ostream& operator<<(std::ostream &output, const Shotgun::Shot &shot)
-{
-    output << toStdString(shot);
-    return output;
-}
-

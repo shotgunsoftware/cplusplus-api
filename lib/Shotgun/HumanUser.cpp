@@ -61,7 +61,7 @@ HumanUser::~HumanUser()
 }
 
 // *****************************************************************************
-List HumanUser::populateReturnFields()
+List HumanUser::defaultReturnFields()
 {
     return List("id")
            .append("project")
@@ -95,17 +95,3 @@ void HumanUser::sgLogin(const std::string &val)
 }
 
 } // End namespace Shotgun
-
-// *****************************************************************************
-// *****************************************************************************
-std::string toStdString(const Shotgun::HumanUser &user)
-{
-    return toStdString(user.attrs());
-}
-
-// *****************************************************************************
-std::ostream& operator<<(std::ostream &output, const Shotgun::HumanUser &user)
-{
-    output << toStdString(user);
-    return output;
-}

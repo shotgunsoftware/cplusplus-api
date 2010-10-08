@@ -40,21 +40,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/FilterBy.h>
 #include <Shotgun/SortBy.h>
 #include <Shotgun/Fields.h>
-#include <Shotgun/Project.h>
-#include <Shotgun/Sequence.h>
-#include <Shotgun/Shot.h>
-#include <Shotgun/Version.h>
-#include <Shotgun/HumanUser.h>
-#include <Shotgun/Element.h>
-#include <Shotgun/Asset.h>
-#include <Shotgun/Delivery.h>
-#include <Shotgun/PublishEvent.h>
-#include <Shotgun/Review.h>
-#include <Shotgun/ReviewItem.h>
-#include <Shotgun/Task.h>
-#include <Shotgun/Group.h>
-#include <Shotgun/Note.h>
-#include <Shotgun/Playlist.h>
 
 namespace Shotgun {
 
@@ -198,54 +183,6 @@ xmlrpc_c::value toXmlrpcValue(const xmlrpc_c::value &in)
 {
     return in;
 }
-
-// *****************************************************************************
-// The template approach won't work since xmlrpc_c::value has to be casted to a 
-// specific derived xmlrpc_c::value type first, which the compiler doesn't like.
-#if 0
-template <typename T>
-T Dict::fromXmlrpcValue(const xmlrpc_c::value &value)
-{
-    std::cout << xmlrpcValueTypeStr(value.type()) << std::endl;
-
-    if (value.type() == xmlrpc_c::value::TYPE_INT)
-    {
-        return T(xmlrpc_c::value_int(value));
-    }
-    else if (value.type() == xmlrpc_c::value::TYPE_BOOLEAN)
-    {
-        return T(xmlrpc_c::value_boolean(value));
-    }
-    else if (value.type() == xmlrpc_c::value::TYPE_DOUBLE)
-    {
-        return T(xmlrpc_c::value_double(value));
-    }
-    else if (value.type() == xmlrpc_c::value::TYPE_DATETIME)
-    {
-        return T(xmlrpc_c::value_datetime(value));
-    }
-    else if (value.type() == xmlrpc_c::value::TYPE_STRING)
-    {
-        return T(xmlrpc_c::value_string(value));
-    }
-    else if (value.type() == xmlrpc_c::value::TYPE_BYTESTRING)
-    {
-        return T((xmlrpc_c::value_bytestring(value)).length());
-    }
-    else if (value.type() == xmlrpc_c::value::TYPE_ARRAY)
-    {
-        return T((xmlrpc_c::value_array(value)).vectorValueValue());
-    }
-    else if (value.type() == xmlrpc_c::value::TYPE_STRUCT)
-    {
-        return T(SgMap(xmlrpc_c::value_struct(value)));
-    }
-    else if (value.type() == xmlrpc_c::value::TYPE_NIL)
-    {
-        throw SgXmlrpcValueIsNilError();
-    }
-}
-#endif
 
 // *****************************************************************************
 void fromXmlrpcValue(const xmlrpc_c::value &value, char *out)

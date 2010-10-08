@@ -65,22 +65,30 @@ public:
 
     Delivery &operator=(const Delivery &that)
     {
-        Entity::operator=(that);
+        if (this != &that)
+        {
+            Entity::operator=(that);
+        }
+
         return *this;
+    }
+
+    friend std::ostream& operator<<(std::ostream &output, const Delivery &delivery)
+    {
+        output << delivery.str();
+        return output;
     }
 
 protected:
     Delivery(Shotgun *sg, const xmlrpc_c::value &attrs);
 
     static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Delivery(sg, attrs); }
-    static List populateReturnFields();
+    static List defaultReturnFields();
 };
 
-} // End namespace Shotgun
+// *****************************************************************************
+typedef std::vector<Delivery *> DeliveryPtrs;
 
-// *****************************************************************************
-// *****************************************************************************
-std::string toStdString(const Shotgun::Delivery &delivery);
-std::ostream& operator<<(std::ostream &output, const Shotgun::Delivery &delivery);
+} // End namespace Shotgun
 
 #endif    // End #ifdef __DELIVERY_H__

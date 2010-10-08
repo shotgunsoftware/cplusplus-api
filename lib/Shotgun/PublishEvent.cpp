@@ -62,7 +62,7 @@ PublishEvent::~PublishEvent()
 }
 
 // *****************************************************************************
-List PublishEvent::populateReturnFields()
+List PublishEvent::defaultReturnFields()
 {
     return List("id")
            .append("project")
@@ -79,17 +79,3 @@ List PublishEvent::populateReturnFields()
 }
 
 } // End namespace Shotgun
-
-// *****************************************************************************
-// *****************************************************************************
-std::string toStdString(const Shotgun::PublishEvent &publishEvent)
-{
-    return toStdString(publishEvent.attrs());
-}
-
-// *****************************************************************************
-std::ostream& operator<<(std::ostream &output, const Shotgun::PublishEvent &publishEvent)
-{
-    output << toStdString(publishEvent);
-    return output;
-}

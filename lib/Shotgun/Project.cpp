@@ -67,7 +67,7 @@ Project::~Project()
 }
 
 // *****************************************************************************
-List Project::populateReturnFields()
+List Project::defaultReturnFields()
 {
     return List("id")
            .append("project")
@@ -87,18 +87,3 @@ List Project::populateReturnFields()
 }
 
 } // End namespace Shotgun
-
-// *****************************************************************************
-// *****************************************************************************
-std::string toStdString(const Shotgun::Project &project)
-{
-    return toStdString(project.attrs());
-}
-
-// *****************************************************************************
-std::ostream& operator<<(std::ostream &output, const Shotgun::Project &project)
-{
-    output << toStdString(project);
-    return output;
-}
-

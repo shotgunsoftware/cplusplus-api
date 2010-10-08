@@ -44,7 +44,7 @@ namespace Shotgun {
 
 // *****************************************************************************
 Entity::Entity(Shotgun *sg)
-    : m_sg(sg), m_invalidAttrMode(INVALID_ATTR_THROW_EXCEPTION)
+    : m_sg(sg)
 {
     m_attrs = NULL;
 
@@ -88,10 +88,14 @@ List Entity::findSGEntities(Shotgun *sg, Dict &findMap)
     // buildFindMap(..) to this function. So need to remove it from findMap
     // afterwards.
     int limit = 0;
-    if (findMap.find("limit"))
+    try
     {
         limit = findMap.value<int>("limit");
         findMap.erase("limit");
+    }
+    catch (SgDictKeyNotFoundError)
+    {
+        // Do nothing
     }
 
     bool done = false;
@@ -101,7 +105,7 @@ List Entity::findSGEntities(Shotgun *sg, Dict &findMap)
         params.add(toXmlrpcValue(sg->authMap()));
         params.add(toXmlrpcValue(findMap));
 
-        // api3 returns a struct - so convert it to an array of entities
+        // Returns a struct - so convert it to an array of entities
         xmlrpc_c::value rawResult = md->call(params);
 
         List entities = Entity::getFindResultEntityList(rawResult);
@@ -130,10 +134,14 @@ List Entity::findSGEntities(Shotgun *sg, Dict &findMap)
             {
                 // Erase the current "paging" field in the findMap
                 Dict findMapPaging;
-                if (findMap.find("paging"))
+                try
                 {
                     findMapPaging = findMap.value<Dict>("paging");
                     findMap.erase("paging");
+                }
+                catch (SgDictKeyNotFoundError)
+                {
+                    // Do nothing
                 }
 
                 // Increase the "current_page" for the findMap "paging".
@@ -428,9 +436,13 @@ const xmlrpc_c::value Entity::getAttrValue(const std::string &attrName) const
     {
         attrMap = Dict(*m_attrs);
 
-        if (attrMap.find(attrName))
+        try
         {
             return attrMap[attrName];
+        }
+        catch (SgDictKeyNotFoundError)
+        {
+            // Do nothing
         }
     }
     
@@ -446,11 +458,11 @@ const xmlrpc_c::value Entity::getAttrValue(const std::string &attrName) const
     attrMap = Dict(entity->attrs());
     delete entity;
 
-    if (attrMap.find(attrName))
+    try
     {
         return attrMap[attrName];
     }
-    else
+    catch (SgDictKeyNotFoundError)
     {
         throw SgAttrNotFoundError(attrName);
     }
@@ -463,11 +475,11 @@ const xmlrpc_c::value Entity::getAttrValue(const std::string &attrName,
 {
     if (!attrsMap.empty())
     {
-        if (attrsMap.find(attrName))
+        try
         {
             return attrsMap[attrName];
         }
-        else
+        catch (SgDictKeyNotFoundError)
         {
             throw SgAttrNotFoundError(attrName);
         }
@@ -507,7 +519,7 @@ void Entity::setAttrValue(const Fields &fields)
             {
                 Dict field = Dict(fields.data()[i]);
 
-                if (field.find("field_name") && field.find("value"))
+                try
                 {
                     // ------------------------------------------------------------
                     // Note that the syntax to get the "field_name" and "value" from
@@ -529,6 +541,10 @@ void Entity::setAttrValue(const Fields &fields)
                         updated = true;
                     }
                 }
+                catch (SgDictKeyNotFoundError)
+                {
+                    // Do nothing
+                }
             }
             // Update the m_attrs as a whole
             if (updated)
@@ -545,6 +561,12 @@ void Entity::setAttrValue(const Fields &fields)
 }
 
 // *****************************************************************************
+const int Entity::getAttrValueAsInt(const std::string &attrName) const
+{
+    return getAttrValue<int>(attrName);
+}
+
+// *****************************************************************************
 const int Entity::getAttrValueAsInt(const std::string &attrName, 
                                     const int defaultVal) const
 {
@@ -554,11 +576,24 @@ const int Entity::getAttrValueAsInt(const std::string &attrName,
 // *****************************************************************************
 // static
 const int Entity::getAttrValueAsInt(const std::string &attrName, 
-                                    const Dict &attrsMap,
-                                    const int defaultVal,
-                                    const InvalidAttrMode invalidAttrMode)
+                                    const Dict &attrsMap)
 {
-    return getAttrValue<int>(attrName, attrsMap, defaultVal, invalidAttrMode);
+    return getAttrValue<int>(attrName, attrsMap);
+}
+
+// *****************************************************************************
+// static
+const int Entity::getAttrValueAsInt(const std::string &attrName, 
+                                    const Dict &attrsMap,
+                                    const int defaultVal)
+{
+    return getAttrValue<int>(attrName, attrsMap, defaultVal);
+}
+
+// *****************************************************************************
+const bool Entity::getAttrValueAsBool(const std::string &attrName) const
+{
+    return getAttrValue<bool>(attrName);
 }
 
 // *****************************************************************************
@@ -571,11 +606,24 @@ const bool Entity::getAttrValueAsBool(const std::string &attrName,
 // *****************************************************************************
 // static
 const bool Entity::getAttrValueAsBool(const std::string &attrName, 
-                                      const Dict &attrsMap,
-                                      const bool defaultVal, 
-                                      const InvalidAttrMode invalidAttrMode)
+                                      const Dict &attrsMap)
 {
-    return getAttrValue<bool>(attrName, attrsMap, defaultVal, invalidAttrMode);
+    return getAttrValue<bool>(attrName, attrsMap);
+}
+
+// *****************************************************************************
+// static
+const bool Entity::getAttrValueAsBool(const std::string &attrName, 
+                                      const Dict &attrsMap,
+                                      const bool defaultVal) 
+{
+    return getAttrValue<bool>(attrName, attrsMap, defaultVal);
+}
+
+// *****************************************************************************
+const double Entity::getAttrValueAsDouble(const std::string &attrName) const
+{
+    return getAttrValue<double>(attrName);
 }
 
 // *****************************************************************************
@@ -588,11 +636,24 @@ const double Entity::getAttrValueAsDouble(const std::string &attrName,
 // *****************************************************************************
 // static
 const double Entity::getAttrValueAsDouble(const std::string &attrName, 
-                                          const Dict &attrsMap,
-                                          const double defaultVal, 
-                                          const InvalidAttrMode invalidAttrMode)
+                                          const Dict &attrsMap)
 {
-    return getAttrValue<double>(attrName, attrsMap, defaultVal, invalidAttrMode);
+    return getAttrValue<double>(attrName, attrsMap);
+}
+
+// *****************************************************************************
+// static
+const double Entity::getAttrValueAsDouble(const std::string &attrName, 
+                                          const Dict &attrsMap,
+                                          const double defaultVal)
+{
+    return getAttrValue<double>(attrName, attrsMap, defaultVal);
+}
+
+// *****************************************************************************
+const time_t Entity::getAttrValueAsDatetime(const std::string &attrName) const
+{
+    return getAttrValue<time_t>(attrName);
 }
 
 // *****************************************************************************
@@ -605,115 +666,101 @@ const time_t Entity::getAttrValueAsDatetime(const std::string &attrName,
 // *****************************************************************************
 // static
 const time_t Entity::getAttrValueAsDatetime(const std::string &attrName, 
-                                            const Dict &attrsMap,
-                                            const time_t defaultVal, 
-                                            const InvalidAttrMode invalidAttrMode)                                          
+                                            const Dict &attrsMap)
 {
-    return getAttrValue<time_t>(attrName, attrsMap, defaultVal, invalidAttrMode);
+    return getAttrValue<time_t>(attrName, attrsMap);
+}
+
+// *****************************************************************************
+// static
+const time_t Entity::getAttrValueAsDatetime(const std::string &attrName, 
+                                            const Dict &attrsMap,
+                                            const time_t defaultVal)
+{
+    return getAttrValue<time_t>(attrName, attrsMap, defaultVal);
+}
+
+// *****************************************************************************
+const std::string Entity::getAttrValueAsString(const std::string &attrName) const 
+{
+    return getAttrValue<std::string>(attrName);
 }
 
 // *****************************************************************************
 const std::string Entity::getAttrValueAsString(const std::string &attrName, 
                                                const std::string &defaultVal) const
 {
-    try
-    {
-        return getAttrValue<std::string>(attrName, defaultVal);
-    }
-    catch (SgXmlrpcValueIsNilError)
-    {
-        // String type can have a default value (i.e. an empty string)
-        // to represent an empty value instead of throwing an exception.
-        return std::string("");
-    }
+    return getAttrValue<std::string>(attrName, defaultVal);
+}
+
+// *****************************************************************************
+// static
+const std::string Entity::getAttrValueAsString(const std::string &attrName, 
+                                               const Dict &attrsMap)
+{
+    return getAttrValue<std::string>(attrName, attrsMap);
 }
 
 // *****************************************************************************
 // static
 const std::string Entity::getAttrValueAsString(const std::string &attrName, 
                                                const Dict &attrsMap,
-                                               const std::string &defaultVal, 
-                                               const InvalidAttrMode invalidAttrMode)
+                                               const std::string &defaultVal)
 {
-    try
-    {
-        return getAttrValue<std::string>(attrName, attrsMap, defaultVal, invalidAttrMode);
-    }
-    catch (SgXmlrpcValueIsNilError)
-    {
-        // String type can have a default value (i.e. an empty string)
-        // to represent an empty value instead of throwing an exception.
-        return std::string("");
-    }
+    return getAttrValue<std::string>(attrName, attrsMap, defaultVal);
+}
+
+// *****************************************************************************
+const List Entity::getAttrValueAsList(const std::string &attrName) const
+{
+    return getAttrValue<List>(attrName);
 }
 
 // *****************************************************************************
 const List Entity::getAttrValueAsList(const std::string &attrName, 
                                       const List &defaultVal) const
 {
-    try
-    {
-        return getAttrValue<List>(attrName, defaultVal);
-    }
-    catch (SgXmlrpcValueIsNilError)
-    {
-        // List type can have a default value (i.e. an empty list)
-        // to represent an empty value instead of throwing an exception.
-        return List();
-    }
+    return getAttrValue<List>(attrName, defaultVal);
+}
+
+// *****************************************************************************
+// static
+const List Entity::getAttrValueAsList(const std::string &attrName, 
+                                      const Dict &attrsMap)
+{
+    return getAttrValue<List>(attrName, attrsMap);
 }
 
 // *****************************************************************************
 // static
 const List Entity::getAttrValueAsList(const std::string &attrName, 
                                       const Dict &attrsMap,
-                                      const List &defaultVal, 
-                                      const InvalidAttrMode invalidAttrMode)
+                                      const List &defaultVal)
 {
-    try
-    {
-        return getAttrValue<List>(attrName, attrsMap, defaultVal, invalidAttrMode);
-    }
-    catch (SgXmlrpcValueIsNilError)
-    {
-        // List type can have a default value (i.e. an empty list)
-        // to represent an empty value instead of throwing an exception.
-        return List();
-    }
+    return getAttrValue<List>(attrName, attrsMap, defaultVal);
 }
 
 // *****************************************************************************
 const Dict Entity::getAttrValueAsDict(const std::string &attrName) const
 {
-    try
-    {
-        return getAttrValue<Dict>(attrName, Dict());
-    }
-    catch (SgXmlrpcValueIsNilError)
-    {
-        // Dict type can have a default value (i.e. an empty dict)
-        // to represent an empty value instead of throwing an exception.
-        return Dict();
-    }
+    return getAttrValue<Dict>(attrName);
+}
+
+// *****************************************************************************
+// static
+const Dict Entity::getAttrValueAsDict(const std::string &attrName, 
+                                      const Dict &attrsMap)
+{
+    return getAttrValue<Dict>(attrName, attrsMap);
 }
 
 // *****************************************************************************
 // static
 const Dict Entity::getAttrValueAsDict(const std::string &attrName, 
                                       const Dict &attrsMap,
-                                      const Dict &defaultVal, 
-                                      const InvalidAttrMode invalidAttrMode)
+                                      const Dict &defaultVal)
 {
-    try
-    {
-        return getAttrValue<Dict>(attrName, attrsMap, defaultVal, invalidAttrMode);
-    }
-    catch (SgXmlrpcValueIsNilError)
-    {
-        // Dict type can have a default value (i.e. an empty dict)
-        // to represent an empty value instead of throwing an exception.
-        return Dict();
-    }
+    return getAttrValue<Dict>(attrName, attrsMap, defaultVal);
 }
 
 // *****************************************************************************
@@ -735,9 +782,13 @@ const Strings Entity::getAttrValueAsTags(const std::string &attrName) const
                 Dict dict;
                 fromXmlrpcValue(list[i], dict);
 
-                if (dict.find("name"))
+                try
                 {
                     tags.push_back(dict.value<std::string>("name"));
+                }
+                catch (SgDictKeyNotFoundError)
+                {
+                    // Do nothing
                 }
             }
             else if (list[i].type() == xmlrpc_c::value::TYPE_STRING)
@@ -771,9 +822,13 @@ const Strings Entity::getAttrValueAsTags(const std::string &attrName,
                 Dict dict;
                 fromXmlrpcValue(list[i], dict);
 
-                if (dict.find("name"))
+                try
                 {
                     tags.push_back(dict.value<std::string>("name"));
+                }
+                catch (SgDictKeyNotFoundError)
+                {
+                    // Do nothing
                 }
             }
             else if (list[i].type() == xmlrpc_c::value::TYPE_STRING)

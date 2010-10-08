@@ -40,23 +40,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace Shotgun {
 
-class Entity;
-class Project;
-class Sequence;
-class Shot;
-class Version;
-class HumanUser;
-class Element;
-class Asset;
-class Delivery;
-class PublishEvent;
-class Review;
-class ReviewItem;
-class Task;
-class Group;
-class Note;
-class Playlist;
-
 class List;
 class Dict;
 class FilterBy;
@@ -69,23 +52,6 @@ typedef Strings MethodSignature;
 typedef std::vector<Strings> MethodSignatures;
 typedef std::map<std::string, xmlrpc_c::value> SgMap;
 typedef std::vector<xmlrpc_c::value> SgArray;
-
-typedef std::vector<Entity *> EntityPtrs;
-typedef std::vector<Project *> ProjectPtrs;
-typedef std::vector<Sequence *> SequencePtrs;
-typedef std::vector<Shot *> ShotPtrs;
-typedef std::vector<Version *> VersionPtrs;
-typedef std::vector<HumanUser *> HumanUserPtrs;
-typedef std::vector<Element *> ElementPtrs;
-typedef std::vector<Asset *> AssetPtrs;
-typedef std::vector<Delivery *> DeliveryPtrs;
-typedef std::vector<PublishEvent *> PublishEventPtrs;
-typedef std::vector<Review *> ReviewPtrs;
-typedef std::vector<ReviewItem *> ReviewItemPtrs;
-typedef std::vector<Task *> TaskPtrs;
-typedef std::vector<Group *> GroupPtrs;
-typedef std::vector<Note *> NotePtrs;
-typedef std::vector<Playlist *> PlaylistPtrs;
 
 // *****************************************************************************
 std::string xmlrpcValueTypeStr(const xmlrpc_c::value::type_t xmlrpcType);
@@ -124,8 +90,8 @@ void fromXmlrpcValue(const xmlrpc_c::value &value, bool &out);
 void fromXmlrpcValue(const xmlrpc_c::value &value, time_t &out);
 void fromXmlrpcValue(const xmlrpc_c::value &value, SgArray &out);
 void fromXmlrpcValue(const xmlrpc_c::value &value, SgMap &out);
-void fromXmlrpcValue(const xmlrpc_c::value &value, Strings &out);
-//void fromXmlrpcValue(const xmlrpc_c::value &value, MethodSignatures &out);
+// MethodSignatures is the same as Strings
+void fromXmlrpcValue(const xmlrpc_c::value &value, Strings &out); 
 void fromXmlrpcValue(const xmlrpc_c::value &value, List &out);
 void fromXmlrpcValue(const xmlrpc_c::value &value, Dict &out);
 void fromXmlrpcValue(const xmlrpc_c::value &value, FilterBy &out);

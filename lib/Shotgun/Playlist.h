@@ -68,22 +68,30 @@ public:
 
     Playlist &operator=(const Playlist &that)
     {
-        Entity::operator=(that);
+        if (this != &that)
+        {
+            Entity::operator=(that);
+        }
+
         return *this;
+    }
+
+    friend std::ostream& operator<<(std::ostream &output, const Playlist &playlist)
+    {
+        output << playlist.str();
+        return output;
     }
 
 protected:
     Playlist(Shotgun *sg, const xmlrpc_c::value &attrs);
 
     static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Playlist(sg, attrs); }
-    static List populateReturnFields();
+    static List defaultReturnFields();
 };
 
-} // End namespace Shotgun
+// *****************************************************************************
+typedef std::vector<Playlist *> PlaylistPtrs;
 
-// *****************************************************************************
-// *****************************************************************************
-std::string toStdString(const Shotgun::Playlist &playlist);
-std::ostream& operator<<(std::ostream &output, const Shotgun::Playlist &playlist);
+} // End namespace Shotgun
 
 #endif    // End #ifdef __PLAYLIST_H__

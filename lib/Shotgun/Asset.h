@@ -42,6 +42,9 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace Shotgun {
 
 class Shotgun;
+class Asset;
+class Element;
+class Shot;
 
 // *****************************************************************************
 class Asset : public Entity, public TaskMixin, public NoteMixin
@@ -58,30 +61,38 @@ public:
     const std::string sgName() const { return getAttrValueAsString("code"); }
     const std::string sgCode() const { return sgName(); }
     const List sgParents() const { return getAttrValueAsList("parents"); }
-    const ElementPtrs sgElements() const;
-    const AssetPtrs sgAssets() const;
-    const ShotPtrs sgShots() const;
+    const std::vector<Element *> sgElements() const;
+    const std::vector<Asset *> sgAssets() const;
+    const std::vector<Shot *> sgShots() const;
 
     static std::string type() { return std::string("Asset"); }
 
     Asset &operator=(const Asset &that)
     {
-        Entity::operator=(that);
+        if (this != &that)
+        {
+            Entity::operator=(that);
+        }
+
         return *this;
+    }
+
+    friend std::ostream& operator<<(std::ostream &output, const Asset &asset)
+    {
+        output << asset.str();
+        return output;
     }
 
 protected:
     Asset(Shotgun *sg, const xmlrpc_c::value &attrs);
 
     static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Asset(sg, attrs); }
-    static List populateReturnFields();
+    static List defaultReturnFields();
 };
 
-} // End namespace Shotgun
+// *****************************************************************************
+typedef std::vector<Asset *> AssetPtrs;
 
-// *****************************************************************************
-// *****************************************************************************
-std::string toStdString(const Shotgun::Asset &asset);
-std::ostream& operator<<(std::ostream &output, const Shotgun::Asset &asset);
+} // End namespace Shotgun
 
 #endif    // End #ifdef __ASSET_H__

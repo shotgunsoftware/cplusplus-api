@@ -53,19 +53,3 @@ Fields &Fields::add(const Fields &that)
 }
 
 } // End namespace Shotgun
-
-// *****************************************************************************
-// *****************************************************************************
-std::string toStdString(const Shotgun::Fields &fields)
-{
-    return toStdString(fields.data());
-}
-
-// *****************************************************************************
-std::ostream& operator<<(std::ostream &output, const Shotgun::Fields &fields)
-{
-    output << toStdString(fields);
-
-    return output;
-}
-

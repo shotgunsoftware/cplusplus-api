@@ -40,6 +40,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace Shotgun {
 
 class Shotgun;
+class Asset;
+class Shot;
 
 // *****************************************************************************
 class Element : public Entity
@@ -54,8 +56,8 @@ public:
 
     // Get an attribute's value
     const std::string sgName() const { return getAttrValueAsString("code"); } 
-    const AssetPtrs sgAssets() const;
-    const ShotPtrs sgShots() const;
+    const std::vector<Asset *> sgAssets() const;
+    const std::vector<Shot *> sgShots() const;
     const Strings sgTags() const { return getAttrValueAsTags("tag_list"); } 
     const std::string sgType() const { return getAttrValueAsString("sg_element_type"); }
 
@@ -69,22 +71,30 @@ public:
 
     Element &operator=(const Element &that)
     {
-        Entity::operator=(that);
+        if (this != &that)
+        {
+            Entity::operator=(that);
+        }
+
         return *this;
+    }
+
+    friend std::ostream& operator<<(std::ostream &output, const Element &element)
+    {
+        output << element.str();
+        return output;
     }
 
 protected:
     Element(Shotgun *sg, const xmlrpc_c::value &attrs);
 
     static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Element(sg, attrs); }
-    static List populateReturnFields();
+    static List defaultReturnFields();
 };
 
-} // End namespace Shotgun
+// *****************************************************************************
+typedef std::vector<Element *> ElementPtrs;
 
-// *****************************************************************************
-// *****************************************************************************
-std::string toStdString(const Shotgun::Element &element);
-std::ostream& operator<<(std::ostream &output, const Shotgun::Element &element);
+} // End namespace Shotgun
 
 #endif    // End #ifdef __ELEMENT_H__

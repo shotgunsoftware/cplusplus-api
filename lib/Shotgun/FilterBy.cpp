@@ -104,19 +104,3 @@ FilterBy &FilterBy::op(const std::string &logicOperator,
 }
 
 } // End namespace Shotgun
-
-// *****************************************************************************
-// *****************************************************************************
-std::string toStdString(const Shotgun::FilterBy &filterList)
-{
-    return toStdString(filterList.filters());
-}
-
-// *****************************************************************************
-std::ostream& operator<<(std::ostream &output, const Shotgun::FilterBy &filterList)
-{
-    output << toStdString(filterList);
-
-    return output;
-}
-

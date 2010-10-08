@@ -60,7 +60,7 @@ Group::~Group()
 }
 
 // *****************************************************************************
-List Group::populateReturnFields()
+List Group::defaultReturnFields()
 {
     return List("id")
            .append("project")
@@ -70,17 +70,3 @@ List Group::populateReturnFields()
 }
 
 } // End namespace Shotgun
-
-// *****************************************************************************
-// *****************************************************************************
-std::string toStdString(const Shotgun::Group &group)
-{
-    return toStdString(group.attrs());
-}
-
-// *****************************************************************************
-std::ostream& operator<<(std::ostream &output, const Shotgun::Group &group)
-{
-    output << toStdString(group);
-    return output;
-}

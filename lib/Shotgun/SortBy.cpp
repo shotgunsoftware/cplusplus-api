@@ -63,19 +63,3 @@ SortBy &SortBy::then(const SortBy &that)
 }
 
 } // End namespace Shotgun
-
-// *****************************************************************************
-// *****************************************************************************
-std::string toStdString(const Shotgun::SortBy &order)
-{
-    return toStdString(order.sorts());
-}
-
-// *****************************************************************************
-std::ostream& operator<<(std::ostream &output, const Shotgun::SortBy &order)
-{
-    output << toStdString(order);
-    
-    return output;
-}
-

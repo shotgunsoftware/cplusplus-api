@@ -60,22 +60,30 @@ public:
 
     Project &operator=(const Project &that)
     {
-        Entity::operator=(that);
+        if (this != &that)
+        {
+            Entity::operator=(that);
+        }
+
         return *this;
+    }
+
+    friend std::ostream& operator<<(std::ostream &output, const Project &project)
+    {
+        output << project.str();
+        return output;
     }
 
 protected:
     Project(Shotgun *sg, const xmlrpc_c::value &attrs);
 
     static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Project(sg, attrs); }
-    static List populateReturnFields();
+    static List defaultReturnFields();
 };
 
-} // End namespace Shotgun
+// *****************************************************************************
+typedef std::vector<Project *> ProjectPtrs;
 
-// *****************************************************************************
-// *****************************************************************************
-std::string toStdString(const Shotgun::Project &project);
-std::ostream& operator<<(std::ostream &output, const Shotgun::Project &project);
+} // End namespace Shotgun
 
 #endif    // End #ifdef __PROJECT_H__

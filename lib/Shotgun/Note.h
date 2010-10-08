@@ -40,6 +40,9 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace Shotgun {
 
 class Shotgun;
+class Review;
+class Shot;
+class Version;
 
 // *****************************************************************************
 class Note : public Entity
@@ -74,22 +77,30 @@ public:
 
     Note &operator=(const Note &that)
     {
-        Entity::operator=(that);
+        if (this != &that)
+        {
+            Entity::operator=(that);
+        }
+
         return *this;
+    }
+
+    friend std::ostream& operator<<(std::ostream &output, const Note &note)
+    {
+        output << note.str();
+        return output;
     }
 
 protected:
     Note(Shotgun *sg, const xmlrpc_c::value &attrs);
 
     static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Note(sg, attrs); }
-    static List populateReturnFields();
+    static List defaultReturnFields();
 };
 
-} // End namespace Shotgun
+// *****************************************************************************
+typedef std::vector<Note *> NotePtrs;
 
-// *****************************************************************************
-// *****************************************************************************
-std::string toStdString(const Shotgun::Note &note);
-std::ostream& operator<<(std::ostream &output, const Shotgun::Note &note);
+} // End namespace Shotgun
 
 #endif    // End #ifdef __NOTE_H__

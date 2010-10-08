@@ -110,12 +110,6 @@ class Entity
 public:
     virtual ~Entity();
 
-    enum InvalidAttrMode
-    {
-        INVALID_ATTR_THROW_EXCEPTION = 0,
-        INVALID_ATTR_USE_DEFAULT
-    };
-
     virtual const int sgId() const throw(Shotgun::SgError);
     virtual const time_t sgDateCreated() const throw(Shotgun::SgError);
     virtual const time_t sgDateUpdated() const throw(Shotgun::SgError);
@@ -127,8 +121,6 @@ public:
     //const Shotgun::Shotgun *sg() const;
     Shotgun::Shotgun *sg();
 
-    void setInvalidAttrMode(InvalidAttrMode mode);
-    const InvalidAttrMode getInvalidAttrMode() const;
     const std::string entityType() const;
     const xmlrpc_c::value &attrs() const;
     const std::string str() const;

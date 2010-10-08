@@ -61,7 +61,7 @@ Asset::~Asset()
 }
 
 // *****************************************************************************
-List Asset::populateReturnFields()
+List Asset::defaultReturnFields()
 {
     return List("id")
            .append("project")
@@ -130,17 +130,3 @@ const ShotPtrs Asset::sgShots() const
 }
 
 } // End namespace Shotgun
-
-// *****************************************************************************
-// *****************************************************************************
-std::string toStdString(const Shotgun::Asset &asset)
-{
-    return toStdString(asset.attrs());
-}
-
-// *****************************************************************************
-std::ostream& operator<<(std::ostream &output, const Shotgun::Asset &asset)
-{
-    output << toStdString(asset);
-    return output;
-}

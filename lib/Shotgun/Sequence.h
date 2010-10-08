@@ -62,22 +62,30 @@ public:
 
     Sequence &operator=(const Sequence &that)
     {
-        Entity::operator=(that);
+        if (this != &that)
+        {
+            Entity::operator=(that);
+        }
+
         return *this;
+    }
+
+    friend std::ostream& operator<<(std::ostream &output, const Sequence &sequence)
+    {
+        output << sequence.str();
+        return output;
     }
 
 protected:
     Sequence(Shotgun *sg, const xmlrpc_c::value &attrs);
 
     static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Sequence(sg, attrs); }
-    static List populateReturnFields();
+    static List defaultReturnFields();
 };
 
-} // End namespace Shotgun
+// *****************************************************************************
+typedef std::vector<Sequence *> SequencePtrs;
 
-// *****************************************************************************
-// *****************************************************************************
-std::string toStdString(const Shotgun::Sequence &sequence);
-std::ostream& operator<<(std::ostream &output, const Shotgun::Sequence &sequence);
+} // End namespace Shotgun
 
 #endif    // End #ifdef __SEQUENCE_H__

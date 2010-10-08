@@ -89,22 +89,30 @@ public:
 
     Shot &operator=(const Shot &that)
     {
-        Entity::operator=(that);
+        if (this != &that)
+        {
+            Entity::operator=(that);
+        }
+
         return *this;
+    }
+
+    friend std::ostream& operator<<(std::ostream &output, const Shot &shot)
+    {
+        output << shot.str();
+        return output;
     }
 
 protected:
     Shot(Shotgun *sg, const xmlrpc_c::value &attrs);
 
     static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Shot(sg, attrs); }
-    static List populateReturnFields();
+    static List defaultReturnFields();
 };
 
-} // End namespace Shotgun
+// *****************************************************************************
+typedef std::vector<Shot *> ShotPtrs;
 
-// *****************************************************************************
-// *****************************************************************************
-std::string toStdString(const Shotgun::Shot &shot);
-std::ostream& operator<<(std::ostream &output, const Shotgun::Shot &shot);
+} // End namespace Shotgun
 
 #endif    // End #ifdef __SHOT_H__

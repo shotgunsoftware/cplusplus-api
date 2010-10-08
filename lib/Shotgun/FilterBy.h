@@ -75,6 +75,7 @@ public:
     const Dict &filters() const { return m_filters; }
     const bool empty() const { return m_filters.empty(); }
     const int size() const { return m_filters.size(); }
+    const std::string str() const { return m_filters.str(); }
     void clear() { m_filters.clear(); }
 
     FilterBy &operator=(const FilterBy &that)
@@ -85,6 +86,12 @@ public:
         }
 
         return *this;
+    }
+
+    friend std::ostream& operator<<(std::ostream &output, const FilterBy &filterBy)
+    {
+        output << filterBy.str();
+        return output;
     }
 
 protected:
@@ -126,10 +133,5 @@ FilterBy &FilterBy::Or(const std::string &path,
 }
 
 } // End namespace Shotgun
-
-// *****************************************************************************
-// *****************************************************************************
-std::string toStdString(const Shotgun::FilterBy &filterList);
-std::ostream& operator<<(std::ostream &output, const Shotgun::FilterBy &filterList);
 
 #endif    // End #ifdef __FILTERBY_H__

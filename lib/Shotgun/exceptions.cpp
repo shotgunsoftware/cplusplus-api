@@ -33,6 +33,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <exceptions.h>
 #include <Dict.h>
 #include <List.h>
+#include <Fields.h>
 
 namespace Shotgun {
 
@@ -75,7 +76,7 @@ SgAttrLinkError::SgAttrLinkError(const Dict &link)
     : SgAttrError("SgAttrLinkError: ")
 {
     m_msg += "The given link is missing one or more of the required fields: \"id\", \"type\", \"name\"\n";
-    m_msg += toStdString(link);
+    m_msg += link.str();
 }
 
 // *****************************************************************************
@@ -117,7 +118,7 @@ SgAttrSetValueError::SgAttrSetValueError(const Fields &fields,
                                          const std::string &errMsg) 
     : SgAttrError("SgAttrSetValueError: ")
 {
-    m_msg += "Failed to set values for attribute list, " + toStdString(fields);
+    m_msg += "Failed to set values for attribute list, " + fields.str();
     if (errMsg != "")
     {
         m_msg += "\n" + errMsg;
@@ -176,13 +177,6 @@ SgEntityCreateError::SgEntityCreateError(const std::string &err)
 }
 
 // *****************************************************************************
-SgApiError::SgApiError(const std::string &api) 
-    : SgError("SgApiError: ")
-{
-    m_msg += api + " is not supported.";
-}
-
-// *****************************************************************************
 SgXmlrpcValueTypeError::SgXmlrpcValueTypeError(const xmlrpc_c::value &value,
                                                const xmlrpc_c::value::type_t wrongType,
                                                const xmlrpc_c::value::type_t correctType) 
@@ -201,32 +195,32 @@ SgXmlrpcValueIsNilError::SgXmlrpcValueIsNilError()
 }
 
 // *****************************************************************************
-SgListError::SgListError(const int index,
-                         const int first,
-                         const int last)
-    : SgError("SgListError: ")
+SgListIndexOutOfRangeError::SgListIndexOutOfRangeError(const int index,
+                                                       const int first,
+                                                       const int last)
+    : SgListError("SgListIndexOutOfRangeError: ")
 {
     m_msg += "index, " + toStdString(index) + ", is out of range [";
     m_msg += toStdString(first) + ", " + toStdString(last) + "].";
 }
 
 // *****************************************************************************
-SgListError::SgListError(const xmlrpc_c::value &value)
-    : SgError("SgListError: ")
+SgListConversionError::SgListConversionError(const xmlrpc_c::value &value)
+    : SgListError("SgListConversionError: ")
 {
     m_msg += "xmlrpc_c::value, " + toStdString(value) + ", is not an array type. Failed to convert it to List type";
 }
 
 // *****************************************************************************
-SgDictError::SgDictError(const std::string &key)
-    : SgError("SgDictError: ")
+SgDictKeyNotFoundError::SgDictKeyNotFoundError(const std::string &key)
+    : SgDictError("SgDictKeyNotFoundError: ")
 {
     m_msg += "key, \"" + key + "\", not found.";
 }
 
 // *****************************************************************************
-SgDictError::SgDictError(const xmlrpc_c::value &value)
-    : SgError("SgDictError: ")
+SgDictConversionError::SgDictConversionError(const xmlrpc_c::value &value)
+    : SgDictError("SgDictConversionError: ")
 {
     m_msg += "xmlrpc_c::value, " + toStdString(value) + ", is not a struct type. Failed to convert it to Dict type";
 }

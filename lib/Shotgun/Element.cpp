@@ -61,7 +61,7 @@ Element::~Element()
 }
 
 // *****************************************************************************
-List Element::populateReturnFields()
+List Element::defaultReturnFields()
 {
     return List("id")
            .append("project")
@@ -159,18 +159,3 @@ void Element::sgType(const std::string &val)
 }
 
 } // End namespace Shotgun
-
-// *****************************************************************************
-// *****************************************************************************
-std::string toStdString(const Shotgun::Element &element)
-{
-    return toStdString(element.attrs());
-}
-
-// *****************************************************************************
-std::ostream& operator<<(std::ostream &output, const Shotgun::Element &element)
-{
-    output << toStdString(element);
-    return output;
-}
-

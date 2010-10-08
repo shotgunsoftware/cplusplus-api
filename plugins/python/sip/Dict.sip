@@ -72,6 +72,19 @@ public:
     const bool find(const std::string &key) const;
     void clear();
     Shotgun::Dict &erase(const std::string &key);
+
+    // ------------------------------------------------------------------------
+    SIP_PYOBJECT __str__();
+%MethodCode
+    sipRes = PyString_FromString(sipCpp->str().c_str());
+%End
+
+    // ------------------------------------------------------------------------
+    SIP_PYOBJECT __repr__();
+%MethodCode
+    sipRes = PyString_FromString(sipCpp->str().c_str());
+%End
+
 };
 
 }; // End namespace Shotgun

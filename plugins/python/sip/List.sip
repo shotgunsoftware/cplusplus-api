@@ -74,6 +74,19 @@ public:
     void clear();
     void erase(const int index);
     void erase(const int first, const int last);
+
+    // ------------------------------------------------------------------------
+    SIP_PYOBJECT __str__();
+%MethodCode
+    sipRes = PyString_FromString(sipCpp->str().c_str());
+%End
+
+    // ------------------------------------------------------------------------
+    SIP_PYOBJECT __repr__();
+%MethodCode
+    sipRes = PyString_FromString(sipCpp->str().c_str());
+%End
+
 };
 
 }; // End namespace Shotgun

@@ -49,37 +49,26 @@ Shotgun::Shotgun(const std::string &serverURL,
     m_client = new xmlrpc_c::client_xml(&m_transport);
 
     // Authetication info comes from Shotgun Admin Pages->Scripts
-    if (m_serverURL.find("api2") != std::string::npos)
-    {
-        m_api = "api2";
-      
-        throw SgApiError(m_api);
-    }
-    else if (m_serverURL.find("api3") != std::string::npos)
-    {
-        m_api = "api3";
-
-        m_authMap.clear();
-        m_authMap.add("script_name", "shotgun.main.Shotgun")
-                 .add("script_key", m_authKey);
-    }
+    m_authMap.clear();
+    m_authMap.add("script_name", "shotgun.main.Shotgun")
+             .add("script_key", m_authKey);
 
     // Register the classes
-    registerClass("Asset",        &Asset::factory,        &Asset::populateReturnFields);
-    registerClass("Delivery",     &Delivery::factory,     &Delivery::populateReturnFields);
-    registerClass("Element",      &Element::factory,      &Element::populateReturnFields);
-    registerClass("Group",        &Group::factory,        &Group::populateReturnFields);
-    registerClass("HumanUser",    &HumanUser::factory,    &HumanUser::populateReturnFields);
-    registerClass("Note",         &Note::factory,         &Note::populateReturnFields);
-    registerClass("Playlist",     &Playlist::factory,     &Playlist::populateReturnFields);
-    registerClass("Project",      &Project::factory,      &Project::populateReturnFields);
-    registerClass("PublishEvent", &PublishEvent::factory, &PublishEvent::populateReturnFields);
-    registerClass("Review",       &Review::factory,       &Review::populateReturnFields);
-    registerClass("ReviewItem",   &ReviewItem::factory,   &ReviewItem::populateReturnFields);
-    registerClass("Sequence",     &Sequence::factory,     &Sequence::populateReturnFields);
-    registerClass("Shot",         &Shot::factory,         &Shot::populateReturnFields);
-    registerClass("Task",         &Task::factory,         &Task::populateReturnFields);
-    registerClass("Version",      &Version::factory,      &Version::populateReturnFields);
+    registerClass("Asset",        &Asset::factory,        &Asset::defaultReturnFields);
+    registerClass("Delivery",     &Delivery::factory,     &Delivery::defaultReturnFields);
+    registerClass("Element",      &Element::factory,      &Element::defaultReturnFields);
+    registerClass("Group",        &Group::factory,        &Group::defaultReturnFields);
+    registerClass("HumanUser",    &HumanUser::factory,    &HumanUser::defaultReturnFields);
+    registerClass("Note",         &Note::factory,         &Note::defaultReturnFields);
+    registerClass("Playlist",     &Playlist::factory,     &Playlist::defaultReturnFields);
+    registerClass("Project",      &Project::factory,      &Project::defaultReturnFields);
+    registerClass("PublishEvent", &PublishEvent::factory, &PublishEvent::defaultReturnFields);
+    registerClass("Review",       &Review::factory,       &Review::defaultReturnFields);
+    registerClass("ReviewItem",   &ReviewItem::factory,   &ReviewItem::defaultReturnFields);
+    registerClass("Sequence",     &Sequence::factory,     &Sequence::defaultReturnFields);
+    registerClass("Shot",         &Shot::factory,         &Shot::defaultReturnFields);
+    registerClass("Task",         &Task::factory,         &Task::defaultReturnFields);
+    registerClass("Version",      &Version::factory,      &Version::defaultReturnFields);
 }
 
 // *****************************************************************************
@@ -91,9 +80,9 @@ Shotgun::~Shotgun()
 // *****************************************************************************
 void Shotgun::registerClass(const std::string &entityType,
                             const FactoryFunc &factoryFunc,
-                            const PopulateReturnFieldsFunc &populateFunc)
+                            const DefaultReturnFieldsFunc &defaultReturnFieldsFunc)
 {
-    m_classRegistry[entityType] = RegistryFuncPair(factoryFunc, populateFunc);
+    m_classRegistry[entityType] = RegistryFuncPair(factoryFunc, defaultReturnFieldsFunc);
 }
 
 // *****************************************************************************
@@ -101,7 +90,7 @@ EntityPtrs Shotgun::entityFactoryFind(const std::string &entityType, Dict &findM
 {
     EntityPtrs entities;
 
-    // Find the factory func and the populateReturnFields func for the given type of entity
+    // Find the factory func and the defaultReturnFields func for the given type of entity
     ClassRegistry::iterator foundRegistryIter = m_classRegistry.find(entityType);
 
     if (foundRegistryIter == m_classRegistry.end())
@@ -109,8 +98,11 @@ EntityPtrs Shotgun::entityFactoryFind(const std::string &entityType, Dict &findM
         throw SgEntityFunctionNotFoundError(entityType, "m_classRegistry");
     }
 
-    FactoryFunc factorFunc = (*foundRegistryIter).second.first;
-    PopulateReturnFieldsFunc populateFunc = (*foundRegistryIter).second.second;
+    // The registry function pair 
+    RegistryFuncPair registryFuncPair = (*foundRegistryIter).second;
+
+    FactoryFunc factoryFunc = registryFuncPair.first;
+    DefaultReturnFieldsFunc defaultReturnFieldsFunc = registryFuncPair.second;
 
     // ------------------------------------------------------------------------
     // If the given findMap already has a "return_fields", merge its contents 
@@ -122,12 +114,18 @@ EntityPtrs Shotgun::entityFactoryFind(const std::string &entityType, Dict &findM
 
     // Populate the default return fields and add the extra return fields
     // before passing them to the findMap
-    List returnFields = (*populateFunc)();
-    if (findMap.find("return_fields"))
+    List returnFields = (*defaultReturnFieldsFunc)();
+    try
     {
+        // Check to see if the findMap has "return_fields" already
         returnFields.extend(findMap.value<List>("return_fields"));
         findMap.erase("return_fields");
     }
+    catch (SgDictKeyNotFoundError)
+    {
+        // Do nothing
+    }
+
     findMap.add("return_fields", returnFields);
 
     // If the findMap already has a "type" field, override it with the
@@ -145,7 +143,7 @@ EntityPtrs Shotgun::entityFactoryFind(const std::string &entityType, Dict &findM
     // Create entity class object.
     for (size_t i = 0; i < xmlrpcFindResult.size(); i++)
     {
-        entities.push_back((*factorFunc)(this, xmlrpcFindResult[i]));
+        entities.push_back((*factoryFunc)(this, xmlrpcFindResult[i]));
     }
 
     return entities;
@@ -154,7 +152,7 @@ EntityPtrs Shotgun::entityFactoryFind(const std::string &entityType, Dict &findM
 // *****************************************************************************
 Entity *Shotgun::entityFactoryCreate(const std::string &entityType, Dict &createMap)
 {
-    // Find the factory func and the populateReturnFields func for the given type of entity
+    // Find the factory func and the defaultReturnFields func for the given type of entity
     ClassRegistry::iterator foundRegistryIter = m_classRegistry.find(entityType);
 
     if (foundRegistryIter == m_classRegistry.end())
@@ -162,8 +160,11 @@ Entity *Shotgun::entityFactoryCreate(const std::string &entityType, Dict &create
         throw SgEntityFunctionNotFoundError(entityType, "m_classRegistry");
     }
 
-    FactoryFunc factorFunc = (*foundRegistryIter).second.first;
-    PopulateReturnFieldsFunc populateFunc = (*foundRegistryIter).second.second;
+    // The registry function pair 
+    RegistryFuncPair registryFuncPair = (*foundRegistryIter).second;
+
+    FactoryFunc factoryFunc = registryFuncPair.first;
+    DefaultReturnFieldsFunc defaultReturnFieldsFunc = registryFuncPair.second;
 
     // ------------------------------------------------------------------------
     // If the given createMap already has a "return_fields", merge its contents 
@@ -175,12 +176,18 @@ Entity *Shotgun::entityFactoryCreate(const std::string &entityType, Dict &create
 
     // Populate the default return fields and add the extra return fields
     // before passing them to the createMap
-    List returnFields = (*populateFunc)();
-    if (createMap.find("return_fields"))
+    List returnFields = (*defaultReturnFieldsFunc)();
+    try
     {
+        // Check to see if the createMap has "return_fields" already
         returnFields.extend(createMap.value<List>("return_fields"));
         createMap.erase("return_fields");
     }
+    catch (SgDictKeyNotFoundError)
+    {
+        // Do nothing
+    }
+
     createMap.add("return_fields", returnFields);
 
     // If the createMap already has a "type" field, override it with the
@@ -198,7 +205,7 @@ Entity *Shotgun::entityFactoryCreate(const std::string &entityType, Dict &create
     // Create entity class object.
     if (xmlrpcCreateResult.type() != xmlrpc_c::value::TYPE_NIL)
     {
-        return (*factorFunc)(this, xmlrpcCreateResult);
+        return (*factoryFunc)(this, xmlrpcCreateResult);
     }
     else
     {
@@ -269,14 +276,6 @@ EntityPtrs Shotgun::findEntities(const std::string &entityType,
                                         order);
 
     return this->entityFactoryFind(entityType, findMap);
-}
-
-// *****************************************************************************
-Entity *Shotgun::findEntityById(const std::string &entityType, const int id)
-{
-    return findEntity(entityType,
-                      FilterBy("id", "is", id));
-
 }
 
 // *****************************************************************************

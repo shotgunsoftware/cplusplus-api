@@ -69,22 +69,30 @@ public:
 
     ReviewItem &operator=(const ReviewItem &that)
     {
-        Entity::operator=(that);
+        if (this != &that)
+        {
+            Entity::operator=(that);
+        }
+
         return *this;
+    }
+
+    friend std::ostream& operator<<(std::ostream &output, const ReviewItem &reviewItem)
+    {
+        output << reviewItem.str();
+        return output;
     }
 
 protected:
     ReviewItem(Shotgun *sg, const xmlrpc_c::value &attrs);
 
     static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new ReviewItem(sg, attrs); }
-    static List populateReturnFields();
+    static List defaultReturnFields();
 };
 
-} // End namespace Shotgun
+// *****************************************************************************
+typedef std::vector<ReviewItem *> ReviewItemPtrs;
 
-// *****************************************************************************
-// *****************************************************************************
-std::string toStdString(const Shotgun::ReviewItem &reviewItem);
-std::ostream& operator<<(std::ostream &output, const Shotgun::ReviewItem &reviewItem);
+} // End namespace Shotgun
 
 #endif    // End #ifdef __REVIEW_ITEM_H__

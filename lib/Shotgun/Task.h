@@ -78,22 +78,30 @@ public:
 
     Task &operator=(const Task &that)
     {
-        Entity::operator=(that);
+        if (this != &that)
+        {
+            Entity::operator=(that);
+        }
+
         return *this;
+    }
+
+    friend std::ostream& operator<<(std::ostream &output, const Task &task)
+    {
+        output << task.str();
+        return output;
     }
 
 protected:
     Task(Shotgun *sg, const xmlrpc_c::value &attrs);
 
     static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Task(sg, attrs); }
-    static List populateReturnFields();
+    static List defaultReturnFields();
 };
 
-} // End namespace Shotgun
+// *****************************************************************************
+typedef std::vector<Task *> TaskPtrs;
 
-// *****************************************************************************
-// *****************************************************************************
-std::string toStdString(const Shotgun::Task &task);
-std::ostream& operator<<(std::ostream &output, const Shotgun::Task &task);
+} // End namespace Shotgun
 
 #endif    // End #ifdef __TASK_H__

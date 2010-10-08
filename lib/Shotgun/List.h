@@ -76,6 +76,7 @@ public:
     const SgArray &value() const { return m_value; }
     const bool empty() const { return m_value.empty(); }
     const int size() const { return m_value.size(); }
+    const std::string str() const { return toStdString(m_value); }
     void clear() { m_value.clear(); }
     void erase(const int index);
     void erase(const int first, const int last);
@@ -88,6 +89,12 @@ public:
         }
 
         return *this;
+    }
+
+    friend std::ostream& operator<<(std::ostream &output, const List &list)
+    {
+        output << list.str();
+        return output;
     }
 
 protected:
@@ -106,7 +113,7 @@ const T List::value(const int index) const
     }
     else
     {
-        throw SgListError(index, 0, m_value.size());
+        throw SgListIndexOutOfRangeError(index, 0, m_value.size());
     }
 }
 
@@ -118,10 +125,5 @@ const T List::operator[](const int index) const
 }
 
 } // End namespace Shotgun
-
-// *****************************************************************************
-// *****************************************************************************
-std::string toStdString(const Shotgun::List &list);
-std::ostream& operator<<(std::ostream &output, const Shotgun::List &list);
 
 #endif    // End #ifdef __LIST_H__

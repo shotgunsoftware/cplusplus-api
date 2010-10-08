@@ -78,22 +78,30 @@ public:
 
     Version &operator=(const Version &that)
     {
-        Entity::operator=(that);
+        if (this != &that)
+        {
+            Entity::operator=(that);
+        }
+
         return *this;
+    }
+
+    friend std::ostream& operator<<(std::ostream &output, const Version &version)
+    {
+        output << version.str();
+        return output;
     }
 
 protected:
     Version(Shotgun *sg, const xmlrpc_c::value &attrs);
 
     static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Version(sg, attrs); }
-    static List populateReturnFields();
+    static List defaultReturnFields();
 };
 
-} // End namespace Shotgun
+// *****************************************************************************
+typedef std::vector<Version *> VersionPtrs;
 
-// *****************************************************************************
-// *****************************************************************************
-std::string toStdString(const Shotgun::Version &version);
-std::ostream& operator<<(std::ostream &output, const Shotgun::Version &version);
+} // End namespace Shotgun
 
 #endif    // End #ifdef __VERSION_H__

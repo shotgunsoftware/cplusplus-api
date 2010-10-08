@@ -61,7 +61,7 @@ ReviewItem::~ReviewItem()
 }
 
 // *****************************************************************************
-List ReviewItem::populateReturnFields()
+List ReviewItem::defaultReturnFields()
 {
     return List("id")
            .append("project")
@@ -79,17 +79,3 @@ List ReviewItem::populateReturnFields()
 }
 
 } // End namespace Shotgun
-
-// *****************************************************************************
-// *****************************************************************************
-std::string toStdString(const Shotgun::ReviewItem &reviewItem)
-{
-    return toStdString(reviewItem.attrs());
-}
-
-// *****************************************************************************
-std::ostream& operator<<(std::ostream &output, const Shotgun::ReviewItem &reviewItem)
-{
-    output << toStdString(reviewItem);
-    return output;
-}

@@ -61,7 +61,7 @@ const xmlrpc_c::value List::value(const int index) const
     }
     else
     {
-        throw SgListError(index, 0, m_value.size());
+        throw SgListIndexOutOfRangeError(index, 0, m_value.size());
     }
 }
 
@@ -84,20 +84,3 @@ void List::erase(const int first, const int last)
 }
 
 } // End namespace Shotgun
-
-// *****************************************************************************
-// *****************************************************************************
-std::string toStdString(const Shotgun::List &list)
-{
-    return toStdString(list.value());
-}
-
-// *****************************************************************************
-std::ostream& operator<<(std::ostream &output, const Shotgun::List &list)
-{
-    output << toStdString(list);
-
-    return output;
-}
-
-

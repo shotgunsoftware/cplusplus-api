@@ -62,7 +62,7 @@ Playlist::~Playlist()
 }
 
 // *****************************************************************************
-List Playlist::populateReturnFields()
+List Playlist::defaultReturnFields()
 {
     return List("id")
            .append("project")
@@ -166,16 +166,3 @@ void Playlist::sgVersions(const List &val)
 }
 
 } // End namespace Shotgun
-
-// *****************************************************************************
-std::string toStdString(const Shotgun::Playlist &playlist)
-{
-    return toStdString(playlist.attrs());
-}
-
-// *****************************************************************************
-std::ostream& operator<<(std::ostream &output, const Shotgun::Playlist &playlist)
-{
-    output << toStdString(playlist);
-    return output;
-}
