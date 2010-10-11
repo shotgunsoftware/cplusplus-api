@@ -47,8 +47,6 @@ class Shot;
 class Element : public Entity
 {
     friend class Shotgun;
-    friend class Shot;
-    friend class Asset;
  
 public:
     Element(const Element &ref);

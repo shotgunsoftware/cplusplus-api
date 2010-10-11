@@ -48,7 +48,6 @@ class Version;
 class Note : public Entity
 {
     friend class Shotgun;
-    friend class Playlist;
 
 public:
     Note(const Note &ref);

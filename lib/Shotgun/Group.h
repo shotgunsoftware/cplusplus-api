@@ -45,7 +45,6 @@ class Shotgun;
 class Group : public Entity
 {
     friend class Shotgun;
-    friend class Task;
  
 public:
     Group(const Group &ref);

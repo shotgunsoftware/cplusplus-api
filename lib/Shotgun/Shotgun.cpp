@@ -86,7 +86,9 @@ void Shotgun::registerClass(const std::string &entityType,
 }
 
 // *****************************************************************************
-EntityPtrs Shotgun::entityFactoryFind(const std::string &entityType, Dict &findMap)
+EntityPtrs Shotgun::entityFactoryFind(const std::string &entityType, 
+                                      Dict &findMap,
+                                      const int limit)
 {
     EntityPtrs entities;
 
@@ -138,7 +140,7 @@ EntityPtrs Shotgun::entityFactoryFind(const std::string &entityType, Dict &findM
     findMap.add("type", entityType);
 
     // Find the shotgun entities by the findMap
-    List xmlrpcFindResult = Entity::findSGEntities(this, findMap); 
+    List xmlrpcFindResult = Entity::findSGEntities(this, findMap, limit); 
     
     // Create entity class object.
     for (size_t i = 0; i < xmlrpcFindResult.size(); i++)
@@ -246,10 +248,10 @@ Entity *Shotgun::findEntity(const std::string &entityType,
                                          filterList,
                                          extraReturnFields,
                                          retiredOnly,
-                                         0,
+                                         1, // limit
                                          order);
 
-    EntityPtrs entities = this->entityFactoryFind(entityType, findMap);
+    EntityPtrs entities = this->entityFactoryFind(entityType, findMap, 1);
     if (entities.size() > 0)
     {
         return entities[0];
@@ -275,7 +277,7 @@ EntityPtrs Shotgun::findEntities(const std::string &entityType,
                                         limit,
                                         order);
 
-    return this->entityFactoryFind(entityType, findMap);
+    return this->entityFactoryFind(entityType, findMap, limit);
 }
 
 // *****************************************************************************

@@ -77,26 +77,13 @@ xmlrpc_c::value Entity::createSGEntity(Shotgun *sg, const Dict &createMap)
 }
 
 // *****************************************************************************
-List Entity::findSGEntities(Shotgun *sg, Dict &findMap)
+List Entity::findSGEntities(Shotgun *sg, 
+                            Dict &findMap,
+                            const int limit)
 {
     Method *md = sg->method("read");
 
     List entityList;
-
-    // Retrieve "limit" from the findMap because it is a field unrecognized
-    // by Shotgun and we merely attach it to findMap to pass it over from
-    // buildFindMap(..) to this function. So need to remove it from findMap
-    // afterwards.
-    int limit = 0;
-    try
-    {
-        limit = findMap.value<int>("limit");
-        findMap.erase("limit");
-    }
-    catch (SgDictKeyNotFoundError)
-    {
-        // Do nothing
-    }
 
     bool done = false;
     while (!done)
@@ -236,11 +223,12 @@ void Entity::validateLink(const Dict &link)
     {
         int id = getAttrValueAsInt("id", link);
         std::string type = getAttrValueAsString("type", link);
-        std::string name = getAttrValueAsString("name", link);
+
+        // I think "name" is optional
+        //std::string name = getAttrValueAsString("name", link);
     }
     catch (SgAttrError)
     {
-        // TODO: is "name" field mandatory or optional?
         throw SgAttrLinkError(link);
     }
 }
@@ -284,8 +272,7 @@ const std::string Entity::getProjectCode() const
 const Dict Entity::asLink() const
 {
     return Dict("type", entityType())
-           .add("id", sgId())
-           .add("name", sgName());
+           .add("id", sgId());
 }
 
 // *****************************************************************************
@@ -386,7 +373,7 @@ Dict Entity::buildFindMap(const std::string &entityType,
     //     too large.  Our limit is 524288 characters.  We got 758343 characters
     //
     // Therefore, we need to be careful about what number to put in
-    // for "entities_per_page". Here I say 200 for Daily entities,
+    // for "entities_per_page". Here I say 200 for Version entities,
     // but to be safe use 100 for potential large entity data set.
     int maxEntitiesPerPage = 100;
 
@@ -415,12 +402,6 @@ Dict Entity::buildFindMap(const std::string &entityType,
     {
         findMap.add("sorts", order);
     }
-
-    // -------------------------------------------------------------------
-    // "limit" - This is a field that is not recognized by Shotgun. But we
-    // add it to findMap so that it can be passed to findSGEntities(..) where
-    // we need to remove it from the findMap.
-    findMap.add("limit", limit);
 
     return findMap;
 }

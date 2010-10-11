@@ -50,12 +50,6 @@ class Shotgun;
 class Shot : public Entity, public TaskMixin, public NoteMixin
 {
     friend class Shotgun;
-    friend class Version;
-    friend class Element;
-    friend class ReviewItem;
-    friend class Reference;
-    friend class Note;
-    friend class Asset;
  
 public:
     Shot(const Shot &ref);

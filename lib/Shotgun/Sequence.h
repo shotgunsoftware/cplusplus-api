@@ -45,8 +45,6 @@ class Shotgun;
 class Sequence : public Entity
 {
     friend class Shotgun;
-    friend class Shot;
-    friend class Reference;
  
 public:
     Sequence(const Sequence &ref);

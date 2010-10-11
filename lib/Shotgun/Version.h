@@ -46,10 +46,6 @@ class Shotgun;
 class Version : public Entity, public NoteMixin
 {
     friend class Shotgun;
-    friend class Shot;
-    friend class ReviewItem;
-    friend class Note;
-    friend class Playlist;
     
 public:
     Version(const Version &ref);

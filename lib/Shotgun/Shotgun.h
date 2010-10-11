@@ -74,10 +74,6 @@ class NoteMixin;
 // *****************************************************************************
 class Shotgun
 {
-    friend class Entity; 
-    friend class TaskMixin;
-    friend class NoteMixin;
-
 public:
     Shotgun(const std::string &serverURL = SG_DEFAULT_URL,
             const std::string &authKey = SG_AUTHENTICATION_KEY);
@@ -153,7 +149,9 @@ protected:
     //----------------------------------------------------------------------
     // This factory function creates an array of entity object pointers which 
     // link to the existing Shotgun entities. The size of the array can be 0. 
-    EntityPtrs entityFactoryFind(const std::string &entityType, Dict &findMap);
+    EntityPtrs entityFactoryFind(const std::string &entityType, 
+                                 Dict &findMap,
+                                 const int limit = 0);
 
     //----------------------------------------------------------------------
     // This factory function creates an entity object pointer which links to 

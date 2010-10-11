@@ -54,9 +54,6 @@ class NoteMixin;
 // *****************************************************************************
 class Entity
 {
-    friend class TaskMixin;
-    friend class NoteMixin;
-
 public:
     virtual ~Entity();
 
@@ -84,7 +81,6 @@ public:
     //     { 
     //         "type" : "Project",
     //         "id" : 68,
-    //         "name" : "TEST PROJECT"
     //     }
     // -------------------------------------------------------------------------
     const Dict asLink() const;
@@ -218,7 +214,9 @@ protected:
     static xmlrpc_c::value createSGEntity(Shotgun *sg, const Dict &createMap);
 
     // Find a list of Shotgun entities that match the search map
-    static List findSGEntities(Shotgun *sg, Dict &findMap);
+    static List findSGEntities(Shotgun *sg, 
+                               Dict &findMap,
+                               const int limit = 0);
 
     // Update an attribute of an existing Shotgun entity
     static xmlrpc_c::value updateSGEntity(Shotgun *sg,

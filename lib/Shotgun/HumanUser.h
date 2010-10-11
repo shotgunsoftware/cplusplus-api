@@ -43,7 +43,6 @@ class Shotgun;
 class HumanUser : public Entity
 {
     friend class Shotgun;
-    friend class Task;
  
 public:
     HumanUser(const HumanUser &ref);

@@ -45,8 +45,6 @@ class Shotgun;
 class Review : public Entity
 {
     friend class Shotgun;
-    friend class ReviewItem;
-    friend class Note;
  
 public:
     Review(const Review &ref);
