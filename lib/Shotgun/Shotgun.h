@@ -95,10 +95,6 @@ public:
                        const DefaultReturnFieldsFunc &defaultReturnFieldsFunc);
 
     //------------------------------------------------------------------------
-    // This is used by most of the search filters, so keep it.
-    Dict getProjectLink(const std::string &projectCode);
-
-    //------------------------------------------------------------------------
     template <class T>
     T *createEntity(const Dict &data,
                     const List &extraReturnFields = List());
@@ -109,6 +105,19 @@ public:
                   const List &extraReturnFields = List(),
                   const bool retiredOnly = false,
                   const SortBy &order = SortBy());
+
+    //------------------------------------------------------------------------
+    // This function is basically the same as calling findEntity(..)->asLink().
+    // But it deletes the entity before returning the link. So there won't be a 
+    // entity pointer lingering around after return. This function is not needed
+    // in Python since Python takes care of deleting the entity object. Therefore,
+    // calling findEntity(..).asLink() will just be fine in Python.
+    //------------------------------------------------------------------------
+    template <class T>
+    const Dict findEntityAsLink(const FilterBy &filterList = FilterBy(),
+                                const List &extraReturnFields = List(),
+                                const bool retiredOnly = false,
+                                const SortBy &order = SortBy());
 
     //------------------------------------------------------------------------
     template <class T>
@@ -212,8 +221,25 @@ T *Shotgun::findEntity(const FilterBy &filterList,
     {
         throw SgEntityDynamicCastError(T::type());
     }
+}
 
-                            
+// *****************************************************************************
+template <class T>
+const Dict Shotgun::findEntityAsLink(const FilterBy &filterList,
+                                     const List &extraReturnFields,
+                                     const bool retiredOnly,
+                                     const SortBy &order)
+{
+    Entity *entity = findEntity(T::type(),
+                                filterList,
+                                extraReturnFields,
+                                retiredOnly,
+                                order);
+
+    Dict link = entity->asLink();
+    delete entity;
+   
+    return link;
 }
 
 // *****************************************************************************

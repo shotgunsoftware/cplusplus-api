@@ -216,16 +216,6 @@ Entity *Shotgun::entityFactoryCreate(const std::string &entityType, Dict &create
 }
 
 // *****************************************************************************
-Dict Shotgun::getProjectLink(const std::string &projectCode)
-{
-    Project *project = findEntity<Project>(FilterBy("code", "is", projectCode));
-    Dict link = project->asLink();
-    delete project;
-
-    return link;
-}
-
-// *****************************************************************************
 Entity *Shotgun::createEntity(const std::string &entityType,
                               const Dict &data,
                               const List &extraReturnFields)
@@ -245,11 +235,11 @@ Entity *Shotgun::findEntity(const std::string &entityType,
                             const SortBy &order)
 {
     Dict findMap = Entity::buildFindMap(entityType,
-                                         filterList,
-                                         extraReturnFields,
-                                         retiredOnly,
-                                         1, // limit
-                                         order);
+                                        filterList,
+                                        extraReturnFields,
+                                        retiredOnly,
+                                        1, // limit
+                                        order);
 
     EntityPtrs entities = this->entityFactoryFind(entityType, findMap, 1);
     if (entities.size() > 0)

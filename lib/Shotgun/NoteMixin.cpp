@@ -46,7 +46,7 @@ NotePtrs NoteMixin::getNotes(const int limit)
     // derived class.
     if (Entity *entity = dynamic_cast<Entity *>(this))
     {
-        FilterBy filterList = FilterBy("project", "is", entity->sg()->getProjectLink(entity->sgProjectCode()))
+        FilterBy filterList = FilterBy("project", "is", entity->sg()->findEntityAsLink<Project>(FilterBy("code", "is", entity->sgProjectCode())))
                                   .And("note_links", "is", entity->asLink());
 
         return entity->sg()->findEntities<Note>(filterList, limit);
@@ -134,14 +134,12 @@ Note *NoteMixin::addNote(const std::string &noteFromUserName,
         }
 
         // Prepare the data for creating a Note entity
-        HumanUser *user = entity->sg()->findEntity<HumanUser>(FilterBy("login", "is", noteFromUserName));
-        Dict attrsMap = Dict("project", entity->sg()->getProjectLink(entity->sgProjectCode()))
-                        .add("user", user->asLink())
+        Dict attrsMap = Dict("project", entity->sg()->findEntityAsLink<Project>(FilterBy("code", "is", entity->sgProjectCode())))
+                        .add("user", entity->sg()->findEntityAsLink<HumanUser>(FilterBy("login", "is", noteFromUserName)))
                         .add("subject", noteSubject)
                         .add("content", noteBody)
                         .add("sg_note_type", noteType)
                         .add("sg_note_origin", noteOrigin);
-        delete user;
 
         if (links.size() > 0)
         {
@@ -155,10 +153,7 @@ Note *NoteMixin::addNote(const std::string &noteFromUserName,
         {
             try
             {
-                HumanUser *toUser = entity->sg()->findEntity<HumanUser>(FilterBy("login", "is", noteToUserNames[i]));
-                addressingsTo.append(toUser->asLink());
-
-                delete toUser;
+                addressingsTo.append(entity->sg()->findEntityAsLink<HumanUser>(FilterBy("login", "is", noteToUserNames[i])));
             }
             catch (SgEntityNotFoundError)
             {
@@ -173,10 +168,7 @@ Note *NoteMixin::addNote(const std::string &noteFromUserName,
         {
             try
             {
-                HumanUser *toUser = entity->sg()->findEntity<HumanUser>(FilterBy("login", "is", noteCcUserNames[i]));
-                addressingsCc.append(toUser->asLink());
-    
-                delete toUser;
+                addressingsCc.append(entity->sg()->findEntityAsLink<HumanUser>(FilterBy("login", "is", noteCcUserNames[i])));
             }
             catch (SgEntityNotFoundError)
             {

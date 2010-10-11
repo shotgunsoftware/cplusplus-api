@@ -51,10 +51,6 @@ public:
     Shotgun::Method *method(const std::string &methodName);
 
     //------------------------------------------------------------------------
-    // This is used by most of the search filters, so keep it.
-    Shotgun::Dict getProjectLink(const std::string &projectCode) throw(Shotgun::SgError);
-
-    //------------------------------------------------------------------------
     Shotgun::Entity *createEntity(const std::string &entityType,
                                   const Shotgun::Dict &data,
                                   const Shotgun::List &extraReturnFields = Shotgun::List()) throw(Shotgun::SgError) /Factory/;
@@ -75,7 +71,7 @@ public:
                                      const Shotgun::SortBy &order = Shotgun::SortBy()) throw(Shotgun::SgError) /Factory/;
 
     //------------------------------------------------------------------------
-    bool deleteEntity(const std::string &entityType, const int id) throw(Shotgun::SgError);
+    bool deleteEntity(const std::string &entityType, const int id) const throw(Shotgun::SgError);
 };
 
 }; // End namespace Shotgun
