@@ -40,9 +40,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace Shotgun {
 
 class Shotgun;
-class Review;
-class Shot;
-class Version;
 
 // *****************************************************************************
 class Note : public Entity
@@ -53,27 +50,9 @@ public:
     Note(const Note &ref);
     virtual ~Note();
 
-    // Get an attribute's value
-    const std::string sgAuthor() const { return getAttrValueAsUserLogin("user"); } 
-    const std::string sgBody() const { return getAttrValueAsString("content"); } 
-    const std::string sgStatus() const { return getAttrValueAsString("sg_status_list"); } 
-    const std::string sgSubject() const { return getAttrValueAsString("subject"); } 
-    const std::string sgName() const { return sgSubject(); } 
-    const std::string sgType() const { return getAttrValueAsString("sg_note_type"); } 
-    Review *getLinkedReview();
-    Shot *getLinkedShot();
-    Version *getLinkedVersion();
-
-    // Both sgCc() and sgTo() could be a mixed list of HumanUser and Group entities.
-    // sgLinks() is a list of mixed types of entities. If we want to these 
-    // functions to return a list of entities instead of a list of mini maps, 
-    // check function, sgAssignees() in "Task.h".
-    const List sgCc() const { return getAttrValueAsList("addressings_cc"); } 
-    const List sgTo() const { return getAttrValueAsList("addressings_to"); } 
-    const List sgLinks() const { return getAttrValueAsList("note_links"); } 
-
     static std::string type() { return std::string("Note"); }
 
+    // -------------------------------------------------------------------------
     Note &operator=(const Note &that)
     {
         if (this != &that)
@@ -84,6 +63,7 @@ public:
         return *this;
     }
 
+    // -------------------------------------------------------------------------
     friend std::ostream& operator<<(std::ostream &output, const Note &note)
     {
         output << note.str();

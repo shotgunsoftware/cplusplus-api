@@ -43,9 +43,6 @@ public:
     Review(const Shotgun::Review &ref);
     virtual ~Review();
 
-    // Get an attribute's value
-    const std::string sgName() const throw(Shotgun::SgError);
-
     static std::string type();
 
 protected:

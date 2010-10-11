@@ -50,19 +50,9 @@ public:
     Delivery(const Delivery &ref);
     virtual ~Delivery();
 
-    // Get an attribute's value
-    const std::string sgName() const { return getAttrValueAsString("title"); } 
-    const std::string sgStatus() const { return getAttrValueAsString("sg_delivery_status"); } 
-    const std::string sgType() const { return getAttrValueAsString("sg_delivery_type"); } 
-    
-    
-    // Set an attribute's value
-    void sgName(const std::string &val);
-    void sgStatus(const std::string &val);
-    void sgType(const std::string &val);
-
     static std::string type() { return std::string("Delivery"); }
 
+    // -------------------------------------------------------------------------
     Delivery &operator=(const Delivery &that)
     {
         if (this != &that)
@@ -73,6 +63,7 @@ public:
         return *this;
     }
 
+    // -------------------------------------------------------------------------
     friend std::ostream& operator<<(std::ostream &output, const Delivery &delivery)
     {
         output << delivery.str();

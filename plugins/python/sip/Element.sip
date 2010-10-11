@@ -43,19 +43,6 @@ public:
     Element(const Shotgun::Element &ref);
     virtual ~Element();
 
-    // Get an attribute's value
-    const std::string sgName() const throw(Shotgun::SgError);
-    const Shotgun::AssetPtrs sgAssets() const throw(Shotgun::SgError) /Factory/;
-    const Shotgun::ShotPtrs sgShots() const throw(Shotgun::SgError) /Factory/;
-    const Shotgun::Strings sgTags() const throw(Shotgun::SgError);
-    const std::string sgType() const throw(Shotgun::SgError);
-
-    // Set an attribute's value
-    void sgAssets(const Shotgun::List &val) throw(Shotgun::SgError);
-    void sgShots(const Shotgun::List &val) throw(Shotgun::SgError);
-    void sgTags(const Shotgun::Strings &val) throw(Shotgun::SgError);
-    void sgType(const std::string &val) throw(Shotgun::SgError);
-
     static std::string type();
 
 protected:

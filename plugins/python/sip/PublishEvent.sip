@@ -43,9 +43,6 @@ public:
     PublishEvent(const Shotgun::PublishEvent &ref);
     virtual ~PublishEvent();
 
-    // Get an attribute's value
-    const std::string sgName() const throw(Shotgun::SgError);
-
     static std::string type();
 
 protected:

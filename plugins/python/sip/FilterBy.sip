@@ -65,6 +65,22 @@ public:
 %End
 
     // -------------------------------------------------------------------
+    Shotgun::FilterBy &And(const std::string &path,
+                           const std::string &relation,
+                           const Shotgun::Dict &value);
+%MethodCode
+    sipRes = &sipCpp->And(*a0, *a1, toXmlrpcValue(*a2));
+%End
+
+    // -------------------------------------------------------------------
+    Shotgun::FilterBy &And(const std::string &path,
+                           const std::string &relation,
+                           const Shotgun::List &value);
+%MethodCode
+    sipRes = &sipCpp->And(*a0, *a1, toXmlrpcValue(*a2));
+%End
+
+    // -------------------------------------------------------------------
     Shotgun::FilterBy &And(const Shotgun::FilterBy &that);
 
     // -------------------------------------------------------------------

@@ -50,11 +50,9 @@ public:
     Review(const Review &ref);
     virtual ~Review();
 
-    // Get an attribute's value
-    const std::string sgName() const { return getAttrValueAsString("code"); } 
-
     static std::string type() { return std::string("Review"); }
 
+    // -------------------------------------------------------------------------
     Review &operator=(const Review &that)
     {
         if (this != &that)
@@ -65,6 +63,7 @@ public:
         return *this;
     }
 
+    // -------------------------------------------------------------------------
     friend std::ostream& operator<<(std::ostream &output, const Review &review)
     {
         output << review.str();

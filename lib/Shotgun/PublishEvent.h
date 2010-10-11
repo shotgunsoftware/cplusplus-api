@@ -50,11 +50,9 @@ public:
     PublishEvent(const PublishEvent &ref);
     virtual ~PublishEvent();
 
-    // Get an attribute's value
-    const std::string sgName() const { return getAttrValueAsString("code"); }
-
     static std::string type() { return std::string("PublishEvent"); }
 
+    // -------------------------------------------------------------------------
     PublishEvent &operator=(const PublishEvent &that)
     {
         if (this != &that)
@@ -65,6 +63,7 @@ public:
         return *this;
     }
 
+    // -------------------------------------------------------------------------
     friend std::ostream& operator<<(std::ostream &output, const PublishEvent &publishEvent)
     {
         output << publishEvent.str();

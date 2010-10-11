@@ -43,17 +43,6 @@ public:
     HumanUser(const Shotgun::HumanUser &ref);
     virtual ~HumanUser();
 
-    // Get an attribute's value
-    const std::string sgName() const throw(Shotgun::SgError);
-    const std::string sgEmail() const throw(Shotgun::SgError);
-    const std::string sgLogin() const throw(Shotgun::SgError);
-    const Shotgun::Dict sgPermissionGroup() throw(Shotgun::SgError);
-
-    // Set an attribute's value
-    void sgName(const std::string &val) throw(Shotgun::SgError);
-    void sgEmail(const std::string &val) throw(Shotgun::SgError);
-    void sgLogin(const std::string &val) throw(Shotgun::SgError);
-
     static std::string type();
 
 protected:

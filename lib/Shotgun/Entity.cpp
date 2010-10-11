@@ -265,7 +265,7 @@ const std::string Entity::getProjectCode() const
     std::string projectName = getAttrValueAsString("name", projectMap);
 
     Project *project = m_sg->findEntity<Project>(FilterBy("name", "is", projectName));
-    return project->sgCode();
+    return project->getAttrValueAsString("code");
 }
 
 // *****************************************************************************
@@ -823,7 +823,7 @@ const Strings Entity::getAttrValueAsTags(const std::string &attrName,
 }
 
 // *****************************************************************************
-const Entity *Entity::getAttrValueAsEntityPtr(const std::string &attrName) const
+const Entity *Entity::getAttrValueAsEntity(const std::string &attrName) const
 {
     Dict entity = getAttrValueAsDict(attrName);
 
@@ -843,9 +843,9 @@ const Entity *Entity::getAttrValueAsEntityPtr(const std::string &attrName) const
 
 // *****************************************************************************
 // static
-const Entity *Entity::getAttrValueAsEntityPtr(Shotgun *sg, 
-                                              const std::string &attrName,
-                                              const Dict &attrsMap)
+const Entity *Entity::getAttrValueAsEntity(Shotgun *sg, 
+                                           const std::string &attrName,
+                                           const Dict &attrsMap)
 {
     Dict entity = getAttrValueAsDict(attrName, attrsMap);
 
@@ -864,7 +864,7 @@ const Entity *Entity::getAttrValueAsEntityPtr(Shotgun *sg,
 }
 
 // *****************************************************************************
-const EntityPtrs Entity::getAttrValueAsMultiEntityPtr(const std::string &attrName) const
+const EntityPtrs Entity::getAttrValueAsEntities(const std::string &attrName) const
 {
     EntityPtrs entities;
 
@@ -888,9 +888,9 @@ const EntityPtrs Entity::getAttrValueAsMultiEntityPtr(const std::string &attrNam
 
 // *****************************************************************************
 // static
-const EntityPtrs Entity::getAttrValueAsMultiEntityPtr(Shotgun *sg, 
-                                                      const std::string &attrName,
-                                                      const Dict &attrsMap)
+const EntityPtrs Entity::getAttrValueAsEntities(Shotgun *sg, 
+                                                const std::string &attrName,
+                                                const Dict &attrsMap)
 {
     EntityPtrs entities;
 
@@ -915,13 +915,13 @@ const EntityPtrs Entity::getAttrValueAsMultiEntityPtr(Shotgun *sg,
 // *****************************************************************************
 const std::string Entity::getAttrValueAsUserLogin(const std::string &attrName) const 
 {
-    const Entity *entity = getAttrValueAsEntityPtr(attrName);
+    const Entity *entity = getAttrValueAsEntity(attrName);
     if (const HumanUser *user = dynamic_cast<const HumanUser *>(entity))
     {
-        std::string sgLogin = user->sgLogin();
+        std::string login = user->getAttrValueAsString("login");
         delete entity;
 
-        return sgLogin;
+        return login;
     }
     else
     {
@@ -936,13 +936,13 @@ const std::string Entity::getAttrValueAsUserLogin(Shotgun *sg,
                                                   const std::string &attrName,
                                                   const Dict &attrsMap) 
 {
-    const Entity *entity = getAttrValueAsEntityPtr(sg, attrName, attrsMap);
+    const Entity *entity = getAttrValueAsEntity(sg, attrName, attrsMap);
     if (const HumanUser *user = dynamic_cast<const HumanUser *>(entity))
     {
-        std::string sgLogin = user->sgLogin();
+        std::string login = user->getAttrValueAsString("login");
         delete entity;
 
-        return sgLogin;
+        return login;
     }
     else
     {

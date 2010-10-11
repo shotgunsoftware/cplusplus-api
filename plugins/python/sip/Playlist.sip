@@ -43,21 +43,6 @@ public:
     Playlist(const Shotgun::Playlist &ref);
     virtual ~Playlist();
 
-    // Get an attribute's value
-    const std::string sgName() const throw(Shotgun::SgError);
-    const std::string sgDescription() const throw(Shotgun::SgError);
-    const std::string sgThumbnail() const throw(Shotgun::SgError);
-    const Shotgun::Strings sgTags() const throw(Shotgun::SgError);
-    const Shotgun::NotePtrs sgNotes() const throw(Shotgun::SgError) /Factory/;
-    const Shotgun::VersionPtrs sgVersions() const throw(Shotgun::SgError) /Factory/;
-
-    // Set an attribute's value
-    void sgName(const std::string &val) throw(Shotgun::SgError);
-    void sgDescription(const std::string &val) throw(Shotgun::SgError);
-    void sgTags(const Shotgun::Strings &val) throw(Shotgun::SgError);
-    void sgNotes(const Shotgun::List &val) throw(Shotgun::SgError);
-    void sgVersions(const Shotgun::List &val) throw(Shotgun::SgError);
-
     static std::string type();
 
 protected:

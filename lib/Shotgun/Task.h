@@ -50,32 +50,9 @@ public:
     Task(const Task &ref);
     virtual ~Task();
 
-    // Get an attribute's value
-    const std::string sgName() const { return getAttrValueAsString("content"); } 
-    const std::string sgColor() const { return getAttrValueAsString("color"); } 
-    const std::string sgEndDate() const { return getAttrValueAsString("due_date"); } 
-    const int sgDuration() const { return getAttrValueAsInt("duration"); } 
-    const bool sgMilestone() const { return getAttrValueAsBool("milestone"); } 
-    const std::string sgStartDate() const { return getAttrValueAsString("start_date"); } 
-    const std::string sgStatus() const { return getAttrValueAsString("sg_status_list"); } 
-    //const std::string sgType() const { return getAttrValueAsString("sg_system_task_type"); } // The "sg_system_task_type" field seems no longer exist
-    
-    // ------------------------------------------------------------------------
-    // IMPORTANT: 
-    // (1) C++ - user must be responsible for deleting the pointers in C++ app.
-    // (2) Python - the ownership has been transferred to Python by using the 
-    //     /Factory/ annotation.
-    // ------------------------------------------------------------------------
-    const Entity *sgLink() const { return getAttrValueAsEntityPtr("entity"); }
-    const EntityPtrs sgAssignees() const; // The return value is a mixed list of HumanUsers & Groups
-    const std::string sgLinkEntityType() const { return linkEntityType("entity"); }
-
-    // Set an attribute's value
-    void sgStatus(const std::string &val);
-    void sgAssignees(const Strings &val);
-
     static std::string type() { return std::string("Task"); }
 
+    // -------------------------------------------------------------------------
     Task &operator=(const Task &that)
     {
         if (this != &that)
@@ -86,6 +63,7 @@ public:
         return *this;
     }
 
+    // -------------------------------------------------------------------------
     friend std::ostream& operator<<(std::ostream &output, const Task &task)
     {
         output << task.str();

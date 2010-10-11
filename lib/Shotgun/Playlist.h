@@ -34,7 +34,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define __PLAYLIST_H__
 
 #include <Shotgun/Entity.h>
-#include <Shotgun/Version.h>
 
 namespace Shotgun {
 
@@ -49,23 +48,9 @@ public:
     Playlist(const Playlist &ref);
     virtual ~Playlist();
 
-    // Get an attribute's value
-    const std::string sgName() const { return getAttrValueAsString("code"); }
-    const std::string sgDescription() const { return getAttrValueAsString("description"); }
-    const std::string sgThumbnail() const { return getAttrValueAsString("image"); }
-    const Strings sgTags() const { return getAttrValueAsTags("tag_list"); }
-    const NotePtrs sgNotes() const;
-    const VersionPtrs sgVersions() const;
-
-    // Set an attribute's value
-    void sgName(const std::string &val);
-    void sgDescription(const std::string &val);
-    void sgTags(const Strings &val);
-    void sgNotes(const List &val);  // An array of entity links
-    void sgVersions(const List &val);  // An array of entity links
-
     static std::string type() { return std::string("Playlist"); }
 
+    // -------------------------------------------------------------------------
     Playlist &operator=(const Playlist &that)
     {
         if (this != &that)
@@ -76,6 +61,7 @@ public:
         return *this;
     }
 
+    // -------------------------------------------------------------------------
     friend std::ostream& operator<<(std::ostream &output, const Playlist &playlist)
     {
         output << playlist.str();

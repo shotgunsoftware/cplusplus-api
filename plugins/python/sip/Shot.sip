@@ -43,30 +43,6 @@ public:
     Shot(const Shotgun::Shot &ref);
     virtual ~Shot();
 
-    // Get an attribute's value
-    const std::string sgName() const throw(Shotgun::SgError);
-    const std::string sgDescription() const throw(Shotgun::SgError);
-    const Shotgun::ElementPtrs sgElements() const throw(Shotgun::SgError) /Factory/;
-    const Shotgun::Sequence *sgSequence() const throw(Shotgun::SgError) /Factory/;
-    const std::string sgProject() const throw(Shotgun::SgError);
-    const std::string sgStatus() const throw(Shotgun::SgError);
-    const int sgCutDuration() const throw(Shotgun::SgError);
-    const int sgCutIn() const throw(Shotgun::SgError);
-    const int sgCutOut() const throw(Shotgun::SgError);
-    const std::string sgCutSummary() const throw(Shotgun::SgError);
-    const std::string sgDurationSummary() const throw(Shotgun::SgError);
-    const int sgHeadDuration() const throw(Shotgun::SgError);
-    const int sgHeadIn() const throw(Shotgun::SgError);
-    const int sgHeadOut() const throw(Shotgun::SgError);
-    const int sgTailDuration() const throw(Shotgun::SgError);
-    const int sgTailIn() const throw(Shotgun::SgError);
-    const int sgTailOut() const throw(Shotgun::SgError);
-    const int sgWorkingDuration() const throw(Shotgun::SgError);
-
-    // Set an attribute's value
-    void sgSequence(const Shotgun::Dict &val) throw(Shotgun::SgError);
-    void sgElements(const Shotgun::List &val) throw(Shotgun::SgError); 
-
     static std::string type();
 
 protected:

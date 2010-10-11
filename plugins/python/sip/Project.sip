@@ -43,9 +43,6 @@ public:
     Project(const Shotgun::Project &ref);
     virtual ~Project();
 
-    virtual const std::string sgName() const throw(Shotgun::SgError);
-    virtual const std::string sgCode() const throw(Shotgun::SgError);
-
     // Overrides for base entity methods that don't work correctly 
     // for this entity type
     virtual const std::string sgProjectName() const throw(Shotgun::SgError);

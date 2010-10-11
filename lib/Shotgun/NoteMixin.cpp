@@ -65,7 +65,7 @@ NotePtrs NoteMixin::getDisclaimerNotes(const int limit)
     NotePtrs outNotes;
     for (size_t i = 0; i < notes.size(); i++)
     {
-        if (notes[i]->sgType() == "Disclaimer")
+        if (notes[i]->getAttrValueAsString("sg_note_type") == "Disclaimer")
         {
             outNotes.push_back(notes[i]);
 
@@ -84,7 +84,7 @@ NotePtrs NoteMixin::getClientNotes(const int limit)
     NotePtrs outNotes;
     for (size_t i = 0; i < notes.size(); i++)
     {
-        if (notes[i]->sgType() == "Client")
+        if (notes[i]->getAttrValueAsString("sg_note_type") == "Client")
         {
             outNotes.push_back(notes[i]);
 
@@ -116,9 +116,7 @@ Note *NoteMixin::addNote(const std::string &noteFromUserName,
             {
                 try
                 {
-                    const Shot *shot = version->sgShot();
-                    links.append(shot->asLink());
-                    delete shot;
+                    links.append(entity->getAttrValueAsDict("entity"));
                 }
                 catch (SgEntityNotFoundError)
                 {

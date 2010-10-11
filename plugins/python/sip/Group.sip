@@ -43,8 +43,6 @@ public:
     Group(const Shotgun::Group &ref);
     virtual ~Group();
 
-    const std::string sgName() const throw(Shotgun::SgError);
-
     static std::string type();
 
 protected:

@@ -110,48 +110,55 @@ class Entity
 public:
     virtual ~Entity();
 
+    // ------------------------------------------------------------------------
+    // Can't have both in SIP
+    //const Shotgun::Shotgun *sg() const;
+    Shotgun::Shotgun *sg();
+
+    // ------------------------------------------------------------------------
     virtual const int sgId() const throw(Shotgun::SgError);
     virtual const time_t sgDateCreated() const throw(Shotgun::SgError);
     virtual const time_t sgDateUpdated() const throw(Shotgun::SgError);
     virtual const std::string sgProjectName() const throw(Shotgun::SgError);
     virtual const std::string sgProjectCode() const throw(Shotgun::SgError);
-    virtual const std::string sgName() const throw(Shotgun::SgError);
 
-    // Can't have both in SIP
-    //const Shotgun::Shotgun *sg() const;
-    Shotgun::Shotgun *sg();
-
+    // ------------------------------------------------------------------------
     const std::string entityType() const;
     const xmlrpc_c::value &attrs() const;
     const std::string str() const;
     const Shotgun::Dict asLink() const;
-
     const std::string linkEntityType(const std::string &linkName) const;
     
+    // ------------------------------------------------------------------------
     // Get a attribute's value as a generic xmlrpc_c::value type
     virtual const xmlrpc_c::value getAttrValue(const std::string &attrName) const throw(Shotgun::SgError);
     static const xmlrpc_c::value getAttrValue(const std::string &attrName, 
                                               const Shotgun::Dict &attrsMap) throw(Shotgun::SgError);
 
+    // ------------------------------------------------------------------------
     virtual const Shotgun::Strings getAttrValueAsTags(const std::string &attrName) const throw(Shotgun::SgError);
     static const Shotgun::Strings getAttrValueAsTags(const std::string &attrName,
                                                      const Shotgun::Dict &attrsMap) throw(Shotgun::SgError);
 
-    virtual const Shotgun::Entity *getAttrValueAsEntityPtr(const std::string &attrName) const throw(Shotgun::SgError) /Factory/;
-    static const Shotgun::Entity *getAttrValueAsEntityPtr(Shotgun::Shotgun *sg,
-                                                          const std::string &attrName,
-                                                          const Shotgun::Dict &attrsMap) throw(Shotgun::SgError) /Factory/;
+    // ------------------------------------------------------------------------
+    virtual const Shotgun::Entity *getAttrValueAsEntity(const std::string &attrName) const throw(Shotgun::SgError) /Factory/;
+    static const Shotgun::Entity *getAttrValueAsEntity(Shotgun::Shotgun *sg,
+                                                       const std::string &attrName,
+                                                       const Shotgun::Dict &attrsMap) throw(Shotgun::SgError) /Factory/;
 
-    virtual const Shotgun::EntityPtrs getAttrValueAsMultiEntityPtr(const std::string &attrName) const throw(Shotgun::SgError) /Factory/;
-    static const Shotgun::EntityPtrs getAttrValueAsMultiEntityPtr(Shotgun::Shotgun *sg,
-                                                                  const std::string &attrName,
-                                                                  const Shotgun::Dict &attrsMap) throw(Shotgun::SgError) /Factory/;
+    // ------------------------------------------------------------------------
+    virtual const Shotgun::EntityPtrs getAttrValueAsEntities(const std::string &attrName) const throw(Shotgun::SgError) /Factory/;
+    static const Shotgun::EntityPtrs getAttrValueAsEntities(Shotgun::Shotgun *sg,
+                                                            const std::string &attrName,
+                                                            const Shotgun::Dict &attrsMap) throw(Shotgun::SgError) /Factory/;
 
+    // ------------------------------------------------------------------------
     virtual const std::string getAttrValueAsUserLogin(const std::string &attrName) const throw(Shotgun::SgError);
     static const std::string getAttrValueAsUserLogin(Shotgun::Shotgun *sg,
                                                      const std::string &attrName,
                                                      const Shotgun::Dict &attrsMap) throw(Shotgun::SgError);
 
+    // ------------------------------------------------------------------------
     virtual void setAttrValue(const Shotgun::Fields &fields) throw(Shotgun::SgError); 
 
     // ------------------------------------------------------------------------

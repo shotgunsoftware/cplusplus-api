@@ -76,22 +76,4 @@ List HumanUser::defaultReturnFields()
            .append("permission_rule_set");
 }
 
-// *****************************************************************************
-void HumanUser::sgName(const std::string &val)
-{
-    setAttrValue(Fields("name", val));
-}
-
-// *****************************************************************************
-void HumanUser::sgEmail(const std::string &val)
-{
-    setAttrValue(Fields("email", val));
-}
-
-// *****************************************************************************
-void HumanUser::sgLogin(const std::string &val)
-{
-    setAttrValue(Fields("login", val));
-}
-
 } // End namespace Shotgun

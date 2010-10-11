@@ -36,9 +36,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <string>
 
 #include <Shotgun/Entity.h>
-#include <Shotgun/Version.h>
-#include <Shotgun/Sequence.h>
-#include <Shotgun/Element.h>
 #include <Shotgun/TaskMixin.h>
 #include <Shotgun/NoteMixin.h>
 
@@ -55,32 +52,9 @@ public:
     Shot(const Shot &ref);
     virtual ~Shot();
 
-    // Get an attribute's value
-    const std::string sgName() const { return getAttrValueAsString("code"); }
-    const std::string sgDescription() const { return getAttrValueAsString("description"); } 
-    const ElementPtrs sgElements() const;
-    const Sequence *sgSequence() const;
-    const std::string sgProject() const { return sgProjectName(); }
-    const std::string sgStatus() const { return getAttrValueAsString("sg_status_list"); } 
-    const int sgCutDuration() const { return getAttrValueAsInt("smart_cut_duration"); }
-    const int sgCutIn() const { return getAttrValueAsInt("smart_cut_in"); }
-    const int sgCutOut() const { return getAttrValueAsInt("smart_cut_out"); }
-    const std::string sgCutSummary() const { return getAttrValueAsString("smart_cut_summary_display"); }
-    const std::string sgDurationSummary() const { return getAttrValueAsString("smart_duration_summary_display"); }
-    const int sgHeadDuration() const { return getAttrValueAsInt("smart_head_duration"); }
-    const int sgHeadIn() const { return getAttrValueAsInt("smart_head_in"); }
-    const int sgHeadOut() const { return getAttrValueAsInt("smart_head_out"); }
-    const int sgTailDuration() const { return getAttrValueAsInt("smart_tail_duration"); }
-    const int sgTailIn() const { return getAttrValueAsInt("smart_tail_in"); }
-    const int sgTailOut() const { return getAttrValueAsInt("smart_tail_out"); }
-    const int sgWorkingDuration() const { return getAttrValueAsInt("smart_working_duration"); }
-
-    // Set an attribute's value
-    void sgSequence(const Dict &val);
-    void sgElements(const List &val); // An array of entity links
-
     static std::string type() { return std::string("Shot"); }
 
+    // -------------------------------------------------------------------------
     Shot &operator=(const Shot &that)
     {
         if (this != &that)
@@ -91,6 +65,7 @@ public:
         return *this;
     }
 
+    // -------------------------------------------------------------------------
     friend std::ostream& operator<<(std::ostream &output, const Shot &shot)
     {
         output << shot.str();

@@ -43,16 +43,6 @@ public:
     Delivery(const Shotgun::Delivery &ref);
     virtual ~Delivery();
 
-    // Get an attribute's value
-    const std::string sgName() const throw(Shotgun::SgError);
-    const std::string sgStatus() const throw(Shotgun::SgError);
-    const std::string sgType() const throw(Shotgun::SgError);
-    
-    // Set an attribute's value
-    void sgName(const std::string &val) throw(Shotgun::SgError);
-    void sgStatus(const std::string &val) throw(Shotgun::SgError);
-    void sgType(const std::string &val) throw(Shotgun::SgError);
-
     static std::string type();
 
 protected:

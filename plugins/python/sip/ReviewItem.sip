@@ -43,11 +43,6 @@ public:
     ReviewItem(const Shotgun::ReviewItem &ref);
     virtual ~ReviewItem();
 
-    // Get an attribute's value
-    const std::string sgName() const throw(Shotgun::SgError);
-    const Shotgun::Entity *sgLink() const throw(Shotgun::SgError) /Factory/;
-    const std::string sgLinkEntityType() const throw(Shotgun::SgError);
-
     static std::string type();
 
 protected:

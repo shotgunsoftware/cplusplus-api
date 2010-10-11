@@ -42,9 +42,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace Shotgun {
 
 class Shotgun;
-class Asset;
-class Element;
-class Shot;
 
 // *****************************************************************************
 class Asset : public Entity, public TaskMixin, public NoteMixin
@@ -55,16 +52,9 @@ public:
     Asset(const Asset &ref);
     virtual ~Asset();
 
-    // Get an attribute's value
-    const std::string sgName() const { return getAttrValueAsString("code"); }
-    const std::string sgCode() const { return sgName(); }
-    const List sgParents() const { return getAttrValueAsList("parents"); }
-    const std::vector<Element *> sgElements() const;
-    const std::vector<Asset *> sgAssets() const;
-    const std::vector<Shot *> sgShots() const;
-
     static std::string type() { return std::string("Asset"); }
 
+    // -------------------------------------------------------------------------
     Asset &operator=(const Asset &that)
     {
         if (this != &that)
@@ -75,6 +65,7 @@ public:
         return *this;
     }
 
+    // -------------------------------------------------------------------------
     friend std::ostream& operator<<(std::ostream &output, const Asset &asset)
     {
         output << asset.str();

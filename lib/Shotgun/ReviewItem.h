@@ -36,9 +36,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <string>
 
 #include <Shotgun/Entity.h>
-#include <Shotgun/Version.h>
-#include <Shotgun/Shot.h>
-#include <Shotgun/Review.h>
 
 namespace Shotgun {
 
@@ -53,20 +50,9 @@ public:
     ReviewItem(const ReviewItem &ref);
     virtual ~ReviewItem();
 
-    // Get an attribute's value
-    const std::string sgName() const { return getAttrValueAsString("code"); } 
-   
-    // ------------------------------------------------------------------------
-    // IMPORTANT:
-    // (1) C++ - user must be responsible for deleting the pointers in C++ app.
-    // (2) Python - the ownership has been transferred to Python by using the
-    //     /Factory/ annotation.
-    // ------------------------------------------------------------------------
-    const Entity *sgLink() const { return getAttrValueAsEntityPtr("sg_link"); }
-    const std::string sgLinkEntityType() const { return linkEntityType("sg_link"); }
-
     static std::string type() { return std::string("ReviewItem"); }
 
+    // -------------------------------------------------------------------------
     ReviewItem &operator=(const ReviewItem &that)
     {
         if (this != &that)
@@ -77,6 +63,7 @@ public:
         return *this;
     }
 
+    // -------------------------------------------------------------------------
     friend std::ostream& operator<<(std::ostream &output, const ReviewItem &reviewItem)
     {
         output << reviewItem.str();

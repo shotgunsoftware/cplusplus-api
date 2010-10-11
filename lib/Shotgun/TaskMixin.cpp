@@ -98,11 +98,11 @@ Task *TaskMixin::getNextIncompleteMilestoneTask()
     for (size_t i = 0; i < milestones.size(); i++)
     {
         // Is this milestone incomplete?
-        if (milestones[i]->sgStatus() != "cmpt")
+        if (milestones[i]->getAttrValueAsString("sg_status_list") != "cmpt")
         {
             // Yes, consider it
             if (next < 0 or 
-                milestones[next]->sgEndDate() > milestones[i]->sgEndDate())
+                milestones[next]->getAttrValueAsString("due_date") > milestones[i]->getAttrValueAsString("due_date"))
             {
                 next = i;
             }

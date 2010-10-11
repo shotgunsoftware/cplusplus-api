@@ -50,14 +50,9 @@ public:
     Sequence(const Sequence &ref);
     virtual ~Sequence();
 
-    // Get an attribute's value
-    const std::string sgName() const { return getAttrValueAsString("code"); } 
-
-    // Set an attribute's value
-    void sgName(const std::string &name);
-
     static std::string type() { return std::string("Sequence"); }
 
+    // -------------------------------------------------------------------------
     Sequence &operator=(const Sequence &that)
     {
         if (this != &that)
@@ -68,6 +63,7 @@ public:
         return *this;
     }
 
+    // -------------------------------------------------------------------------
     friend std::ostream& operator<<(std::ostream &output, const Sequence &sequence)
     {
         output << sequence.str();

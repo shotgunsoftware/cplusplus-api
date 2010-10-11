@@ -50,10 +50,9 @@ public:
     Group(const Group &ref);
     virtual ~Group();
 
-    const std::string sgName() const { return getAttrValueAsString("code"); } 
-
     static std::string type() { return std::string("Group"); }
 
+    // -------------------------------------------------------------------------
     Group &operator=(const Group &that)
     {
         if (this != &that)
@@ -64,6 +63,7 @@ public:
         return *this;
     }
 
+    // -------------------------------------------------------------------------
     friend std::ostream& operator<<(std::ostream &output, const Group &group)
     {
         output << group.str();

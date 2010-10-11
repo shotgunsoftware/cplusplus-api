@@ -91,14 +91,4 @@ List Version::defaultReturnFields()
            .append("user");
 }
 
-// *****************************************************************************
-const Shot *Version::sgShot() const
-{
-#warning Implement in non-Tippett way
-//     std::string theShotName = TipUtil::ShotName(sgProjectCode(), sgShotName()).shot(true, true);
-// 
-//     return m_sg->findEntity<Shot>(FilterBy("code", "is", sn.shot(true, true))
-//                                       .And("project", "is", getProjectLink(sn.project())));
-}
-
 } // End namespace Shotgun

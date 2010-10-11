@@ -40,8 +40,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace Shotgun {
 
 class Shotgun;
-class Asset;
-class Shot;
 
 // *****************************************************************************
 class Element : public Entity
@@ -52,21 +50,9 @@ public:
     Element(const Element &ref);
     virtual ~Element();
 
-    // Get an attribute's value
-    const std::string sgName() const { return getAttrValueAsString("code"); } 
-    const std::vector<Asset *> sgAssets() const;
-    const std::vector<Shot *> sgShots() const;
-    const Strings sgTags() const { return getAttrValueAsTags("tag_list"); } 
-    const std::string sgType() const { return getAttrValueAsString("sg_element_type"); }
-
-    // Set an attribute's value
-    void sgAssets(const List &val); // An array of entity links
-    void sgShots(const List &val); // An array of entity links
-    void sgTags(const Strings &val);
-    void sgType(const std::string &val);
-
     static std::string type() { return std::string("Element"); }
 
+    // -------------------------------------------------------------------------
     Element &operator=(const Element &that)
     {
         if (this != &that)
@@ -77,6 +63,7 @@ public:
         return *this;
     }
 
+    // -------------------------------------------------------------------------
     friend std::ostream& operator<<(std::ostream &output, const Element &element)
     {
         output << element.str();

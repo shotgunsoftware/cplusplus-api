@@ -48,19 +48,9 @@ public:
     HumanUser(const HumanUser &ref);
     virtual ~HumanUser();
 
-    // Get an attribute's value
-    const std::string sgName() const { return getAttrValueAsString("name"); }
-    const std::string sgEmail() const { return getAttrValueAsString("email"); }
-    const std::string sgLogin() const { return getAttrValueAsString("login"); }
-    const Dict sgPermissionGroup() const { return getAttrValueAsDict("permission_rule_set"); }
-
-    // Set an attribute's value
-    void sgName(const std::string &val);
-    void sgEmail(const std::string &val);
-    void sgLogin(const std::string &val);
-
     static std::string type() { return std::string("HumanUser"); }
 
+    // -------------------------------------------------------------------------
     HumanUser &operator=(const HumanUser &that)
     {
         if (this != &that)
@@ -71,6 +61,7 @@ public:
         return *this;
     }
 
+    // -------------------------------------------------------------------------
     friend std::ostream& operator<<(std::ostream &output, const HumanUser &user)
     {
         output << user.str();

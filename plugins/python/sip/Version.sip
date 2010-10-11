@@ -43,18 +43,6 @@ public:
     Version(const Shotgun::Version &ref);
     virtual ~Version();
 
-    // Get an attribute's value
-    const std::string sgName() const throw(Shotgun::SgError);
-    const std::string sgCode() const throw(Shotgun::SgError);
-    const std::string sgAuthor() const throw(Shotgun::SgError);
-    const Shotgun::Shot *sgShot() const throw(Shotgun::SgError) /Factory/; 
-    const std::string sgDescription() const throw(Shotgun::SgError);
-    const size_t sgFrameCount() const throw(Shotgun::SgError);
-    const std::string sgFrameRange() const throw(Shotgun::SgError);
-    const std::string sgThumbnailPath() const throw(Shotgun::SgError);
-    const Shotgun::Entity *sgLink() const throw(Shotgun::SgError) /Factory/;
-    const std::string sgLinkEntityType() const throw(Shotgun::SgError);
-
     static std::string type();
 
 protected:

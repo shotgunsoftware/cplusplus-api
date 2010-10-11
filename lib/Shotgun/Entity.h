@@ -57,21 +57,22 @@ class Entity
 public:
     virtual ~Entity();
 
+    // -------------------------------------------------------------------------
+    const Shotgun *sg() const { return m_sg; }
+    Shotgun *sg() { return m_sg; }
+
+    // -------------------------------------------------------------------------
     // These are the few common attributes shared by all entities
     virtual const int sgId() const { return getAttrValueAsInt("id"); }
     virtual const time_t sgDateCreated() const { return getAttrValueAsDatetime("created_at"); }
     virtual const time_t sgDateUpdated() const { return getAttrValueAsDatetime("updated_at"); }
 
+    // -------------------------------------------------------------------------
     // These two have to be overridden for Project entity
     virtual const std::string sgProjectName() const { return getProjectName(); }
     virtual const std::string sgProjectCode() const { return getProjectCode(); }
 
-    // Has to define a virtual sgName() here since it's called within sgLink().
-    virtual const std::string sgName() const { return std::string(""); }
-
-    const Shotgun *sg() const { return m_sg; }
-    Shotgun *sg() { return m_sg; }
-
+    // -------------------------------------------------------------------------
     const std::string entityType() const { return m_type; }
     const xmlrpc_c::value &attrs() const { return *m_attrs; }
     const std::string str() const { return toStdString(*m_attrs); }
@@ -85,14 +86,17 @@ public:
     // -------------------------------------------------------------------------
     const Dict asLink() const;
 
+    // -------------------------------------------------------------------------
     // If an entity has a link attribute, this returns the entity type of the link.
     const std::string linkEntityType(const std::string &linkName) const;
     
+    // -------------------------------------------------------------------------
     // Get a attribute's value as a generic xmlrpc_c::value type
     virtual const xmlrpc_c::value getAttrValue(const std::string &attrName) const;
     static const xmlrpc_c::value getAttrValue(const std::string &attrName, 
                                               const Dict &attrsMap);
 
+    // -------------------------------------------------------------------------
     // Get a attribute's value of a specific data type.
     virtual const int getAttrValueAsInt(const std::string &attrName) const;
     virtual const int getAttrValueAsInt(const std::string &attrName, 
@@ -103,6 +107,7 @@ public:
                                        const Dict &attrsMap,
                                        const int defaultVal); 
 
+    // -------------------------------------------------------------------------
     virtual const bool getAttrValueAsBool(const std::string &attrName) const; 
     virtual const bool getAttrValueAsBool(const std::string &attrName, 
                                           const bool defaultVal) const; 
@@ -112,6 +117,7 @@ public:
                                          const Dict &attrsMap,
                                          const bool defaultVal); 
 
+    // -------------------------------------------------------------------------
     virtual const double getAttrValueAsDouble(const std::string &attrName) const;
     virtual const double getAttrValueAsDouble(const std::string &attrName, 
                                               const double defaultVal) const; 
@@ -121,6 +127,7 @@ public:
                                              const Dict &attrsMap,
                                              const double defaultVal);
 
+    // -------------------------------------------------------------------------
     virtual const time_t getAttrValueAsDatetime(const std::string &attrName) const;
     virtual const time_t getAttrValueAsDatetime(const std::string &attrName, 
                                                 const time_t defaultVal) const;
@@ -130,6 +137,7 @@ public:
                                                const Dict &attrsMap,
                                                const time_t defaultVal);
 
+    // -------------------------------------------------------------------------
     virtual const std::string getAttrValueAsString(const std::string &attrName) const;
     virtual const std::string getAttrValueAsString(const std::string &attrName, 
                                                    const std::string &defaultVal) const;
@@ -139,6 +147,7 @@ public:
                                                   const Dict &attrsMap,
                                                   const std::string &defaultVal);
 
+    // -------------------------------------------------------------------------
     virtual const List getAttrValueAsList(const std::string &attrName) const; 
     virtual const List getAttrValueAsList(const std::string &attrName, 
                                           const List &defaultVal) const;
@@ -148,6 +157,7 @@ public:
                                          const Dict &attrsMap,
                                          const List &defaultVal);
 
+    // -------------------------------------------------------------------------
     // This member function can't take a default value because it has the same 
     // type as the attrsMap, and therefore creates an ambiguous overload.
     //const Dict getAttrValueAsDict(const std::string &attrName, 
@@ -159,20 +169,38 @@ public:
                                          const Dict &attrsMap,
                                          const Dict &defaultVal);
 
+    // -------------------------------------------------------------------------
     virtual const Strings getAttrValueAsTags(const std::string &attrName) const;
     static const Strings getAttrValueAsTags(const std::string &attrName,
                                             const Dict &attrsMap);
 
-    virtual const Entity *getAttrValueAsEntityPtr(const std::string &attrName) const;
-    static const Entity *getAttrValueAsEntityPtr(Shotgun *sg,
-                                                 const std::string &attrName,
-                                                 const Dict &attrsMap);
+    // -------------------------------------------------------------------------
+    virtual const Entity *getAttrValueAsEntity(const std::string &attrName) const;
+    static const Entity *getAttrValueAsEntity(Shotgun *sg,
+                                              const std::string &attrName,
+                                              const Dict &attrsMap);
+    template <class T>
+    const T *getAttrValueAsEntity(const std::string &attrName) const;
 
-    virtual const std::vector<Entity *> getAttrValueAsMultiEntityPtr(const std::string &attrName) const;
-    static const std::vector<Entity *> getAttrValueAsMultiEntityPtr(Shotgun *sg,
-                                                                    const std::string &attrName,
-                                                                    const Dict &attrsMap);
+    template <class T>
+    static const T *getAttrValueAsEntity(Shotgun *sg,
+                                         const std::string &attrName,
+                                         const Dict &attrsMap);
 
+    // -------------------------------------------------------------------------
+    virtual const std::vector<Entity *> getAttrValueAsEntities(const std::string &attrName) const;
+    static const std::vector<Entity *> getAttrValueAsEntities(Shotgun *sg,
+                                                              const std::string &attrName,
+                                                              const Dict &attrsMap);
+    template <class T>
+    const std::vector<T *> getAttrValueAsEntities(const std::string &attrName) const;
+
+    template <class T>
+    static const std::vector<T *> getAttrValueAsEntities(Shotgun *sg,
+                                                         const std::string &attrName,
+                                                         const Dict &attrsMap);
+
+    // -------------------------------------------------------------------------
     virtual const std::string getAttrValueAsUserLogin(const std::string &attrName) const;
     static const std::string getAttrValueAsUserLogin(Shotgun *sg,
                                                      const std::string &attrName,
@@ -192,7 +220,7 @@ public:
     // -------------------------------------------------------------------------
     virtual void setAttrValue(const Fields &fields); 
 
-    // TODO: Explore making this operator overload virtual
+    // -------------------------------------------------------------------------
     Entity &operator=(const Entity &that)
     {
         if (this != &that)
@@ -373,6 +401,78 @@ const T Entity::getAttrValue(const std::string &attrName,
     }
 
     return result;
+}
+
+// *****************************************************************************
+template <class T>
+const T *Entity::getAttrValueAsEntity(const std::string &attrName) const
+{
+    Entity *entity = getAttrValueAsEntity(attrName);
+
+    if (T *t = dynamic_cast<T *>(entity))
+    {
+        return t;
+    }
+    else
+    {
+        throw SgEntityDynamicCastError(T::type());
+    }
+}
+
+// *****************************************************************************
+template <class T>
+const T *Entity::getAttrValueAsEntity(Shotgun *sg,
+                                      const std::string &attrName,
+                                      const Dict &attrsMap)
+{
+    Entity *entity = Entity::getAttrValueAsEntity(sg, attrName, attrsMap);
+
+    if (T *t = dynamic_cast<T *>(entity))
+    {
+        return t;
+    }
+    else
+    {
+        throw SgEntityDynamicCastError(T::type());
+    }
+}
+
+// *****************************************************************************
+template <class T>
+const std::vector<T *> Entity::getAttrValueAsEntities(const std::string &attrName) const
+{
+    std::vector<Entity *> entities = getAttrValueAsEntities(attrName);
+    std::vector<T *> entityTs;
+    
+    for (size_t i = 0; i < entities.size(); i++)
+    {
+        if (T *t = dynamic_cast<T *>(entities[i]))
+        {
+            entityTs.push_back(t);
+        }
+    }
+
+    return entityTs;
+}
+
+// *****************************************************************************
+template <class T>
+const std::vector<T *> Entity::getAttrValueAsEntities(Shotgun *sg,
+                                                      const std::string &attrName,
+                                                      const Dict &attrsMap)
+{
+    std::vector<Entity *> entities = Entity::getAttrValueAsEntities(sg, attrName, attrsMap);
+    std::vector<T *> entityTs;
+    
+    for (size_t i = 0; i < entities.size(); i++)
+    {
+        if (T *t = dynamic_cast<T *>(entities[i]))
+        {
+            entityTs.push_back(t);
+        }
+    }
+
+    return entityTs;
 }
 
 // *****************************************************************************

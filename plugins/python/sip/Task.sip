@@ -43,22 +43,6 @@ public:
     Task(const Shotgun::Task &ref);
     virtual ~Task();
 
-    // Get an attribute's value
-    const std::string sgName() const throw(Shotgun::SgError);
-    const std::string sgColor() const throw(Shotgun::SgError);
-    const std::string sgEndDate() const throw(Shotgun::SgError);
-    const int sgDuration() const throw(Shotgun::SgError);
-    const bool sgMilestone() const throw(Shotgun::SgError);
-    const std::string sgStartDate() const throw(Shotgun::SgError);
-    const std::string sgStatus() const throw(Shotgun::SgError);
-    const Shotgun::Entity *sgLink() const throw(Shotgun::SgError) /Factory/;
-    const Shotgun::EntityPtrs sgAssignees() const throw(Shotgun::SgError) /Factory/;
-    const std::string sgLinkEntityType() const throw(Shotgun::SgError);
-
-    // Set an attribute's value
-    void sgStatus(const std::string &val) throw(Shotgun::SgError);
-    void sgAssignees(const Shotgun::Strings &val) throw(Shotgun::SgError);
-
     static std::string type();
 
 protected:

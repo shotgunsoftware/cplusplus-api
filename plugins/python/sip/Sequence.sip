@@ -43,12 +43,6 @@ public:
     Sequence(const Shotgun::Sequence &ref);
     virtual ~Sequence();
 
-    // Get an attribute's value
-    const std::string sgName() const throw(Shotgun::SgError);
-
-    // Set an attribute's value
-    void sgName(const std::string &name) throw(Shotgun::SgError);
-
     static std::string type();
 
 protected:

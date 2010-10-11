@@ -48,16 +48,14 @@ public:
     Project(const Project &ref);
     virtual ~Project();
 
-    virtual const std::string sgName() const { return getAttrValueAsString("name"); }
-    virtual const std::string sgCode() const { return getAttrValueAsString("code"); }
-
     // Overrides for base entity methods that don't work correctly 
     // for this entity type
-    virtual const std::string sgProjectName() const { return sgName(); }
-    virtual const std::string sgProjectCode() const { return sgCode(); }
+    virtual const std::string sgProjectName() const { return getAttrValueAsString("name"); }
+    virtual const std::string sgProjectCode() const { return getAttrValueAsString("code"); }
 
     static std::string type() { return std::string("Project"); }
 
+    // -------------------------------------------------------------------------
     Project &operator=(const Project &that)
     {
         if (this != &that)
@@ -68,6 +66,7 @@ public:
         return *this;
     }
 
+    // -------------------------------------------------------------------------
     friend std::ostream& operator<<(std::ostream &output, const Project &project)
     {
         output << project.str();
