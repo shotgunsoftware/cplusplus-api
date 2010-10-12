@@ -47,8 +47,10 @@ TaskPtrs TaskMixin::getTasks(const int limit)
     // derived class.
     if (Entity *entity = dynamic_cast<Entity *>(this))
     {
+        Dict projectAsLink = entity->sg()->findEntityAsLink<Project>(FilterBy("code", "is", entity->sgProjectCode()));
+
         return entity->sg()->findEntities<Task>(FilterBy("entity", "is", entity->asLink())
-                                                    .And("project", "is", entity->sg()->findEntityAsLink<Project>(FilterBy("code", "is", entity->sgProjectCode()))),
+                                                    .And("project", "is", projectAsLink),
                                                 limit);
     }
     else
@@ -62,9 +64,11 @@ Task *TaskMixin::getTaskByName(const std::string &taskName)
 {
     if (Entity *entity = dynamic_cast<Entity *>(this))
     {
+        Dict projectAsLink = entity->sg()->findEntityAsLink<Project>(FilterBy("code", "is", entity->sgProjectCode()));
+
         return entity->sg()->findEntity<Task>(FilterBy("content", "is", taskName)
                                                   .And("entity", "is", entity->asLink())
-                                                  .And("project", "is", entity->sg()->findEntityAsLink<Project>(FilterBy("code", "is", entity->sgProjectCode()))));
+                                                  .And("project", "is", projectAsLink));
     }
     else
     {
@@ -77,9 +81,11 @@ TaskPtrs TaskMixin::getMilestoneTasks(const int limit)
 {
     if (Entity *entity = dynamic_cast<Entity *>(this))
     {
+        Dict projectAsLink = entity->sg()->findEntityAsLink<Project>(FilterBy("code", "is", entity->sgProjectCode()));
+
         return entity->sg()->findEntities<Task>(FilterBy("entity", "is", entity->asLink())
                                                     .And("milestone", "is", true)
-                                                    .And("project", "is", entity->sg()->findEntityAsLink<Project>(FilterBy("code", "is", entity->sgProjectCode()))),
+                                                    .And("project", "is", projectAsLink),
                                                 limit);
 
     }
@@ -140,7 +146,9 @@ Task *TaskMixin::addTask(const std::string &taskName,
         if (Entity *entity = dynamic_cast<Entity *>(this))
         {
             // Prepare data for creating a Task entity
-            Dict attrsMap = Dict("project", entity->sg()->findEntityAsLink<Project>(FilterBy("code", "is", entity->sgProjectCode())))
+            Dict projectAsLink = entity->sg()->findEntityAsLink<Project>(FilterBy("code", "is", entity->sgProjectCode()));
+
+            Dict attrsMap = Dict("project", projectAsLink)
                             .add("content", taskName)
                             .add("sg_system_task_type", taskType) // This field seems no longer exist
                             .add("milestone", taskMilestone)
@@ -151,13 +159,17 @@ Task *TaskMixin::addTask(const std::string &taskName,
             {
                 try
                 {
-                    attrsMap.add("task_assignees", List(entity->sg()->findEntityAsLink<HumanUser>(FilterBy("login", "is", taskAssignee))));
+                    Dict userAsLink = entity->sg()->findEntityAsLink<HumanUser>(FilterBy("login", "is", taskAssignee));
+
+                    attrsMap.add("task_assignees", List(userAsLink));
                 }
                 catch (SgEntityNotFoundError)
                 {
                     try
                     {
-                        attrsMap.add("task_assignees", List(entity->sg()->findEntityAsLink<Group>(FilterBy("code", "is", taskAssignee))));
+                        Dict groupAsLink = entity->sg()->findEntityAsLink<Group>(FilterBy("code", "is", taskAssignee));
+
+                        attrsMap.add("task_assignees", List(groupAsLink));
                     }
                     catch (SgEntityNotFoundError)
                     {
@@ -230,13 +242,16 @@ Task *TaskMixin::updateTask(const std::string &taskName,
     {
         try
         {
-            fieldData.add("task_assignees", List(task->sg()->findEntityAsLink<HumanUser>(FilterBy("login", "is", taskAssignee))));
+            Dict userAsLink = task->sg()->findEntityAsLink<HumanUser>(FilterBy("login", "is", taskAssignee));
+
+            fieldData.add("task_assignees", List(userAsLink));
         }
         catch (SgEntityNotFoundError)
         {
             try
             {
-                fieldData.add("task_assignees", List(task->sg()->findEntityAsLink<Group>(FilterBy("code", "is", taskAssignee))));
+                Dict groupAsLink = task->sg()->findEntityAsLink<Group>(FilterBy("code", "is", taskAssignee));
+                fieldData.add("task_assignees", List(groupAsLink));
             }
             catch (SgEntityNotFoundError)
             {

@@ -57,6 +57,22 @@ public:
 %End
 
     // -------------------------------------------------------------------
+    FilterBy(const std::string &path,
+             const std::string &relation,
+             const Shotgun::Dict &value);
+%MethodCode
+    sipCpp = new Shotgun::FilterBy(*a0, *a1, toXmlrpcValue(*a2));
+%End
+
+    // -------------------------------------------------------------------
+    FilterBy(const std::string &path,
+             const std::string &relation,
+             const Shotgun::List &value);
+%MethodCode
+    sipCpp = new Shotgun::FilterBy(*a0, *a1, toXmlrpcValue(*a2));
+%End
+
+    // -------------------------------------------------------------------
     Shotgun::FilterBy &And(const std::string &path,
                            const std::string &relation,
                            const xmlrpc_c::value &value);
