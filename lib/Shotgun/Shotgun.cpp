@@ -33,8 +33,15 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <iostream>
 #include <map>
 
+#include <time.h>
+
 #include <Shotgun/Shotgun.h>
 #include <Shotgun/utils.h>
+
+// External global variables that contain the info of the local time zone
+extern char* tzname[2];
+extern long timezone;
+extern int daylight;
 
 namespace Shotgun {
 
@@ -52,6 +59,10 @@ Shotgun::Shotgun(const std::string &serverURL,
     m_authMap.clear();
     m_authMap.add("script_name", "shotgun.main.Shotgun")
              .add("script_key", m_authKey);
+
+    // Set the correct "TZ" time zone environment variable, this is needed by
+    // some of the datetime calls to find the correct local time zone info.
+    setTimeZoneEnv();
 
     // Register the classes
     registerClass("Asset",        &Asset::factory,        &Asset::defaultReturnFields);
@@ -274,6 +285,30 @@ EntityPtrs Shotgun::findEntities(const std::string &entityType,
 bool Shotgun::deleteEntity(const std::string &entityType, const int id)
 {
     return Entity::deleteSGEntity(this, entityType, id);
+}
+
+// *****************************************************************************
+void Shotgun::setTimeZoneEnv()
+{
+    time_t rawTime;
+    struct tm *localTime;
+
+    // These calls are necessary to get the updated values for the external
+    // time zone variables that contain the correct local time zone info.
+    time(&rawTime);
+    localTime = localtime(&rawTime);
+
+    char envValue[80];
+    if (daylight)
+    {
+        sprintf(envValue, "%s%d%s", tzname[0], timezone/3600, tzname[1]);
+    }
+    else
+    {
+        sprintf(envValue, "%s%d", tzname[0], timezone/3600);
+    }
+
+    setenv("TZ", envValue, 1);
 }
     
 } // End namespace Shotgun

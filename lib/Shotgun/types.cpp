@@ -41,6 +41,10 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/SortBy.h>
 #include <Shotgun/Fields.h>
 
+extern char *tzname[2];
+extern long timezone;
+extern int daylight;
+
 namespace Shotgun {
 
 // *****************************************************************************
@@ -108,6 +112,15 @@ xmlrpc_c::value toXmlrpcValue(const bool &in)
 xmlrpc_c::value toXmlrpcValue(const time_t &in)
 {
     return xmlrpc_c::value(xmlrpc_c::value_datetime(in));
+}
+
+// *****************************************************************************
+xmlrpc_c::value toXmlrpcValue(const struct tm &in)
+{
+    // This converts the local time to UTC time
+    time_t time = mktime((struct tm *)&in);
+
+    return xmlrpc_c::value(xmlrpc_c::value_datetime(time));
 }
 
 // *****************************************************************************
@@ -285,6 +298,28 @@ void fromXmlrpcValue(const xmlrpc_c::value &value, time_t &out)
     if (value.type() == xmlrpc_c::value::TYPE_DATETIME)
     {
         out = time_t(xmlrpc_c::value_datetime(value));
+    }
+    else if (value.type() == xmlrpc_c::value::TYPE_NIL)
+    {
+        throw SgXmlrpcValueIsNilError();
+    }
+    else
+    {
+        throw SgXmlrpcValueTypeError(value,
+                                     xmlrpc_c::value::TYPE_DATETIME,
+                                     value.type());
+    }
+}
+
+// *****************************************************************************
+void fromXmlrpcValue(const xmlrpc_c::value &value, struct tm &out)
+{
+    if (value.type() == xmlrpc_c::value::TYPE_DATETIME)
+    {
+        time_t t = time_t(xmlrpc_c::value_datetime(value));
+
+        // This converts the UTC time to local time
+        out = *(localtime(&t));
     }
     else if (value.type() == xmlrpc_c::value::TYPE_NIL)
     {
@@ -483,7 +518,7 @@ std::string currDateStr()
     // Convert to a time string
     struct tm *timeInfo = localtime(&rawTime);
     char timeStr[10];
-    sprintf(timeStr, "%d-%02d-%02d", timeInfo->tm_year + 1900, timeInfo->tm_mon + 1, timeInfo->tm_mday);
+    strftime(timeStr, 10, "%Y-%m-%d", timeInfo);
 
     return std::string(timeStr);
 }
@@ -518,6 +553,14 @@ std::string toStdString(const time_t val)
     char str[1024];
     sprintf(str, "%u", val);
     return std::string(str);
+}
+
+std::string toStdString(const struct tm &val)
+{
+    char timeStr[80];
+    strftime(timeStr, 80, "%c", &val);
+
+    return std::string(timeStr);
 }
 
 std::string toStdString(const xmlrpc_c::value &value)
@@ -696,6 +739,13 @@ std::string toStdString(const Shotgun::MethodSignatures &sigs)
 std::ostream &operator<<(std::ostream& output, const xmlrpc_c::value &value)
 {
     output << toStdString(value);
+    return output;
+}
+
+// *****************************************************************************
+std::ostream &operator<<(std::ostream& output, const struct tm &time)
+{
+    output << toStdString(time);
     return output;
 }
 

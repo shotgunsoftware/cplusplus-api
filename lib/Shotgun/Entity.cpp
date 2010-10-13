@@ -632,13 +632,13 @@ const double Entity::getAttrValueAsDouble(const std::string &attrName,
 }
 
 // *****************************************************************************
-const time_t Entity::getAttrValueAsDatetime(const std::string &attrName) const
+const time_t Entity::getAttrValueAsUTCtime(const std::string &attrName) const
 {
     return getAttrValue<time_t>(attrName);
 }
 
 // *****************************************************************************
-const time_t Entity::getAttrValueAsDatetime(const std::string &attrName, 
+const time_t Entity::getAttrValueAsUTCtime(const std::string &attrName, 
                                            const time_t defaultVal) const
 {
     return getAttrValue<time_t>(attrName, defaultVal);
@@ -646,19 +646,49 @@ const time_t Entity::getAttrValueAsDatetime(const std::string &attrName,
 
 // *****************************************************************************
 // static
-const time_t Entity::getAttrValueAsDatetime(const std::string &attrName, 
-                                            const Dict &attrsMap)
+const time_t Entity::getAttrValueAsUTCtime(const std::string &attrName, 
+                                           const Dict &attrsMap)
 {
     return getAttrValue<time_t>(attrName, attrsMap);
 }
 
 // *****************************************************************************
 // static
-const time_t Entity::getAttrValueAsDatetime(const std::string &attrName, 
-                                            const Dict &attrsMap,
-                                            const time_t defaultVal)
+const time_t Entity::getAttrValueAsUTCtime(const std::string &attrName, 
+                                           const Dict &attrsMap,
+                                           const time_t defaultVal)
 {
     return getAttrValue<time_t>(attrName, attrsMap, defaultVal);
+}
+
+// *****************************************************************************
+const struct tm Entity::getAttrValueAsLocaltime(const std::string &attrName) const
+{
+    return getAttrValue<struct tm>(attrName);
+}
+
+// *****************************************************************************
+const struct tm Entity::getAttrValueAsLocaltime(const std::string &attrName, 
+                                                const struct tm &defaultVal) const
+{
+    return getAttrValue<struct tm>(attrName, defaultVal);
+}
+
+// *****************************************************************************
+// static
+const struct tm Entity::getAttrValueAsLocaltime(const std::string &attrName, 
+                                                const Dict &attrsMap)
+{
+    return getAttrValue<struct tm>(attrName, attrsMap);
+}
+
+// *****************************************************************************
+// static
+const struct tm Entity::getAttrValueAsLocaltime(const std::string &attrName, 
+                                                const Dict &attrsMap,
+                                                const struct tm &defaultVal)
+{
+    return getAttrValue<struct tm>(attrName, attrsMap, defaultVal);
 }
 
 // *****************************************************************************

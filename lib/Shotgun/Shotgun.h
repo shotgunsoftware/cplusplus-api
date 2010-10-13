@@ -174,8 +174,11 @@ protected:
     Dict m_authMap;
 
 private:
-    ClassRegistry m_classRegistry;
+    // Set the "TZ" environment varible which is used by some datetime-related
+    // calls to find the correct local time zone
+    void setTimeZoneEnv();
 
+    ClassRegistry m_classRegistry;
 };
 
 // *****************************************************************************

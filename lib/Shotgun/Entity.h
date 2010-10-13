@@ -64,8 +64,8 @@ public:
     // -------------------------------------------------------------------------
     // These are the few common attributes shared by all entities
     virtual const int sgId() const { return getAttrValueAsInt("id"); }
-    virtual const time_t sgDateCreated() const { return getAttrValueAsDatetime("created_at"); }
-    virtual const time_t sgDateUpdated() const { return getAttrValueAsDatetime("updated_at"); }
+    virtual const time_t sgDateCreated() const { return getAttrValueAsUTCtime("created_at"); }
+    virtual const time_t sgDateUpdated() const { return getAttrValueAsUTCtime("updated_at"); }
 
     // -------------------------------------------------------------------------
     // These two have to be overridden for Project entity
@@ -128,14 +128,24 @@ public:
                                              const double defaultVal);
 
     // -------------------------------------------------------------------------
-    virtual const time_t getAttrValueAsDatetime(const std::string &attrName) const;
-    virtual const time_t getAttrValueAsDatetime(const std::string &attrName, 
-                                                const time_t defaultVal) const;
-    static const time_t getAttrValueAsDatetime(const std::string &attrName, 
-                                               const Dict &attrsMap);
-    static const time_t getAttrValueAsDatetime(const std::string &attrName, 
-                                               const Dict &attrsMap,
-                                               const time_t defaultVal);
+    virtual const time_t getAttrValueAsUTCtime(const std::string &attrName) const;
+    virtual const time_t getAttrValueAsUTCtime(const std::string &attrName, 
+                                               const time_t defaultVal) const;
+    static const time_t getAttrValueAsUTCtime(const std::string &attrName, 
+                                              const Dict &attrsMap);
+    static const time_t getAttrValueAsUTCtime(const std::string &attrName, 
+                                              const Dict &attrsMap,
+                                              const time_t defaultVal);
+
+    // -------------------------------------------------------------------------
+    virtual const struct tm getAttrValueAsLocaltime(const std::string &attrName) const;
+    virtual const struct tm getAttrValueAsLocaltime(const std::string &attrName, 
+                                                    const struct tm &defaultVal) const;
+    static const struct tm getAttrValueAsLocaltime(const std::string &attrName, 
+                                                   const Dict &attrsMap);
+    static const struct tm getAttrValueAsLocaltime(const std::string &attrName, 
+                                                   const Dict &attrsMap,
+                                                   const struct tm &defaultVal);
 
     // -------------------------------------------------------------------------
     virtual const std::string getAttrValueAsString(const std::string &attrName) const;
