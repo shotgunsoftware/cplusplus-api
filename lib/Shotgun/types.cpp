@@ -557,10 +557,7 @@ std::string toStdString(const time_t val)
 
 std::string toStdString(const struct tm &val)
 {
-    char timeStr[80];
-    strftime(timeStr, 80, "%c", &val);
-
-    return std::string(timeStr);
+    return std::string(asctime(&val));
 }
 
 std::string toStdString(const xmlrpc_c::value &value)

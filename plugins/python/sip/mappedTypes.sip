@@ -31,7 +31,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 // ************************************************************************
-//  time_t
+//  std::string
 //
 //  Got this from the [PyQt] mailing list:
 //  http://www.riverbankcomputing.com/pipermail/pyqt/2005-February/009662.html
@@ -169,10 +169,17 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 {
 %TypeHeaderCode
 #include <xmlrpc-c/base.hpp>
+#include <time.h>
+#include <datetime.h>
 %End
 
 %ConvertFromTypeCode
     // Convert a xmlrpc_c::value to a Python type
+
+    // -------------------------------------------------------------------------
+    // This line is IMPORTANT! - Otherwise, any PyDateTime calls will crash
+    // -------------------------------------------------------------------------
+    PyDateTime_IMPORT;
 
     PyObject* pObj = NULL;
 
@@ -190,7 +197,18 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     }
     else if (sipCpp->type() == xmlrpc_c::value::TYPE_DATETIME)
     {
-        pObj = PyLong_FromLong(time_t(xmlrpc_c::value_datetime(*sipCpp)));
+        //pObj = PyLong_FromLong(time_t(xmlrpc_c::value_datetime(*sipCpp)));
+
+        time_t utcTime = time_t(xmlrpc_c::value_datetime(*sipCpp));
+        struct tm localTime = *(localtime(&utcTime));
+
+        pObj = PyDateTime_FromDateAndTime(localTime.tm_year + 1900,
+                                          localTime.tm_mon + 1,
+                                          localTime.tm_mday,
+                                          localTime.tm_hour,
+                                          localTime.tm_min,
+                                          localTime.tm_sec,
+                                          0);
     }
     else if (sipCpp->type() == xmlrpc_c::value::TYPE_STRING)
     {
@@ -245,6 +263,11 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 %ConvertToTypeCode
     // Convert a Python type to a xmlrpc_c::value type
+    
+    // -------------------------------------------------------------------------
+    // This line is IMPORTANT! - Otherwise, any PyDateTime calls will crash
+    // -------------------------------------------------------------------------
+    PyDateTime_IMPORT;
 
     if (sipIsErr == NULL)
     {
@@ -253,6 +276,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 PyFloat_Check(sipPy) ||
                 PyLong_Check(sipPy) ||
                 PyString_Check(sipPy) ||
+                PyDateTime_Check(sipPy) ||
                 sipCanConvertToType(sipPy, sipType_std_vector_27000100xmlrpc_c_value, SIP_NOT_NONE) ||
                 sipCanConvertToType(sipPy, sipType_std_map_27000100std_string_27000100xmlrpc_c_value, SIP_NOT_NONE) ||
                 (sipPy == Py_None));
@@ -289,6 +313,23 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     else if (PyString_Check(sipPy))
     {
         *sipCppPtr = new xmlrpc_c::value(xmlrpc_c::value_string(std::string(PyString_AS_STRING(sipPy))));
+        return 1;
+    }
+    else if (PyDateTime_Check(sipPy))
+    {
+        time_t utcTime;
+        struct tm localTime; 
+
+        localTime.tm_year = PyDateTime_GET_YEAR(sipPy) - 1900;
+        localTime.tm_mon = PyDateTime_GET_MONTH(sipPy) - 1;
+        localTime.tm_mday = PyDateTime_GET_DAY(sipPy);
+        localTime.tm_hour = PyDateTime_DATE_GET_HOUR(sipPy);
+        localTime.tm_min = PyDateTime_DATE_GET_MINUTE(sipPy);
+        localTime.tm_sec = PyDateTime_DATE_GET_SECOND(sipPy);
+
+        utcTime = mktime(&localTime);
+
+        *sipCppPtr = new xmlrpc_c::value(xmlrpc_c::value_datetime(time_t(utcTime)));
         return 1;
     }
     else if (sipCanConvertToType(sipPy, sipType_std_vector_27000100xmlrpc_c_value, SIP_NOT_NONE))
