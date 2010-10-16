@@ -37,7 +37,10 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace Shotgun {
 
+/// Utility function - returns the lower-case of the input string.
 std::string tolower(const std::string& s);
+
+/// Utility function - returns the upper-case of the input string.
 std::string toupper(const std::string& s);
 
 }  //  End namespace Shotgun

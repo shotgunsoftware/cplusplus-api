@@ -117,7 +117,7 @@ Task *TaskMixin::getNextIncompleteMilestoneTask()
 
     if (next > 0)
     {
-        // Return the last one found that has the ealiest endDate
+        // Return the last one found that has the earliest endDate
         return milestones[next];
     }
     else

@@ -41,7 +41,8 @@ class Fields
 
 public:
     Fields();
-    Fields(const Shotgun::List &data);
+    Fields(const Shotgun::Fields &ref);
+    Fields(const Shotgun::List &fields);
 
     // ===================================================================
     // These SIP functions that have %MethodCode directive are not defined
@@ -70,7 +71,7 @@ public:
     Shotgun::Fields &add(const Shotgun::Fields &that);
 
     // -------------------------------------------------------------------
-    const Shotgun::List &data() const;
+    const Shotgun::List &fields() const;
     const bool empty() const;
     const int size() const;
     void clear();

@@ -40,6 +40,11 @@ SortBy::SortBy() : m_sorts(List())
 }
 
 // *****************************************************************************
+SortBy::SortBy(const SortBy &ref) : m_sorts(ref.m_sorts)
+{
+}
+
+// *****************************************************************************
 SortBy::SortBy(const List &sorts) : m_sorts(sorts)
 {
 }

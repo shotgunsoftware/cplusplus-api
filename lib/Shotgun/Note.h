@@ -42,14 +42,19 @@ namespace Shotgun {
 class Shotgun;
 
 // *****************************************************************************
+/// \class Note
 class Note : public Entity
 {
     friend class Shotgun;
 
 public:
+    /// A copy constructor.
     Note(const Note &ref);
+
+    /// A destructor that does nothing.
     virtual ~Note();
 
+    /// The string representation of Note entity type.
     static std::string type() { return std::string("Note"); }
 
     // -------------------------------------------------------------------------
@@ -71,9 +76,23 @@ public:
     }
 
 protected:
+    /// A constructor.
+    ///
+    /// \param sg - instantiated Shotgun object pointer
+    /// \param attrs - raw attribute map for a Shotgun entity
     Note(Shotgun *sg, const xmlrpc_c::value &attrs);
 
+    /// A Note entity factory function.
+    ///
+    /// \param sg - instantiated Shotgun object pointer
+    /// \param attrs - raw attribute map for a Shotgun entity
+    /// \return a newly-created Note * as its base Entity * type
     static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Note(sg, attrs); }
+
+    /// Builds a list of default "return_fields" which are the attributes
+    /// exposed to the users when a Note entity is created or searched.
+    ///
+    /// \return a list of default "return_fields" name strings.
     static List defaultReturnFields();
 };
 

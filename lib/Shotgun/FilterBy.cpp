@@ -40,6 +40,11 @@ FilterBy::FilterBy() : m_filters(Dict())
 }
 
 // *****************************************************************************
+FilterBy::FilterBy(const FilterBy &ref) : m_filters(ref.m_filters)
+{
+}
+
+// *****************************************************************************
 FilterBy::FilterBy(const Dict &filters) : m_filters(filters)
 {
 }

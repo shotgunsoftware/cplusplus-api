@@ -75,42 +75,8 @@ SgAttrValueError::SgAttrValueError(const std::string &attrName)
 SgAttrLinkError::SgAttrLinkError(const Dict &link) 
     : SgAttrError("SgAttrLinkError: ")
 {
-    m_msg += "The given link is missing one or more of the required fields: \"id\", \"type\", \"name\"\n";
+    m_msg += "The given link is missing one or more of the required fields: \"id\", \"type\"\n";
     m_msg += link.str();
-}
-
-// *****************************************************************************
-SgAttrLinkError::SgAttrLinkError(const xmlrpc_c::value &link,
-                                 const xmlrpc_c::value::type_t &type) 
-    : SgAttrError("SgAttrLinkError: ")
-{
-    m_msg += "The given link has the wrong type: \"" + xmlrpcValueTypeStr(type);
-    m_msg += "\", it should be type of \"TYPE_STRUCT\"\n";
-    m_msg += toStdString(link);
-}
-
-// *****************************************************************************
-SgAttrSetValueError::SgAttrSetValueError(const std::string &fieldName,
-                                         const std::string &errMsg) 
-    : SgAttrError("SgAttrSetValueError: ")
-{
-    m_msg += "Failed to set value for attribute, '" + fieldName + "'";
-    if (errMsg != "")
-    {
-        m_msg += "\n" + errMsg;
-    }
-}
-
-// *****************************************************************************
-SgAttrSetValueError::SgAttrSetValueError(const char *fieldName,
-                                         const std::string &errMsg) 
-    : SgAttrError("SgAttrSetValueError: ")
-{
-    m_msg += "Failed to set value for attribute, '" + std::string(fieldName) + "'";
-    if (errMsg != "")
-    {
-        m_msg += "\n" + errMsg;
-    }
 }
 
 // *****************************************************************************
@@ -154,12 +120,11 @@ SgEntityNotFoundError::SgEntityNotFoundError(const std::string &entityType)
 }
 
 // *****************************************************************************
-SgEntityFunctionNotFoundError::SgEntityFunctionNotFoundError(const std::string &entityType, 
-                                                             const std::string &funcMapName) 
-    : SgEntityError("SgEntityFunctionNotFoundError: ")
+SgEntityClassNotRegisteredError::SgEntityClassNotRegisteredError(const std::string &entityType)
+    : SgEntityError("SgEntityClassNotRegisteredError: ")
 {
-    m_msg += "Can't find entry for \"" + entityType + "\" entity in function map \"";
-    m_msg += funcMapName + "\". Check Shotgun class' constructor.";
+    m_msg += "Can't find entry for \"" + entityType + "\" entity in class registry. ";
+    m_msg += "Check Shotgun class' constructor.";
 }
 
 // *****************************************************************************

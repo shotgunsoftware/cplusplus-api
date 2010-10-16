@@ -42,14 +42,19 @@ namespace Shotgun {
 class Shotgun;
 
 // *****************************************************************************
+/// \class Task
 class Task : public Entity
 {
     friend class Shotgun;
     
 public:
+    /// A copy constructor.
     Task(const Task &ref);
+
+    /// A destructor that does nothing
     virtual ~Task();
 
+    /// The string representation of Task entity type.
     static std::string type() { return std::string("Task"); }
 
     // -------------------------------------------------------------------------
@@ -71,9 +76,23 @@ public:
     }
 
 protected:
+    /// A constructor.
+    ///
+    /// \param sg - instantiated Shotgun object pointer
+    /// \param attrs - raw attribute map for a Shotgun entity
     Task(Shotgun *sg, const xmlrpc_c::value &attrs);
 
+    /// A Task entity factory function.
+    ///
+    /// \param sg - instantiated Shotgun object pointer
+    /// \param attrs - raw attribute map for a Shotgun entity
+    /// \return a newly-created Task * as its base Entity * type
     static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Task(sg, attrs); }
+
+    /// Builds a list of default "return_fields" which are the attributes
+    /// exposed to the users when a Task entity is created or searched.
+    ///
+    /// \return a list of default "return_fields" name strings.
     static List defaultReturnFields();
 };
 

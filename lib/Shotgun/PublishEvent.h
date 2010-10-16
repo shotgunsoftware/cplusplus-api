@@ -42,14 +42,19 @@ namespace Shotgun {
 class Shotgun;
 
 // *****************************************************************************
+/// \class PublishEvent
 class PublishEvent : public Entity
 {
     friend class Shotgun;
      
 public:
+    /// A copy constructor.
     PublishEvent(const PublishEvent &ref);
+
+    /// A destructor that does nothing.
     virtual ~PublishEvent();
 
+    /// The string representation of PublishEvent entity type.
     static std::string type() { return std::string("PublishEvent"); }
 
     // -------------------------------------------------------------------------
@@ -71,9 +76,23 @@ public:
     }
 
 protected:
+    /// A constructor.
+    ///
+    /// \param sg - instantiated Shotgun object pointer
+    /// \param attrs - raw attribute map for a Shotgun entity
     PublishEvent(Shotgun *sg, const xmlrpc_c::value &attrs);
 
+    /// A PublishEvent entity factory function.
+    ///
+    /// \param sg - instantiated Shotgun object pointer
+    /// \param attrs - raw attribute map for a Shotgun entity
+    /// \return a newly-created PublishEvent * as its base Entity * type
     static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new PublishEvent(sg, attrs); }
+
+    /// Builds a list of default "return_fields" which are the attributes
+    /// exposed to the users when a PublishEvent entity is created or searched.
+    ///
+    /// \return a list of default "return_fields" name strings.
     static List defaultReturnFields();
 };
 

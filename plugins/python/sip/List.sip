@@ -41,6 +41,7 @@ class List
 
 public:
     List();
+    List(const Shotgun::List &ref);
     List(const Shotgun::SgArray &array);
 
     // ===================================================================

@@ -42,14 +42,19 @@ namespace Shotgun {
 class Shotgun;
 
 // *****************************************************************************
+/// \class Sequence
 class Sequence : public Entity
 {
     friend class Shotgun;
  
 public:
+    /// A copy constructor.
     Sequence(const Sequence &ref);
+
+    /// A destructor that does nothing
     virtual ~Sequence();
 
+    /// The string representation of Sequence entity type.
     static std::string type() { return std::string("Sequence"); }
 
     // -------------------------------------------------------------------------
@@ -71,9 +76,23 @@ public:
     }
 
 protected:
+    /// A constructor.
+    ///
+    /// \param sg - instantiated Shotgun object pointer
+    /// \param attrs - raw attribute map for a Shotgun entity
     Sequence(Shotgun *sg, const xmlrpc_c::value &attrs);
 
+    /// A Sequence entity factory function.
+    ///
+    /// \param sg - instantiated Shotgun object pointer
+    /// \param attrs - raw attribute map for a Shotgun entity
+    /// \return a newly-created Sequence * as its base Entity * type
     static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Sequence(sg, attrs); }
+
+    /// Builds a list of default "return_fields" which are the attributes
+    /// exposed to the users when a Sequence entity is created or searched.
+    ///
+    /// \return a list of default "return_fields" name strings.
     static List defaultReturnFields();
 };
 

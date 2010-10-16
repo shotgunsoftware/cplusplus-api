@@ -49,27 +49,105 @@ namespace Shotgun {
 class Shotgun;
 
 // *****************************************************************************
+/*! 
+ \class Method
+ A Method class is a container for a Shotgun API function through which programs
+ access Shotgun via XML-RPC (http://xmlrpc-c.sourceforge.net/). All Method objects
+ have to be initiated by a Shotgun object. Valid Shotgun API functions are:
+
+    - system.listMethods
+    - system.methodSignature
+    - system.methodHelp
+    - create
+    - read
+    - update
+    - delete
+    - schema_entity_create
+    - schema_entity_read
+    - schema_entity_update
+    - schema_entity_delete
+    - schema_field_create
+    - schema_field_read
+    - schema_field_update
+    - schema_field_delete
+    - schema_read
+
+ \htmlonly
+ All Shotgun API functions and arguments are case-sensitive. <br>
+
+ All Shotgun API functions have the signature: <br>
+ <pre>
+    struct function_name(struct <b>auth_args</b>, struct <b>args</b>)
+ </pre>
+ where: <br>
+     <br>
+     <b>auth_args</b> is a struct containing information to authenticate the 
+     script with Shotgun.  Format:
+
+     <pre>
+     auth_args = { <br> 
+         'script_name': string, # Corresponds to "Script Name" on the [Admin] page > [Scripts] page. <br>
+         'script_key': string   # Corresponds to ""Application Key" <br>
+     }
+     </pre>
+
+     <b>args</b> is a struct of the function's arguments. <br>
+
+     <br>
+     All functions return a struct as the result.  General format:
+     <pre>
+     { <br>
+         'results' = { <br>
+             ... <br>
+         } <br>
+     }
+     </pre>
+ \endhtmlonly
+
+ In this Shotgun library, only the CRUD functions (create, read, update, delete) are used.
+*/
 class Method
 {
     friend class Shotgun;
 
 protected:
+    /// A constructor.
+    ///
+    /// \param sg - instantiated Shotgun object pointer
+    /// \param methodName - name of a Shotgun API function. 
     Method(Shotgun *sg, const std::string &methodName);
+
+    /// A destructor that does nothing.
     virtual ~Method();
 
 public:
+    /// Returns the name of the Shotgun API function.
     const std::string &methodName() const { return m_methodName; }
+
+    /// Returns the signature of the Shotgun API function.
+    /// It throws a SgEntityXmlrpcError exception if the XML-RPC call fails.
     MethodSignatures &signature(); 
+
+    /// Returns the usage of the Shotgun API function.
+    /// It throws a SgEntityXmlrpcError exception if the XML-RPC call fails.
     std::string &help();
+
+    /// Calls the Shotgun API function without any argument.
+    /// It throws a SgEntityXmlrpcError exception if the XML-RPC call fails.
+    /// \return a struct as the result.
     xmlrpc_c::value call();
-    xmlrpc_c::value call(const xmlrpc_c::paramList &params);
+
+    /// Calls the Shotgun API function with a struct of arguments.
+    /// It throws a SgEntityXmlrpcError exception if the XML-RPC call fails.
+    /// \return a struct as the result.
+    xmlrpc_c::value call(const Dict &params);
 
 protected:
-    Shotgun *m_sg;
-    std::string m_methodName;
+    Shotgun *m_sg; ///< The instantiated Shotgun object pointer.
+    std::string m_methodName; ///< The name of the Shotgun API function.
 
-    MethodSignatures m_signatures;
-    std::string m_help;
+    MethodSignatures m_signatures; ///< The signature of the Shotgun API function.
+    std::string m_help; ///< The usage string of the Shotgun API function.
 };
 
 } // End namespace Shotgun

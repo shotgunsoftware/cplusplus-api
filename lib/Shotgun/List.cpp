@@ -40,6 +40,11 @@ List::List() : m_value(SgArray())
 }
 
 // *****************************************************************************
+List::List(const List &ref) : m_value(ref.m_value)
+{
+}
+
+// *****************************************************************************
 List::List(const SgArray &array) : m_value(array)
 {
 }

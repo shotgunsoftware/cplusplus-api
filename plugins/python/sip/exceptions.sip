@@ -220,9 +220,9 @@
 };
 
 // *******************************************************************
-// Shotgun::SgEntityFunctionNotFoundError
+// Shotgun::SgEntityClassNotRegisteredError
 // *******************************************************************
-%Exception Shotgun::SgEntityFunctionNotFoundError(SIP_Exception) /PyName=SgEntityFunctionNotFoundError/
+%Exception Shotgun::SgEntityClassNotRegisteredError(SIP_Exception) /PyName=SgEntityClassNotRegisteredError/
 {
 %TypeHeaderCode
 #include <Shotgun/exceptions.h>
@@ -231,7 +231,7 @@
         const char *detail = sipExceptionRef.what();
 
         SIP_BLOCK_THREADS
-        PyErr_SetString(sipException_Shotgun_SgEntityFunctionNotFoundError, detail);
+        PyErr_SetString(sipException_Shotgun_SgEntityClassNotRegisteredError, detail);
         SIP_UNBLOCK_THREADS
 %End
 };

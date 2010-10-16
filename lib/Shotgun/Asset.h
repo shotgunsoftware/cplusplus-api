@@ -44,14 +44,19 @@ namespace Shotgun {
 class Shotgun;
 
 // *****************************************************************************
+/// \class Asset
 class Asset : public Entity, public TaskMixin, public NoteMixin
 {
     friend class Shotgun;
  
 public:
+    /// A copy constructor.
     Asset(const Asset &ref);
+
+    /// A destructor that does nothing.
     virtual ~Asset();
 
+    /// The string representation of Asset entity type.
     static std::string type() { return std::string("Asset"); }
 
     // -------------------------------------------------------------------------
@@ -73,9 +78,23 @@ public:
     }
 
 protected:
+    /// A constructor.
+    ///
+    /// \param sg - instantiated Shotgun object pointer
+    /// \param attrs - raw attribute map for a Shotgun entity
     Asset(Shotgun *sg, const xmlrpc_c::value &attrs);
 
+    /// An Asset entity factory function. 
+    ///
+    /// \param sg - instantiated Shotgun object pointer
+    /// \param attrs - raw attribute map for a Shotgun entity
+    /// \return a newly-created Asset * as its base Entity * type
     static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Asset(sg, attrs); }
+
+    /// Builds a list of default "return_fields" which are the attributes 
+    /// exposed to the users when an Asset entity is created or searched.
+    ///
+    /// \return a list of default "return_fields" name strings.
     static List defaultReturnFields();
 };
 

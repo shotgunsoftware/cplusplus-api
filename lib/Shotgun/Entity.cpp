@@ -61,11 +61,7 @@ xmlrpc_c::value Entity::createSGEntity(Shotgun *sg, const Dict &createMap)
 {
     Method *md = sg->method("create");
 
-    xmlrpc_c::paramList params;
-    params.add(toXmlrpcValue(sg->authMap()));
-    params.add(toXmlrpcValue(createMap));
-
-    xmlrpc_c::value rawResult = md->call(params); 
+    xmlrpc_c::value rawResult = md->call(createMap); 
     xmlrpc_c::value results;
 
     if (rawResult.type() != xmlrpc_c::value::TYPE_NIL)
@@ -88,12 +84,8 @@ List Entity::findSGEntities(Shotgun *sg,
     bool done = false;
     while (!done)
     {
-        xmlrpc_c::paramList params;
-        params.add(toXmlrpcValue(sg->authMap()));
-        params.add(toXmlrpcValue(findMap));
-
         // Returns a struct - so convert it to an array of entities
-        xmlrpc_c::value rawResult = md->call(params);
+        xmlrpc_c::value rawResult = md->call(findMap);
 
         List entities = Entity::getFindResultEntityList(rawResult);
 
@@ -153,11 +145,7 @@ xmlrpc_c::value Entity::updateSGEntity(Shotgun *sg,
                      .add("id", entityId)
                      .add("fields", fieldsToUpdate);
 
-    xmlrpc_c::paramList params;
-    params.add(toXmlrpcValue(sg->authMap()));
-    params.add(toXmlrpcValue(updateMap));
-
-    xmlrpc_c::value rawResult = md->call(params); 
+    xmlrpc_c::value rawResult = md->call(updateMap); 
     xmlrpc_c::value results;
 
     if (rawResult.type() != xmlrpc_c::value::TYPE_NIL)
@@ -179,11 +167,7 @@ bool Entity::deleteSGEntity(Shotgun *sg,
     Dict deleteMap = Dict("type", entityType)
                      .add("id", entityId);
 
-    xmlrpc_c::paramList params;
-    params.add(toXmlrpcValue(sg->authMap()));
-    params.add(toXmlrpcValue(deleteMap));
-
-    xmlrpc_c::value rawResult = md->call(params); 
+    xmlrpc_c::value rawResult = md->call(deleteMap); 
 
     return getAttrValueAsBool("results", Dict(rawResult));
 }
@@ -230,22 +214,6 @@ void Entity::validateLink(const Dict &link)
     catch (SgAttrError)
     {
         throw SgAttrLinkError(link);
-    }
-}
-
-// *****************************************************************************
-void Entity::validateLink(const xmlrpc_c::value &link)
-{
-    if (link.type() == xmlrpc_c::value::TYPE_STRUCT)
-    {
-        Dict linkAsDict;
-        fromXmlrpcValue(link, linkAsDict);
-
-        validateLink(linkAsDict);
-    }
-    else
-    {
-        throw SgAttrLinkError(link, link.type());
     }
 }
 
@@ -496,9 +464,9 @@ void Entity::setAttrValue(const Fields &fields)
             Dict attrMap = Dict(*m_attrs);
             bool updated = false;
         
-            for (size_t i = 0; i < fields.data().size(); i++)
+            for (size_t i = 0; i < fields.fields().size(); i++)
             {
-                Dict field = Dict(fields.data()[i]);
+                Dict field = Dict(fields.fields()[i]);
 
                 try
                 {

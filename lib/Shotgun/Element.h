@@ -42,14 +42,19 @@ namespace Shotgun {
 class Shotgun;
 
 // *****************************************************************************
+/// \class Element
 class Element : public Entity
 {
     friend class Shotgun;
  
 public:
+    /// A copy constructor.
     Element(const Element &ref);
+
+    /// A destructor that does nothing.
     virtual ~Element();
 
+    /// The string representation of Element entity type.
     static std::string type() { return std::string("Element"); }
 
     // -------------------------------------------------------------------------
@@ -71,9 +76,23 @@ public:
     }
 
 protected:
+    /// A constructor.
+    ///
+    /// \param sg - instantiated Shotgun object pointer
+    /// \param attrs - raw attribute map for a Shotgun entity
     Element(Shotgun *sg, const xmlrpc_c::value &attrs);
 
+    /// An Element entity factory function.
+    ///
+    /// \param sg - instantiated Shotgun object pointer
+    /// \param attrs - raw attribute map for a Shotgun entity
+    /// \return a newly-created Element * as its base Entity * typ
     static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Element(sg, attrs); }
+
+    /// Builds a list of default "return_fields" which are the attributes
+    /// exposed to the users when an Element entity is created or searched.
+    ///
+    /// \return a list of default "return_fields" name strings.
     static List defaultReturnFields();
 };
 

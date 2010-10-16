@@ -42,26 +42,65 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace Shotgun {
 
 // *****************************************************************************
+/*!
+ \class SortBy
+ A SortBy class is a wrapper around a "sorts" List. It contains a list of 
+ result sort orders ("sorts") when searching a Shotgun entity. Each element
+ of the list constains a field name and its corrresponding sort order. 
+ The "sorts" list looks like this:
+ 
+ \htmlonly
+ <pre>
+ <br>
+ 'sorts': [                                                         # OPTIONAL: Array of result sort orders <br>
+             {'field_name': string, 'direction': 'asc' | 'desc'},   # REQUIRED: Field name and sort order <br>
+                                                                    # (ascending or descending).  The default <br>
+                                                                    # sort order is {'field_name': 'id', 'direction': 'asc'}
+             ...                                                    <br>
+          ],
+ </pre>
+ \endhtmlonly
+*/
+
 class SortBy
 {
 public:
+    /// A Default constructor.
     SortBy();
+
+    /// A copy constructor.
+    SortBy(const SortBy &ref);
+
+    /// A constructor that takes a sorts List.
     SortBy(const List &sorts);
 
+    /// A constructor that adds one field and its sort order to the "sorts" list.
     SortBy(const std::string &fieldName,
            const std::string &direction = "asc")
     {
          then(fieldName, direction);      
     }
 
+    /// Adds one field and its sort order to the "sorts" list. 
     SortBy &then(const std::string &fieldName,
                  const std::string &direction = "asc");
+
+    /// Extends the "sorts" list with another "sorts" list.
     SortBy &then(const SortBy &that);
 
+    /// Returns the "sorts" list.
     const List &sorts() const { return m_sorts; }
+
+    /// Returns whether the "sorts" list is empty.
     const bool empty() const { return m_sorts.empty(); }
+
+    /// Returns the size of the "sorts" list.
     const int size() const { return m_sorts.size(); }
+
+    /// Returns the string representation of the SortBy class.
     const std::string str() const { return m_sorts.str(); }
+
+    /// Removes all the contents from the "sorts" list.
     void clear() { m_sorts.clear(); }
 
     SortBy &operator=(const SortBy &that)
@@ -81,7 +120,7 @@ public:
     }
 
 protected:
-    List m_sorts;
+    List m_sorts; ///< The "sorts" list.
 };
 
 } // End namespace Shotgun

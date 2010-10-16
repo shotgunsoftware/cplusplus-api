@@ -41,6 +41,7 @@ class Dict
 
 public:
     Dict();
+    Dict(const Shotgun::Dict &ref);
     Dict(const Shotgun::SgMap &map);
     Dict(const xmlrpc_c::value &value);
 

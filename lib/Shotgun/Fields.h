@@ -42,39 +42,78 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace Shotgun {
 
 // *****************************************************************************
+/*!
+ \class Fields
+ A Fields class is a wrapper around a "fields" List. "fields" is specified as a
+ list of fields to be updated for a Shotgun entity.
+
+ \htmlonly
+ <pre>
+ <br>
+ 'fields': [                                                     # REQUIRED: Array of fields to update <br>
+     { <br>
+         'field_name': string,                                   # REQUIRED: Field name <br>
+         'value': field_value,                                   # REQUIRED: Field value <br>
+         'multi_entity_update_mode': 'set' | 'add' | 'remove',   # OPTIONAL: Update mode for multi-valued <br>
+                                                                 # data types (e.g. multi_entity) <br>
+         'parent_entity': {'type': string, 'id': int}            # OPTIONAL: For update on fields with an <br>
+                                                                 # associated parent entity, you specify the <br>
+                                                                 # parent entity here <br>
+     }, <br>
+     ... <br>
+ ]
+ </pre>
+ \endhtmlonly
+*/
 class Fields
 {
 public:
+    /// A default constructor.
     Fields();
-    Fields(const List &data);
 
+    /// A copy constructor.
+    Fields(const Fields &ref);
+
+    /// A constructor that takes a fields List.
+    Fields(const List &fields);
+
+    /// A template constructor that adds one field to the "fields" list.
     template <typename T>
     Fields(const std::string &fieldName,
            const T &fieldValue,
            const std::string &multiEntityUpdateMode = "",
            const Dict &parentEntity = Dict());
 
-    // -------------------------------------------------------------------
-    // Add one field
+    /// A template function that adds one field to the "fields" list.
     template <typename T>
     Fields &add(const std::string &fieldName,
                 const T &fieldValue,
                 const std::string &multiEntityUpdateMode = "",
                 const Dict &parentEntity = Dict());
 
+    /// Expands the "fields" list with a second "fields" list.
     Fields &add(const Fields &that);
 
-    const List &data() const { return m_data; }
-    const bool empty() const { return m_data.empty(); }
-    const int size() const { return m_data.size(); }
-    const std::string str() const { return m_data.str(); }
-    void clear() { m_data.clear(); }
+    /// Returns the "fields" list.
+    const List &fields() const { return m_fields; }
+
+    /// Returns whether the "fields" list is empty.
+    const bool empty() const { return m_fields.empty(); }
+
+    /// Returns the size of the "fields" list.
+    const int size() const { return m_fields.size(); }
+
+    /// Returns the string representation of the Fields class.
+    const std::string str() const { return m_fields.str(); }
+
+    /// Removes all the contents from the "fields" list.
+    void clear() { m_fields.clear(); }
 
     Fields &operator=(const Fields &that)
     {
         if (this != &that)
         {
-            m_data = that.m_data;
+            m_fields = that.m_fields;
         }
 
         return *this;
@@ -87,7 +126,7 @@ public:
     }
 
 protected:
-    List m_data;
+    List m_fields; ///< The "fields" list.
 };
 
 // *****************************************************************************
@@ -120,7 +159,7 @@ Fields &Fields::add(const std::string &fieldName,
         field.add("parent_entity", parentEntity);
     }
 
-    m_data.append(field);
+    m_fields.append(field);
 
     return *this;
 }

@@ -134,6 +134,29 @@ AC_DEFINE_UNQUOTED(SG_DEFAULT_URL, "$SG_DEFAULT_URL",
 # -------------------------------
 
 # -------------------------------
+# SG_AUTHENTICATION_NAME
+#
+AC_ARG_WITH(authentication-name,
+AS_HELP_STRING([--with-authentication-name=NAME],
+               [Specify a default Shotgun authentication name]),
+[
+    if test "$withval" = "yes" ; then
+      AC_MSG_ERROR([--with-authentication-name requires an argument.])
+    else
+      SG_AUTHENTICATION_NAME=$withval
+    fi
+],
+[
+SG_AUTHENTICATION_NAME=""
+]
+)
+AC_DEFINE_UNQUOTED(SG_AUTHENTICATION_NAME, "$SG_AUTHENTICATION_NAME",
+                     [The default Shotgun authentication name])
+#
+# SG_AUTHENTICATION_NAME
+# -------------------------------
+
+# -------------------------------
 # SG_AUTHENTICATION_KEY
 #
 AC_ARG_WITH(authentication-key,

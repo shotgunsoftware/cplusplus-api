@@ -40,16 +40,29 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace Shotgun {
 
 // *****************************************************************************
+/// \class TaskMixin
+/// A TaskMixin class is used as "add-on"s to any entity class that shares a
+/// common set of Task-related functions. The entity class needs to derive
+/// from the TaskMixin class.
 class TaskMixin
 {
 public:
+    /// A destructor that does nothing.
     virtual ~TaskMixin() {};
 
+    /// Returns an array of Task entities which link to the current entity.
     TaskPtrs getTasks(const int limit = 0);
+
+    /// Returns a Task entity by its name which links to the current entity.
     Task *getTaskByName(const std::string &taskName);
+
+    /// Returns milestone Task entities which link to the current entity.
     TaskPtrs getMilestoneTasks(const int limit = 0);
+
+    /// Returns an incomplete milestone Task entity that has the earliest due date.
     Task *getNextIncompleteMilestoneTask();
 
+    /// Creates a new Task entity with data from the current entity.
     Task *addTask(const std::string &taskName,
                   const std::string &taskType,
                   const std::string &taskAssignee = "",
@@ -59,6 +72,8 @@ public:
                   const std::string &taskColor = "",
                   const bool taskMilestone = false);
 
+    /// Finds an existing Task entity by its name and updates its data with
+    /// the passed arguments.
     Task *updateTask(const std::string &taskName,
                      const std::string &taskAssignee = "",
                      const std::string &taskStartDate = "",
@@ -67,9 +82,11 @@ public:
                      const std::string &taskColor = "",
                      const bool taskMilestone = false);
 
+    /// Removes a Task entity by its name.
     bool removeTask(const std::string &taskName);
 
 protected:
+    /// A constructor that does nothing.
     TaskMixin() {}
 };
 

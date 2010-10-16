@@ -40,15 +40,28 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace Shotgun {
 
 // *****************************************************************************
+/// \class NoteMixin
+/// A NoteMixin class is used as "add-on"s to any entity class that shares a
+/// common set of Note-related functions. The entity class needs to derive
+/// from the NoteMixin class.
 class NoteMixin
 {
 public:
+    /// A destructor that does nothing.
     virtual ~NoteMixin() {};
 
+    /// Returns an array of Note entities which link to the current entity.
     NotePtrs getNotes(const int limit = 0);
+
+    /// Returns an array of "Disclaimer" type Note entities which link to the 
+    /// current entity.
     NotePtrs getDisclaimerNotes(const int limit = 0);
+
+    /// Returns an array of "Client" type Note entities which link to the 
+    /// current entity.
     NotePtrs getClientNotes(const int limit = 0);
 
+    /// Creates a new Note entity with data from the current entity.
     Note *addNote(const std::string &noteFromUserName,
                   const Strings &noteToUserNames = Strings(),
                   const Strings &noteCcUserNames = Strings(),
@@ -59,6 +72,7 @@ public:
                   const std::string &noteOrigin = "");
 
 protected:
+    /// A constructor that does nothing.
     NoteMixin() {}
 
 };

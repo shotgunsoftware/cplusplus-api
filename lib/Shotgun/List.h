@@ -41,18 +41,34 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace Shotgun {
 
 // *****************************************************************************
+/// \class List
+/// A List class is basically a wrapper around a SgArray container, which is 
+/// actually of type, std::vector<xmlrpc_c::value>. It simplifies the API for:
+///
+///    - appending a new value to the SgArray container
+///    - extending the SgArray container
+///    - converting a value of any valid type to the internal xmlrpc_c::value type
+///
 class List
 {
 public:
+    /// A default constructor.
     List();
+
+    /// A copy constructor.
+    List(const List &ref);
+
+    /// A constructor that takes a SgArray.
     List(const SgArray &array);
 
+    /// A template construtor that adds an element to the SgArray container.
     template <typename T>
     List(const T &value)
     {
          append(value);      
     }
 
+    /// A template function that adds an element to the SgArray container.
     template <typename T>
     List &append(const T &value)
     {
@@ -61,24 +77,48 @@ public:
         return *this;
     }
     
+    /// Extends the SgArray container with the given List.
     List &extend(const List &that);
 
+    /// A template function that returns the value of an element with the
+    /// given index. 
     template <typename T>
     const T value(const int index) const;
-    // This function should only be used within the Shotgun lib
+
+    /// Returns the value of an element with the given index. This function 
+    /// should only be used within the Shotgun lib
     const xmlrpc_c::value value(const int index) const;
     
+    /// The template [] operator that returns the value of an element with
+    /// the given index.
     template <typename T>
     const T operator[](const int index) const;
-    // This function should only be used within the Shotgun lib
+
+    /// Returns the value of an element with the given index. The value is of
+    /// type, xmlrpc_c::value. This function should only be used within the 
+    /// Shotgun lib.
     const xmlrpc_c::value operator[](const int index) const;
 
+    /// Returns the SgArray container that the List class wraps around.
     const SgArray &value() const { return m_value; }
+
+    /// Returns whether the SgArray container is empty.
     const bool empty() const { return m_value.empty(); }
+
+    /// Returns the size of the SgArray container.
     const int size() const { return m_value.size(); }
+
+    /// Returns the string representation of the List class. 
     const std::string str() const { return toStdString(m_value); }
+
+    /// Removes all the contents from the SgArray container, leaving it with 
+    /// a size of 0.
     void clear() { m_value.clear(); }
+
+    /// Removes a single element with the given index from the SgArray container.
     void erase(const int index);
+
+    /// Removes a range of elements with the given indices from the SgArray container.
     void erase(const int first, const int last);
 
     List &operator=(const List &that)
@@ -98,7 +138,7 @@ public:
     }
 
 protected:
-    SgArray m_value;
+    SgArray m_value; ///< The SgArray container.
 };
 
 // *****************************************************************************

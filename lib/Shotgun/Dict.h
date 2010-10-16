@@ -41,44 +41,98 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace Shotgun {
 
 // *****************************************************************************
+/// \class Dict
+/// A Dict class is basically a wrapper around a SgMap container, which is 
+/// actually of type, std::map<std::string, xmlrpc_c::value>. It simplifies 
+/// the API for:
+///
+///    - adding (key, value) pairs to the container
+///    - finding the value of a particular key
+///    - converting a value of any valid type to the internal xmlrpc_c::value type
+/// 
+/// It uses C++'s Named Parameter idiom: http://en.wikibooks.org/wiki/More_C%2B%2B_Idioms/Named_Parameter
+///
 class Dict
 {
 public:
+    /// A default constructor.
     Dict();
+
+    /// A copy constructor.
+    Dict(const Dict &ref);
+
+    /// A constructor that takes a SgMap.
     Dict(const SgMap &map);
-    // This constructor should only be used within the Shotgun lib.
+
+    /// A constructor that should only be used within the Shotgun lib.
+    /// It checks whether the input is a xmlrpc_c::value::TYPE_STRUCT type.
+    /// If so, it converts the input to the SgMap container. Otherwise, it 
+    /// throws an exception.
     Dict(const xmlrpc_c::value &value);
 
+    /// A template constructor that takes a (key, value) pair, and add
+    /// that pair to the SgMap container.
     template <typename T>
     Dict(const std::string &key, const T &value);
 
+    /// A template function that adds a (key, value) pair to the SgMap container.
     template <typename T>
     Dict &add(const std::string &key, const T &value);
 
+    /// A template function that returns the value of a given key. 
     template <typename  T>
     const T value(const std::string &key) const;
-    // This function should only be used within the Shotgun lib
+
+    /// Returns the value of a given key. The return value is of type, 
+    /// xmlrpc_c::value. It should only be called within the Shotgun lib.
     const xmlrpc_c::value value(const std::string &key) const;
 
-    // --------------------------------------------------------------------
-    // The [] operator that returns the value of a given key. The syntax of
-    // using this operator is kind of complex, which makes it not worth to
-    // use it. For example,
-    //     std::string nameStr = dict.operator[]<std::string>("name");
-    //                  int id = dict.operator[]<int>("id");
-    // Instead use template function, value(key).
-    // --------------------------------------------------------------------
+    /*!
+     The template [] operator that returns the value of a given key. The 
+     syntax of using this operator is kind of awkward. For example,
+    
+     \htmlonly
+     <pre>
+     Dict dict = Dict("name", "John").add("id", "168"); <br>
+     std::string name = dict.operator[]<std::string>("name"); <br>
+               int id = dict.operator[]<int>("id"); 
+     </pre>
+
+     You can use function, value(key), instead.
+
+     <pre>
+     std::string name = dict.value<std::string>("name"); <br>
+               int id = dict.value<int>("id"); <br>
+     </pre>
+     \endhtmlonly
+    */
     template <typename  T>
     const T operator[](const std::string &key) const;
-    // This function should only be used within the Shotgun lib
+
+    /// This [] operator that returns the value of a given key. The return 
+    /// value is of type, xmlrpc_c::value. It should only be called within 
+    /// the Shotgun lib.
     const xmlrpc_c::value operator[](const std::string &key) const;
 
+    /// Returns the SgMap container that the Dict class wraps around.
     const SgMap &value() const { return m_value; }
+
+    /// Returns whether the SgMap container is empty.
     const bool empty() const { return m_value.empty(); }
+
+    /// Returns the size of the SgMap container.
     const int size() const { return m_value.size(); }
+
+    /// Returns the string representation of the Dict class.
     const std::string str() const { return toStdString(m_value); }
+
+    /// Returns whether a given key exists.
     const bool find(const std::string &key) const;
+
+    /// Removes all the contents from the SgMap container, leaving it with a size of 0.
     void clear() { m_value.clear(); }
+
+    /// Removes a single element with the given key from the SgMap container.
     Dict &erase(const std::string &key);
 
     Dict &operator=(const Dict &that)
@@ -98,7 +152,7 @@ public:
     }
 
 protected:
-    SgMap m_value;
+    SgMap m_value; ///< The SgMap container.
 };
 
 // *****************************************************************************

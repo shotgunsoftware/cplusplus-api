@@ -54,9 +54,12 @@ typedef std::map<std::string, xmlrpc_c::value> SgMap;
 typedef std::vector<xmlrpc_c::value> SgArray;
 
 // *****************************************************************************
+/// Returns the string representation of "xmlrpc_c::value::type_t" type.
+/// To download source for libxmlrpc, see http://xmlrpc-c.sourceforge.net/.
 std::string xmlrpcValueTypeStr(const xmlrpc_c::value::type_t xmlrpcType);
 
 // *****************************************************************************
+// Converts a particular data type to xmlrpc_c::value type.
 xmlrpc_c::value toXmlrpcValue(const char *in);
 xmlrpc_c::value toXmlrpcValue(const std::string &in);
 xmlrpc_c::value toXmlrpcValue(const int &in);
@@ -76,13 +79,9 @@ xmlrpc_c::value toXmlrpcValue(const Fields &in);
 xmlrpc_c::value toXmlrpcValue(const xmlrpc_c::value &in);
 
 // *****************************************************************************
+// Converts a xmlrpc_c::value type to a specified data type.
 // The template approach won't work since xmlrpc_c::value has to be casted to a
 // specific derived xmlrpc_c::value type first, which the compiler doesn't like.
-#if 0
-template <typename T>
-T fromXmlrpcValue(const xmlrpc_c::value &value);
-#endif
-
 void fromXmlrpcValue(const xmlrpc_c::value &value, char *out);
 void fromXmlrpcValue(const xmlrpc_c::value &value, std::string &out);
 void fromXmlrpcValue(const xmlrpc_c::value &value, int &out);
@@ -102,13 +101,15 @@ void fromXmlrpcValue(const xmlrpc_c::value &value, Fields &out);
 void fromXmlrpcValue(const xmlrpc_c::value &value, xmlrpc_c::value &out);
 
 // *****************************************************************************
-// Utility func
+/// Utility function - returns a string representation of the current date.
+/// It is in the format of "YYYY-MM-DD".
 std::string currDateStr();
 
 } // End namespace Shotgun
 
 // *****************************************************************************
 // *****************************************************************************
+// Returns a string representation of a given data type.
 std::string toStdString(const int val);
 std::string toStdString(const bool val);
 std::string toStdString(const double val);

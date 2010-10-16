@@ -42,40 +42,85 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace Shotgun {
 
 // *****************************************************************************
+/*!
+ \class FilterBy
+ A FilterBy class is a wrapper around a "filters" Dict. "filters" format is 
+ specified as a <general_condition> hash, which contains <simple_conditions>
+ hashes, even more <general_condition> hashes, or no conditions.
+
+ \htmlonly
+ <pre>
+ <br>
+ <b>general_condition</b>: { <br>
+     'logical_operator': 'and' | 'or',               # Logical operator to apply to all conditions <br>
+     'conditions': [                                 # Array of <b>general_condition</b>'s or <b>simple_condition</b>'s <br>
+         <b>general_condition</b> | <b>simple_condition</b>,       # An empty array signifies no conditions. <br>
+         ... <br>
+     ] <br>
+ } <br>
+
+ <b>simple_condition</b>: { <br>
+     'path': string,                                 # Field name to filter on, which can be either: <br>
+                                                     # (1) field_name <br>
+                                                     # (2) join_field_name.entity_type.field_name <br>
+     'relation': string,                             # Comparison operator <br>
+     'values': [                                     # Array of field values to compare with.  If the comparison <br>
+         field_value,                                # operator accepts only one value, specify a single-element <br>
+         ...                                         # array (e.g. [0]) <br>
+     ] <br>
+ }
+ </pre>  
+ \endhtmlonly
+*/
 class FilterBy
 {
 public:
+    /// A default constructor.
     FilterBy();
+
+    /// A copy constructor.
+    FilterBy(const FilterBy &ref);
+
+    /// A constructor that takes a filters Dict.
     FilterBy(const Dict &filters);
 
+    /// A template constructor that adds one simple condition to the "filters".
     template <typename T>
     FilterBy(const std::string &path,
              const std::string &relation,
              const T &value);
 
-    // -------------------------------------------------------------------
-    // logic "and"
+    /// A template logic "and" function that adds one simple condition to the "filters".
     template <typename T>
     FilterBy &And(const std::string &path,
                   const std::string &relation,
                   const T &value);
 
+    /// A logic "and" function that adds one general condition to the "filters".
     FilterBy &And(const FilterBy &that) { return op("and", that); }
 
-    // -------------------------------------------------------------------
-    // logic "or"
+    /// A template logic "or" function that adds one condition to the "filters".
     template <typename T>
     FilterBy &Or(const std::string &path,
                  const std::string &relation,
                  const T &value);
     
+    /// A logic "or" function that adds one general condition to the "filters".
     FilterBy &Or(const FilterBy &that) { return op("or", that); }
 
-
+    /// Returns the "filters" dict.
     const Dict &filters() const { return m_filters; }
+
+    /// Returns whether the "filters" dict is empty.
     const bool empty() const { return m_filters.empty(); }
+
+    /// Returns the size of the "filters" dict.
     const int size() const { return m_filters.size(); }
+
+    /// Returns the string representation of the FilterBy class.
     const std::string str() const { return m_filters.str(); }
+
+    /// Removes all the contents from the "filters" dict.
     void clear() { m_filters.clear(); }
 
     FilterBy &operator=(const FilterBy &that)
@@ -95,14 +140,17 @@ public:
     }
 
 protected:
+    /// Adds a simple condition to the "filters" with a specified logic operator.
     FilterBy &op(const std::string &logicOperator,
                  const std::string &path,
                  const std::string &relation,
                  const xmlrpc_c::value &value);
+
+    /// Adds a general condition to the "filters" with a specified logic operator.
     FilterBy &op(const std::string &logicOperator,
                  const FilterBy &that);
 
-    Dict m_filters;
+    Dict m_filters; ///< The "filters" dict.
 };
 
 // *****************************************************************************

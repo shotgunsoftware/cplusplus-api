@@ -188,7 +188,7 @@ xmlrpc_c::value toXmlrpcValue(const SortBy &in)
 // *****************************************************************************
 xmlrpc_c::value toXmlrpcValue(const Fields &in)
 {
-    return toXmlrpcValue(in.data());
+    return toXmlrpcValue(in.fields());
 }
 
 // *****************************************************************************

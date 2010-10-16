@@ -44,7 +44,7 @@ public:
     Shotgun::MethodSignatures &signature() throw (Shotgun::SgEntityXmlrpcError); 
     std::string &help() throw (Shotgun::SgEntityXmlrpcError);
     xmlrpc_c::value call() throw (Shotgun::SgEntityXmlrpcError);
-    xmlrpc_c::value call(const xmlrpc_c::paramList &params) throw (Shotgun::SgEntityXmlrpcError);
+    xmlrpc_c::value call(const Shotgun::Dict &params) throw (Shotgun::SgEntityXmlrpcError);
 
 protected:
     Method(Shotgun::Shotgun *sg, const std::string &methodName);

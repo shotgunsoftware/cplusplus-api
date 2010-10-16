@@ -41,6 +41,7 @@ class FilterBy
 
 public:
     FilterBy();
+    FilterBy(const Shotgun::FilterBy &ref);
     FilterBy(const Shotgun::Dict &filters);
 
     // ===================================================================

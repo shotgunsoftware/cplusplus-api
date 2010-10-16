@@ -42,14 +42,19 @@ namespace Shotgun {
 class Shotgun;
 
 // *****************************************************************************
+/// \classs Delivery
 class Delivery : public Entity
 {
     friend class Shotgun;
  
 public:
+    /// A copy constructor.
     Delivery(const Delivery &ref);
+
+    /// A destructor that does nothing.
     virtual ~Delivery();
 
+    /// The string represenstation of Delivery entity type.
     static std::string type() { return std::string("Delivery"); }
 
     // -------------------------------------------------------------------------
@@ -71,9 +76,23 @@ public:
     }
 
 protected:
+    /// A constructor.
+    ///
+    /// \param sg - instantiated Shotgun object pointer
+    /// \param attrs - raw attribute map for a Shotgun entity
     Delivery(Shotgun *sg, const xmlrpc_c::value &attrs);
 
+    /// A Delivery entity factory function.
+    ///
+    /// \param sg - instantiated Shotgun object pointer
+    /// \param attrs - raw attribute map for a Shotgun entity
+    /// \return a newly-created Delivery * as its base Entity * type
     static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Delivery(sg, attrs); }
+
+    /// Builds a list of default "return_fields" which are the attributes 
+    /// exposed to the users when a Delivery entity is created or searched.
+    ///
+    /// \return a list of default "return_fields" name strings.
     static List defaultReturnFields();
 };
 

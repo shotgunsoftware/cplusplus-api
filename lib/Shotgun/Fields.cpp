@@ -35,19 +35,24 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace Shotgun {
 
 // *****************************************************************************
-Fields::Fields() : m_data(List())
+Fields::Fields() : m_fields(List())
 {
 }
 
 // *****************************************************************************
-Fields::Fields(const List &data) : m_data(data)
+Fields::Fields(const Fields &ref) : m_fields(ref.m_fields)
+{
+}
+
+// *****************************************************************************
+Fields::Fields(const List &fields) : m_fields(fields)
 {
 }
 
 // *****************************************************************************
 Fields &Fields::add(const Fields &that)
 {
-    m_data.extend(that.m_data);
+    m_fields.extend(that.m_fields);
 
     return *this;
 }

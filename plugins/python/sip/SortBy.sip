@@ -41,6 +41,7 @@ class SortBy
 
 public:
     SortBy();
+    SortBy(const Shotgun::SortBy &ref);
     SortBy(const Shotgun::List &sorts);
 
     SortBy(const std::string &fieldName,

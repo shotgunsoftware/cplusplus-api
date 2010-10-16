@@ -41,10 +41,12 @@ class Shotgun
 
 public:
     Shotgun(const std::string &serverURL = SG_DEFAULT_URL,
+            const std::string &authName = SG_AUTHENTICATION_NAME,
             const std::string &authKey = SG_AUTHENTICATION_KEY);
     virtual ~Shotgun();
 
     const std::string &serverURL() const;
+    const std::string &authName() const;
     const std::string &authKey() const;
     const Shotgun::Dict &authMap() const;
 

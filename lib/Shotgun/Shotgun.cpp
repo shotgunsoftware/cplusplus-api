@@ -47,8 +47,10 @@ namespace Shotgun {
 
 // *****************************************************************************
 Shotgun::Shotgun(const std::string &serverURL,
+                 const std::string &authName,
                  const std::string &authKey)
     : m_serverURL(serverURL),
+      m_authName(authName),
       m_authKey(authKey),
       m_client(NULL)
 {
@@ -57,7 +59,7 @@ Shotgun::Shotgun(const std::string &serverURL,
 
     // Authetication info comes from Shotgun Admin Pages->Scripts
     m_authMap.clear();
-    m_authMap.add("script_name", "shotgun.main.Shotgun")
+    m_authMap.add("script_name", m_authName)
              .add("script_key", m_authKey);
 
     // Set the correct "TZ" time zone environment variable, this is needed by
@@ -108,7 +110,7 @@ EntityPtrs Shotgun::entityFactoryFind(const std::string &entityType,
 
     if (foundRegistryIter == m_classRegistry.end())
     {
-        throw SgEntityFunctionNotFoundError(entityType, "m_classRegistry");
+        throw SgEntityClassNotRegisteredError(entityType);
     }
 
     // The registry function pair 
@@ -170,7 +172,7 @@ Entity *Shotgun::entityFactoryCreate(const std::string &entityType, Dict &create
 
     if (foundRegistryIter == m_classRegistry.end())
     {
-        throw SgEntityFunctionNotFoundError(entityType, "m_classRegistry");
+        throw SgEntityClassNotRegisteredError(entityType);
     }
 
     // The registry function pair 
