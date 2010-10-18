@@ -34,9 +34,11 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <stdexcept>
 
 #include <Shotgun/Shotgun.h>
-#include <Shotgun/Type.h>
+#include <Shotgun/types.h>
 
 #include <xmlrpc.h>
+
+using namespace SG;
 
 int main( int argc, char **argv )
 {
@@ -53,17 +55,17 @@ int main( int argc, char **argv )
     }
     try
     {
-        Shotgun::Shotgun sg(shotgunURL);
+        Shotgun sg(shotgunURL);
 
         // Create a shotgun Method instance
         std::string const methodName("system.listMethods");
-        Shotgun::Method *myMethod = sg.method(methodName); 
+        Method *myMethod = sg.method(methodName); 
 
         // Print out the method signature
-        Shotgun::MethodSignatures mySigs = myMethod->signature();
+        MethodSignatures mySigs = myMethod->signature();
         std::cout << ">>>>>> Signatures for method: " 
                   << methodName << " is: " << std::endl;
-        std::cout << Shotgun::toStdString(mySigs) << std::endl << std::endl;
+        std::cout << mySigs << std::endl << std::endl;
 
         // Print out the method help
         std::string myHelp = myMethod->help();
@@ -76,7 +78,7 @@ int main( int argc, char **argv )
         std::cout << ">>>>>> Calling ..." << std::endl 
                   << "    " << myMethod->methodName() << std::endl;
         std::cout << std::endl << "The results are ..." << std::endl;
-        std::cout << Shotgun::toStdString(results) << std::endl;
+        std::cout << results << std::endl;
     }
     catch (const std::exception& e)
     {

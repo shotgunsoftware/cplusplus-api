@@ -42,6 +42,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Dict.h>
 #include <Shotgun/Fields.h>
 
+using namespace SG;
+
 int main( int argc, char **argv )
 {
     std::string shotgunURL(SG_DEFAULT_URL);
@@ -57,10 +59,10 @@ int main( int argc, char **argv )
     }
     try
     {
-        Shotgun::Shotgun sg(shotgunURL);
+        Shotgun sg(shotgunURL);
 
         std::cout << std::endl << "**************************** findEntities ****************************" << std::endl;
-        Shotgun::ProjectPtrs projects = sg.findEntities<Shotgun::Project>();
+        ProjectPtrs projects = sg.findEntities<Project>();
         for( size_t p = 0; p < projects.size(); ++p )
         {
             std::cout << *(projects[p]) << std::endl;
@@ -68,48 +70,10 @@ int main( int argc, char **argv )
             std::cout << "-------------------" << std::endl;
             delete projects[p];
         }
-
-
-        std::cout << std::endl << "**************************** createEntity ****************************" << std::endl;
-        Shotgun::Project *newProject = sg.createEntity<Shotgun::Project>(Shotgun::Dict("name", "TEST PROJECT")
-                                                                               .add("code", "tp"));
-        std::cout << *newProject << std::endl;
-        delete newProject;
-
-
-        std::cout << std::endl << "**************************** findEntiy ****************************" << std::endl;
-        Shotgun::Project *project = sg.findEntity<Shotgun::Project>(Shotgun::FilterBy("code", "is", "tp"));
-        std::cout << *project << std::endl;
-        //delete project; // delete later
-
-
-        std::cout << std::endl << "**************************** setAttrValue - update entity ****************************" << std::endl;
-        project->setAttrValue(Shotgun::Fields("name", "My Test Project")
-                                         .add("sg_default_start_frame", 101));
-        std::cout << *project << std::endl;
-
-
-        std::cout << std::endl << "**************************** deleteEntity ****************************" << std::endl;
-        int id = project->sgId();
-        if (sg.deleteEntity<Shotgun::Project>(id)) // Delete the Shotgun entity by its id
-        {
-            std::cout << "Project entity with id, " << id << ", deleted" << std::endl;
-        }
-        else
-        {
-            std::cout << "Project entity with id, " << id << ", not deleted - it may be retired or non-existent" << std::endl;
-        }
-        delete project; // Delete the Project class instance.
-
-
-        std::cout << std::endl << "**************************** findEntity ****************************" << std::endl;
-        project = sg.findEntity<Shotgun::Project>(Shotgun::FilterBy("code", "is", "tp"));
-        std::cout << *project << std::endl;
-        delete project;
     }
-    catch (const Shotgun::SgError & e)
+    catch (const SgError & e)
     {
-        std::cerr << "Shotgun::SgError: " << e.what() << std::endl;
+        std::cerr << "SgError: " << e.what() << std::endl;
         return -1;
     }
     catch (const std::exception& e)
