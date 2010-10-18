@@ -32,7 +32,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <Shotgun/Fields.h>
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
 Fields::Fields() : m_fields(List())
@@ -57,4 +57,4 @@ Fields &Fields::add(const Fields &that)
     return *this;
 }
 
-} // End namespace Shotgun
+} // End namespace SG

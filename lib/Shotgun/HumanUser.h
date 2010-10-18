@@ -35,7 +35,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <Shotgun/Entity.h>
 
-namespace Shotgun {
+namespace SG {
 
 class Shotgun;
 
@@ -97,6 +97,6 @@ protected:
 // *****************************************************************************
 typedef std::vector<HumanUser *> HumanUserPtrs;
 
-} // End namespace Shotgun
+} // End namespace SG
 
 #endif    // End #ifdef __USER_H__

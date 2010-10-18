@@ -30,7 +30,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
 class Method
@@ -41,15 +41,15 @@ class Method
 
 public:
     const std::string &methodName() const;
-    Shotgun::MethodSignatures &signature() throw (Shotgun::SgEntityXmlrpcError); 
-    std::string &help() throw (Shotgun::SgEntityXmlrpcError);
-    xmlrpc_c::value call() throw (Shotgun::SgEntityXmlrpcError);
-    xmlrpc_c::value call(const Shotgun::Dict &params) throw (Shotgun::SgEntityXmlrpcError);
+    SG::MethodSignatures &signature() throw (SG::SgEntityXmlrpcError); 
+    std::string &help() throw (SG::SgEntityXmlrpcError);
+    xmlrpc_c::value call() throw (SG::SgEntityXmlrpcError);
+    xmlrpc_c::value call(const SG::Dict &params) throw (SG::SgEntityXmlrpcError);
 
 protected:
-    Method(Shotgun::Shotgun *sg, const std::string &methodName);
+    Method(SG::Shotgun *sg, const std::string &methodName);
     virtual ~Method();
 };
 
-}; // End namespace Shotgun - IMPORTANT: has to have the semi-colon
+}; // End namespace SG - IMPORTANT: has to have the semi-colon
 

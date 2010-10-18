@@ -60,7 +60,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Note.h>
 #include <Shotgun/Playlist.h>
 
-namespace Shotgun {
+namespace SG {
 
 
 /// Defines a function pointer to a Shotgun entity's factory() function.
@@ -424,6 +424,6 @@ bool Shotgun::deleteEntity(const int id)
 }
 
 // *****************************************************************************
-} // End namespace Shotgun
+} // End namespace SG
 
 #endif    // End #ifdef __SHOTGUN_H__

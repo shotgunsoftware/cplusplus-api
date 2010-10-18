@@ -30,7 +30,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
 class List
@@ -41,8 +41,8 @@ class List
 
 public:
     List();
-    List(const Shotgun::List &ref);
-    List(const Shotgun::SgArray &array);
+    List(const SG::List &ref);
+    List(const SG::SgArray &array);
 
     // ===================================================================
     // These SIP functions that have %MethodCode directive are not defined
@@ -52,24 +52,24 @@ public:
     // -------------------------------------------------------------------
     List(const xmlrpc_c::value &value);
 %MethodCode
-    sipCpp = new Shotgun::List(*a0);
+    sipCpp = new SG::List(*a0);
 %End
 
     // -------------------------------------------------------------------
-    Shotgun::List &append(const xmlrpc_c::value &value);
+    SG::List &append(const xmlrpc_c::value &value);
 %MethodCode
     sipRes = &sipCpp->append(*a0);
 %End
    
     // -------------------------------------------------------------------
-    Shotgun::List &extend(const Shotgun::List &that);
+    SG::List &extend(const SG::List &that);
 
     // -------------------------------------------------------------------
     const xmlrpc_c::value value(const int index) const;
     const xmlrpc_c::value operator[](const int index) const;
 
     // -------------------------------------------------------------------
-    const Shotgun::SgArray &value() const;
+    const SG::SgArray &value() const;
     const bool empty() const;
     const int size() const;
     void clear();
@@ -90,5 +90,5 @@ public:
 
 };
 
-}; // End namespace Shotgun
+}; // End namespace SG
 

@@ -38,7 +38,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <xmlrpc-c/base.hpp>
 
-namespace Shotgun {
+namespace SG {
 
 class List;
 class Dict;
@@ -105,7 +105,7 @@ void fromXmlrpcValue(const xmlrpc_c::value &value, xmlrpc_c::value &out);
 /// It is in the format of "YYYY-MM-DD".
 std::string currDateStr();
 
-} // End namespace Shotgun
+} // End namespace SG
 
 // *****************************************************************************
 // *****************************************************************************
@@ -116,16 +116,16 @@ std::string toStdString(const double val);
 std::string toStdString(const time_t val);
 std::string toStdString(const struct tm &val);
 std::string toStdString(const xmlrpc_c::value &value);
-std::string toStdString(const Shotgun::SgArray &array);
-std::string toStdString(const Shotgun::SgMap &map);
-std::string toStdString(const Shotgun::Strings &strs);
-std::string toStdString(const Shotgun::MethodSignatures &sigs);
+std::string toStdString(const SG::SgArray &array);
+std::string toStdString(const SG::SgMap &map);
+std::string toStdString(const SG::Strings &strs);
+std::string toStdString(const SG::MethodSignatures &sigs);
 
 std::ostream &operator<<(std::ostream& output, const xmlrpc_c::value &value);
 std::ostream &operator<<(std::ostream& output, const struct tm &time);
-std::ostream &operator<<(std::ostream& output, const Shotgun::SgMap &map);
-std::ostream &operator<<(std::ostream& output, const Shotgun::SgArray &array);
-std::ostream &operator<<(std::ostream& output, const Shotgun::Strings &strs);
-std::ostream &operator<<(std::ostream& output, const Shotgun::MethodSignatures &sigs);
+std::ostream &operator<<(std::ostream& output, const SG::SgMap &map);
+std::ostream &operator<<(std::ostream& output, const SG::SgArray &array);
+std::ostream &operator<<(std::ostream& output, const SG::Strings &strs);
+std::ostream &operator<<(std::ostream& output, const SG::MethodSignatures &sigs);
 
 #endif    // End #ifdef __TYPE_H__

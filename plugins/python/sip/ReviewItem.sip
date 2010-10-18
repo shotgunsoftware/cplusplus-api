@@ -30,23 +30,23 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
-class ReviewItem : Shotgun::Entity
+class ReviewItem : SG::Entity
 {
 %TypeHeaderCode
     #include <Shotgun/ReviewItem.h>
 %End
 
 public:
-    ReviewItem(const Shotgun::ReviewItem &ref);
+    ReviewItem(const SG::ReviewItem &ref);
     virtual ~ReviewItem();
 
     static std::string type();
 
 protected:
-    ReviewItem(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
+    ReviewItem(SG::Shotgun *sg, const xmlrpc_c::value &attrs);
 };
 
-}; // End namespace Shotgun
+}; // End namespace SG

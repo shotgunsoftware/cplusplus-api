@@ -35,7 +35,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <Shotgun/types.h>
 
-namespace Shotgun {
+namespace SG {
 
 class Dict;
 class List;
@@ -307,6 +307,6 @@ public:
     virtual ~SgDictConversionError() throw() {}
 };
 
-} // End namespace Shotgun
+} // End namespace SG
 
 #endif    // End #ifdef __EXCEPTIONS_H__

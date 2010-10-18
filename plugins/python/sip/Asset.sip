@@ -30,23 +30,23 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
-class Asset : Shotgun::Entity, Shotgun::TaskMixin, Shotgun::NoteMixin
+class Asset : SG::Entity, SG::TaskMixin, SG::NoteMixin
 {
 %TypeHeaderCode
     #include <Shotgun/Asset.h>
 %End
 
 public:
-    Asset(const Shotgun::Asset &ref);
+    Asset(const SG::Asset &ref);
     virtual ~Asset();
 
     static std::string type();
 
 protected:
-    Asset(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
+    Asset(SG::Shotgun *sg, const xmlrpc_c::value &attrs);
 };
 
-}; // End namespace Shotgun
+}; // End namespace SG

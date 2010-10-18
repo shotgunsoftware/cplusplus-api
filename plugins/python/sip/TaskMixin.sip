@@ -30,7 +30,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
 class TaskMixin
@@ -42,32 +42,32 @@ class TaskMixin
 public:
     virtual ~TaskMixin();
 
-    Shotgun::TaskPtrs getTasks(const int limit = 0) throw(Shotgun::SgError) /Factory/;
-    Shotgun::Task *getTaskByName(const std::string &taskName) throw(Shotgun::SgError) /Factory/;
-    Shotgun::TaskPtrs getMilestoneTasks(const int limit = 0) throw(Shotgun::SgError) /Factory/;
-    Shotgun::Task *getNextIncompleteMilestoneTask() throw(Shotgun::SgError) /Factory/;
+    SG::TaskPtrs getTasks(const int limit = 0) throw(SG::SgError) /Factory/;
+    SG::Task *getTaskByName(const std::string &taskName) throw(SG::SgError) /Factory/;
+    SG::TaskPtrs getMilestoneTasks(const int limit = 0) throw(SG::SgError) /Factory/;
+    SG::Task *getNextIncompleteMilestoneTask() throw(SG::SgError) /Factory/;
 
-    Shotgun::Task *addTask(const std::string &taskName,
-                           const std::string &taskType,
-                           const std::string &taskAssignee = "",
-                           const std::string &taskStartDate = "",
-                           const std::string &taskEndDate = "",
-                           const std::string &taskStatus = "",
-                           const std::string &taskColor = "",
-                           const bool taskMilestone = false) throw(Shotgun::SgError) /Factory/;
+    SG::Task *addTask(const std::string &taskName,
+                      const std::string &taskType,
+                      const std::string &taskAssignee = "",
+                      const std::string &taskStartDate = "",
+                      const std::string &taskEndDate = "",
+                      const std::string &taskStatus = "",
+                      const std::string &taskColor = "",
+                      const bool taskMilestone = false) throw(SG::SgError) /Factory/;
 
-    Shotgun::Task *updateTask(const std::string &taskName,
-                              const std::string &taskAssignee = "",
-                              const std::string &taskStartDate = "",
-                              const std::string &taskEndDate = "",
-                              const std::string &taskStatus = "",
-                              const std::string &taskColor = "",
-                              const bool taskMilestone = false) throw(Shotgun::SgError) /Factory/;
+    SG::Task *updateTask(const std::string &taskName,
+                         const std::string &taskAssignee = "",
+                         const std::string &taskStartDate = "",
+                         const std::string &taskEndDate = "",
+                         const std::string &taskStatus = "",
+                         const std::string &taskColor = "",
+                         const bool taskMilestone = false) throw(SG::SgError) /Factory/;
 
-    bool removeTask(const std::string &taskName) throw(Shotgun::SgError);
+    bool removeTask(const std::string &taskName) throw(SG::SgError);
 
 protected:
     TaskMixin();
 };
 
-}; // End namespace Shotgun
+}; // End namespace SG

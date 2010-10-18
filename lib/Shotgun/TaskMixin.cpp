@@ -38,7 +38,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/HumanUser.h>
 #include <Shotgun/Group.h>
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
 TaskPtrs TaskMixin::getTasks(const int limit)
@@ -325,4 +325,4 @@ bool TaskMixin::removeTask(const std::string &taskName)
     }
 }
 
-} // End namespace Shotgun
+} // End namespace SG

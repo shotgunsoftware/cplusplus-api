@@ -30,23 +30,23 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
-class Playlist : Shotgun::Entity
+class Playlist : SG::Entity
 {
 %TypeHeaderCode
     #include <Shotgun/Playlist.h>
 %End
 
 public:
-    Playlist(const Shotgun::Playlist &ref);
+    Playlist(const SG::Playlist &ref);
     virtual ~Playlist();
 
     static std::string type();
 
 protected:
-    Playlist(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
+    Playlist(SG::Shotgun *sg, const xmlrpc_c::value &attrs);
 };
 
-}; // End namespace Shotgun
+}; // End namespace SG

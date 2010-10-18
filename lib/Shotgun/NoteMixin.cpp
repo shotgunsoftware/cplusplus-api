@@ -37,7 +37,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Entity.h>
 #include <Shotgun/Shot.h>
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
 NotePtrs NoteMixin::getNotes(const int limit)
@@ -194,4 +194,4 @@ Note *NoteMixin::addNote(const std::string &noteFromUserName,
     }
 }
 
-} // End namespace Shotgun
+} // End namespace SG

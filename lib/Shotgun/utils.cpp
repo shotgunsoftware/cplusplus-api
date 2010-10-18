@@ -32,7 +32,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <Shotgun/utils.h>
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
 std::string tolower(const std::string& s)
@@ -52,4 +52,4 @@ std::string toupper(const std::string& s)
 }
 
 
-}  //  End namespace Shotgun
+}  //  End namespace SG

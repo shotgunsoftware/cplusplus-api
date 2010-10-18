@@ -39,7 +39,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/List.h>
 #include <Shotgun/Dict.h>
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
 /*!
@@ -123,6 +123,6 @@ protected:
     List m_sorts; ///< The "sorts" list.
 };
 
-} // End namespace Shotgun
+} // End namespace SG
 
 #endif    // End #ifdef __SORTBY_H__

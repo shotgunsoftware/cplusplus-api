@@ -39,7 +39,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Sequence.h>
 #include <Shotgun/Project.h>
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
 Shot::Shot(Shotgun *sg, const xmlrpc_c::value &attrs)
@@ -111,4 +111,4 @@ List Shot::defaultReturnFields()
            .append("sg_pixel_aspect");
 }
 
-} // End namespace Shotgun
+} // End namespace SG

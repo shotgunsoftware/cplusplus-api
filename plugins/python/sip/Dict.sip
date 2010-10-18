@@ -30,7 +30,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
 class Dict
@@ -41,8 +41,8 @@ class Dict
 
 public:
     Dict();
-    Dict(const Shotgun::Dict &ref);
-    Dict(const Shotgun::SgMap &map);
+    Dict(const SG::Dict &ref);
+    Dict(const SG::SgMap &map);
     Dict(const xmlrpc_c::value &value);
 
     // ===================================================================
@@ -53,11 +53,11 @@ public:
     // -------------------------------------------------------------------
     Dict(const std::string &key, const xmlrpc_c::value &value);
 %MethodCode
-    sipCpp = new Shotgun::Dict(*a0, *a1);
+    sipCpp = new SG::Dict(*a0, *a1);
 %End
 
     // -------------------------------------------------------------------
-    Shotgun::Dict &add(const std::string &key, const xmlrpc_c::value &value);
+    SG::Dict &add(const std::string &key, const xmlrpc_c::value &value);
 %MethodCode
     sipRes = &sipCpp->add(*a0, *a1);
 %End
@@ -67,12 +67,12 @@ public:
     const xmlrpc_c::value operator[](const std::string &key) const;
 
     // -------------------------------------------------------------------
-    const Shotgun::SgMap &value() const;
+    const SG::SgMap &value() const;
     const bool empty() const;
     const int size() const;
     const bool find(const std::string &key) const;
     void clear();
-    Shotgun::Dict &erase(const std::string &key);
+    SG::Dict &erase(const std::string &key);
 
     // ------------------------------------------------------------------------
     SIP_PYOBJECT __str__();
@@ -88,5 +88,5 @@ public:
 
 };
 
-}; // End namespace Shotgun
+}; // End namespace SG
 

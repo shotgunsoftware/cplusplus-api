@@ -30,7 +30,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
 class FilterBy
@@ -41,8 +41,8 @@ class FilterBy
 
 public:
     FilterBy();
-    FilterBy(const Shotgun::FilterBy &ref);
-    FilterBy(const Shotgun::Dict &filters);
+    FilterBy(const SG::FilterBy &ref);
+    FilterBy(const SG::Dict &filters);
 
     // ===================================================================
     // These SIP functions that have %MethodCode directive are not defined 
@@ -54,65 +54,65 @@ public:
              const std::string &relation,
              const xmlrpc_c::value &value);
 %MethodCode
-    sipCpp = new Shotgun::FilterBy(*a0, *a1, *a2);
+    sipCpp = new SG::FilterBy(*a0, *a1, *a2);
 %End
 
     // -------------------------------------------------------------------
     FilterBy(const std::string &path,
              const std::string &relation,
-             const Shotgun::Dict &value);
+             const SG::Dict &value);
 %MethodCode
-    sipCpp = new Shotgun::FilterBy(*a0, *a1, toXmlrpcValue(*a2));
+    sipCpp = new SG::FilterBy(*a0, *a1, toXmlrpcValue(*a2));
 %End
 
     // -------------------------------------------------------------------
     FilterBy(const std::string &path,
              const std::string &relation,
-             const Shotgun::List &value);
+             const SG::List &value);
 %MethodCode
-    sipCpp = new Shotgun::FilterBy(*a0, *a1, toXmlrpcValue(*a2));
+    sipCpp = new SG::FilterBy(*a0, *a1, toXmlrpcValue(*a2));
 %End
 
     // -------------------------------------------------------------------
-    Shotgun::FilterBy &And(const std::string &path,
-                           const std::string &relation,
-                           const xmlrpc_c::value &value);
+    SG::FilterBy &And(const std::string &path,
+                      const std::string &relation,
+                      const xmlrpc_c::value &value);
 %MethodCode
     sipRes = &sipCpp->And(*a0, *a1, *a2);
 %End
 
     // -------------------------------------------------------------------
-    Shotgun::FilterBy &And(const std::string &path,
-                           const std::string &relation,
-                           const Shotgun::Dict &value);
+    SG::FilterBy &And(const std::string &path,
+                      const std::string &relation,
+                      const SG::Dict &value);
 %MethodCode
     sipRes = &sipCpp->And(*a0, *a1, toXmlrpcValue(*a2));
 %End
 
     // -------------------------------------------------------------------
-    Shotgun::FilterBy &And(const std::string &path,
-                           const std::string &relation,
-                           const Shotgun::List &value);
+    SG::FilterBy &And(const std::string &path,
+                      const std::string &relation,
+                      const SG::List &value);
 %MethodCode
     sipRes = &sipCpp->And(*a0, *a1, toXmlrpcValue(*a2));
 %End
 
     // -------------------------------------------------------------------
-    Shotgun::FilterBy &And(const Shotgun::FilterBy &that);
+    SG::FilterBy &And(const SG::FilterBy &that);
 
     // -------------------------------------------------------------------
-    Shotgun::FilterBy &Or(const std::string &path,
-                          const std::string &relation,
-                          const xmlrpc_c::value &value);
+    SG::FilterBy &Or(const std::string &path,
+                     const std::string &relation,
+                     const xmlrpc_c::value &value);
 %MethodCode
     sipRes = &sipCpp->Or(*a0, *a1, *a2);
 %End
 
     // -------------------------------------------------------------------
-    Shotgun::FilterBy &Or(const Shotgun::FilterBy &that);
+    SG::FilterBy &Or(const SG::FilterBy &that);
 
     // -------------------------------------------------------------------
-    const Shotgun::Dict &filters() const;
+    const SG::Dict &filters() const;
     const bool empty() const;
     const int size() const;
     void clear();
@@ -131,4 +131,4 @@ public:
 
 };
 
-}; // End namespace Shotgun
+}; // End namespace SG

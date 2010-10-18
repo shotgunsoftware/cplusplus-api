@@ -35,7 +35,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Shotgun.h>
 #include <Shotgun/HumanUser.h>
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
 HumanUser::HumanUser(Shotgun *sg, const xmlrpc_c::value &attrs)
@@ -76,4 +76,4 @@ List HumanUser::defaultReturnFields()
            .append("permission_rule_set");
 }
 
-} // End namespace Shotgun
+} // End namespace SG

@@ -36,7 +36,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Asset.h>
 #include <Shotgun/Project.h>
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
 Asset::Asset(Shotgun *sg, const xmlrpc_c::value &attrs)
@@ -78,4 +78,4 @@ List Asset::defaultReturnFields()
            .append("shots");
 }
 
-} // End namespace Shotgun
+} // End namespace SG

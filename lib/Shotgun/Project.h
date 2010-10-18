@@ -35,7 +35,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <Shotgun/Entity.h>
 
-namespace Shotgun {
+namespace SG {
 
 class Shotgun;
 
@@ -105,6 +105,6 @@ protected:
 // *****************************************************************************
 typedef std::vector<Project *> ProjectPtrs;
 
-} // End namespace Shotgun
+} // End namespace SG
 
 #endif    // End #ifdef __PROJECT_H__

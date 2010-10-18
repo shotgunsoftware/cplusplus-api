@@ -36,7 +36,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Delivery.h>
 #include <Shotgun/Project.h>
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
 Delivery::Delivery(Shotgun *sg, const xmlrpc_c::value &attrs)
@@ -79,4 +79,4 @@ List Delivery::defaultReturnFields()
            .append("sg_wrangler_notes");
 }
 
-} // End namespace Shotgun
+} // End namespace SG

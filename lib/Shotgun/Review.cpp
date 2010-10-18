@@ -38,7 +38,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Review.h>
 #include <Shotgun/Project.h>
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
 Review::Review(Shotgun *sg, const xmlrpc_c::value &attrs)
@@ -81,4 +81,4 @@ List Review::defaultReturnFields()
            .append("sg_review_client_notes");
 }
 
-} // End namespace Shotgun
+} // End namespace SG

@@ -36,7 +36,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/PublishEvent.h>
 #include <Shotgun/Project.h>
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
 PublishEvent::PublishEvent(Shotgun *sg, const xmlrpc_c::value &attrs)
@@ -77,4 +77,4 @@ List PublishEvent::defaultReturnFields()
            .append("sg_type");
 }
 
-} // End namespace Shotgun
+} // End namespace SG

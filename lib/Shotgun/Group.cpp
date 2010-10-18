@@ -35,7 +35,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Shotgun.h>
 #include <Shotgun/Group.h>
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
 Group::Group(Shotgun *sg, const xmlrpc_c::value &attrs)
@@ -69,4 +69,4 @@ List Group::defaultReturnFields()
            .append("code");
 }
 
-} // End namespace Shotgun
+} // End namespace SG

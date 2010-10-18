@@ -36,7 +36,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Element.h>
 #include <Shotgun/Project.h>
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
 Element::Element(Shotgun *sg, const xmlrpc_c::value &attrs)
@@ -74,4 +74,4 @@ List Element::defaultReturnFields()
            .append("sg_element_type");
 }
 
-} // End namespace Shotgun
+} // End namespace SG

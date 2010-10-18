@@ -30,23 +30,23 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
-class Delivery : Shotgun::Entity
+class Delivery : SG::Entity
 {
 %TypeHeaderCode
     #include <Shotgun/Delivery.h>
 %End
  
 public:
-    Delivery(const Shotgun::Delivery &ref);
+    Delivery(const SG::Delivery &ref);
     virtual ~Delivery();
 
     static std::string type();
 
 protected:
-    Delivery(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
+    Delivery(SG::Shotgun *sg, const xmlrpc_c::value &attrs);
 };
 
-}; // End namespace Shotgun
+}; // End namespace SG

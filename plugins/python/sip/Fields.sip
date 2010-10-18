@@ -30,7 +30,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
 class Fields
@@ -41,8 +41,8 @@ class Fields
 
 public:
     Fields();
-    Fields(const Shotgun::Fields &ref);
-    Fields(const Shotgun::List &fields);
+    Fields(const SG::Fields &ref);
+    Fields(const SG::List &fields);
 
     // ===================================================================
     // These SIP functions that have %MethodCode directive are not defined
@@ -52,26 +52,26 @@ public:
     Fields(const std::string &fieldName,
            const xmlrpc_c::value &fieldValue,
            const std::string &multiEntityUpdateMode = "",
-           const Shotgun::Dict &parentEntity = Shotgun::Dict());
+           const SG::Dict &parentEntity = SG::Dict());
 %MethodCode
-    sipCpp = new Shotgun::Fields(*a0, *a1, *a2, *a3);
+    sipCpp = new SG::Fields(*a0, *a1, *a2, *a3);
 %End
 
     // -------------------------------------------------------------------
     // Add one field
-    Shotgun::Fields &add(const std::string &fieldName,
+    SG::Fields &add(const std::string &fieldName,
                 const xmlrpc_c::value &fieldValue,
                 const std::string &multiEntityUpdateMode = "",
-                const Shotgun::Dict &parentEntity = Shotgun::Dict());
+                const SG::Dict &parentEntity = SG::Dict());
 %MethodCode
     sipRes = &sipCpp->add(*a0, *a1, *a2, *a3);
 %End
 
     // -------------------------------------------------------------------
-    Shotgun::Fields &add(const Shotgun::Fields &that);
+    SG::Fields &add(const SG::Fields &that);
 
     // -------------------------------------------------------------------
-    const Shotgun::List &fields() const;
+    const SG::List &fields() const;
     const bool empty() const;
     const int size() const;
     void clear();
@@ -90,4 +90,4 @@ public:
 
 };
 
-}; // End namespace Shotgun
+}; // End namespace SG

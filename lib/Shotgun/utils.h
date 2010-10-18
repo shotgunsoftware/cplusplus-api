@@ -35,7 +35,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <string>
 
-namespace Shotgun {
+namespace SG {
 
 /// Utility function - returns the lower-case of the input string.
 std::string tolower(const std::string& s);
@@ -43,7 +43,7 @@ std::string tolower(const std::string& s);
 /// Utility function - returns the upper-case of the input string.
 std::string toupper(const std::string& s);
 
-}  //  End namespace Shotgun
+}  //  End namespace SG
 
 #endif    // End #ifdef __UTILS_H__
 

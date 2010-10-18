@@ -36,7 +36,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/ReviewItem.h>
 #include <Shotgun/Project.h>
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
 ReviewItem::ReviewItem(Shotgun *sg, const xmlrpc_c::value &attrs)
@@ -78,4 +78,4 @@ List ReviewItem::defaultReturnFields()
            .append("sg_approved_");
 }
 
-} // End namespace Shotgun
+} // End namespace SG

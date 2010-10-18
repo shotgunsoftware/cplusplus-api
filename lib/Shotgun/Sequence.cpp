@@ -37,7 +37,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Project.h>
 #include <Shotgun/utils.h>
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
 Sequence::Sequence(Shotgun *sg, const xmlrpc_c::value &attrs)
@@ -71,4 +71,4 @@ List Sequence::defaultReturnFields()
            .append("code");
 }
 
-} // End namespace Shotgun
+} // End namespace SG

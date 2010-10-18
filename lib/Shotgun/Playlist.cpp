@@ -36,7 +36,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Playlist.h>
 #include <Shotgun/Note.h>
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
 Playlist::Playlist(Shotgun *sg, const xmlrpc_c::value &attrs)
@@ -77,4 +77,4 @@ List Playlist::defaultReturnFields()
            .append("versions");
 }
 
-} // End namespace Shotgun
+} // End namespace SG

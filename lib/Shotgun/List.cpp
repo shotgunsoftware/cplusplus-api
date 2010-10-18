@@ -32,7 +32,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <Shotgun/List.h>
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
 List::List() : m_value(SgArray())
@@ -88,4 +88,4 @@ void List::erase(const int first, const int last)
     m_value.erase(m_value.begin() + first, m_value.begin() + last);
 }
 
-} // End namespace Shotgun
+} // End namespace SG

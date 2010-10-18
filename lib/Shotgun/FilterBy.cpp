@@ -32,7 +32,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <Shotgun/FilterBy.h>
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
 FilterBy::FilterBy() : m_filters(Dict())
@@ -108,4 +108,4 @@ FilterBy &FilterBy::op(const std::string &logicOperator,
     return *this;
 }
 
-} // End namespace Shotgun
+} // End namespace SG

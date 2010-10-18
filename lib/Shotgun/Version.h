@@ -38,7 +38,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Entity.h>
 #include <Shotgun/NoteMixin.h>
 
-namespace Shotgun {
+namespace SG {
 
 class Shotgun;
 
@@ -100,6 +100,6 @@ protected:
 // *****************************************************************************
 typedef std::vector<Version *> VersionPtrs;
 
-} // End namespace Shotgun
+} // End namespace SG
 
 #endif    // End #ifdef __VERSION_H__

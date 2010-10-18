@@ -378,7 +378,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 };
 
 // ************************************************************************
-//  std::vector<xmlrpc_c::value> - Shotgun::SgArray
+//  std::vector<xmlrpc_c::value> - SG::SgArray
 // ************************************************************************
 
 // Refer to /tip/rnd/3rdparty/managed/python/modules/pyqt/PyQt-x11-gpl-4.5.1/sip/QtCore/qlist.sip
@@ -493,7 +493,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 };
 
 // ************************************************************************
-//  std::vector<std::string> - Shotgun::Strings
+//  std::vector<std::string> - SG::Strings
 // ************************************************************************
 
 %MappedType std::vector<std::string>
@@ -565,7 +565,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 // ************************************************************************
 //  std::vector<std::vector<std::string>>  
-//      - std::vector<Strings> - Shotgun::MethodSignatures
+//      - std::vector<Strings> - SG::MethodSignatures
 // ************************************************************************
 %MappedType std::vector< std::vector<std::string> > // NOTE: need a whitespace between > > in sip's syntax
 {
@@ -661,10 +661,10 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 };
 
 // ************************************************************************
-//  std::vector<Shotgun::Entity *> - Shotgun::EntityPtrs
+//  std::vector<SG::Entity *> - SG::EntityPtrs
 // ************************************************************************
 
-%MappedType std::vector<Shotgun::Entity *>
+%MappedType std::vector<SG::Entity *>
 {
 %TypeHeaderCode
 #include <vector>
@@ -679,11 +679,11 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
     for (SIP_SSIZE_T i = 0; i < SIP_SSIZE_T(sipCpp->size()); ++i)
     {
-        Shotgun::Entity *t = (*sipCpp)[i];
+        SG::Entity *t = (*sipCpp)[i];
         
         PyObject *pObj;
 
-        if ((pObj = sipConvertFromNewType(t, sipType_Shotgun_Entity, sipTransferObj)) == NULL)
+        if ((pObj = sipConvertFromNewType(t, sipType_SG_Entity, sipTransferObj)) == NULL)
         {
             Py_DECREF(pList);
             delete t;
@@ -709,7 +709,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         {
             PyObject *itm = PySequence_ITEM(sipPy, i);
             bool ok = (itm &&
-                       sipCanConvertToType(itm, sipType_Shotgun_Entity, SIP_NOT_NONE));
+                       sipCanConvertToType(itm, sipType_SG_Entity, SIP_NOT_NONE));
 
             Py_XDECREF(itm);
 
@@ -720,16 +720,16 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         return 1;
     }
 
-    std::vector<Shotgun::Entity *> *stdVector = new std::vector<Shotgun::Entity *>;
+    std::vector<SG::Entity *> *stdVector = new std::vector<SG::Entity *>;
     len = PySequence_Size(sipPy);
 
     for (SIP_SSIZE_T i = 0; i < len; ++i)
     {
         PyObject *itm = PySequence_ITEM(sipPy, i);
         int state;
-        Shotgun::Entity *t = reinterpret_cast<Shotgun::Entity *>(
+        SG::Entity *t = reinterpret_cast<SG::Entity *>(
                                  sipConvertToType( itm,
-                                                   sipType_Shotgun_Entity,
+                                                   sipType_SG_Entity,
                                                    sipTransferObj,
                                                    SIP_NOT_NONE,
                                                    &state,
@@ -739,7 +739,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
         if (*sipIsErr)
         {
-            sipReleaseType(t, sipType_Shotgun_Entity, state);
+            sipReleaseType(t, sipType_SG_Entity, state);
 
             delete stdVector;
 
@@ -756,10 +756,10 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 };
 
 // ************************************************************************
-//  std::vector<Shotgun::Project *> - Shotgun::ProjectPtrs
+//  std::vector<SG::Project *> - SG::ProjectPtrs
 // ************************************************************************
 
-%MappedType std::vector<Shotgun::Project *>
+%MappedType std::vector<SG::Project *>
 {
 %TypeHeaderCode
 #include <vector>
@@ -774,11 +774,11 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
     for (SIP_SSIZE_T i = 0; i < SIP_SSIZE_T(sipCpp->size()); ++i)
     {
-        Shotgun::Project *t = (*sipCpp)[i];
+        SG::Project *t = (*sipCpp)[i];
         
         PyObject *pObj;
 
-        if ((pObj = sipConvertFromNewType(t, sipType_Shotgun_Project, sipTransferObj)) == NULL)
+        if ((pObj = sipConvertFromNewType(t, sipType_SG_Project, sipTransferObj)) == NULL)
         {
             Py_DECREF(pList);
             delete t;
@@ -804,7 +804,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         {
             PyObject *itm = PySequence_ITEM(sipPy, i);
             bool ok = (itm &&
-                       sipCanConvertToType(itm, sipType_Shotgun_Project, SIP_NOT_NONE));
+                       sipCanConvertToType(itm, sipType_SG_Project, SIP_NOT_NONE));
 
             Py_XDECREF(itm);
 
@@ -815,16 +815,16 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         return 1;
     }
 
-    std::vector<Shotgun::Project *> *stdVector = new std::vector<Shotgun::Project *>;
+    std::vector<SG::Project *> *stdVector = new std::vector<SG::Project *>;
     len = PySequence_Size(sipPy);
 
     for (SIP_SSIZE_T i = 0; i < len; ++i)
     {
         PyObject *itm = PySequence_ITEM(sipPy, i);
         int state;
-        Shotgun::Project *t = reinterpret_cast<Shotgun::Project *>(
+        SG::Project *t = reinterpret_cast<SG::Project *>(
                                  sipConvertToType( itm,
-                                                   sipType_Shotgun_Project,
+                                                   sipType_SG_Project,
                                                    sipTransferObj,
                                                    SIP_NOT_NONE,
                                                    &state,
@@ -834,7 +834,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
         if (*sipIsErr)
         {
-            sipReleaseType(t, sipType_Shotgun_Project, state);
+            sipReleaseType(t, sipType_SG_Project, state);
 
             delete stdVector;
 
@@ -851,10 +851,10 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 };
 
 // ************************************************************************
-//  std::vector<Shotgun::Sequence *> - Shotgun::SequencePtrs
+//  std::vector<SG::Sequence *> - SG::SequencePtrs
 // ************************************************************************
 
-%MappedType std::vector<Shotgun::Sequence *>
+%MappedType std::vector<SG::Sequence *>
 {
 %TypeHeaderCode
 #include <vector>
@@ -869,11 +869,11 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
     for (SIP_SSIZE_T i = 0; i < SIP_SSIZE_T(sipCpp->size()); ++i)
     {
-        Shotgun::Sequence *t = (*sipCpp)[i];
+        SG::Sequence *t = (*sipCpp)[i];
         
         PyObject *pObj;
 
-        if ((pObj = sipConvertFromNewType(t, sipType_Shotgun_Sequence, sipTransferObj)) == NULL)
+        if ((pObj = sipConvertFromNewType(t, sipType_SG_Sequence, sipTransferObj)) == NULL)
         {
             Py_DECREF(pList);
             delete t;
@@ -899,7 +899,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         {
             PyObject *itm = PySequence_ITEM(sipPy, i);
             bool ok = (itm &&
-                       sipCanConvertToType(itm, sipType_Shotgun_Sequence, SIP_NOT_NONE));
+                       sipCanConvertToType(itm, sipType_SG_Sequence, SIP_NOT_NONE));
 
             Py_XDECREF(itm);
 
@@ -910,16 +910,16 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         return 1;
     }
 
-    std::vector<Shotgun::Sequence *> *stdVector = new std::vector<Shotgun::Sequence *>;
+    std::vector<SG::Sequence *> *stdVector = new std::vector<SG::Sequence *>;
     len = PySequence_Size(sipPy);
 
     for (SIP_SSIZE_T i = 0; i < len; ++i)
     {
         PyObject *itm = PySequence_ITEM(sipPy, i);
         int state;
-        Shotgun::Sequence *t = reinterpret_cast<Shotgun::Sequence *>(
+        SG::Sequence *t = reinterpret_cast<SG::Sequence *>(
                                  sipConvertToType( itm,
-                                                   sipType_Shotgun_Sequence,
+                                                   sipType_SG_Sequence,
                                                    sipTransferObj,
                                                    SIP_NOT_NONE,
                                                    &state,
@@ -929,7 +929,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
         if (*sipIsErr)
         {
-            sipReleaseType(t, sipType_Shotgun_Sequence, state);
+            sipReleaseType(t, sipType_SG_Sequence, state);
 
             delete stdVector;
 
@@ -946,10 +946,10 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 };
 
 // ************************************************************************
-//  std::vector<Shotgun::Shot *> - Shotgun::ShotPtrs
+//  std::vector<SG::Shot *> - SG::ShotPtrs
 // ************************************************************************
 
-%MappedType std::vector<Shotgun::Shot *>
+%MappedType std::vector<SG::Shot *>
 {
 %TypeHeaderCode
 #include <vector>
@@ -964,11 +964,11 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
     for (SIP_SSIZE_T i = 0; i < SIP_SSIZE_T(sipCpp->size()); ++i)
     {
-        Shotgun::Shot *t = (*sipCpp)[i];
+        SG::Shot *t = (*sipCpp)[i];
         
         PyObject *pObj;
 
-        if ((pObj = sipConvertFromNewType(t, sipType_Shotgun_Shot, sipTransferObj)) == NULL)
+        if ((pObj = sipConvertFromNewType(t, sipType_SG_Shot, sipTransferObj)) == NULL)
         {
             Py_DECREF(pList);
             delete t;
@@ -994,7 +994,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         {
             PyObject *itm = PySequence_ITEM(sipPy, i);
             bool ok = (itm &&
-                       sipCanConvertToType(itm, sipType_Shotgun_Shot, SIP_NOT_NONE));
+                       sipCanConvertToType(itm, sipType_SG_Shot, SIP_NOT_NONE));
 
             Py_XDECREF(itm);
 
@@ -1005,16 +1005,16 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         return 1;
     }
 
-    std::vector<Shotgun::Shot *> *stdVector = new std::vector<Shotgun::Shot *>;
+    std::vector<SG::Shot *> *stdVector = new std::vector<SG::Shot *>;
     len = PySequence_Size(sipPy);
 
     for (SIP_SSIZE_T i = 0; i < len; ++i)
     {
         PyObject *itm = PySequence_ITEM(sipPy, i);
         int state;
-        Shotgun::Shot *t = reinterpret_cast<Shotgun::Shot *>(
+        SG::Shot *t = reinterpret_cast<SG::Shot *>(
                                  sipConvertToType( itm,
-                                                   sipType_Shotgun_Shot,
+                                                   sipType_SG_Shot,
                                                    sipTransferObj,
                                                    SIP_NOT_NONE,
                                                    &state,
@@ -1024,7 +1024,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
         if (*sipIsErr)
         {
-            sipReleaseType(t, sipType_Shotgun_Shot, state);
+            sipReleaseType(t, sipType_SG_Shot, state);
 
             delete stdVector;
 
@@ -1041,10 +1041,10 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 };
 
 // ************************************************************************
-//  std::vector<Shotgun::Version *> - Shotgun::VersionPtrs
+//  std::vector<SG::Version *> - SG::VersionPtrs
 // ************************************************************************
 
-%MappedType std::vector<Shotgun::Version *>
+%MappedType std::vector<SG::Version *>
 {
 %TypeHeaderCode
 #include <vector>
@@ -1059,11 +1059,11 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
     for (SIP_SSIZE_T i = 0; i < SIP_SSIZE_T(sipCpp->size()); ++i)
     {
-        Shotgun::Version *t = (*sipCpp)[i];
+        SG::Version *t = (*sipCpp)[i];
         
         PyObject *pObj;
 
-        if ((pObj = sipConvertFromNewType(t, sipType_Shotgun_Version, sipTransferObj)) == NULL)
+        if ((pObj = sipConvertFromNewType(t, sipType_SG_Version, sipTransferObj)) == NULL)
         {
             Py_DECREF(pList);
             delete t;
@@ -1089,7 +1089,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         {
             PyObject *itm = PySequence_ITEM(sipPy, i);
             bool ok = (itm &&
-                       sipCanConvertToType(itm, sipType_Shotgun_Version, SIP_NOT_NONE));
+                       sipCanConvertToType(itm, sipType_SG_Version, SIP_NOT_NONE));
 
             Py_XDECREF(itm);
 
@@ -1100,16 +1100,16 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         return 1;
     }
 
-    std::vector<Shotgun::Version *> *stdVector = new std::vector<Shotgun::Version *>;
+    std::vector<SG::Version *> *stdVector = new std::vector<SG::Version *>;
     len = PySequence_Size(sipPy);
 
     for (SIP_SSIZE_T i = 0; i < len; ++i)
     {
         PyObject *itm = PySequence_ITEM(sipPy, i);
         int state;
-        Shotgun::Version *t = reinterpret_cast<Shotgun::Version *>(
+        SG::Version *t = reinterpret_cast<SG::Version *>(
                                  sipConvertToType( itm,
-                                                   sipType_Shotgun_Version,
+                                                   sipType_SG_Version,
                                                    sipTransferObj,
                                                    SIP_NOT_NONE,
                                                    &state,
@@ -1119,7 +1119,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
         if (*sipIsErr)
         {
-            sipReleaseType(t, sipType_Shotgun_Version, state);
+            sipReleaseType(t, sipType_SG_Version, state);
 
             delete stdVector;
 
@@ -1136,10 +1136,10 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 };
 
 // ************************************************************************
-//  std::vector<Shotgun::HumanUser *> - Shotgun::HumanUserPtrs
+//  std::vector<SG::HumanUser *> - SG::HumanUserPtrs
 // ************************************************************************
 
-%MappedType std::vector<Shotgun::HumanUser *>
+%MappedType std::vector<SG::HumanUser *>
 {
 %TypeHeaderCode
 #include <vector>
@@ -1154,11 +1154,11 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
     for (SIP_SSIZE_T i = 0; i < SIP_SSIZE_T(sipCpp->size()); ++i)
     {
-        Shotgun::HumanUser *t = (*sipCpp)[i];
+        SG::HumanUser *t = (*sipCpp)[i];
         
         PyObject *pObj;
 
-        if ((pObj = sipConvertFromNewType(t, sipType_Shotgun_HumanUser, sipTransferObj)) == NULL)
+        if ((pObj = sipConvertFromNewType(t, sipType_SG_HumanUser, sipTransferObj)) == NULL)
         {
             Py_DECREF(pList);
             delete t;
@@ -1184,7 +1184,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         {
             PyObject *itm = PySequence_ITEM(sipPy, i);
             bool ok = (itm &&
-                       sipCanConvertToType(itm, sipType_Shotgun_HumanUser, SIP_NOT_NONE));
+                       sipCanConvertToType(itm, sipType_SG_HumanUser, SIP_NOT_NONE));
 
             Py_XDECREF(itm);
 
@@ -1195,16 +1195,16 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         return 1;
     }
 
-    std::vector<Shotgun::HumanUser *> *stdVector = new std::vector<Shotgun::HumanUser *>;
+    std::vector<SG::HumanUser *> *stdVector = new std::vector<SG::HumanUser *>;
     len = PySequence_Size(sipPy);
 
     for (SIP_SSIZE_T i = 0; i < len; ++i)
     {
         PyObject *itm = PySequence_ITEM(sipPy, i);
         int state;
-        Shotgun::HumanUser *t = reinterpret_cast<Shotgun::HumanUser *>(
+        SG::HumanUser *t = reinterpret_cast<SG::HumanUser *>(
                                  sipConvertToType( itm,
-                                                   sipType_Shotgun_HumanUser,
+                                                   sipType_SG_HumanUser,
                                                    sipTransferObj,
                                                    SIP_NOT_NONE,
                                                    &state,
@@ -1214,7 +1214,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
         if (*sipIsErr)
         {
-            sipReleaseType(t, sipType_Shotgun_HumanUser, state);
+            sipReleaseType(t, sipType_SG_HumanUser, state);
 
             delete stdVector;
 
@@ -1231,10 +1231,10 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 };
 
 // ************************************************************************
-//  std::vector<Shotgun::Element *> - Shotgun::ElementPtrs
+//  std::vector<SG::Element *> - SG::ElementPtrs
 // ************************************************************************
 
-%MappedType std::vector<Shotgun::Element *>
+%MappedType std::vector<SG::Element *>
 {
 %TypeHeaderCode
 #include <vector>
@@ -1249,11 +1249,11 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
     for (SIP_SSIZE_T i = 0; i < SIP_SSIZE_T(sipCpp->size()); ++i)
     {
-        Shotgun::Element *t = (*sipCpp)[i];
+        SG::Element *t = (*sipCpp)[i];
         
         PyObject *pObj;
 
-        if ((pObj = sipConvertFromNewType(t, sipType_Shotgun_Element, sipTransferObj)) == NULL)
+        if ((pObj = sipConvertFromNewType(t, sipType_SG_Element, sipTransferObj)) == NULL)
         {
             Py_DECREF(pList);
             delete t;
@@ -1279,7 +1279,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         {
             PyObject *itm = PySequence_ITEM(sipPy, i);
             bool ok = (itm &&
-                       sipCanConvertToType(itm, sipType_Shotgun_Element, SIP_NOT_NONE));
+                       sipCanConvertToType(itm, sipType_SG_Element, SIP_NOT_NONE));
 
             Py_XDECREF(itm);
 
@@ -1290,16 +1290,16 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         return 1;
     }
 
-    std::vector<Shotgun::Element *> *stdVector = new std::vector<Shotgun::Element *>;
+    std::vector<SG::Element *> *stdVector = new std::vector<SG::Element *>;
     len = PySequence_Size(sipPy);
 
     for (SIP_SSIZE_T i = 0; i < len; ++i)
     {
         PyObject *itm = PySequence_ITEM(sipPy, i);
         int state;
-        Shotgun::Element *t = reinterpret_cast<Shotgun::Element *>(
+        SG::Element *t = reinterpret_cast<SG::Element *>(
                                  sipConvertToType( itm,
-                                                   sipType_Shotgun_Element,
+                                                   sipType_SG_Element,
                                                    sipTransferObj,
                                                    SIP_NOT_NONE,
                                                    &state,
@@ -1309,7 +1309,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
         if (*sipIsErr)
         {
-            sipReleaseType(t, sipType_Shotgun_Element, state);
+            sipReleaseType(t, sipType_SG_Element, state);
 
             delete stdVector;
 
@@ -1326,10 +1326,10 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 };
 
 // ************************************************************************
-//  std::vector<Shotgun::Asset *> - Shotgun::AssetPtrs
+//  std::vector<SG::Asset *> - SG::AssetPtrs
 // ************************************************************************
 
-%MappedType std::vector<Shotgun::Asset *>
+%MappedType std::vector<SG::Asset *>
 {
 %TypeHeaderCode
 #include <vector>
@@ -1344,11 +1344,11 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
     for (SIP_SSIZE_T i = 0; i < SIP_SSIZE_T(sipCpp->size()); ++i)
     {
-        Shotgun::Asset *t = (*sipCpp)[i];
+        SG::Asset *t = (*sipCpp)[i];
         
         PyObject *pObj;
 
-        if ((pObj = sipConvertFromNewType(t, sipType_Shotgun_Asset, sipTransferObj)) == NULL)
+        if ((pObj = sipConvertFromNewType(t, sipType_SG_Asset, sipTransferObj)) == NULL)
         {
             Py_DECREF(pList);
             delete t;
@@ -1374,7 +1374,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         {
             PyObject *itm = PySequence_ITEM(sipPy, i);
             bool ok = (itm &&
-                       sipCanConvertToType(itm, sipType_Shotgun_Asset, SIP_NOT_NONE));
+                       sipCanConvertToType(itm, sipType_SG_Asset, SIP_NOT_NONE));
 
             Py_XDECREF(itm);
 
@@ -1385,16 +1385,16 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         return 1;
     }
 
-    std::vector<Shotgun::Asset *> *stdVector = new std::vector<Shotgun::Asset *>;
+    std::vector<SG::Asset *> *stdVector = new std::vector<SG::Asset *>;
     len = PySequence_Size(sipPy);
 
     for (SIP_SSIZE_T i = 0; i < len; ++i)
     {
         PyObject *itm = PySequence_ITEM(sipPy, i);
         int state;
-        Shotgun::Asset *t = reinterpret_cast<Shotgun::Asset *>(
+        SG::Asset *t = reinterpret_cast<SG::Asset *>(
                                  sipConvertToType( itm,
-                                                   sipType_Shotgun_Asset,
+                                                   sipType_SG_Asset,
                                                    sipTransferObj,
                                                    SIP_NOT_NONE,
                                                    &state,
@@ -1404,7 +1404,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
         if (*sipIsErr)
         {
-            sipReleaseType(t, sipType_Shotgun_Asset, state);
+            sipReleaseType(t, sipType_SG_Asset, state);
 
             delete stdVector;
 
@@ -1421,10 +1421,10 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 };
 
 // ************************************************************************
-//  std::vector<Shotgun::Delivery *> - Shotgun::DeliveryPtrs
+//  std::vector<SG::Delivery *> - SG::DeliveryPtrs
 // ************************************************************************
 
-%MappedType std::vector<Shotgun::Delivery *>
+%MappedType std::vector<SG::Delivery *>
 {
 %TypeHeaderCode
 #include <vector>
@@ -1439,11 +1439,11 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
     for (SIP_SSIZE_T i = 0; i < SIP_SSIZE_T(sipCpp->size()); ++i)
     {
-        Shotgun::Delivery *t = (*sipCpp)[i];
+        SG::Delivery *t = (*sipCpp)[i];
         
         PyObject *pObj;
 
-        if ((pObj = sipConvertFromNewType(t, sipType_Shotgun_Delivery, sipTransferObj)) == NULL)
+        if ((pObj = sipConvertFromNewType(t, sipType_SG_Delivery, sipTransferObj)) == NULL)
         {
             Py_DECREF(pList);
             delete t;
@@ -1469,7 +1469,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         {
             PyObject *itm = PySequence_ITEM(sipPy, i);
             bool ok = (itm &&
-                       sipCanConvertToType(itm, sipType_Shotgun_Delivery, SIP_NOT_NONE));
+                       sipCanConvertToType(itm, sipType_SG_Delivery, SIP_NOT_NONE));
 
             Py_XDECREF(itm);
 
@@ -1480,16 +1480,16 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         return 1;
     }
 
-    std::vector<Shotgun::Delivery *> *stdVector = new std::vector<Shotgun::Delivery *>;
+    std::vector<SG::Delivery *> *stdVector = new std::vector<SG::Delivery *>;
     len = PySequence_Size(sipPy);
 
     for (SIP_SSIZE_T i = 0; i < len; ++i)
     {
         PyObject *itm = PySequence_ITEM(sipPy, i);
         int state;
-        Shotgun::Delivery *t = reinterpret_cast<Shotgun::Delivery *>(
+        SG::Delivery *t = reinterpret_cast<SG::Delivery *>(
                                  sipConvertToType( itm,
-                                                   sipType_Shotgun_Delivery,
+                                                   sipType_SG_Delivery,
                                                    sipTransferObj,
                                                    SIP_NOT_NONE,
                                                    &state,
@@ -1499,7 +1499,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
         if (*sipIsErr)
         {
-            sipReleaseType(t, sipType_Shotgun_Delivery, state);
+            sipReleaseType(t, sipType_SG_Delivery, state);
 
             delete stdVector;
 
@@ -1516,10 +1516,10 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 };
 
 // ************************************************************************
-//  std::vector<Shotgun::PublishEvent *> - Shotgun::PublishEventPtrs
+//  std::vector<SG::PublishEvent *> - SG::PublishEventPtrs
 // ************************************************************************
 
-%MappedType std::vector<Shotgun::PublishEvent *>
+%MappedType std::vector<SG::PublishEvent *>
 {
 %TypeHeaderCode
 #include <vector>
@@ -1534,11 +1534,11 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
     for (SIP_SSIZE_T i = 0; i < SIP_SSIZE_T(sipCpp->size()); ++i)
     {
-        Shotgun::PublishEvent *t = (*sipCpp)[i];
+        SG::PublishEvent *t = (*sipCpp)[i];
         
         PyObject *pObj;
 
-        if ((pObj = sipConvertFromNewType(t, sipType_Shotgun_PublishEvent, sipTransferObj)) == NULL)
+        if ((pObj = sipConvertFromNewType(t, sipType_SG_PublishEvent, sipTransferObj)) == NULL)
         {
             Py_DECREF(pList);
             delete t;
@@ -1564,7 +1564,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         {
             PyObject *itm = PySequence_ITEM(sipPy, i);
             bool ok = (itm &&
-                       sipCanConvertToType(itm, sipType_Shotgun_PublishEvent, SIP_NOT_NONE));
+                       sipCanConvertToType(itm, sipType_SG_PublishEvent, SIP_NOT_NONE));
 
             Py_XDECREF(itm);
 
@@ -1575,16 +1575,16 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         return 1;
     }
 
-    std::vector<Shotgun::PublishEvent *> *stdVector = new std::vector<Shotgun::PublishEvent *>;
+    std::vector<SG::PublishEvent *> *stdVector = new std::vector<SG::PublishEvent *>;
     len = PySequence_Size(sipPy);
 
     for (SIP_SSIZE_T i = 0; i < len; ++i)
     {
         PyObject *itm = PySequence_ITEM(sipPy, i);
         int state;
-        Shotgun::PublishEvent *t = reinterpret_cast<Shotgun::PublishEvent *>(
+        SG::PublishEvent *t = reinterpret_cast<SG::PublishEvent *>(
                                  sipConvertToType( itm,
-                                                   sipType_Shotgun_PublishEvent,
+                                                   sipType_SG_PublishEvent,
                                                    sipTransferObj,
                                                    SIP_NOT_NONE,
                                                    &state,
@@ -1594,7 +1594,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
         if (*sipIsErr)
         {
-            sipReleaseType(t, sipType_Shotgun_PublishEvent, state);
+            sipReleaseType(t, sipType_SG_PublishEvent, state);
 
             delete stdVector;
 
@@ -1611,10 +1611,10 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 };
 
 // ************************************************************************
-//  std::vector<Shotgun::Review *> - Shotgun::ReviewPtrs
+//  std::vector<SG::Review *> - SG::ReviewPtrs
 // ************************************************************************
 
-%MappedType std::vector<Shotgun::Review *>
+%MappedType std::vector<SG::Review *>
 {
 %TypeHeaderCode
 #include <vector>
@@ -1629,11 +1629,11 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
     for (SIP_SSIZE_T i = 0; i < SIP_SSIZE_T(sipCpp->size()); ++i)
     {
-        Shotgun::Review *t = (*sipCpp)[i];
+        SG::Review *t = (*sipCpp)[i];
         
         PyObject *pObj;
 
-        if ((pObj = sipConvertFromNewType(t, sipType_Shotgun_Review, sipTransferObj)) == NULL)
+        if ((pObj = sipConvertFromNewType(t, sipType_SG_Review, sipTransferObj)) == NULL)
         {
             Py_DECREF(pList);
             delete t;
@@ -1659,7 +1659,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         {
             PyObject *itm = PySequence_ITEM(sipPy, i);
             bool ok = (itm &&
-                       sipCanConvertToType(itm, sipType_Shotgun_Review, SIP_NOT_NONE));
+                       sipCanConvertToType(itm, sipType_SG_Review, SIP_NOT_NONE));
 
             Py_XDECREF(itm);
 
@@ -1670,16 +1670,16 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         return 1;
     }
 
-    std::vector<Shotgun::Review *> *stdVector = new std::vector<Shotgun::Review *>;
+    std::vector<SG::Review *> *stdVector = new std::vector<SG::Review *>;
     len = PySequence_Size(sipPy);
 
     for (SIP_SSIZE_T i = 0; i < len; ++i)
     {
         PyObject *itm = PySequence_ITEM(sipPy, i);
         int state;
-        Shotgun::Review *t = reinterpret_cast<Shotgun::Review *>(
+        SG::Review *t = reinterpret_cast<SG::Review *>(
                                  sipConvertToType( itm,
-                                                   sipType_Shotgun_Review,
+                                                   sipType_SG_Review,
                                                    sipTransferObj,
                                                    SIP_NOT_NONE,
                                                    &state,
@@ -1689,7 +1689,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
         if (*sipIsErr)
         {
-            sipReleaseType(t, sipType_Shotgun_Review, state);
+            sipReleaseType(t, sipType_SG_Review, state);
 
             delete stdVector;
 
@@ -1706,10 +1706,10 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 };
 
 // ************************************************************************
-//  std::vector<Shotgun::ReviewItem *> - Shotgun::ReviewItemPtrs
+//  std::vector<SG::ReviewItem *> - SG::ReviewItemPtrs
 // ************************************************************************
 
-%MappedType std::vector<Shotgun::ReviewItem *>
+%MappedType std::vector<SG::ReviewItem *>
 {
 %TypeHeaderCode
 #include <vector>
@@ -1724,11 +1724,11 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
     for (SIP_SSIZE_T i = 0; i < SIP_SSIZE_T(sipCpp->size()); ++i)
     {
-        Shotgun::ReviewItem *t = (*sipCpp)[i];
+        SG::ReviewItem *t = (*sipCpp)[i];
         
         PyObject *pObj;
 
-        if ((pObj = sipConvertFromNewType(t, sipType_Shotgun_ReviewItem, sipTransferObj)) == NULL)
+        if ((pObj = sipConvertFromNewType(t, sipType_SG_ReviewItem, sipTransferObj)) == NULL)
         {
             Py_DECREF(pList);
             delete t;
@@ -1754,7 +1754,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         {
             PyObject *itm = PySequence_ITEM(sipPy, i);
             bool ok = (itm &&
-                       sipCanConvertToType(itm, sipType_Shotgun_ReviewItem, SIP_NOT_NONE));
+                       sipCanConvertToType(itm, sipType_SG_ReviewItem, SIP_NOT_NONE));
 
             Py_XDECREF(itm);
 
@@ -1765,16 +1765,16 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         return 1;
     }
 
-    std::vector<Shotgun::ReviewItem *> *stdVector = new std::vector<Shotgun::ReviewItem *>;
+    std::vector<SG::ReviewItem *> *stdVector = new std::vector<SG::ReviewItem *>;
     len = PySequence_Size(sipPy);
 
     for (SIP_SSIZE_T i = 0; i < len; ++i)
     {
         PyObject *itm = PySequence_ITEM(sipPy, i);
         int state;
-        Shotgun::ReviewItem *t = reinterpret_cast<Shotgun::ReviewItem *>(
+        SG::ReviewItem *t = reinterpret_cast<SG::ReviewItem *>(
                                  sipConvertToType( itm,
-                                                   sipType_Shotgun_ReviewItem,
+                                                   sipType_SG_ReviewItem,
                                                    sipTransferObj,
                                                    SIP_NOT_NONE,
                                                    &state,
@@ -1784,7 +1784,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
         if (*sipIsErr)
         {
-            sipReleaseType(t, sipType_Shotgun_ReviewItem, state);
+            sipReleaseType(t, sipType_SG_ReviewItem, state);
 
             delete stdVector;
 
@@ -1801,10 +1801,10 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 };
 
 // ************************************************************************
-//  std::vector<Shotgun::Task *> - Shotgun::TaskPtrs
+//  std::vector<SG::Task *> - SG::TaskPtrs
 // ************************************************************************
 
-%MappedType std::vector<Shotgun::Task *>
+%MappedType std::vector<SG::Task *>
 {
 %TypeHeaderCode
 #include <vector>
@@ -1819,11 +1819,11 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
     for (SIP_SSIZE_T i = 0; i < SIP_SSIZE_T(sipCpp->size()); ++i)
     {
-        Shotgun::Task *t = (*sipCpp)[i];
+        SG::Task *t = (*sipCpp)[i];
         
         PyObject *pObj;
 
-        if ((pObj = sipConvertFromNewType(t, sipType_Shotgun_Task, sipTransferObj)) == NULL)
+        if ((pObj = sipConvertFromNewType(t, sipType_SG_Task, sipTransferObj)) == NULL)
         {
             Py_DECREF(pList);
             delete t;
@@ -1849,7 +1849,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         {
             PyObject *itm = PySequence_ITEM(sipPy, i);
             bool ok = (itm &&
-                       sipCanConvertToType(itm, sipType_Shotgun_Task, SIP_NOT_NONE));
+                       sipCanConvertToType(itm, sipType_SG_Task, SIP_NOT_NONE));
 
             Py_XDECREF(itm);
 
@@ -1860,16 +1860,16 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         return 1;
     }
 
-    std::vector<Shotgun::Task *> *stdVector = new std::vector<Shotgun::Task *>;
+    std::vector<SG::Task *> *stdVector = new std::vector<SG::Task *>;
     len = PySequence_Size(sipPy);
 
     for (SIP_SSIZE_T i = 0; i < len; ++i)
     {
         PyObject *itm = PySequence_ITEM(sipPy, i);
         int state;
-        Shotgun::Task *t = reinterpret_cast<Shotgun::Task *>(
+        SG::Task *t = reinterpret_cast<SG::Task *>(
                                  sipConvertToType( itm,
-                                                   sipType_Shotgun_Task,
+                                                   sipType_SG_Task,
                                                    sipTransferObj,
                                                    SIP_NOT_NONE,
                                                    &state,
@@ -1879,7 +1879,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
         if (*sipIsErr)
         {
-            sipReleaseType(t, sipType_Shotgun_Task, state);
+            sipReleaseType(t, sipType_SG_Task, state);
 
             delete stdVector;
 
@@ -1896,10 +1896,10 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 };
 
 // ************************************************************************
-//  std::vector<Shotgun::Group *> - Shotgun::GroupPtrs
+//  std::vector<SG::Group *> - SG::GroupPtrs
 // ************************************************************************
 
-%MappedType std::vector<Shotgun::Group *>
+%MappedType std::vector<SG::Group *>
 {
 %TypeHeaderCode
 #include <vector>
@@ -1914,11 +1914,11 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
     for (SIP_SSIZE_T i = 0; i < SIP_SSIZE_T(sipCpp->size()); ++i)
     {
-        Shotgun::Group *t = (*sipCpp)[i];
+        SG::Group *t = (*sipCpp)[i];
         
         PyObject *pObj;
 
-        if ((pObj = sipConvertFromNewType(t, sipType_Shotgun_Group, sipTransferObj)) == NULL)
+        if ((pObj = sipConvertFromNewType(t, sipType_SG_Group, sipTransferObj)) == NULL)
         {
             Py_DECREF(pList);
             delete t;
@@ -1944,7 +1944,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         {
             PyObject *itm = PySequence_ITEM(sipPy, i);
             bool ok = (itm &&
-                       sipCanConvertToType(itm, sipType_Shotgun_Group, SIP_NOT_NONE));
+                       sipCanConvertToType(itm, sipType_SG_Group, SIP_NOT_NONE));
 
             Py_XDECREF(itm);
 
@@ -1955,16 +1955,16 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         return 1;
     }
 
-    std::vector<Shotgun::Group *> *stdVector = new std::vector<Shotgun::Group *>;
+    std::vector<SG::Group *> *stdVector = new std::vector<SG::Group *>;
     len = PySequence_Size(sipPy);
 
     for (SIP_SSIZE_T i = 0; i < len; ++i)
     {
         PyObject *itm = PySequence_ITEM(sipPy, i);
         int state;
-        Shotgun::Group *t = reinterpret_cast<Shotgun::Group *>(
+        SG::Group *t = reinterpret_cast<SG::Group *>(
                                  sipConvertToType( itm,
-                                                   sipType_Shotgun_Group,
+                                                   sipType_SG_Group,
                                                    sipTransferObj,
                                                    SIP_NOT_NONE,
                                                    &state,
@@ -1974,7 +1974,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
         if (*sipIsErr)
         {
-            sipReleaseType(t, sipType_Shotgun_Group, state);
+            sipReleaseType(t, sipType_SG_Group, state);
 
             delete stdVector;
 
@@ -1991,10 +1991,10 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 };
 
 // ************************************************************************
-//  std::vector<Shotgun::Note *> - Shotgun::NotePtrs
+//  std::vector<SG::Note *> - SG::NotePtrs
 // ************************************************************************
 
-%MappedType std::vector<Shotgun::Note *>
+%MappedType std::vector<SG::Note *>
 {
 %TypeHeaderCode
 #include <vector>
@@ -2009,11 +2009,11 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
     for (SIP_SSIZE_T i = 0; i < SIP_SSIZE_T(sipCpp->size()); ++i)
     {
-        Shotgun::Note *t = (*sipCpp)[i];
+        SG::Note *t = (*sipCpp)[i];
         
         PyObject *pObj;
 
-        if ((pObj = sipConvertFromNewType(t, sipType_Shotgun_Note, sipTransferObj)) == NULL)
+        if ((pObj = sipConvertFromNewType(t, sipType_SG_Note, sipTransferObj)) == NULL)
         {
             Py_DECREF(pList);
             delete t;
@@ -2039,7 +2039,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         {
             PyObject *itm = PySequence_ITEM(sipPy, i);
             bool ok = (itm &&
-                       sipCanConvertToType(itm, sipType_Shotgun_Note, SIP_NOT_NONE));
+                       sipCanConvertToType(itm, sipType_SG_Note, SIP_NOT_NONE));
 
             Py_XDECREF(itm);
 
@@ -2050,16 +2050,16 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         return 1;
     }
 
-    std::vector<Shotgun::Note *> *stdVector = new std::vector<Shotgun::Note *>;
+    std::vector<SG::Note *> *stdVector = new std::vector<SG::Note *>;
     len = PySequence_Size(sipPy);
 
     for (SIP_SSIZE_T i = 0; i < len; ++i)
     {
         PyObject *itm = PySequence_ITEM(sipPy, i);
         int state;
-        Shotgun::Note *t = reinterpret_cast<Shotgun::Note *>(
+        SG::Note *t = reinterpret_cast<SG::Note *>(
                                  sipConvertToType( itm,
-                                                   sipType_Shotgun_Note,
+                                                   sipType_SG_Note,
                                                    sipTransferObj,
                                                    SIP_NOT_NONE,
                                                    &state,
@@ -2069,7 +2069,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
         if (*sipIsErr)
         {
-            sipReleaseType(t, sipType_Shotgun_Note, state);
+            sipReleaseType(t, sipType_SG_Note, state);
 
             delete stdVector;
 
@@ -2086,10 +2086,10 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 };
 
 // ************************************************************************
-//  std::vector<Shotgun::Playlist *> - Shotgun::PlaylistPtrs
+//  std::vector<SG::Playlist *> - SG::PlaylistPtrs
 // ************************************************************************
 
-%MappedType std::vector<Shotgun::Playlist *>
+%MappedType std::vector<SG::Playlist *>
 {
 %TypeHeaderCode
 #include <vector>
@@ -2104,11 +2104,11 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
     for (SIP_SSIZE_T i = 0; i < SIP_SSIZE_T(sipCpp->size()); ++i)
     {
-        Shotgun::Playlist *t = (*sipCpp)[i];
+        SG::Playlist *t = (*sipCpp)[i];
         
         PyObject *pObj;
 
-        if ((pObj = sipConvertFromNewType(t, sipType_Shotgun_Playlist, sipTransferObj)) == NULL)
+        if ((pObj = sipConvertFromNewType(t, sipType_SG_Playlist, sipTransferObj)) == NULL)
         {
             Py_DECREF(pList);
             delete t;
@@ -2134,7 +2134,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         {
             PyObject *itm = PySequence_ITEM(sipPy, i);
             bool ok = (itm &&
-                       sipCanConvertToType(itm, sipType_Shotgun_Playlist, SIP_NOT_NONE));
+                       sipCanConvertToType(itm, sipType_SG_Playlist, SIP_NOT_NONE));
 
             Py_XDECREF(itm);
 
@@ -2145,16 +2145,16 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         return 1;
     }
 
-    std::vector<Shotgun::Playlist *> *stdVector = new std::vector<Shotgun::Playlist *>;
+    std::vector<SG::Playlist *> *stdVector = new std::vector<SG::Playlist *>;
     len = PySequence_Size(sipPy);
 
     for (SIP_SSIZE_T i = 0; i < len; ++i)
     {
         PyObject *itm = PySequence_ITEM(sipPy, i);
         int state;
-        Shotgun::Playlist *t = reinterpret_cast<Shotgun::Playlist *>(
+        SG::Playlist *t = reinterpret_cast<SG::Playlist *>(
                                  sipConvertToType( itm,
-                                                   sipType_Shotgun_Playlist,
+                                                   sipType_SG_Playlist,
                                                    sipTransferObj,
                                                    SIP_NOT_NONE,
                                                    &state,
@@ -2164,7 +2164,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
         if (*sipIsErr)
         {
-            sipReleaseType(t, sipType_Shotgun_Playlist, state);
+            sipReleaseType(t, sipType_SG_Playlist, state);
 
             delete stdVector;
 
@@ -2275,7 +2275,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 };
 
 // ************************************************************************
-//  std::map<std::string, xmlrpc_c::value> - Shotgun::SgMap
+//  std::map<std::string, xmlrpc_c::value> - SG::SgMap
 // ************************************************************************
 
 // Refer to /tip/rnd/3rdparty/managed/python/modules/pyqt/PyQt-x11-gpl-4.5.1/sip/QtCore/qmap.sip
@@ -2431,7 +2431,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // ************************************************************************
 
-namespace Shotgun {
+namespace SG {
 
 typedef std::vector<std::string> Strings;
 typedef std::vector<std::string> MethodSignature;
@@ -2442,23 +2442,23 @@ typedef std::map<std::string, xmlrpc_c::value> SgMap;
 // --------------------------------------------------------------------
 // In Python, the Entity object and its pointer are treated the same.
 // --------------------------------------------------------------------
-typedef std::vector<Shotgun::Entity *> EntityPtrs;
-typedef std::vector<Shotgun::Project *> ProjectPtrs;
-typedef std::vector<Shotgun::Sequence *> SequencePtrs;
-typedef std::vector<Shotgun::Shot *> ShotPtrs;
-typedef std::vector<Shotgun::Version *> VersionPtrs;
-typedef std::vector<Shotgun::HumanUser *> HumanUserPtrs;
-typedef std::vector<Shotgun::Element *> ElementPtrs;
-typedef std::vector<Shotgun::Asset *> AssetPtrs;
-typedef std::vector<Shotgun::Delivery *> DeliveryPtrs;
-typedef std::vector<Shotgun::PublishEvent *> PublishEventPtrs;
-typedef std::vector<Shotgun::Review *> ReviewPtrs;
-typedef std::vector<Shotgun::ReviewItem *> ReviewItemPtrs;
-typedef std::vector<Shotgun::Task *> TaskPtrs;
-typedef std::vector<Shotgun::Group *> GroupPtrs;
-typedef std::vector<Shotgun::Note *> NotePtrs;
-typedef std::vector<Shotgun::Playlist *> PlaylistPtrs;
+typedef std::vector<SG::Entity *> EntityPtrs;
+typedef std::vector<SG::Project *> ProjectPtrs;
+typedef std::vector<SG::Sequence *> SequencePtrs;
+typedef std::vector<SG::Shot *> ShotPtrs;
+typedef std::vector<SG::Version *> VersionPtrs;
+typedef std::vector<SG::HumanUser *> HumanUserPtrs;
+typedef std::vector<SG::Element *> ElementPtrs;
+typedef std::vector<SG::Asset *> AssetPtrs;
+typedef std::vector<SG::Delivery *> DeliveryPtrs;
+typedef std::vector<SG::PublishEvent *> PublishEventPtrs;
+typedef std::vector<SG::Review *> ReviewPtrs;
+typedef std::vector<SG::ReviewItem *> ReviewItemPtrs;
+typedef std::vector<SG::Task *> TaskPtrs;
+typedef std::vector<SG::Group *> GroupPtrs;
+typedef std::vector<SG::Note *> NotePtrs;
+typedef std::vector<SG::Playlist *> PlaylistPtrs;
 
-}; // End namespace Shotgun
+}; // End namespace SG
 
 

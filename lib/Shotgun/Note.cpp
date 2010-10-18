@@ -34,7 +34,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Shotgun.h>
 #include <Shotgun/Note.h>
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
 Note::Note(Shotgun *sg, const xmlrpc_c::value &attrs)
@@ -75,4 +75,4 @@ List Note::defaultReturnFields()
            .append("note_links");
 }
 
-} // End namespace Shotgun
+} // End namespace SG

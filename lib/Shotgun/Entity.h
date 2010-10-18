@@ -45,7 +45,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Dict.h>
 #include <Shotgun/Fields.h>
 
-namespace Shotgun {
+namespace SG {
 
 class Shotgun;
 class TaskMixin;
@@ -641,6 +641,6 @@ const std::vector<T *> Entity::getAttrValueAsEntities(Shotgun *sg,
 // *****************************************************************************
 typedef std::vector<Entity *> EntityPtrs;
 
-} // End namespace Shotgun
+} // End namespace SG
 
 #endif    // End #ifdef __ENTITY_H__

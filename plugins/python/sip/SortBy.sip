@@ -30,7 +30,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
 class SortBy
@@ -41,17 +41,17 @@ class SortBy
 
 public:
     SortBy();
-    SortBy(const Shotgun::SortBy &ref);
-    SortBy(const Shotgun::List &sorts);
+    SortBy(const SG::SortBy &ref);
+    SortBy(const SG::List &sorts);
 
     SortBy(const std::string &fieldName,
            const std::string &direction = "asc");
 
-    Shotgun::SortBy &then(const std::string &fieldName,
-                          const std::string &direction = "asc");
-    Shotgun::SortBy &then(const Shotgun::SortBy &that);
+    SG::SortBy &then(const std::string &fieldName,
+                     const std::string &direction = "asc");
+    SG::SortBy &then(const SG::SortBy &that);
 
-    const Shotgun::List &sorts() const;
+    const SG::List &sorts() const;
     const bool empty() const;
     const int size() const;
     void clear();
@@ -70,5 +70,5 @@ public:
 
 };
 
-}; // End namespace Shotgun
+}; // End namespace SG
 

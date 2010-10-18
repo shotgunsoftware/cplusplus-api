@@ -30,7 +30,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
 class NoteMixin
@@ -42,22 +42,22 @@ class NoteMixin
 public:
     virtual ~NoteMixin();
 
-    Shotgun::NotePtrs getNotes(const int limit = 0) throw(Shotgun::SgError) /Factory/;
-    Shotgun::NotePtrs getDisclaimerNotes(const int limit = 0) throw(Shotgun::SgError) /Factory/;
-    Shotgun::NotePtrs getClientNotes(const int limit = 0) throw(Shotgun::SgError) /Factory/;
+    SG::NotePtrs getNotes(const int limit = 0) throw(SG::SgError) /Factory/;
+    SG::NotePtrs getDisclaimerNotes(const int limit = 0) throw(SG::SgError) /Factory/;
+    SG::NotePtrs getClientNotes(const int limit = 0) throw(SG::SgError) /Factory/;
 
-    Shotgun::Note *addNote(const std::string &noteFromUserName,
-                           const Shotgun::Strings &noteToUserNames = Shotgun::Strings(),
-                           const Shotgun::Strings &noteCcUserNames = Shotgun::Strings(),
-                           const std::string &noteSubject = "",
-                           const std::string &noteBody = "",
-                           const std::string &noteType = "",
-                           const Shotgun::List &noteLinks = Shotgun::List(),
-                           const std::string &noteOrigin = "") throw(Shotgun::SgError) /Factory/;
+    SG::Note *addNote(const std::string &noteFromUserName,
+                      const SG::Strings &noteToUserNames = SG::Strings(),
+                      const SG::Strings &noteCcUserNames = SG::Strings(),
+                      const std::string &noteSubject = "",
+                      const std::string &noteBody = "",
+                      const std::string &noteType = "",
+                      const SG::List &noteLinks = SG::List(),
+                      const std::string &noteOrigin = "") throw(SG::SgError) /Factory/;
 
 protected:
     NoteMixin();
 
 };
 
-}; // End namespace Shotgun
+}; // End namespace SG

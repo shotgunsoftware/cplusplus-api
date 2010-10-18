@@ -39,7 +39,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/TaskMixin.h>
 #include <Shotgun/NoteMixin.h>
 
-namespace Shotgun {
+namespace SG {
 
 class Shotgun;
 
@@ -101,6 +101,6 @@ protected:
 // *****************************************************************************
 typedef std::vector<Asset *> AssetPtrs;
 
-} // End namespace Shotgun
+} // End namespace SG
 
 #endif    // End #ifdef __ASSET_H__

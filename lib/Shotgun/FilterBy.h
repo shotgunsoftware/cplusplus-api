@@ -39,7 +39,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/List.h>
 #include <Shotgun/Dict.h>
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
 /*!
@@ -180,6 +180,6 @@ FilterBy &FilterBy::Or(const std::string &path,
     return op("or", path, relation, toXmlrpcValue(value));
 }
 
-} // End namespace Shotgun
+} // End namespace SG
 
 #endif    // End #ifdef __FILTERBY_H__

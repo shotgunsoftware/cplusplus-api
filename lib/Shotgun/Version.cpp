@@ -38,7 +38,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Sequence.h>
 #include <Shotgun/Project.h>
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
 Version::Version(Shotgun *sg, const xmlrpc_c::value &attrs)
@@ -91,4 +91,4 @@ List Version::defaultReturnFields()
            .append("user");
 }
 
-} // End namespace Shotgun
+} // End namespace SG

@@ -45,7 +45,7 @@ extern char *tzname[2];
 extern long timezone;
 extern int daylight;
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
 std::string xmlrpcValueTypeStr(const xmlrpc_c::value::type_t xmlrpcType)
@@ -523,7 +523,7 @@ std::string currDateStr()
     return std::string(timeStr);
 }
 
-} // End namespace Shotgun
+} // End namespace SG
 
 // *****************************************************************************
 // *****************************************************************************
@@ -613,7 +613,7 @@ std::string toStdString(const xmlrpc_c::value &value)
 
         output = "\n" + indent + "[\n";
 
-        Shotgun::SgArray array = xmlrpc_c::value_array(value).vectorValueValue();
+        SG::SgArray array = xmlrpc_c::value_array(value).vectorValueValue();
         for (size_t i = 0; i < array.size(); i++)
         {
             if (i == (array.size() - 1))
@@ -650,9 +650,9 @@ std::string toStdString(const xmlrpc_c::value &value)
 
         output = "\n" + indent + "{\n";
 
-        Shotgun::SgMap map = Shotgun::SgMap(xmlrpc_c::value_struct(value));
+        SG::SgMap map = SG::SgMap(xmlrpc_c::value_struct(value));
         size_t count = 0;
-        for (Shotgun::SgMap::const_iterator mIter = map.begin(); mIter != map.end(); mIter++)
+        for (SG::SgMap::const_iterator mIter = map.begin(); mIter != map.end(); mIter++)
         {
             count++;
             if (count == map.size())
@@ -681,19 +681,19 @@ std::string toStdString(const xmlrpc_c::value &value)
 }
 
 // *****************************************************************************
-std::string toStdString(const Shotgun::SgMap &map)
+std::string toStdString(const SG::SgMap &map)
 {
     return toStdString(xmlrpc_c::value_struct(map));
 }
 
 // *****************************************************************************
-std::string toStdString(const Shotgun::SgArray &array)
+std::string toStdString(const SG::SgArray &array)
 {
     return toStdString(xmlrpc_c::value_array(array));
 }
 
 // *****************************************************************************
-std::string toStdString(const Shotgun::Strings &strs)
+std::string toStdString(const SG::Strings &strs)
 {
     std::string output = "[";
 
@@ -713,7 +713,7 @@ std::string toStdString(const Shotgun::Strings &strs)
 }
 
 // *****************************************************************************
-std::string toStdString(const Shotgun::MethodSignatures &sigs)
+std::string toStdString(const SG::MethodSignatures &sigs)
 {
     std::string output = "[";
 
@@ -747,28 +747,28 @@ std::ostream &operator<<(std::ostream& output, const struct tm &time)
 }
 
 // *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const Shotgun::SgMap &map)
+std::ostream &operator<<(std::ostream& output, const SG::SgMap &map)
 {
     output << toStdString(map);
     return output;
 }
 
 // *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const Shotgun::SgArray &array)
+std::ostream &operator<<(std::ostream& output, const SG::SgArray &array)
 {
     output << toStdString(array);
     return output;
 }
 
 // *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const Shotgun::Strings &strs)
+std::ostream &operator<<(std::ostream& output, const SG::Strings &strs)
 {
     output << toStdString(strs);
     return output;
 }
 
 // *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const Shotgun::MethodSignatures &sigs)
+std::ostream &operator<<(std::ostream& output, const SG::MethodSignatures &sigs)
 {
     output << toStdString(sigs);
     return output;

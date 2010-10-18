@@ -30,28 +30,28 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
-class Project : Shotgun::Entity
+class Project : SG::Entity
 {
 %TypeHeaderCode
     #include <Shotgun/Project.h>
 %End
  
 public:
-    Project(const Shotgun::Project &ref);
+    Project(const SG::Project &ref);
     virtual ~Project();
 
     // Overrides for base entity methods that don't work correctly 
     // for this entity type
-    virtual const std::string sgProjectName() const throw(Shotgun::SgError);
-    virtual const std::string sgProjectCode() const throw(Shotgun::SgError);
+    virtual const std::string sgProjectName() const throw(SG::SgError);
+    virtual const std::string sgProjectCode() const throw(SG::SgError);
 
     static std::string type();
 
 protected:
-    Project(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
+    Project(SG::Shotgun *sg, const xmlrpc_c::value &attrs);
 };
 
-}; // End namespace Shotgun
+}; // End namespace SG

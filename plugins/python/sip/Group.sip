@@ -30,23 +30,23 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
-class Group : Shotgun::Entity
+class Group : SG::Entity
 {
 %TypeHeaderCode
     #include <Shotgun/Group.h>
 %End
 
 public:
-    Group(const Shotgun::Group &ref);
+    Group(const SG::Group &ref);
     virtual ~Group();
 
     static std::string type();
 
 protected:
-    Group(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
+    Group(SG::Shotgun *sg, const xmlrpc_c::value &attrs);
 };
 
-}; // End namespace Shotgun
+}; // End namespace SG

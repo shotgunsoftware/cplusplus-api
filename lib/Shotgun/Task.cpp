@@ -36,7 +36,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Task.h>
 #include <Shotgun/Project.h>
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
 Task::Task(Shotgun *sg, const xmlrpc_c::value &attrs)
@@ -80,4 +80,4 @@ List Task::defaultReturnFields()
            .append("sg_view_order");
 }
 
-} // End namespace Shotgun
+} // End namespace SG

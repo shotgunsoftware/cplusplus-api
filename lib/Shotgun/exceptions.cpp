@@ -35,7 +35,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <List.h>
 #include <Fields.h>
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
 SgAttrNotFoundError::SgAttrNotFoundError(const std::string &attrName) 
@@ -190,4 +190,4 @@ SgDictConversionError::SgDictConversionError(const xmlrpc_c::value &value)
     m_msg += "xmlrpc_c::value, " + toStdString(value) + ", is not a struct type. Failed to convert it to Dict type";
 }
 
-} // End namespace Shotgun
+} // End namespace SG

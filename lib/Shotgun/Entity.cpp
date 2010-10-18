@@ -40,7 +40,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Entity.h>
 #include <Shotgun/Shotgun.h>
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
 Entity::Entity(Shotgun *sg)
@@ -949,4 +949,4 @@ const std::string Entity::getAttrValueAsUserLogin(Shotgun *sg,
     }
 }
 
-} // End namespace Shotgun
+} // End namespace SG

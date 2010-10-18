@@ -38,7 +38,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/types.h>
 #include <Shotgun/exceptions.h>
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
 /// \class List
@@ -164,6 +164,6 @@ const T List::operator[](const int index) const
     return value<T>(index);    
 }
 
-} // End namespace Shotgun
+} // End namespace SG
 
 #endif    // End #ifdef __LIST_H__

@@ -30,23 +30,23 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
-class PublishEvent : Shotgun::Entity
+class PublishEvent : SG::Entity
 {
 %TypeHeaderCode
     #include <Shotgun/PublishEvent.h>
 %End
 
 public:
-    PublishEvent(const Shotgun::PublishEvent &ref);
+    PublishEvent(const SG::PublishEvent &ref);
     virtual ~PublishEvent();
 
     static std::string type();
 
 protected:
-    PublishEvent(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
+    PublishEvent(SG::Shotgun *sg, const xmlrpc_c::value &attrs);
 };
 
-}; // End namespace Shotgun
+}; // End namespace SG

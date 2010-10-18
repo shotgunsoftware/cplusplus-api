@@ -38,7 +38,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/types.h>
 #include <Shotgun/exceptions.h>
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
 /// \class Dict
@@ -204,6 +204,6 @@ const T Dict::operator[](const std::string &key) const
     return value<T>(key);
 }
 
-} // End namespace Shotgun
+} // End namespace SG
 
 #endif    // End #ifdef __DICT_H__

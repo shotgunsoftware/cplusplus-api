@@ -37,7 +37,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <Shotgun/Note.h>
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
 /// \class NoteMixin
@@ -77,6 +77,6 @@ protected:
 
 };
 
-} // End namespace Shotgun
+} // End namespace SG
 
 #endif    // End #ifdef __NOTE_MIXIN_H__

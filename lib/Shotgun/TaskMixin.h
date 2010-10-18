@@ -37,7 +37,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <Shotgun/Task.h>
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
 /// \class TaskMixin
@@ -90,6 +90,6 @@ protected:
     TaskMixin() {}
 };
 
-} // End namespace Shotgun
+} // End namespace SG
 
 #endif    // End #ifdef __TASK_MIXIN_H__

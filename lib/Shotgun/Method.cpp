@@ -37,7 +37,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Method.h>
 #include <Shotgun/Shotgun.h>
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
 Method::Method(Shotgun *sg, const std::string &methodName)
@@ -195,4 +195,4 @@ xmlrpc_c::value Method::call(const Dict &params)
     return output;
 }
 
-} // End namespace Shotgun
+} // End namespace SG

@@ -43,7 +43,7 @@ extern char* tzname[2];
 extern long timezone;
 extern int daylight;
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
 Shotgun::Shotgun(const std::string &serverURL,
@@ -313,4 +313,4 @@ void Shotgun::setTimeZoneEnv()
     setenv("TZ", envValue, 1);
 }
     
-} // End namespace Shotgun
+} // End namespace SG

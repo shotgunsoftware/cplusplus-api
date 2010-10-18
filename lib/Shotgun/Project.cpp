@@ -38,7 +38,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Shotgun.h>
 #include <Shotgun/Project.h>
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
 Project::Project(Shotgun *sg, const xmlrpc_c::value &attrs)
@@ -86,4 +86,4 @@ List Project::defaultReturnFields()
            .append("sg_ms_project_schedule");
 }
 
-} // End namespace Shotgun
+} // End namespace SG

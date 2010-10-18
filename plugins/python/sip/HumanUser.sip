@@ -30,23 +30,23 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
-class HumanUser : Shotgun::Entity
+class HumanUser : SG::Entity
 {
 %TypeHeaderCode
     #include <Shotgun/HumanUser.h>
 %End
 
 public:
-    HumanUser(const Shotgun::HumanUser &ref);
+    HumanUser(const SG::HumanUser &ref);
     virtual ~HumanUser();
 
     static std::string type();
 
 protected:
-    HumanUser(Shotgun::Shotgun *sg, const xmlrpc_c::value &attrs);
+    HumanUser(SG::Shotgun *sg, const xmlrpc_c::value &attrs);
 };
 
-}; // End namespace Shotgun
+}; // End namespace SG

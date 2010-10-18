@@ -37,7 +37,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <Shotgun/Entity.h>
 
-namespace Shotgun {
+namespace SG {
 
 class Shotgun;
 
@@ -99,6 +99,6 @@ protected:
 // *****************************************************************************
 typedef std::vector<ReviewItem *> ReviewItemPtrs;
 
-} // End namespace Shotgun
+} // End namespace SG
 
 #endif    // End #ifdef __REVIEW_ITEM_H__

@@ -39,7 +39,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/List.h>
 #include <Shotgun/Dict.h>
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
 /*!
@@ -164,6 +164,6 @@ Fields &Fields::add(const std::string &fieldName,
     return *this;
 }
 
-} // End namespace Shotgun
+} // End namespace SG
 
 #endif    // End #ifdef __FIELDS_H__

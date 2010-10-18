@@ -30,7 +30,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
 class Shotgun
@@ -48,32 +48,32 @@ public:
     const std::string &serverURL() const;
     const std::string &authName() const;
     const std::string &authKey() const;
-    const Shotgun::Dict &authMap() const;
+    const SG::Dict &authMap() const;
 
-    Shotgun::Method *method(const std::string &methodName);
-
-    //------------------------------------------------------------------------
-    Shotgun::Entity *createEntity(const std::string &entityType,
-                                  const Shotgun::Dict &data,
-                                  const Shotgun::List &extraReturnFields = Shotgun::List()) throw(Shotgun::SgError) /Factory/;
+    SG::Method *method(const std::string &methodName);
 
     //------------------------------------------------------------------------
-    Shotgun::Entity *findEntity(const std::string &entityType,
-                                const Shotgun::FilterBy &filterList = Shotgun::FilterBy(),
-                                const Shotgun::List &extraReturnFields = Shotgun::List(),
+    SG::Entity *createEntity(const std::string &entityType,
+                             const SG::Dict &data,
+                             const SG::List &extraReturnFields = SG::List()) throw(SG::SgError) /Factory/;
+
+    //------------------------------------------------------------------------
+    SG::Entity *findEntity(const std::string &entityType,
+                           const SG::FilterBy &filterList = SG::FilterBy(),
+                           const SG::List &extraReturnFields = SG::List(),
+                           const bool retiredOnly = false,
+                           const SG::SortBy &order = SG::SortBy()) throw(SG::SgError) /Factory/;
+
+    //------------------------------------------------------------------------
+    SG::EntityPtrs findEntities(const std::string &entityType,
+                                const SG::FilterBy &filterList = SG::FilterBy(),
+                                const int limit = 0,
+                                const SG::List &extraReturnFields = SG::List(),
                                 const bool retiredOnly = false,
-                                const Shotgun::SortBy &order = Shotgun::SortBy()) throw(Shotgun::SgError) /Factory/;
+                                const SG::SortBy &order = SG::SortBy()) throw(SG::SgError) /Factory/;
 
     //------------------------------------------------------------------------
-    Shotgun::EntityPtrs findEntities(const std::string &entityType,
-                                     const Shotgun::FilterBy &filterList = Shotgun::FilterBy(),
-                                     const int limit = 0,
-                                     const Shotgun::List &extraReturnFields = Shotgun::List(),
-                                     const bool retiredOnly = false,
-                                     const Shotgun::SortBy &order = Shotgun::SortBy()) throw(Shotgun::SgError) /Factory/;
-
-    //------------------------------------------------------------------------
-    bool deleteEntity(const std::string &entityType, const int id) const throw(Shotgun::SgError);
+    bool deleteEntity(const std::string &entityType, const int id) const throw(SG::SgError);
 };
 
-}; // End namespace Shotgun
+}; // End namespace SG

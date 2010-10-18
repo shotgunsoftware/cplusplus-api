@@ -32,7 +32,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <Shotgun/SortBy.h>
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
 SortBy::SortBy() : m_sorts(List())
@@ -67,4 +67,4 @@ SortBy &SortBy::then(const SortBy &that)
     return *this;
 }
 
-} // End namespace Shotgun
+} // End namespace SG

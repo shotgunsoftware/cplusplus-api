@@ -32,7 +32,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <Shotgun/Dict.h>
 
-namespace Shotgun {
+namespace SG {
 
 // *****************************************************************************
 Dict::Dict() : m_value(SgMap())
@@ -102,4 +102,4 @@ Dict &Dict::erase(const std::string &key)
     return *this;
 }
 
-} // End namespace Shotgun
+} // End namespace SG
