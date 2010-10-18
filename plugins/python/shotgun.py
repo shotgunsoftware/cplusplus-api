@@ -4,7 +4,7 @@
 #
 # Before: 
 #   import _shotgun
-#   sg = _shotgun.Shotgun.Shotgun("...")
+#   sg = _shotgun.SG.Shotgun("...")
 #
 # After:
 #   import shotgun
@@ -19,7 +19,7 @@ for (_sgClassName, _sgClass) in inspect.getmembers(_shotgun,
                                                    inspect.isclass):
     globals()[_sgClassName] = _sgClass
 
-for (_sgClassName, _sgClass) in inspect.getmembers(_shotgun.Shotgun, 
+for (_sgClassName, _sgClass) in inspect.getmembers(_shotgun.SG, 
                                                    inspect.isclass):
     globals()[_sgClassName] = _sgClass
 
