@@ -35,24 +35,24 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace SG {
 
 // *****************************************************************************
-Fields::Fields() : m_fields(List())
+Fields::Fields() : List()
 {
 }
 
 // *****************************************************************************
-Fields::Fields(const Fields &ref) : m_fields(ref.m_fields)
+Fields::Fields(const Fields &ref) : List(ref.m_value)
 {
 }
 
 // *****************************************************************************
-Fields::Fields(const List &fields) : m_fields(fields)
+Fields::Fields(const std::vector<xmlrpc_c::value> &fields) : List(fields)
 {
 }
 
 // *****************************************************************************
-Fields &Fields::add(const Fields &that)
+Fields &Fields::extend(const Fields &that)
 {
-    m_fields.extend(that.m_fields);
+    m_value.insert(m_value.end(), that.m_value.begin(), that.m_value.end());
 
     return *this;
 }

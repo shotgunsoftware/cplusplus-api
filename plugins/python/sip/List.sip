@@ -42,7 +42,7 @@ class List
 public:
     List();
     List(const SG::List &ref);
-    List(const SG::SgArray &array);
+    List(const std::vector<xmlrpc_c::value> &array);
 
     // ===================================================================
     // These SIP functions that have %MethodCode directive are not defined
@@ -69,7 +69,7 @@ public:
     const xmlrpc_c::value operator[](const int index) const;
 
     // -------------------------------------------------------------------
-    const SG::SgArray &value() const;
+    const std::vector<xmlrpc_c::value> &value() const;
     const bool empty() const;
     const int size() const;
     void clear();

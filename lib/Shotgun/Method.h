@@ -126,7 +126,7 @@ public:
 
     /// Returns the signature of the Shotgun API function.
     /// It throws a SgEntityXmlrpcError exception if the XML-RPC call fails.
-    MethodSignatures &signature(); 
+    std::vector< std::vector<std::string> > &signature(); 
 
     /// Returns the usage of the Shotgun API function.
     /// It throws a SgEntityXmlrpcError exception if the XML-RPC call fails.
@@ -146,7 +146,7 @@ protected:
     Shotgun *m_sg; ///< The instantiated Shotgun object pointer.
     std::string m_methodName; ///< The name of the Shotgun API function.
 
-    MethodSignatures m_signatures; ///< The signature of the Shotgun API function.
+    std::vector< std::vector<std::string> > m_signatures; ///< The signature of the Shotgun API function.
     std::string m_help; ///< The usage string of the Shotgun API function.
 };
 

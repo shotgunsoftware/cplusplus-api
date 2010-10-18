@@ -33,7 +33,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace SG {
 
 // *****************************************************************************
-class Fields
+class Fields : SG::List
 {
 %TypeHeaderCode
     #include <Shotgun/Fields.h>
@@ -42,7 +42,7 @@ class Fields
 public:
     Fields();
     Fields(const SG::Fields &ref);
-    Fields(const SG::List &fields);
+    Fields(const std::vector<xmlrpc_c::value> &fields);
 
     // ===================================================================
     // These SIP functions that have %MethodCode directive are not defined
@@ -59,35 +59,19 @@ public:
 
     // -------------------------------------------------------------------
     // Add one field
-    SG::Fields &add(const std::string &fieldName,
-                const xmlrpc_c::value &fieldValue,
-                const std::string &multiEntityUpdateMode = "",
-                const SG::Dict &parentEntity = SG::Dict());
+    SG::Fields &append(const std::string &fieldName,
+                       const xmlrpc_c::value &fieldValue,
+                       const std::string &multiEntityUpdateMode = "",
+                       const SG::Dict &parentEntity = SG::Dict());
 %MethodCode
-    sipRes = &sipCpp->add(*a0, *a1, *a2, *a3);
+    sipRes = &sipCpp->append(*a0, *a1, *a2, *a3);
 %End
 
     // -------------------------------------------------------------------
-    SG::Fields &add(const SG::Fields &that);
+    SG::Fields &extend(const SG::Fields &that);
 
     // -------------------------------------------------------------------
-    const SG::List &fields() const;
-    const bool empty() const;
-    const int size() const;
-    void clear();
-
-    // ------------------------------------------------------------------------
-    SIP_PYOBJECT __str__();
-%MethodCode
-    sipRes = PyString_FromString(sipCpp->str().c_str());
-%End
-
-    // ------------------------------------------------------------------------
-    SIP_PYOBJECT __repr__();
-%MethodCode
-    sipRes = PyString_FromString(sipCpp->str().c_str());
-%End
-
+    const std::vector<xmlrpc_c::value> &fields() const;
 };
 
 }; // End namespace SG

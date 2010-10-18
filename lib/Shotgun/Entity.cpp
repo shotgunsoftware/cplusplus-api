@@ -273,7 +273,7 @@ Dict Entity::buildCreateMap(const std::string &entityType,
     // -------------------------------------------------------------------
     // "fields"
     List fields;
-    for(SgMap::const_iterator dataIter = data.value().begin(); dataIter != data.value().end(); ++dataIter)
+    for(std::map<std::string, xmlrpc_c::value>::const_iterator dataIter = data.value().begin(); dataIter != data.value().end(); ++dataIter)
     {
         fields.append(Dict("field_name", (*dataIter).first)
                       .add("value", (*dataIter).second));

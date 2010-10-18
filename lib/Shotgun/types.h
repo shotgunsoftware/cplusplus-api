@@ -48,14 +48,9 @@ class Fields;
 
 // *****************************************************************************
 typedef std::vector<std::string> Strings;
-typedef Strings MethodSignature;
-typedef std::vector<Strings> MethodSignatures;
-typedef std::map<std::string, xmlrpc_c::value> SgMap;
-typedef std::vector<xmlrpc_c::value> SgArray;
 
 // *****************************************************************************
 /// Returns the string representation of "xmlrpc_c::value::type_t" type.
-/// To download source for libxmlrpc, see http://xmlrpc-c.sourceforge.net/.
 std::string xmlrpcValueTypeStr(const xmlrpc_c::value::type_t xmlrpcType);
 
 // *****************************************************************************
@@ -67,10 +62,10 @@ xmlrpc_c::value toXmlrpcValue(const double &in);
 xmlrpc_c::value toXmlrpcValue(const bool &in);
 xmlrpc_c::value toXmlrpcValue(const time_t &in);
 xmlrpc_c::value toXmlrpcValue(const struct tm &in);
-xmlrpc_c::value toXmlrpcValue(const SgArray &in);
-xmlrpc_c::value toXmlrpcValue(const SgMap &in);
+xmlrpc_c::value toXmlrpcValue(const std::vector<xmlrpc_c::value> &in);
+xmlrpc_c::value toXmlrpcValue(const std::map<std::string, xmlrpc_c::value> &in);
 xmlrpc_c::value toXmlrpcValue(const Strings &in);
-xmlrpc_c::value toXmlrpcValue(const MethodSignatures &in);
+xmlrpc_c::value toXmlrpcValue(const std::vector< std::vector<std::string> > &in);
 xmlrpc_c::value toXmlrpcValue(const List &in);
 xmlrpc_c::value toXmlrpcValue(const Dict &in);
 xmlrpc_c::value toXmlrpcValue(const FilterBy &in);
@@ -89,9 +84,8 @@ void fromXmlrpcValue(const xmlrpc_c::value &value, double &out);
 void fromXmlrpcValue(const xmlrpc_c::value &value, bool &out);
 void fromXmlrpcValue(const xmlrpc_c::value &value, time_t &out);
 void fromXmlrpcValue(const xmlrpc_c::value &value, struct tm &out);
-void fromXmlrpcValue(const xmlrpc_c::value &value, SgArray &out);
-void fromXmlrpcValue(const xmlrpc_c::value &value, SgMap &out);
-// MethodSignatures is the same as Strings
+void fromXmlrpcValue(const xmlrpc_c::value &value, std::vector<xmlrpc_c::value> &out);
+void fromXmlrpcValue(const xmlrpc_c::value &value, std::map<std::string, xmlrpc_c::value> &out);
 void fromXmlrpcValue(const xmlrpc_c::value &value, Strings &out); 
 void fromXmlrpcValue(const xmlrpc_c::value &value, List &out);
 void fromXmlrpcValue(const xmlrpc_c::value &value, Dict &out);
@@ -116,16 +110,16 @@ std::string toStdString(const double val);
 std::string toStdString(const time_t val);
 std::string toStdString(const struct tm &val);
 std::string toStdString(const xmlrpc_c::value &value);
-std::string toStdString(const SG::SgArray &array);
-std::string toStdString(const SG::SgMap &map);
+std::string toStdString(const std::vector<xmlrpc_c::value> &array);
+std::string toStdString(const std::map<std::string, xmlrpc_c::value> &map);
 std::string toStdString(const SG::Strings &strs);
-std::string toStdString(const SG::MethodSignatures &sigs);
+std::string toStdString(const std::vector< std::vector<std::string> > &sigs);
 
 std::ostream &operator<<(std::ostream& output, const xmlrpc_c::value &value);
 std::ostream &operator<<(std::ostream& output, const struct tm &time);
-std::ostream &operator<<(std::ostream& output, const SG::SgMap &map);
-std::ostream &operator<<(std::ostream& output, const SG::SgArray &array);
+std::ostream &operator<<(std::ostream& output, const std::map<std::string, xmlrpc_c::value> &map);
+std::ostream &operator<<(std::ostream& output, const std::vector<xmlrpc_c::value> &array);
 std::ostream &operator<<(std::ostream& output, const SG::Strings &strs);
-std::ostream &operator<<(std::ostream& output, const SG::MethodSignatures &sigs);
+std::ostream &operator<<(std::ostream& output, const std::vector< std::vector<std::string> > &sigs);
 
 #endif    // End #ifdef __TYPE_H__

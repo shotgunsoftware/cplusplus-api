@@ -35,7 +35,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace SG {
 
 // *****************************************************************************
-List::List() : m_value(SgArray())
+List::List() : m_value(std::vector<xmlrpc_c::value>())
 {
 }
 
@@ -45,7 +45,7 @@ List::List(const List &ref) : m_value(ref.m_value)
 }
 
 // *****************************************************************************
-List::List(const SgArray &array) : m_value(array)
+List::List(const std::vector<xmlrpc_c::value> &array) : m_value(array)
 {
 }
 

@@ -193,9 +193,7 @@ public:
 
     /// This template function is basically the same as calling findEntity()->asLink().
     /// But it deletes the entity before returning the link. So there won't be a 
-    /// entity pointer lingering around after return. This function is not needed
-    /// in Python since Python takes care of deleting the entity object. Therefore,
-    /// calling findEntity(..).asLink() will just be fine in Python.
+    /// entity pointer lingering around after return. 
     template <class T>
     const Dict findEntityAsLink(const FilterBy &filterList = FilterBy(),
                                 const List &extraReturnFields = List(),

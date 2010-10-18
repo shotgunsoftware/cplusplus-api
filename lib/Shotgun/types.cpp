@@ -124,13 +124,13 @@ xmlrpc_c::value toXmlrpcValue(const struct tm &in)
 }
 
 // *****************************************************************************
-xmlrpc_c::value toXmlrpcValue(const SgArray &in)
+xmlrpc_c::value toXmlrpcValue(const std::vector<xmlrpc_c::value> &in)
 {
     return xmlrpc_c::value(xmlrpc_c::value_array(in));
 }
 
 // *****************************************************************************
-xmlrpc_c::value toXmlrpcValue(const SgMap &in)
+xmlrpc_c::value toXmlrpcValue(const std::map<std::string, xmlrpc_c::value> &in)
 {
     return xmlrpc_c::value(xmlrpc_c::value_struct(in));
 }
@@ -138,7 +138,7 @@ xmlrpc_c::value toXmlrpcValue(const SgMap &in)
 // *****************************************************************************
 xmlrpc_c::value toXmlrpcValue(const Strings &in)
 {
-    SgArray strArray;
+    std::vector<xmlrpc_c::value> strArray;
    
     for (size_t i = 0; i < in.size(); i++)
     {
@@ -149,9 +149,9 @@ xmlrpc_c::value toXmlrpcValue(const Strings &in)
 }
 
 // *****************************************************************************
-xmlrpc_c::value toXmlrpcValue(const MethodSignatures &in)
+xmlrpc_c::value toXmlrpcValue(const std::vector< std::vector<std::string> > &in)
 {
-    SgArray strArray;
+    std::vector<xmlrpc_c::value> strArray;
    
     for (size_t i = 0; i < in.size(); i++)
     {
@@ -334,11 +334,11 @@ void fromXmlrpcValue(const xmlrpc_c::value &value, struct tm &out)
 }
 
 // *****************************************************************************
-void fromXmlrpcValue(const xmlrpc_c::value &value, SgArray &out)
+void fromXmlrpcValue(const xmlrpc_c::value &value, std::vector<xmlrpc_c::value> &out)
 {
     if (value.type() == xmlrpc_c::value::TYPE_ARRAY)
     {
-        out = SgArray((xmlrpc_c::value_array(value)).vectorValueValue());
+        out = (xmlrpc_c::value_array(value)).vectorValueValue();
     }
     else if (value.type() == xmlrpc_c::value::TYPE_NIL)
     {
@@ -353,11 +353,11 @@ void fromXmlrpcValue(const xmlrpc_c::value &value, SgArray &out)
 }
 
 // *****************************************************************************
-void fromXmlrpcValue(const xmlrpc_c::value &value, SgMap &out)
+void fromXmlrpcValue(const xmlrpc_c::value &value, std::map<std::string, xmlrpc_c::value> &out)
 {
     if (value.type() == xmlrpc_c::value::TYPE_STRUCT)
     {
-        out = SgMap(xmlrpc_c::value_struct(value));
+        out = std::map<std::string, xmlrpc_c::value>(xmlrpc_c::value_struct(value));
     }
     else if (value.type() == xmlrpc_c::value::TYPE_NIL)
     {
@@ -376,7 +376,7 @@ void fromXmlrpcValue(const xmlrpc_c::value &value, Strings &out)
 {
     if (value.type() == xmlrpc_c::value::TYPE_ARRAY)
     {
-        SgArray array = SgArray((xmlrpc_c::value_array(value)).vectorValueValue());
+        std::vector<xmlrpc_c::value> array = (xmlrpc_c::value_array(value)).vectorValueValue();
         
         Strings strings;
         for (size_t i = 0; i < array.size(); i++)
@@ -412,7 +412,7 @@ void fromXmlrpcValue(const xmlrpc_c::value &value, List &out)
 {
     if (value.type() == xmlrpc_c::value::TYPE_ARRAY)
     {
-        out = List(SgArray((xmlrpc_c::value_array(value)).vectorValueValue()));
+        out = List((xmlrpc_c::value_array(value)).vectorValueValue());
     }
     else if (value.type() == xmlrpc_c::value::TYPE_NIL)
     {
@@ -431,7 +431,7 @@ void fromXmlrpcValue(const xmlrpc_c::value &value, Dict &out)
 {
     if (value.type() == xmlrpc_c::value::TYPE_STRUCT)
     {
-        out = Dict(SgMap(xmlrpc_c::value_struct(value)));
+        out = Dict(std::map<std::string, xmlrpc_c::value>(xmlrpc_c::value_struct(value)));
     }
     else if (value.type() == xmlrpc_c::value::TYPE_NIL)
     {
@@ -450,7 +450,7 @@ void fromXmlrpcValue(const xmlrpc_c::value &value, FilterBy &out)
 {
     if (value.type() == xmlrpc_c::value::TYPE_STRUCT)
     {
-        out = FilterBy(SgMap(xmlrpc_c::value_struct(value)));
+        out = FilterBy(Dict(std::map<std::string, xmlrpc_c::value>(xmlrpc_c::value_struct(value))));
     }
     else if (value.type() == xmlrpc_c::value::TYPE_NIL)
     {
@@ -469,7 +469,7 @@ void fromXmlrpcValue(const xmlrpc_c::value &value, SortBy &out)
 {
     if (value.type() == xmlrpc_c::value::TYPE_ARRAY)
     {
-        out = SortBy(SgArray((xmlrpc_c::value_array(value)).vectorValueValue()));
+        out = SortBy(List((xmlrpc_c::value_array(value)).vectorValueValue()));
     }
     else if (value.type() == xmlrpc_c::value::TYPE_NIL)
     {
@@ -488,7 +488,7 @@ void fromXmlrpcValue(const xmlrpc_c::value &value, Fields &out)
 {
     if (value.type() == xmlrpc_c::value::TYPE_ARRAY)
     {
-        out = Fields(SgArray((xmlrpc_c::value_array(value)).vectorValueValue()));
+        out = Fields((xmlrpc_c::value_array(value)).vectorValueValue());
     }
     else if (value.type() == xmlrpc_c::value::TYPE_NIL)
     {
@@ -613,7 +613,7 @@ std::string toStdString(const xmlrpc_c::value &value)
 
         output = "\n" + indent + "[\n";
 
-        SG::SgArray array = xmlrpc_c::value_array(value).vectorValueValue();
+        std::vector<xmlrpc_c::value> array = xmlrpc_c::value_array(value).vectorValueValue();
         for (size_t i = 0; i < array.size(); i++)
         {
             if (i == (array.size() - 1))
@@ -650,9 +650,9 @@ std::string toStdString(const xmlrpc_c::value &value)
 
         output = "\n" + indent + "{\n";
 
-        SG::SgMap map = SG::SgMap(xmlrpc_c::value_struct(value));
+        std::map<std::string, xmlrpc_c::value> map = std::map<std::string, xmlrpc_c::value>(xmlrpc_c::value_struct(value));
         size_t count = 0;
-        for (SG::SgMap::const_iterator mIter = map.begin(); mIter != map.end(); mIter++)
+        for (std::map<std::string, xmlrpc_c::value>::const_iterator mIter = map.begin(); mIter != map.end(); mIter++)
         {
             count++;
             if (count == map.size())
@@ -681,13 +681,13 @@ std::string toStdString(const xmlrpc_c::value &value)
 }
 
 // *****************************************************************************
-std::string toStdString(const SG::SgMap &map)
+std::string toStdString(const std::map<std::string, xmlrpc_c::value> &map)
 {
     return toStdString(xmlrpc_c::value_struct(map));
 }
 
 // *****************************************************************************
-std::string toStdString(const SG::SgArray &array)
+std::string toStdString(const std::vector<xmlrpc_c::value> &array)
 {
     return toStdString(xmlrpc_c::value_array(array));
 }
@@ -713,7 +713,7 @@ std::string toStdString(const SG::Strings &strs)
 }
 
 // *****************************************************************************
-std::string toStdString(const SG::MethodSignatures &sigs)
+std::string toStdString(const std::vector< std::vector<std::string> > &sigs)
 {
     std::string output = "[";
 
@@ -747,14 +747,14 @@ std::ostream &operator<<(std::ostream& output, const struct tm &time)
 }
 
 // *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const SG::SgMap &map)
+std::ostream &operator<<(std::ostream& output, const std::map<std::string, xmlrpc_c::value> &map)
 {
     output << toStdString(map);
     return output;
 }
 
 // *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const SG::SgArray &array)
+std::ostream &operator<<(std::ostream& output, const std::vector<xmlrpc_c::value> &array)
 {
     output << toStdString(array);
     return output;
@@ -768,7 +768,7 @@ std::ostream &operator<<(std::ostream& output, const SG::Strings &strs)
 }
 
 // *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const SG::MethodSignatures &sigs)
+std::ostream &operator<<(std::ostream& output, const std::vector< std::vector<std::string> > &sigs)
 {
     output << toStdString(sigs);
     return output;

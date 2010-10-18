@@ -44,8 +44,8 @@ namespace SG {
 // *****************************************************************************
 /*!
  \class Fields
- A Fields class is a wrapper around a "fields" List. "fields" is specified as a
- list of fields to be updated for a Shotgun entity.
+ A Fields class is a specialized "fields" List. "fields" is specified as a
+ list of fields to update for a Shotgun entity.
 
  \htmlonly
  <pre>
@@ -65,7 +65,7 @@ namespace SG {
  </pre>
  \endhtmlonly
 */
-class Fields
+class Fields : public List
 {
 public:
     /// A default constructor.
@@ -74,8 +74,8 @@ public:
     /// A copy constructor.
     Fields(const Fields &ref);
 
-    /// A constructor that takes a fields List.
-    Fields(const List &fields);
+    /// A constructor that takes a std::vector<xmlrpc_c::value>.
+    Fields(const std::vector<xmlrpc_c::value> &fields);
 
     /// A template constructor that adds one field to the "fields" list.
     template <typename T>
@@ -86,34 +86,22 @@ public:
 
     /// A template function that adds one field to the "fields" list.
     template <typename T>
-    Fields &add(const std::string &fieldName,
-                const T &fieldValue,
-                const std::string &multiEntityUpdateMode = "",
-                const Dict &parentEntity = Dict());
+    Fields &append(const std::string &fieldName,
+                   const T &fieldValue,
+                   const std::string &multiEntityUpdateMode = "",
+                   const Dict &parentEntity = Dict());
 
-    /// Expands the "fields" list with a second "fields" list.
-    Fields &add(const Fields &that);
+    /// Extends the "fields" list with a second "fields" list.
+    Fields &extend(const Fields &that);
 
-    /// Returns the "fields" list.
-    const List &fields() const { return m_fields; }
-
-    /// Returns whether the "fields" list is empty.
-    const bool empty() const { return m_fields.empty(); }
-
-    /// Returns the size of the "fields" list.
-    const int size() const { return m_fields.size(); }
-
-    /// Returns the string representation of the Fields class.
-    const std::string str() const { return m_fields.str(); }
-
-    /// Removes all the contents from the "fields" list.
-    void clear() { m_fields.clear(); }
+    /// Returns the std::vector container for the "fields" list.
+    const std::vector<xmlrpc_c::value> &fields() const { return value(); }
 
     Fields &operator=(const Fields &that)
     {
         if (this != &that)
         {
-            m_fields = that.m_fields;
+            List::operator=(that) ;
         }
 
         return *this;
@@ -124,9 +112,6 @@ public:
         output << fields.str();
         return output;
     }
-
-protected:
-    List m_fields; ///< The "fields" list.
 };
 
 // *****************************************************************************
@@ -136,15 +121,15 @@ Fields::Fields(const std::string &fieldName,
                const std::string &multiEntityUpdateMode,
                const Dict &parentEntity)
 {
-     add(fieldName, fieldValue, multiEntityUpdateMode, parentEntity);      
+     append(fieldName, fieldValue, multiEntityUpdateMode, parentEntity);      
 }
 
 // *****************************************************************************
 template <typename T>
-Fields &Fields::add(const std::string &fieldName,
-                    const T &fieldValue,
-                    const std::string &multiEntityUpdateMode,
-                    const Dict &parentEntity)
+Fields &Fields::append(const std::string &fieldName,
+                       const T &fieldValue,
+                       const std::string &multiEntityUpdateMode,
+                       const Dict &parentEntity)
 {
     Dict field = Dict("field_name", fieldName)
                  .add("value", fieldValue);
@@ -159,7 +144,7 @@ Fields &Fields::add(const std::string &fieldName,
         field.add("parent_entity", parentEntity);
     }
 
-    m_fields.append(field);
+    m_value.push_back(toXmlrpcValue(field));
 
     return *this;
 }

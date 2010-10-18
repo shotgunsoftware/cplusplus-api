@@ -378,7 +378,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 };
 
 // ************************************************************************
-//  std::vector<xmlrpc_c::value> - SG::SgArray
+//  std::vector<xmlrpc_c::value>
 // ************************************************************************
 
 // Refer to /tip/rnd/3rdparty/managed/python/modules/pyqt/PyQt-x11-gpl-4.5.1/sip/QtCore/qlist.sip
@@ -564,10 +564,9 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 };
 
 // ************************************************************************
-//  std::vector<std::vector<std::string>>  
-//      - std::vector<Strings> - SG::MethodSignatures
+//  std::vector< std::vector<std::string> >  
 // ************************************************************************
-%MappedType std::vector< std::vector<std::string> > // NOTE: need a whitespace between > > in sip's syntax
+%MappedType std::vector< std::vector<std::string> > // NOTE: need a whitespace between > >
 {
 %TypeHeaderCode
 #include <vector>
@@ -2275,7 +2274,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 };
 
 // ************************************************************************
-//  std::map<std::string, xmlrpc_c::value> - SG::SgMap
+//  std::map<std::string, xmlrpc_c::value> 
 // ************************************************************************
 
 // Refer to /tip/rnd/3rdparty/managed/python/modules/pyqt/PyQt-x11-gpl-4.5.1/sip/QtCore/qmap.sip
@@ -2407,10 +2406,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //  typedefs:
 //
 //    - Strings
-//    - MethodSignature (same as Strings)
-//    - MethodSignatures
-//    - SgArray
-//    - SgMap
 //
 //    - EntityPtrs
 //    - ProjectPtrs;
@@ -2434,10 +2429,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace SG {
 
 typedef std::vector<std::string> Strings;
-typedef std::vector<std::string> MethodSignature;
-typedef std::vector< std::vector<std::string> > MethodSignatures;
-typedef std::vector<xmlrpc_c::value> SgArray;
-typedef std::map<std::string, xmlrpc_c::value> SgMap;
 
 // --------------------------------------------------------------------
 // In Python, the Entity object and its pointer are treated the same.

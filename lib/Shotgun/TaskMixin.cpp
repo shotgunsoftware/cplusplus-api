@@ -244,14 +244,14 @@ Task *TaskMixin::updateTask(const std::string &taskName,
         {
             Dict userAsLink = task->sg()->findEntityAsLink<HumanUser>(FilterBy("login", "is", taskAssignee));
 
-            fieldData.add("task_assignees", List(userAsLink));
+            fieldData.append("task_assignees", List(userAsLink));
         }
         catch (SgEntityNotFoundError)
         {
             try
             {
                 Dict groupAsLink = task->sg()->findEntityAsLink<Group>(FilterBy("code", "is", taskAssignee));
-                fieldData.add("task_assignees", List(groupAsLink));
+                fieldData.append("task_assignees", List(groupAsLink));
             }
             catch (SgEntityNotFoundError)
             {
@@ -265,11 +265,11 @@ Task *TaskMixin::updateTask(const std::string &taskName,
     {
         if (taskStartDate == "now")
         {
-            fieldData.add("start_date", currDateStr());
+            fieldData.append("start_date", currDateStr());
         }
         else
         {
-            fieldData.add("start_date", taskStartDate);
+            fieldData.append("start_date", taskStartDate);
         }
     }
 
@@ -278,28 +278,28 @@ Task *TaskMixin::updateTask(const std::string &taskName,
     {
         if (taskEndDate == "now")
         {
-            fieldData.add("due_date", currDateStr());
+            fieldData.append("due_date", currDateStr());
         }
         else
         {
-            fieldData.add("due_date", taskEndDate);
+            fieldData.append("due_date", taskEndDate);
         }
     }
 
     // taskStatus
     if (taskStatus != "")
     {
-        fieldData.add("sg_status_list", taskStatus);
+        fieldData.append("sg_status_list", taskStatus);
     }
 
     // taskColor
     if (taskColor != "")
     {
-        fieldData.add("color", taskColor);
+        fieldData.append("color", taskColor);
     }
 
     // taskMilestone
-    fieldData.add("milestone", taskMilestone);
+    fieldData.append("milestone", taskMilestone);
 
     // update the task's attributes
     task->setAttrValue(fieldData);

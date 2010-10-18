@@ -42,7 +42,7 @@ class Dict
 public:
     Dict();
     Dict(const SG::Dict &ref);
-    Dict(const SG::SgMap &map);
+    Dict(const std::map<std::string, xmlrpc_c::value> &map);
     Dict(const xmlrpc_c::value &value);
 
     // ===================================================================
@@ -67,7 +67,7 @@ public:
     const xmlrpc_c::value operator[](const std::string &key) const;
 
     // -------------------------------------------------------------------
-    const SG::SgMap &value() const;
+    const std::map<std::string, xmlrpc_c::value> &value() const;
     const bool empty() const;
     const int size() const;
     const bool find(const std::string &key) const;

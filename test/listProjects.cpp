@@ -67,9 +67,54 @@ int main( int argc, char **argv )
         {
             std::cout << *(projects[p]) << std::endl;
 
+            std::cout << projects[p]->getAttrValueAsString("code") << std::endl;
+            std::cout << projects[p]->getAttrValueAsInt("id") << std::endl;
             std::cout << "-------------------" << std::endl;
             delete projects[p];
         }
+
+        std::cout << std::endl << "**************************** findEntiy ****************************" << std::endl;
+        VersionPtrs versions = sg.findEntities<Version>(FilterBy("project", "is", sg.findEntityAsLink<Project>(FilterBy("code", "is", "ca2"))), 10);
+        for (size_t v = 0; v < versions.size(); ++v)
+        {
+            std::cout << versions[v]->getAttrValueAsString("code") << std::endl;
+            delete versions[v];
+        }
+
+        std::cout << std::endl << "**************************** createEntity ****************************" << std::endl;
+        Project *newProject = sg.createEntity<Project>(Dict("name", "TEST PROJECT")
+                                                                               .add("code", "tp"));
+        std::cout << *newProject << std::endl;
+        delete newProject;
+
+        std::cout << std::endl << "**************************** findEntiy ****************************" << std::endl;
+        Project *project = sg.findEntity<Project>(FilterBy("code", "is", "tp"));
+        std::cout << *project << std::endl;
+        //delete project; // delete later
+
+
+        std::cout << std::endl << "**************************** setAttrValue - update entity ****************************" << std::endl;
+        project->setAttrValue(Fields("name", "My Test Project")
+                             .append("sg_default_start_frame", 101));
+        std::cout << *project << std::endl;
+
+        std::cout << std::endl << "**************************** deleteEntity ****************************" << std::endl;
+        int id = project->sgId();
+        if (sg.deleteEntity<Project>(id)) // Delete the Shotgun entity by its id
+        {
+            std::cout << "Project entity with id, " << id << ", deleted" << std::endl;
+        }
+        else
+        {
+            std::cout << "Project entity with id, " << id << ", not deleted - it may be retired or non-existent" << std::endl;
+        }
+        delete project; // Delete the Project class instance.
+
+
+        std::cout << std::endl << "**************************** findEntity ****************************" << std::endl;
+        project = sg.findEntity<Project>(FilterBy("code", "is", "tp"));
+        std::cout << *project << std::endl;
+        delete project;
     }
     catch (const SgError & e)
     {

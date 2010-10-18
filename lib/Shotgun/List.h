@@ -42,13 +42,8 @@ namespace SG {
 
 // *****************************************************************************
 /// \class List
-/// A List class is basically a wrapper around a SgArray container, which is 
-/// actually of type, std::vector<xmlrpc_c::value>. It simplifies the API for:
-///
-///    - appending a new value to the SgArray container
-///    - extending the SgArray container
-///    - converting a value of any valid type to the internal xmlrpc_c::value type
-///
+/// A List class is basically a wrapper around a std::vector<xmlrpc_c::value> 
+/// container. 
 class List
 {
 public:
@@ -58,17 +53,17 @@ public:
     /// A copy constructor.
     List(const List &ref);
 
-    /// A constructor that takes a SgArray.
-    List(const SgArray &array);
+    /// A constructor that takes a std::vector<xmlrpc_c::value>.
+    List(const std::vector<xmlrpc_c::value> &array);
 
-    /// A template construtor that adds an element to the SgArray container.
+    /// A template construtor that adds an element to the std::vector container.
     template <typename T>
     List(const T &value)
     {
          append(value);      
     }
 
-    /// A template function that adds an element to the SgArray container.
+    /// A template function that adds an element to the std::vector container.
     template <typename T>
     List &append(const T &value)
     {
@@ -77,7 +72,7 @@ public:
         return *this;
     }
     
-    /// Extends the SgArray container with the given List.
+    /// Extends the std::vector container with the given List.
     List &extend(const List &that);
 
     /// A template function that returns the value of an element with the
@@ -89,36 +84,31 @@ public:
     /// should only be used within the Shotgun lib
     const xmlrpc_c::value value(const int index) const;
     
-    /// The template [] operator that returns the value of an element with
-    /// the given index.
-    template <typename T>
-    const T operator[](const int index) const;
-
     /// Returns the value of an element with the given index. The value is of
     /// type, xmlrpc_c::value. This function should only be used within the 
     /// Shotgun lib.
     const xmlrpc_c::value operator[](const int index) const;
 
-    /// Returns the SgArray container that the List class wraps around.
-    const SgArray &value() const { return m_value; }
+    /// Returns the std::vector container that the List class wraps around.
+    const std::vector<xmlrpc_c::value> &value() const { return m_value; }
 
-    /// Returns whether the SgArray container is empty.
+    /// Returns whether the std::vector container is empty.
     const bool empty() const { return m_value.empty(); }
 
-    /// Returns the size of the SgArray container.
+    /// Returns the size of the std::vector container.
     const int size() const { return m_value.size(); }
 
     /// Returns the string representation of the List class. 
     const std::string str() const { return toStdString(m_value); }
 
-    /// Removes all the contents from the SgArray container, leaving it with 
+    /// Removes all the contents from the std::vector container, leaving it with 
     /// a size of 0.
     void clear() { m_value.clear(); }
 
-    /// Removes a single element with the given index from the SgArray container.
+    /// Removes a single element with the given index from the std::vector container.
     void erase(const int index);
 
-    /// Removes a range of elements with the given indices from the SgArray container.
+    /// Removes a range of elements with the given indices from the std::vector container.
     void erase(const int first, const int last);
 
     List &operator=(const List &that)
@@ -138,7 +128,7 @@ public:
     }
 
 protected:
-    SgArray m_value; ///< The SgArray container.
+    std::vector<xmlrpc_c::value> m_value; ///< The std::vector container.
 };
 
 // *****************************************************************************
@@ -155,13 +145,6 @@ const T List::value(const int index) const
     {
         throw SgListIndexOutOfRangeError(index, 0, m_value.size());
     }
-}
-
-// *****************************************************************************
-template <typename T>
-const T List::operator[](const int index) const
-{
-    return value<T>(index);    
 }
 
 } // End namespace SG

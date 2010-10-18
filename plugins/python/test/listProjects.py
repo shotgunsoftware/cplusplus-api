@@ -37,7 +37,7 @@ try:
     #################################################################
     print "*" * 40, "setAttrValue - update entity", "*" * 40
     project.setAttrValue(Fields("name", "My Test Project")
-                           .add("sg_default_start_frame", 101))
+                        .append("sg_default_start_frame", 101))
     print project
     
     #################################################################

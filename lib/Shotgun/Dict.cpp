@@ -35,7 +35,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace SG {
 
 // *****************************************************************************
-Dict::Dict() : m_value(SgMap())
+Dict::Dict() : m_value(std::map<std::string, xmlrpc_c::value>())
 {
 }
 
@@ -45,7 +45,7 @@ Dict::Dict(const Dict &ref) : m_value(ref.m_value)
 }
 
 // *****************************************************************************
-Dict::Dict(const SgMap &map) : m_value(map)
+Dict::Dict(const std::map<std::string, xmlrpc_c::value> &map) : m_value(map)
 {
 }
 
@@ -54,7 +54,7 @@ Dict::Dict(const xmlrpc_c::value &value)
 {
     if (value.type() == xmlrpc_c::value::TYPE_STRUCT)
     {
-        m_value = SgMap(xmlrpc_c::value_struct(value));
+        m_value = std::map<std::string, xmlrpc_c::value>(xmlrpc_c::value_struct(value));
     }
     else
     {
@@ -65,7 +65,7 @@ Dict::Dict(const xmlrpc_c::value &value)
 // *****************************************************************************
 const xmlrpc_c::value Dict::value(const std::string &key) const
 {
-    SgMap::const_iterator foundIter = m_value.find(key);
+    std::map<std::string, xmlrpc_c::value>::const_iterator foundIter = m_value.find(key);
     if (foundIter != m_value.end())
     {
         return (*foundIter).second;
@@ -85,7 +85,7 @@ const xmlrpc_c::value Dict::operator[](const std::string &key) const
 // *****************************************************************************
 const bool Dict::find(const std::string &key) const
 {
-    SgMap::const_iterator foundIter = m_value.find(key);
+    std::map<std::string, xmlrpc_c::value>::const_iterator foundIter = m_value.find(key);
     if (foundIter != m_value.end())
     {
         return true;
