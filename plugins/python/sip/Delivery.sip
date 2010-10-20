@@ -43,7 +43,8 @@ public:
     Delivery(const SG::Delivery &ref);
     virtual ~Delivery();
 
-    static std::string type();
+    static std::string entityType();
+    static std::string classType();
 
 protected:
     Delivery(SG::Shotgun *sg, const xmlrpc_c::value &attrs);

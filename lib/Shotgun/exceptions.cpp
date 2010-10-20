@@ -123,8 +123,7 @@ SgEntityNotFoundError::SgEntityNotFoundError(const std::string &entityType)
 SgEntityClassNotRegisteredError::SgEntityClassNotRegisteredError(const std::string &entityType)
     : SgEntityError("SgEntityClassNotRegisteredError: ")
 {
-    m_msg += "Can't find entry for \"" + entityType + "\" entity in class registry. ";
-    m_msg += "Check Shotgun class' constructor.";
+    m_msg += "Can't find entry for \"" + entityType + "\" entity in class registry.";
 }
 
 // *****************************************************************************

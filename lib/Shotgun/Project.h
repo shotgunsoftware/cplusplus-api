@@ -37,8 +37,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace SG {
 
-class Shotgun;
-
 // *****************************************************************************
 /// \class Project
 class Project : public Entity
@@ -46,12 +44,14 @@ class Project : public Entity
     friend class Shotgun;
  
 public:
+    // -------------------------------------------------------------------------
     /// A copy constructor.
     Project(const Project &ref);
 
     /// A destructor that does nothing.
     virtual ~Project();
 
+    // -------------------------------------------------------------------------
     /// Overrides for base Entity class methods that don't work correctly 
     /// for Project entity type.
     virtual const std::string sgProjectName() const { return getAttrValueAsString("name"); }
@@ -60,8 +60,12 @@ public:
     /// for Project entity type.
     virtual const std::string sgProjectCode() const { return getAttrValueAsString("code"); }
 
-    /// The string representation of Project entity type.    
-    static std::string type() { return std::string("Project"); }
+    // -------------------------------------------------------------------------
+    /// The string representation of Project entity type.
+    static std::string entityType() { return std::string("Project"); }
+
+    /// The string representation of Project class type.
+    static std::string classType() { return entityType(); }
 
     // -------------------------------------------------------------------------
     Project &operator=(const Project &that)
@@ -82,12 +86,14 @@ public:
     }
 
 protected:
+    // -------------------------------------------------------------------------
     /// A constructor.
     ///
     /// \param sg - instantiated Shotgun object pointer
     /// \param attrs - raw attribute map for a Shotgun entity
     Project(Shotgun *sg, const xmlrpc_c::value &attrs);
 
+    // -------------------------------------------------------------------------
     /// A Project entity factory function.
     ///
     /// \param sg - instantiated Shotgun object pointer
@@ -95,6 +101,7 @@ protected:
     /// \return a newly-created Project * as its base Entity * type
     static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Project(sg, attrs); }
 
+    // -------------------------------------------------------------------------
     /// Builds a list of default "return_fields" which are the attributes
     /// exposed to the users when a Project entity is created or searched.
     ///

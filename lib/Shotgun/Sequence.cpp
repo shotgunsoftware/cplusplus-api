@@ -43,7 +43,7 @@ namespace SG {
 Sequence::Sequence(Shotgun *sg, const xmlrpc_c::value &attrs)
     : Entity(sg)
 {
-    m_type = "Sequence";
+    m_entityType = m_classType = "Sequence";
     m_attrs = new xmlrpc_c::value(attrs);
 }
 
@@ -51,7 +51,7 @@ Sequence::Sequence(Shotgun *sg, const xmlrpc_c::value &attrs)
 Sequence::Sequence(const Sequence &ref)
     : Entity(ref.m_sg)
 {
-    m_type = "Sequence";
+    m_entityType = m_classType = "Sequence";
     m_attrs = new xmlrpc_c::value(*ref.m_attrs);
 }
 

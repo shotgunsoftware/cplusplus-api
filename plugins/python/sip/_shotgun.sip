@@ -33,3 +33,5 @@
 %Include NoteMixin.sip
 %Include TaskMixin.sip
 
+%Include SiteShotgun.sip
+%Include SiteProject.sip

@@ -42,7 +42,7 @@ namespace SG {
 Asset::Asset(Shotgun *sg, const xmlrpc_c::value &attrs)
     : Entity(sg), TaskMixin(), NoteMixin()
 {
-    m_type = "Asset";
+    m_entityType = m_classType = "Asset";
     m_attrs = new xmlrpc_c::value(attrs);
 }
 
@@ -50,7 +50,7 @@ Asset::Asset(Shotgun *sg, const xmlrpc_c::value &attrs)
 Asset::Asset(const Asset &ref)
     : Entity(ref.m_sg)
 {
-    m_type = "Asset";
+    m_entityType = m_classType = "Asset";
     m_attrs = new xmlrpc_c::value(*ref.m_attrs);
 }
 

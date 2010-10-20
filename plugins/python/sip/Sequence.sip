@@ -43,7 +43,8 @@ public:
     Sequence(const SG::Sequence &ref);
     virtual ~Sequence();
 
-    static std::string type();
+    static std::string entityType();
+    static std::string classType();
 
 protected:
     Sequence(SG::Shotgun *sg, const xmlrpc_c::value &attrs);

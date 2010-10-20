@@ -41,7 +41,7 @@ namespace SG {
 Group::Group(Shotgun *sg, const xmlrpc_c::value &attrs)
     : Entity(sg)
 {
-    m_type = "Group";
+    m_entityType = m_classType = "Group";
     m_attrs = new xmlrpc_c::value(attrs);
 }
 
@@ -49,7 +49,7 @@ Group::Group(Shotgun *sg, const xmlrpc_c::value &attrs)
 Group::Group(const Group &ref)
     : Entity(ref.m_sg)
 {
-    m_type = "Group";
+    m_entityType = m_classType = "Group";
     m_attrs = new xmlrpc_c::value(*ref.m_attrs);
 }
 

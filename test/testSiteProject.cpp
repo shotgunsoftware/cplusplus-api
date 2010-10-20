@@ -30,24 +30,57 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-namespace SG {
+#include <iostream>
+#include <stdexcept>
 
-// *****************************************************************************
-class Asset : SG::Entity, SG::TaskMixin, SG::NoteMixin
+#include <Shotgun/types.h>
+#include <Shotgun/exceptions.h>
+#include <Shotgun/SiteShotgun.h>
+#include <Shotgun/SiteProject.h>
+
+using namespace SG;
+
+int main( int argc, char **argv )
 {
-%TypeHeaderCode
-    #include <Shotgun/Asset.h>
-%End
+    std::string shotgunURL(SG_DEFAULT_URL);
+    if( argc == 2 )
+    {
+        shotgunURL = argv[1];
+    }
+    if(shotgunURL == "")
+    {
+        std::cerr << "No default Shotgun URL specified to configure.  Skipping test."
+                  << std::endl;
+        exit(0);
+    }
+    try
+    {
+        SiteShotgun sg(shotgunURL);
 
-public:
-    Asset(const SG::Asset &ref);
-    virtual ~Asset();
+        std::cout << std::endl << "**************************** findEntities ****************************" << std::endl;
+        SiteProjectPtrs siteProjects = sg.findEntities<SiteProject>();
+        for( size_t p = 0; p < siteProjects.size(); ++p )
+        {
+            std::cout << *(siteProjects[p]) << std::endl;
 
-    static std::string entityType();
-    static std::string classType();
+            // These are SiteProject-specific convenience functions.
+            std::cout << siteProjects[p]->sgName() << std::endl;
+            std::cout << siteProjects[p]->sgCode() << std::endl;
 
-protected:
-    Asset(SG::Shotgun *sg, const xmlrpc_c::value &attrs);
-};
+            std::cout << "-------------------" << std::endl;
+            delete siteProjects[p];
+        }
+    }
+    catch (const SgError & e)
+    {
+        std::cerr << "SgError: " << e.what() << std::endl;
+        return -1;
+    }
+    catch (const std::exception& e)
+    {
+        std::cerr << "ERROR: " << e.what() << std::endl;
+        return -1;
+    }
 
-}; // End namespace SG
+    return 0;
+}

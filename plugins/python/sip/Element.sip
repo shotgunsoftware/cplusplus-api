@@ -43,7 +43,8 @@ public:
     Element(const SG::Element &ref);
     virtual ~Element();
 
-    static std::string type();
+    static std::string entityType();
+    static std::string classType();
 
 protected:
     Element(SG::Shotgun *sg, const xmlrpc_c::value &attrs);

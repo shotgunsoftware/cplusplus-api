@@ -42,7 +42,7 @@ namespace SG {
 Task::Task(Shotgun *sg, const xmlrpc_c::value &attrs)
     : Entity(sg)
 {
-    m_type = "Task";
+    m_entityType = m_classType = "Task";
     m_attrs = new xmlrpc_c::value(attrs);
 }
 
@@ -50,7 +50,7 @@ Task::Task(Shotgun *sg, const xmlrpc_c::value &attrs)
 Task::Task(const Task &ref)
     : Entity(ref.m_sg)
 {
-    m_type = "Task";
+    m_entityType = m_classType = "Task";
     m_attrs = new xmlrpc_c::value(*ref.m_attrs);
 }
 

@@ -43,7 +43,8 @@ public:
     Task(const SG::Task &ref);
     virtual ~Task();
 
-    static std::string type();
+    static std::string entityType();
+    static std::string classType();
 
 protected:
     Task(SG::Shotgun *sg, const xmlrpc_c::value &attrs);

@@ -30,24 +30,41 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
+#include <iostream>
+#include <vector>
+
+#include <Shotgun/Method.h>
+#include <Shotgun/Entity.h>
+#include <Shotgun/Shotgun.h>
+#include <Shotgun/SiteProject.h>
+
 namespace SG {
 
 // *****************************************************************************
-class Asset : SG::Entity, SG::TaskMixin, SG::NoteMixin
+SiteProject::SiteProject(Shotgun *sg, const xmlrpc_c::value &attrs)
+    : Project(sg, attrs)
 {
-%TypeHeaderCode
-    #include <Shotgun/Asset.h>
-%End
+    m_classType = "SiteProject";
+}
 
-public:
-    Asset(const SG::Asset &ref);
-    virtual ~Asset();
+// *****************************************************************************
+SiteProject::SiteProject(const SiteProject &ref)
+    : Project(ref.m_sg, *ref.m_attrs)
+{
+    m_classType = "SiteProject";
+}
 
-    static std::string entityType();
-    static std::string classType();
+// *****************************************************************************
+SiteProject::~SiteProject()
+{
+    // Nothing
+}
 
-protected:
-    Asset(SG::Shotgun *sg, const xmlrpc_c::value &attrs);
-};
+// *****************************************************************************
+List SiteProject::defaultReturnFields()
+{
+    return Project::defaultReturnFields()
+               .append("created_by");
+}
 
-}; // End namespace SG
+} // End namespace SG

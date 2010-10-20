@@ -43,7 +43,8 @@ public:
     Shot(const SG::Shot &ref);
     virtual ~Shot();
 
-    static std::string type();
+    static std::string entityType();
+    static std::string classType();
 
 protected:
     Shot(SG::Shotgun *sg, const xmlrpc_c::value &attrs);

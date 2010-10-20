@@ -48,7 +48,8 @@ public:
     virtual const std::string sgProjectName() const throw(SG::SgError);
     virtual const std::string sgProjectCode() const throw(SG::SgError);
 
-    static std::string type();
+    static std::string entityType();
+    static std::string classType();
 
 protected:
     Project(SG::Shotgun *sg, const xmlrpc_c::value &attrs);

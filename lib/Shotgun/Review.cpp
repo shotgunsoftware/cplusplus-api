@@ -44,7 +44,7 @@ namespace SG {
 Review::Review(Shotgun *sg, const xmlrpc_c::value &attrs)
     : Entity(sg)
 {
-    m_type = "Review";
+    m_entityType = m_classType = "Review";
     m_attrs = new xmlrpc_c::value(attrs);
 }
 
@@ -52,7 +52,7 @@ Review::Review(Shotgun *sg, const xmlrpc_c::value &attrs)
 Review::Review(const Review &ref)
     : Entity(ref.m_sg)
 {
-    m_type = "Review";
+    m_entityType = m_classType = "Review";
     m_attrs = new xmlrpc_c::value(*ref.m_attrs);
 }
 

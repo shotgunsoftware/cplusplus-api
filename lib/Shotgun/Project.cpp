@@ -44,7 +44,7 @@ namespace SG {
 Project::Project(Shotgun *sg, const xmlrpc_c::value &attrs)
     : Entity(sg)
 {
-    m_type = "Project";
+    m_entityType = m_classType = "Project";
 
     if (attrs.type() != xmlrpc_c::value::TYPE_NIL)
     {
@@ -56,7 +56,7 @@ Project::Project(Shotgun *sg, const xmlrpc_c::value &attrs)
 Project::Project(const Project &ref)
     : Entity(ref.m_sg)
 {
-    m_type = "Project";
+    m_entityType = m_classType = "Project";
     m_attrs = new xmlrpc_c::value(*ref.m_attrs);
 }
 

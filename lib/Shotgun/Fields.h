@@ -68,6 +68,7 @@ namespace SG {
 class Fields : public List
 {
 public:
+    // -------------------------------------------------------------------------
     /// A default constructor.
     Fields();
 
@@ -84,6 +85,7 @@ public:
            const std::string &multiEntityUpdateMode = "",
            const Dict &parentEntity = Dict());
 
+    // -------------------------------------------------------------------------
     /// A template function that adds one field to the "fields" list.
     template <typename T>
     Fields &append(const std::string &fieldName,
@@ -91,12 +93,15 @@ public:
                    const std::string &multiEntityUpdateMode = "",
                    const Dict &parentEntity = Dict());
 
+    // -------------------------------------------------------------------------
     /// Extends the "fields" list with a second "fields" list.
     Fields &extend(const Fields &that);
 
+    // -------------------------------------------------------------------------
     /// Returns the std::vector container for the "fields" list.
     const std::vector<xmlrpc_c::value> &fields() const { return value(); }
 
+    // -------------------------------------------------------------------------
     Fields &operator=(const Fields &that)
     {
         if (this != &that)
@@ -107,6 +112,7 @@ public:
         return *this;
     }
 
+    // -------------------------------------------------------------------------
     friend std::ostream& operator<<(std::ostream &output, const Fields &fields)
     {
         output << fields.str();

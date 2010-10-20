@@ -42,7 +42,7 @@ namespace SG {
 Playlist::Playlist(Shotgun *sg, const xmlrpc_c::value &attrs)
     : Entity(sg)
 {
-    m_type = "Playlist";
+    m_entityType = m_classType = "Playlist";
     m_attrs = new xmlrpc_c::value(attrs);
 }
 
@@ -51,7 +51,7 @@ Playlist::Playlist(Shotgun *sg, const xmlrpc_c::value &attrs)
 Playlist::Playlist(const Playlist &ref)
     : Entity(ref.m_sg)
 {
-    m_type = "Playlist";
+    m_entityType = m_classType = "Playlist";
     m_attrs = new xmlrpc_c::value(*ref.m_attrs);
 }
 

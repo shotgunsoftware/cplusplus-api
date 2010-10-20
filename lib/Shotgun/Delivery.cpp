@@ -42,7 +42,7 @@ namespace SG {
 Delivery::Delivery(Shotgun *sg, const xmlrpc_c::value &attrs)
     : Entity(sg)
 {
-    m_type = "Delivery";
+    m_entityType = m_classType = "Delivery";
     m_attrs = new xmlrpc_c::value(attrs);
 }
 
@@ -51,7 +51,7 @@ Delivery::Delivery(Shotgun *sg, const xmlrpc_c::value &attrs)
 Delivery::Delivery(const Delivery &ref)
     : Entity(ref.m_sg)
 {
-    m_type = "Delivery";
+    m_entityType = m_classType = "Delivery";
     m_attrs = new xmlrpc_c::value(*ref.m_attrs);
 }
 

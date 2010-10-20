@@ -40,8 +40,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace SG {
 
-class Shotgun;
-
 // *****************************************************************************
 /// \class Version
 class Version : public Entity, public NoteMixin
@@ -49,14 +47,19 @@ class Version : public Entity, public NoteMixin
     friend class Shotgun;
     
 public:
+    // -------------------------------------------------------------------------
     /// A copy constructor.
     Version(const Version &ref);
 
     /// A destructor that does nothing.
     virtual ~Version();
 
-    /// The string representation of Asset entity type.
-    static std::string type() { return std::string("Version"); }
+    // -------------------------------------------------------------------------
+    /// The string representation of Version entity type.
+    static std::string entityType() { return std::string("Version"); }
+
+    /// The string representation of Version class type.
+    static std::string classType() { return entityType(); }
 
     // -------------------------------------------------------------------------
     Version &operator=(const Version &that)
@@ -77,12 +80,14 @@ public:
     }
 
 protected:
+    // -------------------------------------------------------------------------
     /// A constructor.
     ///
     /// \param sg - instantiated Shotgun object pointer
     /// \param attrs - raw attribute map for a Shotgun entity
     Version(Shotgun *sg, const xmlrpc_c::value &attrs);
 
+    // -------------------------------------------------------------------------
     /// A Version entity factory function.
     ///
     /// \param sg - instantiated Shotgun object pointer
@@ -90,6 +95,7 @@ protected:
     /// \return a newly-created Version * as its base Entity * type
     static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Version(sg, attrs); }
 
+    // -------------------------------------------------------------------------
     /// Builds a list of default "return_fields" which are the attributes
     /// exposed to the users when a Version entity is created or searched.
     ///

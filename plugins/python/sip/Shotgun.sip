@@ -53,19 +53,19 @@ public:
     SG::Method *method(const std::string &methodName);
 
     //------------------------------------------------------------------------
-    SG::Entity *createEntity(const std::string &entityType,
+    SG::Entity *createEntity(const std::string &classType,
                              const SG::Dict &data,
                              const SG::List &extraReturnFields = SG::List()) throw(SG::SgError) /Factory/;
 
     //------------------------------------------------------------------------
-    SG::Entity *findEntity(const std::string &entityType,
+    SG::Entity *findEntity(const std::string &classType,
                            const SG::FilterBy &filterList = SG::FilterBy(),
                            const SG::List &extraReturnFields = SG::List(),
                            const bool retiredOnly = false,
                            const SG::SortBy &order = SG::SortBy()) throw(SG::SgError) /Factory/;
 
     //------------------------------------------------------------------------
-    SG::EntityPtrs findEntities(const std::string &entityType,
+    SG::EntityPtrs findEntities(const std::string &classType,
                                 const SG::FilterBy &filterList = SG::FilterBy(),
                                 const int limit = 0,
                                 const SG::List &extraReturnFields = SG::List(),
@@ -73,7 +73,7 @@ public:
                                 const SG::SortBy &order = SG::SortBy()) throw(SG::SgError) /Factory/;
 
     //------------------------------------------------------------------------
-    bool deleteEntity(const std::string &entityType, const int id) const throw(SG::SgError);
+    bool deleteEntity(const std::string &classType, const int id) const throw(SG::SgError);
 };
 
 }; // End namespace SG

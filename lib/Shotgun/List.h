@@ -47,6 +47,7 @@ namespace SG {
 class List
 {
 public:
+    // -------------------------------------------------------------------------
     /// A default constructor.
     List();
 
@@ -63,6 +64,7 @@ public:
          append(value);      
     }
 
+    // -------------------------------------------------------------------------
     /// A template function that adds an element to the std::vector container.
     template <typename T>
     List &append(const T &value)
@@ -72,45 +74,57 @@ public:
         return *this;
     }
     
+    // -------------------------------------------------------------------------
     /// Extends the std::vector container with the given List.
     List &extend(const List &that);
 
+    // -------------------------------------------------------------------------
     /// A template function that returns the value of an element with the
     /// given index. 
     template <typename T>
     const T value(const int index) const;
 
+    // -------------------------------------------------------------------------
     /// Returns the value of an element with the given index. This function 
     /// should only be used within the Shotgun lib
     const xmlrpc_c::value value(const int index) const;
     
+    // -------------------------------------------------------------------------
     /// Returns the value of an element with the given index. The value is of
     /// type, xmlrpc_c::value. This function should only be used within the 
     /// Shotgun lib.
     const xmlrpc_c::value operator[](const int index) const;
 
+    // -------------------------------------------------------------------------
     /// Returns the std::vector container that the List class wraps around.
     const std::vector<xmlrpc_c::value> &value() const { return m_value; }
 
+    // -------------------------------------------------------------------------
     /// Returns whether the std::vector container is empty.
     const bool empty() const { return m_value.empty(); }
 
+    // -------------------------------------------------------------------------
     /// Returns the size of the std::vector container.
     const int size() const { return m_value.size(); }
 
+    // -------------------------------------------------------------------------
     /// Returns the string representation of the List class. 
     const std::string str() const { return toStdString(m_value); }
 
+    // -------------------------------------------------------------------------
     /// Removes all the contents from the std::vector container, leaving it with 
     /// a size of 0.
     void clear() { m_value.clear(); }
 
+    // -------------------------------------------------------------------------
     /// Removes a single element with the given index from the std::vector container.
     void erase(const int index);
 
+    // -------------------------------------------------------------------------
     /// Removes a range of elements with the given indices from the std::vector container.
     void erase(const int first, const int last);
 
+    // -------------------------------------------------------------------------
     List &operator=(const List &that)
     {
         if (this != &that)
@@ -121,6 +135,7 @@ public:
         return *this;
     }
 
+    // -------------------------------------------------------------------------
     friend std::ostream& operator<<(std::ostream &output, const List &list)
     {
         output << list.str();

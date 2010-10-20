@@ -64,24 +64,24 @@ Shotgun::Shotgun(const std::string &serverURL,
 
     // Set the correct "TZ" time zone environment variable, this is needed by
     // some of the datetime calls to find the correct local time zone info.
-    setTimeZoneEnv();
+    //setTimeZoneEnv();
 
     // Register the classes
-    registerClass("Asset",        &Asset::factory,        &Asset::defaultReturnFields);
-    registerClass("Delivery",     &Delivery::factory,     &Delivery::defaultReturnFields);
-    registerClass("Element",      &Element::factory,      &Element::defaultReturnFields);
-    registerClass("Group",        &Group::factory,        &Group::defaultReturnFields);
-    registerClass("HumanUser",    &HumanUser::factory,    &HumanUser::defaultReturnFields);
-    registerClass("Note",         &Note::factory,         &Note::defaultReturnFields);
-    registerClass("Playlist",     &Playlist::factory,     &Playlist::defaultReturnFields);
-    registerClass("Project",      &Project::factory,      &Project::defaultReturnFields);
-    registerClass("PublishEvent", &PublishEvent::factory, &PublishEvent::defaultReturnFields);
-    registerClass("Review",       &Review::factory,       &Review::defaultReturnFields);
-    registerClass("ReviewItem",   &ReviewItem::factory,   &ReviewItem::defaultReturnFields);
-    registerClass("Sequence",     &Sequence::factory,     &Sequence::defaultReturnFields);
-    registerClass("Shot",         &Shot::factory,         &Shot::defaultReturnFields);
-    registerClass("Task",         &Task::factory,         &Task::defaultReturnFields);
-    registerClass("Version",      &Version::factory,      &Version::defaultReturnFields);
+    registerClass("Asset",        &Asset::entityType,        &Asset::factory,        &Asset::defaultReturnFields);
+    registerClass("Delivery",     &Delivery::entityType,     &Delivery::factory,     &Delivery::defaultReturnFields);
+    registerClass("Element",      &Element::entityType,      &Element::factory,      &Element::defaultReturnFields);
+    registerClass("Group",        &Group::entityType,        &Group::factory,        &Group::defaultReturnFields);
+    registerClass("HumanUser",    &HumanUser::entityType,    &HumanUser::factory,    &HumanUser::defaultReturnFields);
+    registerClass("Note",         &Note::entityType,         &Note::factory,         &Note::defaultReturnFields);
+    registerClass("Playlist",     &Playlist::entityType,     &Playlist::factory,     &Playlist::defaultReturnFields);
+    registerClass("Project",      &Project::entityType,      &Project::factory,      &Project::defaultReturnFields);
+    registerClass("PublishEvent", &PublishEvent::entityType, &PublishEvent::factory, &PublishEvent::defaultReturnFields);
+    registerClass("Review",       &Review::entityType,       &Review::factory,       &Review::defaultReturnFields);
+    registerClass("ReviewItem",   &ReviewItem::entityType,   &ReviewItem::factory,   &ReviewItem::defaultReturnFields);
+    registerClass("Sequence",     &Sequence::entityType,     &Sequence::factory,     &Sequence::defaultReturnFields);
+    registerClass("Shot",         &Shot::entityType,         &Shot::factory,         &Shot::defaultReturnFields);
+    registerClass("Task",         &Task::entityType,         &Task::factory,         &Task::defaultReturnFields);
+    registerClass("Version",      &Version::entityType,      &Version::factory,      &Version::defaultReturnFields);
 }
 
 // *****************************************************************************
@@ -91,33 +91,37 @@ Shotgun::~Shotgun()
 }
 
 // *****************************************************************************
-void Shotgun::registerClass(const std::string &entityType,
+void Shotgun::registerClass(const std::string &classType,
+                            const EntityTypeFunc &entityTypeFunc,
                             const FactoryFunc &factoryFunc,
                             const DefaultReturnFieldsFunc &defaultReturnFieldsFunc)
 {
-    m_classRegistry[entityType] = RegistryFuncPair(factoryFunc, defaultReturnFieldsFunc);
+#if 0
+    m_classRegistry[classType] = RegistryFuncPair(factoryFunc, defaultReturnFieldsFunc);
+#else
+    m_classRegistry[classType].entityTypeFunc = entityTypeFunc;
+    m_classRegistry[classType].factoryFunc = factoryFunc;
+    m_classRegistry[classType].defaultReturnFieldsFunc = defaultReturnFieldsFunc;
+#endif
 }
 
 // *****************************************************************************
-EntityPtrs Shotgun::entityFactoryFind(const std::string &entityType, 
+EntityPtrs Shotgun::entityFactoryFind(const std::string &classType, 
                                       Dict &findMap,
                                       const int limit)
 {
     EntityPtrs entities;
 
-    // Find the factory func and the defaultReturnFields func for the given type of entity
-    ClassRegistry::iterator foundRegistryIter = m_classRegistry.find(entityType);
+    // Find the registered functions for the given type of class.
+    ClassRegistry::iterator foundRegistryIter = m_classRegistry.find(classType);
 
     if (foundRegistryIter == m_classRegistry.end())
     {
-        throw SgEntityClassNotRegisteredError(entityType);
+        throw SgEntityClassNotRegisteredError(classType);
     }
 
-    // The registry function pair 
-    RegistryFuncPair registryFuncPair = (*foundRegistryIter).second;
-
-    FactoryFunc factoryFunc = registryFuncPair.first;
-    DefaultReturnFieldsFunc defaultReturnFieldsFunc = registryFuncPair.second;
+    // The set of registered functions 
+    RegistryFuncs registryFuncs = (*foundRegistryIter).second;
 
     // ------------------------------------------------------------------------
     // If the given findMap already has a "return_fields", merge its contents 
@@ -129,7 +133,7 @@ EntityPtrs Shotgun::entityFactoryFind(const std::string &entityType,
 
     // Populate the default return fields and add the extra return fields
     // before passing them to the findMap
-    List returnFields = (*defaultReturnFieldsFunc)();
+    List returnFields = (*(registryFuncs.defaultReturnFieldsFunc))();
     try
     {
         // Check to see if the findMap has "return_fields" already
@@ -144,13 +148,13 @@ EntityPtrs Shotgun::entityFactoryFind(const std::string &entityType,
     findMap.add("return_fields", returnFields);
 
     // If the findMap already has a "type" field, override it with the
-    // given "entityType" to ensure the type will not conflict with the
-    // factory function.
+    // entityType that corresponds to the given "classType" to ensure 
+    // the type will not conflict with the factory function.
     if (findMap.find("type"))
     {
         findMap.erase("type");
     }
-    findMap.add("type", entityType);
+    findMap.add("type", (*(registryFuncs.entityTypeFunc))());
 
     // Find the shotgun entities by the findMap
     List xmlrpcFindResult = Entity::findSGEntities(this, findMap, limit); 
@@ -158,28 +162,25 @@ EntityPtrs Shotgun::entityFactoryFind(const std::string &entityType,
     // Create entity class object.
     for (size_t i = 0; i < xmlrpcFindResult.size(); i++)
     {
-        entities.push_back((*factoryFunc)(this, xmlrpcFindResult[i]));
+        entities.push_back((*(registryFuncs.factoryFunc))(this, xmlrpcFindResult[i]));
     }
 
     return entities;
 }
 
 // *****************************************************************************
-Entity *Shotgun::entityFactoryCreate(const std::string &entityType, Dict &createMap)
+Entity *Shotgun::entityFactoryCreate(const std::string &classType, Dict &createMap)
 {
-    // Find the factory func and the defaultReturnFields func for the given type of entity
-    ClassRegistry::iterator foundRegistryIter = m_classRegistry.find(entityType);
+    // Find the registered functions for the given type of class.
+    ClassRegistry::iterator foundRegistryIter = m_classRegistry.find(classType);
 
     if (foundRegistryIter == m_classRegistry.end())
     {
-        throw SgEntityClassNotRegisteredError(entityType);
+        throw SgEntityClassNotRegisteredError(classType);
     }
 
-    // The registry function pair 
-    RegistryFuncPair registryFuncPair = (*foundRegistryIter).second;
-
-    FactoryFunc factoryFunc = registryFuncPair.first;
-    DefaultReturnFieldsFunc defaultReturnFieldsFunc = registryFuncPair.second;
+    // The set of registered functions 
+    RegistryFuncs registryFuncs = (*foundRegistryIter).second;
 
     // ------------------------------------------------------------------------
     // If the given createMap already has a "return_fields", merge its contents 
@@ -191,7 +192,7 @@ Entity *Shotgun::entityFactoryCreate(const std::string &entityType, Dict &create
 
     // Populate the default return fields and add the extra return fields
     // before passing them to the createMap
-    List returnFields = (*defaultReturnFieldsFunc)();
+    List returnFields = (*(registryFuncs.defaultReturnFieldsFunc))();
     try
     {
         // Check to see if the createMap has "return_fields" already
@@ -206,13 +207,13 @@ Entity *Shotgun::entityFactoryCreate(const std::string &entityType, Dict &create
     createMap.add("return_fields", returnFields);
 
     // If the createMap already has a "type" field, override it with the
-    // given "entityType" to ensure the type will not conflict with the
-    // factory function.
+    // entityType that corresponds to the given "classType" to ensure the 
+    // type will not conflict with the factory function.
     if (createMap.find("type"))
     {
         createMap.erase("type");
     }
-    createMap.add("type", entityType);
+    createMap.add("type", (*(registryFuncs.entityTypeFunc))());
 
     // Create the shotgun entity by the createMap
     xmlrpc_c::value xmlrpcCreateResult = Entity::createSGEntity(this, createMap); 
@@ -220,73 +221,81 @@ Entity *Shotgun::entityFactoryCreate(const std::string &entityType, Dict &create
     // Create entity class object.
     if (xmlrpcCreateResult.type() != xmlrpc_c::value::TYPE_NIL)
     {
-        return (*factoryFunc)(this, xmlrpcCreateResult);
+        return (*(registryFuncs.factoryFunc))(this, xmlrpcCreateResult);
     }
     else
     {
-        throw SgEntityCreateError(entityType);
+        throw SgEntityCreateError(classType);
     }
 }
 
 // *****************************************************************************
-Entity *Shotgun::createEntity(const std::string &entityType,
+Entity *Shotgun::createEntity(const std::string &classType,
                               const Dict &data,
                               const List &extraReturnFields)
 {
-    Dict createMap = Entity::buildCreateMap(entityType,
-                                            data,
+    Dict createMap = Entity::buildCreateMap(data,
                                             extraReturnFields);
 
-    return this->entityFactoryCreate(entityType, createMap);
+    return this->entityFactoryCreate(classType, createMap);
 }
  
 // *****************************************************************************
-Entity *Shotgun::findEntity(const std::string &entityType,
+Entity *Shotgun::findEntity(const std::string &classType,
                             const FilterBy &filterList,
                             const List &extraReturnFields,
                             const bool retiredOnly,
                             const SortBy &order)
 {
-    Dict findMap = Entity::buildFindMap(entityType,
-                                        filterList,
+    Dict findMap = Entity::buildFindMap(filterList,
                                         extraReturnFields,
                                         retiredOnly,
                                         1, // limit
                                         order);
 
-    EntityPtrs entities = this->entityFactoryFind(entityType, findMap, 1);
+    EntityPtrs entities = this->entityFactoryFind(classType, findMap, 1);
     if (entities.size() > 0)
     {
         return entities[0];
     }
     else
     {
-        throw SgEntityNotFoundError(entityType);
+        throw SgEntityNotFoundError(classType);
     }
 }
 
 // *****************************************************************************
-EntityPtrs Shotgun::findEntities(const std::string &entityType,
+EntityPtrs Shotgun::findEntities(const std::string &classType,
                                  const FilterBy &filterList,
                                  const int limit,
                                  const List &extraReturnFields,
                                  const bool retiredOnly,
                                  const SortBy &order)
 {
-    Dict findMap = Entity::buildFindMap(entityType,
-                                        filterList,
+    Dict findMap = Entity::buildFindMap(filterList,
                                         extraReturnFields,
                                         retiredOnly,
                                         limit,
                                         order);
 
-    return this->entityFactoryFind(entityType, findMap, limit);
+    return this->entityFactoryFind(classType, findMap, limit);
 }
 
 // *****************************************************************************
-bool Shotgun::deleteEntity(const std::string &entityType, const int id)
+bool Shotgun::deleteEntity(const std::string &classType, const int id)
 {
-    return Entity::deleteSGEntity(this, entityType, id);
+    // Find the registered functions for the given type of class.
+    ClassRegistry::iterator foundRegistryIter = m_classRegistry.find(classType);
+
+    if (foundRegistryIter == m_classRegistry.end())
+    {
+        throw SgEntityClassNotRegisteredError(classType);
+    }
+
+    // The set of registered functions 
+    RegistryFuncs registryFuncs = (*foundRegistryIter).second;
+
+    return Entity::deleteSGEntity(this, (*(registryFuncs.entityTypeFunc))(), id);
 }
 
 // *****************************************************************************

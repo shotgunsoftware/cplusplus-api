@@ -37,8 +37,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace SG {
 
-class Shotgun;
-
 // *****************************************************************************
 /// \class Playlist
 class Playlist : public Entity
@@ -46,14 +44,19 @@ class Playlist : public Entity
     friend class Shotgun;
  
 public:
+    // -------------------------------------------------------------------------
     /// A copy constructor.
     Playlist(const Playlist &ref);
 
     /// A destructor that does nothing.
     virtual ~Playlist();
 
+    // -------------------------------------------------------------------------
     /// The string representation of Playlist entity type.
-    static std::string type() { return std::string("Playlist"); }
+    static std::string entityType() { return std::string("Playlist"); }
+
+    /// The string representation of Playlist class type.
+    static std::string classType() { return entityType(); }
 
     // -------------------------------------------------------------------------
     Playlist &operator=(const Playlist &that)
@@ -74,12 +77,14 @@ public:
     }
 
 protected:
+    // -------------------------------------------------------------------------
     /// A constructor.
     ///
     /// \param sg - instantiated Shotgun object pointer
     /// \param attrs - raw attribute map for a Shotgun entity
     Playlist(Shotgun *sg, const xmlrpc_c::value &attrs);
 
+    // -------------------------------------------------------------------------
     /// A Playlist entity factory function.
     ///
     /// \param sg - instantiated Shotgun object pointer
@@ -87,6 +92,7 @@ protected:
     /// \return a newly-created Playlist * as its base Entity * type
     static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Playlist(sg, attrs); }
 
+    // -------------------------------------------------------------------------
     /// Builds a list of default "return_fields" which are the attributes
     /// exposed to the users when a Playlist entity is created or searched.
     ///

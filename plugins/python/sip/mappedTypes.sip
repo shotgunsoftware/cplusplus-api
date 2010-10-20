@@ -2180,6 +2180,101 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 };
 
 // ************************************************************************
+//  std::vector<SG::SiteProject *> - SG::SiteProjectPtrs
+// ************************************************************************
+
+%MappedType std::vector<SG::SiteProject *>
+{
+%TypeHeaderCode
+#include <vector>
+#include <Shotgun/SiteProject.h>
+%End
+
+%ConvertFromTypeCode
+    PyObject *pList = NULL;
+
+    if ((pList = PyList_New(sipCpp->size())) == NULL)
+        return NULL;
+
+    for (SIP_SSIZE_T i = 0; i < SIP_SSIZE_T(sipCpp->size()); ++i)
+    {
+        SG::SiteProject *t = (*sipCpp)[i];
+        
+        PyObject *pObj;
+
+        if ((pObj = sipConvertFromNewType(t, sipType_SG_SiteProject, sipTransferObj)) == NULL)
+        {
+            Py_DECREF(pList);
+            delete t;
+
+            return NULL;
+        }
+
+        PyList_SET_ITEM(pList, i, pObj);
+    }
+
+    return pList;
+%End
+
+%ConvertToTypeCode
+    SIP_SSIZE_T len;
+
+    if (sipIsErr == NULL)
+    {
+        if (!PySequence_Check(sipPy) || (len = PySequence_Size(sipPy)) < 0)
+            return 0;
+
+        for (SIP_SSIZE_T i = 0; i < len; ++i)
+        {
+            PyObject *itm = PySequence_ITEM(sipPy, i);
+            bool ok = (itm &&
+                       sipCanConvertToType(itm, sipType_SG_SiteProject, SIP_NOT_NONE));
+
+            Py_XDECREF(itm);
+
+            if (!ok)
+                return 0;
+        }
+
+        return 1;
+    }
+
+    std::vector<SG::SiteProject *> *stdVector = new std::vector<SG::SiteProject *>;
+    len = PySequence_Size(sipPy);
+
+    for (SIP_SSIZE_T i = 0; i < len; ++i)
+    {
+        PyObject *itm = PySequence_ITEM(sipPy, i);
+        int state;
+        SG::SiteProject *t = reinterpret_cast<SG::SiteProject *>(
+                                 sipConvertToType( itm,
+                                                   sipType_SG_SiteProject,
+                                                   sipTransferObj,
+                                                   SIP_NOT_NONE,
+                                                   &state,
+                                                   sipIsErr));
+
+        Py_DECREF(itm);
+
+        if (*sipIsErr)
+        {
+            sipReleaseType(t, sipType_SG_SiteProject, state);
+
+            delete stdVector;
+
+            return 0;
+        }
+
+        stdVector->push_back(t);
+    }
+
+    *sipCppPtr = stdVector;
+
+    return sipGetState(sipTransferObj);
+%End
+};
+
+// ************************************************************************
 //  xmlrpc_c::paramList
 // ************************************************************************
 
@@ -2424,6 +2519,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //    - NotePtrs;
 //    - PlaylistPtrs;
 //
+//    - SiteProjectPtrs;
 // ************************************************************************
 
 namespace SG {
@@ -2449,6 +2545,8 @@ typedef std::vector<SG::Task *> TaskPtrs;
 typedef std::vector<SG::Group *> GroupPtrs;
 typedef std::vector<SG::Note *> NotePtrs;
 typedef std::vector<SG::Playlist *> PlaylistPtrs;
+
+typedef std::vector<SG::SiteProject *> SiteProjectPtrs;
 
 }; // End namespace SG
 

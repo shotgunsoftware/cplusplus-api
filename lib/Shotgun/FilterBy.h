@@ -75,6 +75,7 @@ namespace SG {
 class FilterBy
 {
 public:
+    // -------------------------------------------------------------------------
     /// A default constructor.
     FilterBy();
 
@@ -90,39 +91,49 @@ public:
              const std::string &relation,
              const T &value);
 
+    // -------------------------------------------------------------------------
     /// A template logic "and" function that adds one simple condition to the "filters".
     template <typename T>
     FilterBy &And(const std::string &path,
                   const std::string &relation,
                   const T &value);
 
+    // -------------------------------------------------------------------------
     /// A logic "and" function that adds one general condition to the "filters".
     FilterBy &And(const FilterBy &that) { return op("and", that); }
 
+    // -------------------------------------------------------------------------
     /// A template logic "or" function that adds one condition to the "filters".
     template <typename T>
     FilterBy &Or(const std::string &path,
                  const std::string &relation,
                  const T &value);
     
+    // -------------------------------------------------------------------------
     /// A logic "or" function that adds one general condition to the "filters".
     FilterBy &Or(const FilterBy &that) { return op("or", that); }
 
+    // -------------------------------------------------------------------------
     /// Returns the "filters" dict.
     const Dict &filters() const { return m_filters; }
 
+    // -------------------------------------------------------------------------
     /// Returns whether the "filters" dict is empty.
     const bool empty() const { return m_filters.empty(); }
 
+    // -------------------------------------------------------------------------
     /// Returns the size of the "filters" dict.
     const int size() const { return m_filters.size(); }
 
+    // -------------------------------------------------------------------------
     /// Returns the string representation of the FilterBy class.
     const std::string str() const { return m_filters.str(); }
 
+    // -------------------------------------------------------------------------
     /// Removes all the contents from the "filters" dict.
     void clear() { m_filters.clear(); }
 
+    // -------------------------------------------------------------------------
     FilterBy &operator=(const FilterBy &that)
     {
         if (this != &that)
@@ -133,6 +144,7 @@ public:
         return *this;
     }
 
+    // -------------------------------------------------------------------------
     friend std::ostream& operator<<(std::ostream &output, const FilterBy &filterBy)
     {
         output << filterBy.str();
@@ -140,12 +152,14 @@ public:
     }
 
 protected:
+    // -------------------------------------------------------------------------
     /// Adds a simple condition to the "filters" with a specified logic operator.
     FilterBy &op(const std::string &logicOperator,
                  const std::string &path,
                  const std::string &relation,
                  const xmlrpc_c::value &value);
 
+    // -------------------------------------------------------------------------
     /// Adds a general condition to the "filters" with a specified logic operator.
     FilterBy &op(const std::string &logicOperator,
                  const FilterBy &that);

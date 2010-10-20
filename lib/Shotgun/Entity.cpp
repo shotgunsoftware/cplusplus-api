@@ -260,15 +260,10 @@ const std::string Entity::linkEntityType(const std::string &linkName) const
 }
 
 // *****************************************************************************
-Dict Entity::buildCreateMap(const std::string &entityType,
-                            const Dict &data,
+Dict Entity::buildCreateMap( const Dict &data,
                             const List &extraReturnFields)
 {
     Dict createMap;
-
-    // -------------------------------------------------------------------
-    // "type"
-    createMap.add("type", entityType);
 
     // -------------------------------------------------------------------
     // "fields"
@@ -293,18 +288,13 @@ Dict Entity::buildCreateMap(const std::string &entityType,
 }
 
 // *****************************************************************************
-Dict Entity::buildFindMap(const std::string &entityType,
-                          const FilterBy &filterList,
+Dict Entity::buildFindMap(const FilterBy &filterList,
                           const List &extraReturnFields,
                           const bool retiredOnly,
                           const int limit,
                           const SortBy &order)
 {
     Dict findMap;
-
-    // -------------------------------------------------------------------
-    // "type"
-    findMap.add("type", entityType);
 
     // -------------------------------------------------------------------
     // "filters"
@@ -400,7 +390,7 @@ const xmlrpc_c::value Entity::getAttrValue(const std::string &attrName) const
     // and it has already been retrieved at this point.
     // ------------------------------------------------------------------
     // Add attrName to the list of return fields
-    Entity *entity = m_sg->findEntity(m_type,
+    Entity *entity = m_sg->findEntity(m_classType,
                                       FilterBy("id", "is", sgId()),
                                       List(attrName));
 
@@ -452,7 +442,7 @@ void Entity::setAttrValue(const Fields &fields)
         // -------------------------------------------------------------------------
         // Update the Shotgun records - update all the fields in one call
         xmlrpc_c::value result = updateSGEntity(m_sg,
-                                                m_type,
+                                                m_entityType,
                                                 sgId(),
                                                 fields);
 

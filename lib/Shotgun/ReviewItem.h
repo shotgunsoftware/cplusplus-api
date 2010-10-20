@@ -39,8 +39,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace SG {
 
-class Shotgun;
-
 // *****************************************************************************
 /// \class ReviewItem
 class ReviewItem : public Entity
@@ -48,14 +46,19 @@ class ReviewItem : public Entity
     friend class Shotgun;
  
 public:
+    // -------------------------------------------------------------------------
     /// A copy constructor.
     ReviewItem(const ReviewItem &ref);
 
     /// A destructor that does nothing
     virtual ~ReviewItem();
 
+    // -------------------------------------------------------------------------
     /// The string representation of ReviewItem entity type.
-    static std::string type() { return std::string("ReviewItem"); }
+    static std::string entityType() { return std::string("ReviewItem"); }
+
+    /// The string representation of ReviewItem class type.
+    static std::string classType() { return entityType(); }
 
     // -------------------------------------------------------------------------
     ReviewItem &operator=(const ReviewItem &that)
@@ -76,12 +79,14 @@ public:
     }
 
 protected:
+    // -------------------------------------------------------------------------
     /// A constructor.
     ///
     /// \param sg - instantiated Shotgun object pointer
     /// \param attrs - raw attribute map for a Shotgun entity
     ReviewItem(Shotgun *sg, const xmlrpc_c::value &attrs);
 
+    // -------------------------------------------------------------------------
     /// A ReviewItem entity factory function.
     ///
     /// \param sg - instantiated Shotgun object pointer
@@ -89,6 +94,7 @@ protected:
     /// \return a newly-created ReviewItem * as its base Entity * type
     static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new ReviewItem(sg, attrs); }
 
+    // -------------------------------------------------------------------------
     /// Builds a list of default "return_fields" which are the attributes
     /// exposed to the users when a ReviewItem entity is created or searched.
     ///

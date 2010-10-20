@@ -33,21 +33,28 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace SG {
 
 // *****************************************************************************
-class Asset : SG::Entity, SG::TaskMixin, SG::NoteMixin
+class SiteProject : SG::Project
 {
 %TypeHeaderCode
-    #include <Shotgun/Asset.h>
+    #include <Shotgun/SiteProject.h>
 %End
 
 public:
-    Asset(const SG::Asset &ref);
-    virtual ~Asset();
+    // -------------------------------------------------------------------------
+    SiteProject(const SG::SiteProject &ref);
+    virtual ~SiteProject();
 
+    // -------------------------------------------------------------------------
     static std::string entityType();
     static std::string classType();
 
+    // -------------------------------------------------------------------------
+    // These are site-specific convenience functions
+    virtual const std::string sgName();
+    virtual const std::string sgCode();
+
 protected:
-    Asset(SG::Shotgun *sg, const xmlrpc_c::value &attrs);
+    SiteProject(SG::Shotgun *sg, const xmlrpc_c::value &attrs);
 };
 
 }; // End namespace SG

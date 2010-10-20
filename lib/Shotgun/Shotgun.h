@@ -59,9 +59,13 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Group.h>
 #include <Shotgun/Note.h>
 #include <Shotgun/Playlist.h>
+#include <Shotgun/SiteProject.h>
 
 namespace SG {
 
+// *****************************************************************************
+/// Defines a function pointer to a Shotgun entity's entityType() function.
+typedef std::string (*EntityTypeFunc)();
 
 /// Defines a function pointer to a Shotgun entity's factory() function.
 typedef Entity* (*FactoryFunc)(Shotgun *, const xmlrpc_c::value &);
@@ -69,13 +73,20 @@ typedef Entity* (*FactoryFunc)(Shotgun *, const xmlrpc_c::value &);
 /// Defines a function pointer to a Shotgun entity's defaultReturnFields() function.
 typedef List (*DefaultReturnFieldsFunc) ();
 
-/// Defines a pair of function pointers to <factory(), defaultReturnFields()>
-typedef std::pair<FactoryFunc, DefaultReturnFieldsFunc> RegistryFuncPair;
+/// Defines a struct container to hold the function pointers.
+typedef struct 
+{ 
+    EntityTypeFunc entityTypeFunc;
+    FactoryFunc factoryFunc;
+    DefaultReturnFieldsFunc defaultReturnFieldsFunc;
+
+} RegistryFuncs;
 
 /// Defines the ClassRegistry which registers a Shotgun entity's type string
-/// with a pair of corresponding function pointers.
-typedef std::map<std::string, RegistryFuncPair> ClassRegistry;
+/// with a set of corresponding function pointers.
+typedef std::map<std::string, RegistryFuncs> ClassRegistry;
 
+// *****************************************************************************
 class TaskMixin;
 class NoteMixin;
 
@@ -87,6 +98,7 @@ class NoteMixin;
 class Shotgun
 {
 public:
+    // -------------------------------------------------------------------------
     /// A constructor that 
     ///    - creates a XML-RPC client pointer.
     ///    - sets authentication info.
@@ -108,6 +120,7 @@ public:
     /// A destructor that deletes the XML-RPC client pointer.
     virtual ~Shotgun();
 
+    // -------------------------------------------------------------------------
     /// Returns the XML-RPC client pointer.
     xmlrpc_c::client_xml *client() const { return m_client; }
 
@@ -124,18 +137,22 @@ public:
     /// "script_key".
     const Dict &authMap() const { return m_authMap; } 
 
+    // -------------------------------------------------------------------------
     /// Creates a new instance of Method class object which corresponds to
     /// a Shotgun API function with the specified name.
     Method *method(const std::string &methodName) 
         { return new Method(this, methodName); }
 
+    // -------------------------------------------------------------------------
     /// Registers a class with the specified type. It creates a class registry
     /// that maps a class' string type with its static factory() function and 
     /// static defaultReturnFields() function.
-    void registerClass(const std::string &entityType,
+    void registerClass(const std::string &classType,
+                       const EntityTypeFunc &entityTypeFunc,
                        const FactoryFunc &factoryFunc,
                        const DefaultReturnFieldsFunc &defaultReturnFieldsFunc);
 
+    // -------------------------------------------------------------------------
     /*! 
      A template function that creates an instance of a Shotgun entity. Make sure 
      to delete the entity in your application. Here is an example:
@@ -163,6 +180,7 @@ public:
     T *createEntity(const Dict &data,
                     const List &extraReturnFields = List());
 
+    // -------------------------------------------------------------------------
     /*!
      A template function that returns one entity by the given filters. Make 
      sure to delete the entity in your application. An example:
@@ -191,6 +209,7 @@ public:
                   const bool retiredOnly = false,
                   const SortBy &order = SortBy());
 
+    // -------------------------------------------------------------------------
     /// This template function is basically the same as calling findEntity()->asLink().
     /// But it deletes the entity before returning the link. So there won't be a 
     /// entity pointer lingering around after return. 
@@ -200,6 +219,7 @@ public:
                                 const bool retiredOnly = false,
                                 const SortBy &order = SortBy());
 
+    // -------------------------------------------------------------------------
     /*!
      A template function that returns zero or more entities by the given filters. 
      Make sure to delete the entities in your application. An example:
@@ -233,6 +253,7 @@ public:
                                   const bool retiredOnly = false,
                                   const SortBy &order = SortBy());
 
+    // -------------------------------------------------------------------------
     /*!
      A template function that deletes an entity by its id. Here is an example:
 
@@ -249,6 +270,7 @@ public:
     template <class T>
     bool deleteEntity(const int id);
 
+    // -------------------------------------------------------------------------
     /// Creates a Shotgun entity. The implementation is the same as the template
     /// createEntity() function except that it uses the input "entityType" string 
     /// to decide what type of entity to create and it returns the base Entity * type.
@@ -256,6 +278,7 @@ public:
                          const Dict &data,
                          const List &extraReturnFields = List());
 
+    // -------------------------------------------------------------------------
     /// Finds a Shotgun entity. The implementation is the same as the template
     /// findEntity() function except that it uses the input "entityType" string 
     /// to decide what type of entity to search and it returns the base Entity * type.
@@ -265,6 +288,7 @@ public:
                        const bool retiredOnly = false,
                        const SortBy &order = SortBy());
 
+    // -------------------------------------------------------------------------
     /// Finds zero or more Shotgun entities. The implementation is the same as 
     /// the template findEntities() function except that it uses the input 
     /// "entityType" string to decide what type of entities to search and it 
@@ -276,38 +300,43 @@ public:
                             const bool retiredOnly = false,
                             const SortBy &order = SortBy());
 
+    // -------------------------------------------------------------------------
     /// Deletes a Shotgun entity. The implementation is the same as the template
     /// deleteEntity() function except that it uses the input "entityType" string 
     /// to decide what type of entity to delete.
     bool deleteEntity(const std::string &entityType, const int id);
 
 protected:
+    // -------------------------------------------------------------------------
     /// This factory function creates an array of entity object pointers which 
     /// link to the existing Shotgun entities. The size of the array can be 0. 
     ///
-    /// \param entityType - entity type string.
+    /// \param classType - entity type string.
     /// \param findMap - filter map for finding the entities.
     /// \param limit - upper limit on the number of entities returned.
     /// \return an array of entities.
-    EntityPtrs entityFactoryFind(const std::string &entityType, 
+    EntityPtrs entityFactoryFind(const std::string &classType, 
                                  Dict &findMap,
                                  const int limit = 0);
 
+    // -------------------------------------------------------------------------
     /// This factory function creates an entity object pointer which links to 
     /// a newly-created Shotgun entity.
     ///
-    /// \param entityType - entity type string.
+    /// \param classType - entity type string.
     /// \param data - a data map that contains the fields' name and value to set
     ///               for the new entity.
     /// \return a new entity.
-    Entity *entityFactoryCreate(const std::string &entityType, Dict &data);
+    Entity *entityFactoryCreate(const std::string &classType, Dict &data);
 
+    // -------------------------------------------------------------------------
     std::string m_serverURL; ///< The server URL string.
     std::string m_authName; ///< The authentication "script_name".
     std::string m_authKey; ///< The authentication "script_key".
     Dict m_authMap; ///< The authentication map.
 
 private:
+    // -------------------------------------------------------------------------
     /// Set the "TZ" environment varible which is used by some datetime-related
     /// calls to find the correct local time zone
     void setTimeZoneEnv(); 
@@ -326,7 +355,7 @@ template <class T>
 T *Shotgun::createEntity(const Dict &data,
                          const List &extraReturnFields)
 {
-    Entity *entity = createEntity(T::type(),
+    Entity *entity = createEntity(T::classType(),
                                   data,
                                   extraReturnFields);
 
@@ -336,7 +365,7 @@ T *Shotgun::createEntity(const Dict &data,
     }
     else
     {
-        throw SgEntityDynamicCastError(T::type());
+        throw SgEntityDynamicCastError(T::classType());
     }
 }
 
@@ -347,7 +376,7 @@ T *Shotgun::findEntity(const FilterBy &filterList,
                        const bool retiredOnly,
                        const SortBy &order)
 {
-    Entity *entity = findEntity(T::type(),
+    Entity *entity = findEntity(T::classType(),
                                 filterList,
                                 extraReturnFields,
                                 retiredOnly,
@@ -359,7 +388,7 @@ T *Shotgun::findEntity(const FilterBy &filterList,
     }
     else
     {
-        throw SgEntityDynamicCastError(T::type());
+        throw SgEntityDynamicCastError(T::classType());
     }
 }
 
@@ -370,7 +399,7 @@ const Dict Shotgun::findEntityAsLink(const FilterBy &filterList,
                                      const bool retiredOnly,
                                      const SortBy &order)
 {
-    Entity *entity = findEntity(T::type(),
+    Entity *entity = findEntity(T::classType(),
                                 filterList,
                                 extraReturnFields,
                                 retiredOnly,
@@ -390,7 +419,7 @@ std::vector<T *> Shotgun::findEntities(const FilterBy &filterList,
                                        const bool retiredOnly,
                                        const SortBy &order)
 {
-    EntityPtrs entities = findEntities(T::type(),
+    EntityPtrs entities = findEntities(T::classType(),
                                        filterList,
                                        limit,
                                        extraReturnFields,
@@ -406,7 +435,7 @@ std::vector<T *> Shotgun::findEntities(const FilterBy &filterList,
         }
         else
         {
-             throw SgEntityDynamicCastError(T::type());
+             throw SgEntityDynamicCastError(T::classType());
         }
     }
 
@@ -418,7 +447,7 @@ std::vector<T *> Shotgun::findEntities(const FilterBy &filterList,
 template <class T>
 bool Shotgun::deleteEntity(const int id)
 {
-    return Entity::deleteSGEntity(this, T::type(), id);
+    return Entity::deleteSGEntity(this, T::classType(), id);
 }
 
 // *****************************************************************************

@@ -33,21 +33,18 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace SG {
 
 // *****************************************************************************
-class Asset : SG::Entity, SG::TaskMixin, SG::NoteMixin
+class SiteShotgun : SG::Shotgun
 {
 %TypeHeaderCode
-    #include <Shotgun/Asset.h>
+    #include <Shotgun/SiteShotgun.h>
 %End
 
 public:
-    Asset(const SG::Asset &ref);
-    virtual ~Asset();
-
-    static std::string entityType();
-    static std::string classType();
-
-protected:
-    Asset(SG::Shotgun *sg, const xmlrpc_c::value &attrs);
+    // -------------------------------------------------------------------------
+    SiteShotgun(const std::string &serverURL = SG_DEFAULT_URL,
+                const std::string &authName = SG_AUTHENTICATION_NAME,
+                const std::string &authKey = SG_AUTHENTICATION_KEY);
+    virtual ~SiteShotgun();
 };
 
 }; // End namespace SG

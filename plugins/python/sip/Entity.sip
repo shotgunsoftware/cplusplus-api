@@ -40,71 +40,10 @@ class Entity
 %End
 
 %ConvertToSubClassCode
-    // Downcast to subclass
-    if (sipCpp->entityType() == "Asset")
-    {
-        sipType = sipType_SG_Asset;
-    }
-    else if (sipCpp->entityType() == "Delivery")
-    {
-        sipType = sipType_SG_Delivery;
-    }
-    else if (sipCpp->entityType() == "Element")
-    {
-        sipType = sipType_SG_Element;
-    }
-    else if (sipCpp->entityType() == "Group")
-    {
-        sipType = sipType_SG_Group;
-    }
-    else if (sipCpp->entityType() == "HumanUser")
-    {
-        sipType = sipType_SG_HumanUser;
-    }
-    else if (sipCpp->entityType() == "Note")
-    {
-        sipType = sipType_SG_Note;
-    }
-    else if (sipCpp->entityType() == "Playlist")
-    {
-        sipType = sipType_SG_Playlist;
-    }
-    else if (sipCpp->entityType() == "Project")
-    {
-        sipType = sipType_SG_Project;
-    }
-    else if (sipCpp->entityType() == "PublishEvent")
-    {
-        sipType = sipType_SG_PublishEvent;
-    }
-    else if (sipCpp->entityType() == "ReviewItem")
-    {
-        sipType = sipType_SG_ReviewItem;
-    }
-    else if (sipCpp->entityType() == "Review")
-    {
-        sipType = sipType_SG_Review;
-    }
-    else if (sipCpp->entityType() == "Sequence")
-    {
-        sipType = sipType_SG_Sequence;
-    }
-    else if (sipCpp->entityType() == "Shot")
-    {
-        sipType = sipType_SG_Shot;
-    }
-    else if (sipCpp->entityType() == "Task")
-    {
-        sipType = sipType_SG_Task;
-    }
-    else if (sipCpp->entityType() == "Version")
-    {
-        sipType = sipType_SG_Version;
-    }
-    else
-    {
-        sipType = sipType_SG_Entity;
-    }
+    // Downcast to subclass - the "SG" namespace needs to be included 
+
+    std::string classType = "SG::" + sipCpp->classType();
+    sipType = sipFindType(classType.c_str());
 %End
 
 public:
@@ -124,6 +63,7 @@ public:
 
     // ------------------------------------------------------------------------
     const std::string entityType() const;
+    const std::string classType() const;
     const xmlrpc_c::value &attrs() const;
     const std::string str() const;
     const SG::Dict asLink() const;

@@ -47,20 +47,25 @@ namespace SG {
 class NoteMixin
 {
 public:
+    // -------------------------------------------------------------------------
     /// A destructor that does nothing.
     virtual ~NoteMixin() {};
 
+    // -------------------------------------------------------------------------
     /// Returns an array of Note entities which link to the current entity.
     NotePtrs getNotes(const int limit = 0);
 
+    // -------------------------------------------------------------------------
     /// Returns an array of "Disclaimer" type Note entities which link to the 
     /// current entity.
     NotePtrs getDisclaimerNotes(const int limit = 0);
 
+    // -------------------------------------------------------------------------
     /// Returns an array of "Client" type Note entities which link to the 
     /// current entity.
     NotePtrs getClientNotes(const int limit = 0);
 
+    // -------------------------------------------------------------------------
     /// Creates a new Note entity with data from the current entity.
     Note *addNote(const std::string &noteFromUserName,
                   const Strings &noteToUserNames = Strings(),

@@ -65,6 +65,7 @@ namespace SG {
 class SortBy
 {
 public:
+    // -------------------------------------------------------------------------
     /// A Default constructor.
     SortBy();
 
@@ -81,28 +82,36 @@ public:
          then(fieldName, direction);      
     }
 
+    // -------------------------------------------------------------------------
     /// Adds one field and its sort order to the "sorts" list. 
     SortBy &then(const std::string &fieldName,
                  const std::string &direction = "asc");
 
+    // -------------------------------------------------------------------------
     /// Extends the "sorts" list with another "sorts" list.
     SortBy &then(const SortBy &that);
 
+    // -------------------------------------------------------------------------
     /// Returns the "sorts" list.
     const List &sorts() const { return m_sorts; }
 
+    // -------------------------------------------------------------------------
     /// Returns whether the "sorts" list is empty.
     const bool empty() const { return m_sorts.empty(); }
 
+    // -------------------------------------------------------------------------
     /// Returns the size of the "sorts" list.
     const int size() const { return m_sorts.size(); }
 
+    // -------------------------------------------------------------------------
     /// Returns the string representation of the SortBy class.
     const std::string str() const { return m_sorts.str(); }
 
+    // -------------------------------------------------------------------------
     /// Removes all the contents from the "sorts" list.
     void clear() { m_sorts.clear(); }
 
+    // -------------------------------------------------------------------------
     SortBy &operator=(const SortBy &that)
     {
         if (this != &that)
@@ -113,6 +122,7 @@ public:
         return *this;
     }
 
+    // -------------------------------------------------------------------------
     friend std::ostream& operator<<(std::ostream &output, const SortBy &sortBy)
     {
         output << sortBy.str();

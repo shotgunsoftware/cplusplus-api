@@ -42,7 +42,7 @@ namespace SG {
 Element::Element(Shotgun *sg, const xmlrpc_c::value &attrs)
     : Entity(sg)
 {
-    m_type = "Element";
+    m_entityType = m_classType = "Element";
     m_attrs = new xmlrpc_c::value(attrs);
 }
 
@@ -50,7 +50,7 @@ Element::Element(Shotgun *sg, const xmlrpc_c::value &attrs)
 Element::Element(const Element &ref)
     : Entity(ref.m_sg)
 {
-    m_type = "Element";
+    m_entityType = m_classType = "Element";
     m_attrs = new xmlrpc_c::value(*ref.m_attrs);
 }
 

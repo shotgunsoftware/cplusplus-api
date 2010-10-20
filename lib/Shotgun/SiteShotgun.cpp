@@ -30,24 +30,27 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
+#include <iostream>
+
+#include <Shotgun/SiteShotgun.h>
+#include <Shotgun/SiteProject.h>
+
 namespace SG {
 
 // *****************************************************************************
-class Asset : SG::Entity, SG::TaskMixin, SG::NoteMixin
+SiteShotgun::SiteShotgun(const std::string &serverURL,
+                         const std::string &authName,
+                         const std::string &authKey)
+    : Shotgun(serverURL, authName, authKey)
 {
-%TypeHeaderCode
-    #include <Shotgun/Asset.h>
-%End
+    // Register the site-specific classes
+    registerClass("SiteProject",     &SiteProject::entityType,      &SiteProject::factory,      &SiteProject::defaultReturnFields);
+}
 
-public:
-    Asset(const SG::Asset &ref);
-    virtual ~Asset();
+// *****************************************************************************
+SiteShotgun::~SiteShotgun()
+{
+    // Nothing
+}
 
-    static std::string entityType();
-    static std::string classType();
-
-protected:
-    Asset(SG::Shotgun *sg, const xmlrpc_c::value &attrs);
-};
-
-}; // End namespace SG
+} // End namespace SG

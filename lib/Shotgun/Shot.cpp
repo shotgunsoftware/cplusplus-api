@@ -45,7 +45,7 @@ namespace SG {
 Shot::Shot(Shotgun *sg, const xmlrpc_c::value &attrs)
     : Entity(sg), TaskMixin(), NoteMixin()
 {
-    m_type = "Shot";
+    m_entityType = m_classType = "Shot";
     m_attrs = new xmlrpc_c::value(attrs);
 }
 
@@ -53,7 +53,7 @@ Shot::Shot(Shotgun *sg, const xmlrpc_c::value &attrs)
 Shot::Shot(const Shot &ref)
     : Entity(ref.m_sg)
 {
-    m_type = "Shot";
+    m_entityType = m_classType = "Shot";
     m_attrs = new xmlrpc_c::value(*ref.m_attrs);
 }
 

@@ -37,8 +37,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 namespace SG {
 
-class Shotgun;
-
 // *****************************************************************************
 /// \class HumanUser
 class HumanUser : public Entity
@@ -46,14 +44,19 @@ class HumanUser : public Entity
     friend class Shotgun;
  
 public:
+    // -------------------------------------------------------------------------
     /// A copy constructor.
     HumanUser(const HumanUser &ref);
 
     /// A destructor that does nothing.
     virtual ~HumanUser();
 
+    // -------------------------------------------------------------------------
     /// The string representation of HumanUser entity type.
-    static std::string type() { return std::string("HumanUser"); }
+    static std::string entityType() { return std::string("HumanUser"); }
+
+    /// The string representation of HumanUser class type.
+    static std::string classType() { return entityType(); }
 
     // -------------------------------------------------------------------------
     HumanUser &operator=(const HumanUser &that)
@@ -74,12 +77,14 @@ public:
     }
 
 protected:
+    // -------------------------------------------------------------------------
     /// A constructor.
     ///
     /// \param sg - instantiated Shotgun object pointer
     /// \param attrs - raw attribute map for a Shotgun entity
     HumanUser(Shotgun *sg, const xmlrpc_c::value &attrs);
 
+    // -------------------------------------------------------------------------
     /// A HumanUser entity factory function.
     ///
     /// \param sg - instantiated Shotgun object pointer
@@ -87,6 +92,7 @@ protected:
     /// \return a newly-created HumanUser * as its base Entity * type
     static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new HumanUser(sg, attrs); }
 
+    // -------------------------------------------------------------------------
     /// Builds a list of default "return_fields" which are the attributes
     /// exposed to the users when a HumanUser entity is created or searched.
     ///

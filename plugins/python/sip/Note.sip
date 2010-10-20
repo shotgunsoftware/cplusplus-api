@@ -43,7 +43,8 @@ public:
     Note(const SG::Note &ref);
     virtual ~Note();
 
-    static std::string type();
+    static std::string entityType();
+    static std::string classType();
 
 protected:
     Note(SG::Shotgun *sg, const xmlrpc_c::value &attrs);

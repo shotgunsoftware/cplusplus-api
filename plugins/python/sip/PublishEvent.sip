@@ -43,7 +43,8 @@ public:
     PublishEvent(const SG::PublishEvent &ref);
     virtual ~PublishEvent();
 
-    static std::string type();
+    static std::string entityType();
+    static std::string classType();
 
 protected:
     PublishEvent(SG::Shotgun *sg, const xmlrpc_c::value &attrs);

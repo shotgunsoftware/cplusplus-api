@@ -56,10 +56,12 @@ class NoteMixin;
 class Entity
 {
 public:
+    // -------------------------------------------------------------------------
     /// A destructor that deletes the entity's raw attribute map which is of 
     /// (xmlrpc_c::value *) type.
     virtual ~Entity();
 
+    // -------------------------------------------------------------------------
     /// Returns the Shotgun class instance.
     const Shotgun *sg() const { return m_sg; }
     Shotgun *sg() { return m_sg; }
@@ -86,7 +88,11 @@ public:
 
     // -------------------------------------------------------------------------
     /// Returns the string representation of the entity type.
-    const std::string entityType() const { return m_type; }
+    const std::string entityType() const { return m_entityType; }
+
+    // -------------------------------------------------------------------------
+    /// Returns the string representation of the entity class type.
+    const std::string classType() const { return m_classType; }
 
     /// Returns the de-referenced entity's raw attribute map.
     const xmlrpc_c::value &attrs() const { return *m_attrs; }
@@ -375,7 +381,8 @@ public:
         if (this != &that)
         {
             m_sg = that.m_sg;
-            m_type = that.m_type;
+            m_entityType = that.m_entityType;
+            m_classType = that.m_classType;
 
             delete m_attrs;
             m_attrs = new xmlrpc_c::value(*(that.m_attrs));
@@ -385,9 +392,11 @@ public:
     }
 
 protected:
+    // -------------------------------------------------------------------------
     /// A constructor that sets the entity's raw attribute map pointer to NULL.
     Entity(Shotgun *sg);
 
+    // -------------------------------------------------------------------------
     /// Creates a new Shotgun entity by the given data map and returns the
     /// result as raw xmlrpc_c::value struct.
     static xmlrpc_c::value createSGEntity(Shotgun *sg, const Dict &createMap);
@@ -410,19 +419,19 @@ protected:
                                const std::string &entityType,
                                const int entityId);
 
+    // -------------------------------------------------------------------------
     /// Builds a data map for creating a new Shotgun entity
-    static Dict buildCreateMap(const std::string &entityType,
-                               const Dict &data,
+    static Dict buildCreateMap(const Dict &data,
                                const List &extraReturnFields = List());
 
     /// Build a filter map for finding one or more Shotgun entities
-    static Dict buildFindMap(const std::string &entityType,
-                             const FilterBy &filterList = FilterBy(),
+    static Dict buildFindMap(const FilterBy &filterList = FilterBy(),
                              const List &extraReturnFields = List(),
                              const bool retiredOnly = false,
                              const int limit = 0,
                              const SortBy &order = SortBy());
 
+    // -------------------------------------------------------------------------
     /// A template function that gets the value for a given attribute and
     /// returns as a specified type. If the attribute is not found in the
     /// entity's raw attribute map, fetch its value directly from Shotgun.
@@ -452,6 +461,7 @@ protected:
                                 const Dict &attrsMap,
                                 const T defaultVal);
 
+    // -------------------------------------------------------------------------
     /// The result of a method call is a struct. This convenience function 
     /// is to extract a list of raw Shotgun entities from the result struct.
     static List getFindResultEntityList(xmlrpc_c::value &rawResult);
@@ -464,6 +474,7 @@ protected:
     /// such as "type", "id".
     static void validateLink(const Dict &link);
 
+    // -------------------------------------------------------------------------
     /// Convenience function for getting the project's name of the entity.
     const std::string getProjectName() const;
 
@@ -472,7 +483,8 @@ protected:
 
 protected:
     Shotgun *m_sg; ///< The instantiated Shotgun class object.
-    std::string m_type; ///< The string representation of the entity type.
+    std::string m_entityType; ///< The string representation of the entity type.
+    std::string m_classType; ///< The string representation of the entity class type.
 
     // This has to be an pointer since xmlrpc_c::value will not allow the
     // assignment of an already-instantiated xmlrpc_c::value. For details,
@@ -578,7 +590,7 @@ const T *Entity::getAttrValueAsEntity(const std::string &attrName) const
     }
     else
     {
-        throw SgEntityDynamicCastError(T::type());
+        throw SgEntityDynamicCastError(T::classType());
     }
 }
 
@@ -596,7 +608,7 @@ const T *Entity::getAttrValueAsEntity(Shotgun *sg,
     }
     else
     {
-        throw SgEntityDynamicCastError(T::type());
+        throw SgEntityDynamicCastError(T::classType());
     }
 }
 

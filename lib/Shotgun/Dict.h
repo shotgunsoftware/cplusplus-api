@@ -47,6 +47,7 @@ namespace SG {
 class Dict
 {
 public:
+    // -------------------------------------------------------------------------
     /// A default constructor.
     Dict();
 
@@ -67,44 +68,56 @@ public:
     template <typename T>
     Dict(const std::string &key, const T &value);
 
+    // -------------------------------------------------------------------------
     /// A template function that adds a (key, value) pair to the std::map container.
     template <typename T>
     Dict &add(const std::string &key, const T &value);
 
+    // -------------------------------------------------------------------------
     /// A template function that returns the value of a given key. 
     template <typename  T>
     const T value(const std::string &key) const;
 
+    // -------------------------------------------------------------------------
     /// Returns the value of a given key. The return value is of type, 
     /// xmlrpc_c::value. It should only be called within the Shotgun lib.
     const xmlrpc_c::value value(const std::string &key) const;
 
+    // -------------------------------------------------------------------------
     /// This [] operator that returns the value of a given key. The return 
     /// value is of type, xmlrpc_c::value. It should only be called within 
     /// the Shotgun lib.
     const xmlrpc_c::value operator[](const std::string &key) const;
 
+    // -------------------------------------------------------------------------
     /// Returns the std::map container that the Dict class wraps around.
     const std::map<std::string, xmlrpc_c::value> &value() const { return m_value; }
 
+    // -------------------------------------------------------------------------
     /// Returns whether the std::map container is empty.
     const bool empty() const { return m_value.empty(); }
 
+    // -------------------------------------------------------------------------
     /// Returns the size of the std::map container.
     const int size() const { return m_value.size(); }
 
+    // -------------------------------------------------------------------------
     /// Returns the string representation of the Dict class.
     const std::string str() const { return toStdString(m_value); }
 
+    // -------------------------------------------------------------------------
     /// Returns whether a given key exists.
     const bool find(const std::string &key) const;
 
+    // -------------------------------------------------------------------------
     /// Removes all the contents from the std::map container, leaving it with a size of 0.
     void clear() { m_value.clear(); }
 
+    // -------------------------------------------------------------------------
     /// Removes a single element with the given key from the std::map container.
     Dict &erase(const std::string &key);
 
+    // -------------------------------------------------------------------------
     Dict &operator=(const Dict &that)
     {
         if (this != &that)
@@ -115,6 +128,7 @@ public:
         return *this;
     }
 
+    // -------------------------------------------------------------------------
     friend std::ostream& operator<<(std::ostream &output, const Dict &dict)
     {
         output << dict.str();

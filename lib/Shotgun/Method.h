@@ -146,7 +146,7 @@ protected:
     Shotgun *m_sg; ///< The instantiated Shotgun object pointer.
     std::string m_methodName; ///< The name of the Shotgun API function.
 
-    std::vector< std::vector<std::string> > m_signatures; ///< The signature of the Shotgun API function.
+    std::vector< std::vector<std::string> > m_signatures; ///< The signature list of the Shotgun API function.
     std::string m_help; ///< The usage string of the Shotgun API function.
 };
 

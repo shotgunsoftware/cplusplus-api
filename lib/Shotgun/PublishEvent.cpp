@@ -42,7 +42,7 @@ namespace SG {
 PublishEvent::PublishEvent(Shotgun *sg, const xmlrpc_c::value &attrs)
     : Entity(sg)
 {
-    m_type = "PublishEvent";
+    m_entityType = m_classType = "PublishEvent";
     m_attrs = new xmlrpc_c::value(attrs);
 }
 
@@ -51,7 +51,7 @@ PublishEvent::PublishEvent(Shotgun *sg, const xmlrpc_c::value &attrs)
 PublishEvent::PublishEvent(const PublishEvent &ref)
     : Entity(ref.m_sg)
 {
-    m_type = "PublishEvent";
+    m_entityType = m_classType = "PublishEvent";
     m_attrs = new xmlrpc_c::value(*ref.m_attrs);
 }
 

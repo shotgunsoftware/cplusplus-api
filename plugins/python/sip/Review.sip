@@ -43,7 +43,8 @@ public:
     Review(const SG::Review &ref);
     virtual ~Review();
 
-    static std::string type();
+    static std::string entityType();
+    static std::string classType();
 
 protected:
     Review(SG::Shotgun *sg, const xmlrpc_c::value &attrs);

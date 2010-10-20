@@ -30,53 +30,59 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __SHOT_H__
-#define __SHOT_H__
+#ifndef __SITEPROJECT_H__
+#define __SITEPROJECT_H__
 
-#include <string>
-
-#include <Shotgun/Entity.h>
-#include <Shotgun/TaskMixin.h>
-#include <Shotgun/NoteMixin.h>
+#include <Shotgun/Project.h>
 
 namespace SG {
 
 // *****************************************************************************
-/// \class Shot
-class Shot : public Entity, public TaskMixin, public NoteMixin
+/// \class SiteProject
+/// This is an example on how to derive from one of the basic Shotgun entity 
+/// classes. It differs from any of the basic Shotgun entity classes in that 
+/// it needs to be registered separately before use. All the basic Shotgun 
+/// entity classes defined in this library will be registered when an instance 
+/// of the Shotgun class object is created.
+class SiteProject : public Project
 {
-    friend class Shotgun;
+    friend class SiteShotgun;
  
 public:
     // -------------------------------------------------------------------------
     /// A copy constructor.
-    Shot(const Shot &ref);
+    SiteProject(const SiteProject &ref);
 
     /// A destructor that does nothing.
-    virtual ~Shot();
+    virtual ~SiteProject();
 
     // -------------------------------------------------------------------------
-    /// The string representation of Shot entity type.
-    static std::string entityType() { return std::string("Shot"); }
+    /// The string representation of SiteProject entity type.
+    static std::string entityType() { return std::string("Project"); }
 
-    /// The string representation of Shot class type.
-    static std::string classType() { return entityType(); }
+    /// The string representation of SiteProject class type.
+    static std::string classType() { return std::string("SiteProject"); }
 
     // -------------------------------------------------------------------------
-    Shot &operator=(const Shot &that)
+    // These are site-specific convenience functions
+    virtual const std::string sgName() const { return getAttrValueAsString("name"); }
+    virtual const std::string sgCode() const { return getAttrValueAsString("code"); }
+
+    // -------------------------------------------------------------------------
+    SiteProject &operator=(const SiteProject &that)
     {
         if (this != &that)
         {
-            Entity::operator=(that);
+            Project::operator=(that);
         }
 
         return *this;
     }
 
     // -------------------------------------------------------------------------
-    friend std::ostream& operator<<(std::ostream &output, const Shot &shot)
+    friend std::ostream& operator<<(std::ostream &output, const SiteProject &siteProject)
     {
-        output << shot.str();
+        output << siteProject.str();
         return output;
     }
 
@@ -86,27 +92,27 @@ protected:
     ///
     /// \param sg - instantiated Shotgun object pointer
     /// \param attrs - raw attribute map for a Shotgun entity
-    Shot(Shotgun *sg, const xmlrpc_c::value &attrs);
+    SiteProject(Shotgun *sg, const xmlrpc_c::value &attrs);
 
     // -------------------------------------------------------------------------
-    /// A Shot entity factory function.
+    /// A SiteProject entity factory function.
     ///
     /// \param sg - instantiated Shotgun object pointer
     /// \param attrs - raw attribute map for a Shotgun entity
-    /// \return a newly-created Shot * as its base Entity * type
-    static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Shot(sg, attrs); }
+    /// \return a newly-created Project * as its base Entity * type
+    static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new SiteProject(sg, attrs); }
 
     // -------------------------------------------------------------------------
     /// Builds a list of default "return_fields" which are the attributes
-    /// exposed to the users when a Shot entity is created or searched.
+    /// exposed to the users when a SiteProject entity is created or searched.
     ///
-    /// \return a list of default "return_fields" name strings.
+    /// \return a list of default "return_fields" name strings
     static List defaultReturnFields();
 };
 
 // *****************************************************************************
-typedef std::vector<Shot *> ShotPtrs;
+typedef std::vector<SiteProject *> SiteProjectPtrs;
 
 } // End namespace SG
 
-#endif    // End #ifdef __SHOT_H__
+#endif    // End #ifdef __SITEPROJECT_H__

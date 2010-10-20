@@ -44,7 +44,7 @@ namespace SG {
 Version::Version(Shotgun *sg, const xmlrpc_c::value &attrs)
     : Entity(sg), NoteMixin()
 {
-    m_type = "Version";
+    m_entityType = m_classType = "Version";
     m_attrs = new xmlrpc_c::value(attrs);
 }
 
@@ -52,7 +52,7 @@ Version::Version(Shotgun *sg, const xmlrpc_c::value &attrs)
 Version::Version(const Version &ref)
     : Entity(ref.m_sg)
 {
-    m_type = "Version";
+    m_entityType = m_classType = "Version";
     m_attrs = new xmlrpc_c::value(*ref.m_attrs);
 }
 

@@ -43,7 +43,8 @@ public:
     Playlist(const SG::Playlist &ref);
     virtual ~Playlist();
 
-    static std::string type();
+    static std::string entityType();
+    static std::string classType();
 
 protected:
     Playlist(SG::Shotgun *sg, const xmlrpc_c::value &attrs);

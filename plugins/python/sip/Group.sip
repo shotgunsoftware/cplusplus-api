@@ -43,7 +43,8 @@ public:
     Group(const SG::Group &ref);
     virtual ~Group();
 
-    static std::string type();
+    static std::string entityType();
+    static std::string classType();
 
 protected:
     Group(SG::Shotgun *sg, const xmlrpc_c::value &attrs);

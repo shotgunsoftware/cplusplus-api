@@ -30,24 +30,29 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
+#ifndef __SITESHOTGUN_H__
+#define __SITESHOTGUN_H__
+
+#include <Shotgun/Shotgun.h>
+
 namespace SG {
 
 // *****************************************************************************
-class Asset : SG::Entity, SG::TaskMixin, SG::NoteMixin
+/// \class SiteShotgun
+/// This is an example on how to derive from the Shotgun class.
+class SiteShotgun : public Shotgun
 {
-%TypeHeaderCode
-    #include <Shotgun/Asset.h>
-%End
-
 public:
-    Asset(const SG::Asset &ref);
-    virtual ~Asset();
+    // -------------------------------------------------------------------------
+    /// A constructor that registers more site-specific entity classes.
+    SiteShotgun(const std::string &serverURL = SG_DEFAULT_URL,
+                const std::string &authName = SG_AUTHENTICATION_NAME,
+                const std::string &authKey = SG_AUTHENTICATION_KEY);
 
-    static std::string entityType();
-    static std::string classType();
-
-protected:
-    Asset(SG::Shotgun *sg, const xmlrpc_c::value &attrs);
+    /// A destructor that does nothing
+    virtual ~SiteShotgun();
 };
 
-}; // End namespace SG
+} // End namespace SG
+
+#endif    // End #ifdef __SITESHOTGUN_H__

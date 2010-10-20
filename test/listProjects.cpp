@@ -37,8 +37,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/exceptions.h>
 #include <Shotgun/Shotgun.h>
 #include <Shotgun/FilterBy.h>
-#include <Shotgun/SortBy.h>
-#include <Shotgun/List.h>
 #include <Shotgun/Dict.h>
 #include <Shotgun/Fields.h>
 
@@ -73,19 +71,13 @@ int main( int argc, char **argv )
             delete projects[p];
         }
 
-        std::cout << std::endl << "**************************** findEntiy ****************************" << std::endl;
-        VersionPtrs versions = sg.findEntities<Version>(FilterBy("project", "is", sg.findEntityAsLink<Project>(FilterBy("code", "is", "ca2"))), 10);
-        for (size_t v = 0; v < versions.size(); ++v)
-        {
-            std::cout << versions[v]->getAttrValueAsString("code") << std::endl;
-            delete versions[v];
-        }
 
         std::cout << std::endl << "**************************** createEntity ****************************" << std::endl;
         Project *newProject = sg.createEntity<Project>(Dict("name", "TEST PROJECT")
-                                                                               .add("code", "tp"));
+                                                       .add("code", "tp"));
         std::cout << *newProject << std::endl;
         delete newProject;
+
 
         std::cout << std::endl << "**************************** findEntiy ****************************" << std::endl;
         Project *project = sg.findEntity<Project>(FilterBy("code", "is", "tp"));
@@ -97,6 +89,7 @@ int main( int argc, char **argv )
         project->setAttrValue(Fields("name", "My Test Project")
                              .append("sg_default_start_frame", 101));
         std::cout << *project << std::endl;
+
 
         std::cout << std::endl << "**************************** deleteEntity ****************************" << std::endl;
         int id = project->sgId();

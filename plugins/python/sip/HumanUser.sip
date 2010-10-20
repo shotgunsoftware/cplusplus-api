@@ -43,7 +43,8 @@ public:
     HumanUser(const SG::HumanUser &ref);
     virtual ~HumanUser();
 
-    static std::string type();
+    static std::string entityType();
+    static std::string classType();
 
 protected:
     HumanUser(SG::Shotgun *sg, const xmlrpc_c::value &attrs);
