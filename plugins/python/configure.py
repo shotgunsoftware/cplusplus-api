@@ -35,17 +35,18 @@ try:
     xmlrpc_cppflags = os.environ["XMLRPC_CFLAGS"]
     xmlrpc_ldflags = os.environ["XMLRPC_LDFLAGS"]
     xmlrpc_ldadd = os.environ["XMLRPC_LDADD"]
+    xmlrpc_libs = xmlrpc_ldadd.replace("-l", "")
     automake_defs = os.environ["DEFS"]
 except KeyError:
     print "./configure.py is intended to be run by make."
     sys.exit(1)
 
 makefile.extra_cxxflags = [automake_defs, xmlrpc_cppflags]
-makefile.extra_lflags = ["-lShotgun", 
-                          xmlrpc_ldflags, xmlrpc_ldadd, "-lstdc++"]
+makefile.extra_lflags = [xmlrpc_ldflags]
 
 makefile.extra_include_dirs = ["../../../lib"]
 makefile.extra_lib_dirs = ["../../../lib/Shotgun/.libs"]
+makefile.extra_libs = ["Shotgun", xmlrpc_libs, "stdc++"]
 
 # Generate the Makefile itself.
 makefile.generate()
