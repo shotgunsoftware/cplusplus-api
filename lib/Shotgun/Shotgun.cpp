@@ -57,7 +57,13 @@ Shotgun::Shotgun(const std::string &serverURL,
     // Client
     m_client = new xmlrpc_c::client_xml(&m_transport);
 
-    // Authetication info comes from Shotgun Admin Pages->Scripts
+    if (m_serverURL == "")
+    {
+        throw SgServerURLNotSetError();
+    }
+
+    // Authetication info comes from Shotgun Admin->Scripts pages.
+    // Not all of the Shotgun methods require authentication info.
     m_authMap.clear();
     m_authMap.add("script_name", m_authName)
              .add("script_key", m_authKey);

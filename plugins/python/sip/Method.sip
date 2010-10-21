@@ -41,7 +41,7 @@ class Method
 
 public:
     const std::string &methodName() const;
-    std::vector< std::vector<std::string> > &signature() throw (SG::SgEntityXmlrpcError); 
+    SG::MethodSignatures &signature() throw (SG::SgEntityXmlrpcError); 
     std::string &help() throw (SG::SgEntityXmlrpcError);
     xmlrpc_c::value call() throw (SG::SgEntityXmlrpcError);
     xmlrpc_c::value call(const SG::Dict &params) throw (SG::SgEntityXmlrpcError);

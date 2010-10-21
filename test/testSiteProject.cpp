@@ -42,20 +42,64 @@ using namespace SG;
 
 int main( int argc, char **argv )
 {
+    // ************************************************************************
+    // Check on the essentials for connecting to Shotgun.
+    // ************************************************************************
+
     std::string shotgunURL(SG_DEFAULT_URL);
-    if( argc == 2 )
+    std::string authName(SG_AUTHENTICATION_NAME);
+    std::string authKey(SG_AUTHENTICATION_KEY);
+
+    for (size_t i = 1; i < argc; i++)
     {
-        shotgunURL = argv[1];
+        if (!strcasecmp(argv[i], "-url"))
+        {
+            shotgunURL = argv[++i];
+        }
+        else if (!strcasecmp(argv[i], "-authName"))
+        {
+            authName = argv[++i];
+        }
+        else if (!strcasecmp(argv[i], "-authKey"))
+        {
+            authKey = argv[++i];
+        }
     }
+
     if(shotgunURL == "")
     {
         std::cerr << "No default Shotgun URL specified to configure.  Skipping test."
                   << std::endl;
         exit(0);
     }
+
+    if(authName == "")
+    {
+        std::cerr << std::endl
+                  << "No default Shotgun authentication script_name specified to configure."
+                  << std::endl
+                  << "It corresponds to \"Script Name\" on the [Admin] > [Scripts] page.  Skipping test."
+                  << std::endl;
+        exit(0);
+    }
+
+    if(authKey == "")
+    {
+        std::cerr << std::endl
+                  << "No default Shotgun authentication script_key specified to configure."
+                  << std::endl
+                  << "It corresponds to \"Application Key\" on the [Admin] > [Scripts] page.  Skipping test."
+                  << std::endl;
+        exit(0);
+    }
+
+    // ************************************************************************
+    // Start to test
+    // ************************************************************************
+
     try
     {
-        SiteShotgun sg(shotgunURL);
+        SiteShotgun sg(shotgunURL, authName, authKey);
 
         std::cout << std::endl << "**************************** findEntities ****************************" << std::endl;
         SiteProjectPtrs siteProjects = sg.findEntities<SiteProject>();

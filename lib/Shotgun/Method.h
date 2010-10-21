@@ -86,7 +86,7 @@ class Shotgun;
 
      <pre>
      auth_args = { <br> 
-         'script_name': string, # Corresponds to "Script Name" on the [Admin] page > [Scripts] page. <br>
+         'script_name': string, # Corresponds to "Script Name" on the [Admin] > [Scripts] page. <br>
          'script_key': string   # Corresponds to ""Application Key" <br>
      }
      </pre>
@@ -126,7 +126,7 @@ public:
 
     /// Returns the signature of the Shotgun API function.
     /// It throws a SgEntityXmlrpcError exception if the XML-RPC call fails.
-    std::vector< std::vector<std::string> > &signature(); 
+    MethodSignatures &signature(); 
 
     /// Returns the usage of the Shotgun API function.
     /// It throws a SgEntityXmlrpcError exception if the XML-RPC call fails.
@@ -146,7 +146,7 @@ protected:
     Shotgun *m_sg; ///< The instantiated Shotgun object pointer.
     std::string m_methodName; ///< The name of the Shotgun API function.
 
-    std::vector< std::vector<std::string> > m_signatures; ///< The signature list of the Shotgun API function.
+    MethodSignatures m_signatures; ///< The signature of the Shotgun API function.
     std::string m_help; ///< The usage string of the Shotgun API function.
 };
 

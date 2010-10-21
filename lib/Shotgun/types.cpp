@@ -149,7 +149,7 @@ xmlrpc_c::value toXmlrpcValue(const Strings &in)
 }
 
 // *****************************************************************************
-xmlrpc_c::value toXmlrpcValue(const std::vector< std::vector<std::string> > &in)
+xmlrpc_c::value toXmlrpcValue(const MethodSignatures &in)
 {
     std::vector<xmlrpc_c::value> strArray;
    
@@ -713,7 +713,7 @@ std::string toStdString(const SG::Strings &strs)
 }
 
 // *****************************************************************************
-std::string toStdString(const std::vector< std::vector<std::string> > &sigs)
+std::string toStdString(const SG::MethodSignatures &sigs)
 {
     std::string output = "[";
 
@@ -768,7 +768,7 @@ std::ostream &operator<<(std::ostream& output, const SG::Strings &strs)
 }
 
 // *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const std::vector< std::vector<std::string> > &sigs)
+std::ostream &operator<<(std::ostream& output, const SG::MethodSignatures &sigs)
 {
     output << toStdString(sigs);
     return output;

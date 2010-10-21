@@ -109,9 +109,9 @@ public:
     ///
     /// \param serverURL - server URL
     /// \param authName - authentication "script_name" which corresponds to 
-    ///                   "Script Name" on the [Admin] page > [Scripts] page.
+    ///                   "Script Name" on the [Admin] > [Scripts] page.
     /// \param authKey - authentication "script_key" which corresponds to 
-    ///                  "Application Key" on the [Admin] page > [Scripts] page.
+    ///                  "Application Key" on the [Admin] > [Scripts] page.
     ///
     Shotgun(const std::string &serverURL = SG_DEFAULT_URL,
             const std::string &authName = SG_AUTHENTICATION_NAME,

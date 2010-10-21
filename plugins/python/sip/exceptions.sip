@@ -50,6 +50,23 @@
 };
 
 // *******************************************************************
+// SG::SgServerURLNotSetError
+// *******************************************************************
+%Exception SG::SgServerURLNotSetError(SIP_Exception) /PyName=SgServerURLNotSetError/
+{
+%TypeHeaderCode
+#include <Shotgun/exceptions.h>
+%End
+%RaiseCode
+        const char *detail = sipExceptionRef.what();
+
+        SIP_BLOCK_THREADS
+        PyErr_SetString(sipException_SG_SgServerURLNotSetError, detail);
+        SIP_UNBLOCK_THREADS
+%End
+};
+
+// *******************************************************************
 // SG::SgAttrError
 // *******************************************************************
 %Exception SG::SgAttrError(SIP_Exception) /PyName=SgAttrError/

@@ -53,7 +53,7 @@ Method::~Method()
 }
 
 // *****************************************************************************
-std::vector< std::vector<std::string> > &Method::signature()
+MethodSignatures &Method::signature()
 {
     std::string sigMethodName = std::string("system.methodSignature");
 
@@ -76,7 +76,7 @@ std::vector< std::vector<std::string> > &Method::signature()
         for (size_t i = 0; i < sigs.size(); i++)
         {
             xmlrpc_c::value_array sig = xmlrpc_c::value_array(sigs.vectorValueValue()[i]);
-            std::vector<std::string> oneSig;
+            MethodSignature oneSig;
             for (size_t j = 0; j < sig.size(); j++)
             {
                 std::string arg = xmlrpc_c::value_string(sig.vectorValueValue()[j]);

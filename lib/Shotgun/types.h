@@ -48,6 +48,8 @@ class Fields;
 
 // *****************************************************************************
 typedef std::vector<std::string> Strings;
+typedef Strings MethodSignature;
+typedef std::vector<MethodSignature> MethodSignatures;
 
 // *****************************************************************************
 /// Returns the string representation of "xmlrpc_c::value::type_t" type.
@@ -65,7 +67,7 @@ xmlrpc_c::value toXmlrpcValue(const struct tm &in);
 xmlrpc_c::value toXmlrpcValue(const std::vector<xmlrpc_c::value> &in);
 xmlrpc_c::value toXmlrpcValue(const std::map<std::string, xmlrpc_c::value> &in);
 xmlrpc_c::value toXmlrpcValue(const Strings &in);
-xmlrpc_c::value toXmlrpcValue(const std::vector< std::vector<std::string> > &in);
+xmlrpc_c::value toXmlrpcValue(const MethodSignatures &in);
 xmlrpc_c::value toXmlrpcValue(const List &in);
 xmlrpc_c::value toXmlrpcValue(const Dict &in);
 xmlrpc_c::value toXmlrpcValue(const FilterBy &in);
@@ -113,13 +115,13 @@ std::string toStdString(const xmlrpc_c::value &value);
 std::string toStdString(const std::vector<xmlrpc_c::value> &array);
 std::string toStdString(const std::map<std::string, xmlrpc_c::value> &map);
 std::string toStdString(const SG::Strings &strs);
-std::string toStdString(const std::vector< std::vector<std::string> > &sigs);
+std::string toStdString(const SG::MethodSignatures &sigs);
 
 std::ostream &operator<<(std::ostream& output, const xmlrpc_c::value &value);
 std::ostream &operator<<(std::ostream& output, const struct tm &time);
 std::ostream &operator<<(std::ostream& output, const std::map<std::string, xmlrpc_c::value> &map);
 std::ostream &operator<<(std::ostream& output, const std::vector<xmlrpc_c::value> &array);
 std::ostream &operator<<(std::ostream& output, const SG::Strings &strs);
-std::ostream &operator<<(std::ostream& output, const std::vector< std::vector<std::string> > &sigs);
+std::ostream &operator<<(std::ostream& output, const SG::MethodSignatures &sigs);
 
 #endif    // End #ifdef __TYPE_H__

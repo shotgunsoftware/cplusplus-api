@@ -565,6 +565,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 // ************************************************************************
 //  std::vector< std::vector<std::string> >  
+//      - std::vector<MethodSignature> - Shotgun::MethodSignatures
 // ************************************************************************
 %MappedType std::vector< std::vector<std::string> > // NOTE: need a whitespace between > >
 {
@@ -2501,6 +2502,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //  typedefs:
 //
 //    - Strings
+//    - MethodSignature (same as Strings)
+//    - MethodSignatures
 //
 //    - EntityPtrs
 //    - ProjectPtrs;
@@ -2525,6 +2528,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace SG {
 
 typedef std::vector<std::string> Strings;
+typedef std::vector<std::string> MethodSignature;
+typedef std::vector< std::vector<std::string> > MethodSignatures;
 
 // --------------------------------------------------------------------
 // In Python, the Entity object and its pointer are treated the same.

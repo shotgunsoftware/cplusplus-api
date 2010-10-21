@@ -38,6 +38,13 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace SG {
 
 // *****************************************************************************
+SgServerURLNotSetError::SgServerURLNotSetError() 
+    : SgError("SgServerURLNotSetError: ")
+{
+    m_msg += "Shotgun server URL is not set.";
+}
+
+// *****************************************************************************
 SgAttrNotFoundError::SgAttrNotFoundError(const std::string &attrName) 
     : SgAttrError("SgAttrNotFoundError: ")
 {

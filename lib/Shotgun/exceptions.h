@@ -62,6 +62,16 @@ protected:
 };
 
 // *****************************************************************************
+/// This exception is thrown if Shotgun server URL is not set.
+class SgServerURLNotSetError : public SgError
+{
+public:
+    SgServerURLNotSetError();
+
+    virtual ~SgServerURLNotSetError() throw() {}
+};
+
+// *****************************************************************************
 /// "SgAttrError" is nothing more than it's base class, "SgError". It is just an 
 /// extra container for the attribute-specific exceptions.
 class SgAttrError : public SgError
