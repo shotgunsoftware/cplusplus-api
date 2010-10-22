@@ -50,4 +50,7 @@ protected:
     Review(SG::Shotgun *sg, const xmlrpc_c::value &attrs);
 };
 
+// *****************************************************************************
+typedef std::vector<SG::Review *> ReviewPtrs;
+
 }; // End namespace SG

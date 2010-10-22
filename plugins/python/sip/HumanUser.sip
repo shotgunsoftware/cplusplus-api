@@ -50,4 +50,7 @@ protected:
     HumanUser(SG::Shotgun *sg, const xmlrpc_c::value &attrs);
 };
 
+// *****************************************************************************
+typedef std::vector<SG::HumanUser *> HumanUserPtrs;
+
 }; // End namespace SG

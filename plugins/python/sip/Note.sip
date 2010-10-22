@@ -50,4 +50,7 @@ protected:
     Note(SG::Shotgun *sg, const xmlrpc_c::value &attrs);
 };
 
+// *****************************************************************************
+typedef std::vector<SG::Note *> NotePtrs;
+
 }; // End namespace SG

@@ -50,4 +50,7 @@ protected:
     Shot(SG::Shotgun *sg, const xmlrpc_c::value &attrs);
 };
 
+// *****************************************************************************
+typedef std::vector<SG::Shot *> ShotPtrs;
+
 }; // End namespace SG

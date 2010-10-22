@@ -50,4 +50,7 @@ protected:
     Sequence(SG::Shotgun *sg, const xmlrpc_c::value &attrs);
 };
 
+// *****************************************************************************
+typedef std::vector<SG::Sequence *> SequencePtrs;
+
 }; // End namespace SG

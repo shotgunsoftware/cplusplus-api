@@ -50,4 +50,7 @@ protected:
     Group(SG::Shotgun *sg, const xmlrpc_c::value &attrs);
 };
 
+// *****************************************************************************
+typedef std::vector<SG::Group *> GroupPtrs;
+
 }; // End namespace SG

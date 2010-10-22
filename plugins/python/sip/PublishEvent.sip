@@ -50,4 +50,7 @@ protected:
     PublishEvent(SG::Shotgun *sg, const xmlrpc_c::value &attrs);
 };
 
+// *****************************************************************************
+typedef std::vector<SG::PublishEvent *> PublishEventPtrs;
+
 }; // End namespace SG

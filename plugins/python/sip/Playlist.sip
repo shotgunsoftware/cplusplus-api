@@ -50,4 +50,7 @@ protected:
     Playlist(SG::Shotgun *sg, const xmlrpc_c::value &attrs);
 };
 
+// *****************************************************************************
+typedef std::vector<SG::Playlist *> PlaylistPtrs;
+
 }; // End namespace SG

@@ -55,4 +55,7 @@ protected:
     Project(SG::Shotgun *sg, const xmlrpc_c::value &attrs);
 };
 
+// *****************************************************************************
+typedef std::vector<SG::Project *> ProjectPtrs;
+
 }; // End namespace SG

@@ -87,10 +87,10 @@ public:
                                                   const SG::Dict &attrsMap) throw(SG::SgError) /Factory/;
 
     // ------------------------------------------------------------------------
-    virtual const SG::EntityPtrs getAttrValueAsEntities(const std::string &attrName) const throw(SG::SgError) /Factory/;
-    static const SG::EntityPtrs getAttrValueAsEntities(SG::Shotgun *sg,
-                                                       const std::string &attrName,
-                                                       const SG::Dict &attrsMap) throw(SG::SgError) /Factory/;
+    virtual const std::vector<SG::Entity *> getAttrValueAsEntities(const std::string &attrName) const throw(SG::SgError) /Factory/;
+    static const std::vector<SG::Entity *> getAttrValueAsEntities(SG::Shotgun *sg,
+                                                                  const std::string &attrName,
+                                                                  const SG::Dict &attrsMap) throw(SG::SgError) /Factory/;
 
     // ------------------------------------------------------------------------
     virtual const std::string getAttrValueAsUserLogin(const std::string &attrName) const throw(SG::SgError);
@@ -124,5 +124,8 @@ protected:
 
     Entity(SG::Shotgun *sg);
 };
+
+// *****************************************************************************
+typedef std::vector<SG::Entity *> EntityPtrs;
 
 }; // End namespace SG - IMPORTANT: has to have the semi-colon

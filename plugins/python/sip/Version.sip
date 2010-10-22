@@ -50,4 +50,7 @@ protected:
     Version(SG::Shotgun *sg, const xmlrpc_c::value &attrs);
 };
 
+// *****************************************************************************
+typedef std::vector<SG::Version *> VersionPtrs;
+
 }; // End namespace SG

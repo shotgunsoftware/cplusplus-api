@@ -50,4 +50,7 @@ protected:
     Task(SG::Shotgun *sg, const xmlrpc_c::value &attrs);
 };
 
+// *****************************************************************************
+typedef std::vector<SG::Task *> TaskPtrs;
+
 }; // End namespace SG

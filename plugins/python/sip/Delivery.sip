@@ -50,4 +50,7 @@ protected:
     Delivery(SG::Shotgun *sg, const xmlrpc_c::value &attrs);
 };
 
+// *****************************************************************************
+typedef std::vector<SG::Delivery *> DeliveryPtrs;
+
 }; // End namespace SG

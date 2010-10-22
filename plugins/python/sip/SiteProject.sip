@@ -57,4 +57,7 @@ protected:
     SiteProject(SG::Shotgun *sg, const xmlrpc_c::value &attrs);
 };
 
+// *****************************************************************************
+typedef std::vector<SG::SiteProject *> SiteProjectPtrs;
+
 }; // End namespace SG
