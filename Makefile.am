@@ -1,7 +1,7 @@
 
 ACLOCAL_AMFLAGS=-I config/m4
 
-SUBDIRS = lib plugins test
+SUBDIRS = lib plugins test doc
 
 EXTRA_DIST = TODO
 
@@ -21,4 +21,11 @@ dist-hook:
 	else \
 	        echo A git clone is required to generate a ChangeLog >&2; \
 	fi
+
+.PHONY: doc
+
+doc:
+	cd doc; make doc
+
+
 
