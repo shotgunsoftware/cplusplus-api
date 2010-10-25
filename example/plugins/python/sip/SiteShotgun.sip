@@ -30,27 +30,21 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-#include <iostream>
-
-#include <Shotgun/SiteShotgun.h>
-#include <Shotgun/SiteProject.h>
-
 namespace SG {
 
 // *****************************************************************************
-SiteShotgun::SiteShotgun(const std::string &serverURL,
-                         const std::string &authName,
-                         const std::string &authKey)
-    : Shotgun(serverURL, authName, authKey)
+class SiteShotgun : SG::Shotgun
 {
-    // Register the site-specific classes
-    registerClass("SiteProject",     &SiteProject::entityType,      &SiteProject::factory,      &SiteProject::defaultReturnFields);
-}
+%TypeHeaderCode
+    #include <SiteShotgun/SiteShotgun.h>
+%End
 
-// *****************************************************************************
-SiteShotgun::~SiteShotgun()
-{
-    // Nothing
-}
+public:
+    // -------------------------------------------------------------------------
+    SiteShotgun(const std::string &serverURL = SG_DEFAULT_URL,
+                const std::string &authName = SG_AUTHENTICATION_NAME,
+                const std::string &authKey = SG_AUTHENTICATION_KEY);
+    virtual ~SiteShotgun();
+};
 
-} // End namespace SG
+}; // End namespace SG

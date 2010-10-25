@@ -30,34 +30,27 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
+#include <iostream>
+
+#include <SiteShotgun/SiteShotgun.h>
+#include <SiteShotgun/SiteProject.h>
+
 namespace SG {
 
 // *****************************************************************************
-class SiteProject : SG::Project
+SiteShotgun::SiteShotgun(const std::string &serverURL,
+                         const std::string &authName,
+                         const std::string &authKey)
+    : Shotgun(serverURL, authName, authKey)
 {
-%TypeHeaderCode
-    #include <Shotgun/SiteProject.h>
-%End
-
-public:
-    // -------------------------------------------------------------------------
-    SiteProject(const SG::SiteProject &ref);
-    virtual ~SiteProject();
-
-    // -------------------------------------------------------------------------
-    static std::string entityType();
-    static std::string classType();
-
-    // -------------------------------------------------------------------------
-    // These are site-specific convenience functions
-    virtual const std::string sgName();
-    virtual const std::string sgCode();
-
-protected:
-    SiteProject(SG::Shotgun *sg, const xmlrpc_c::value &attrs);
-};
+    // Register the site-specific classes
+    registerClass("SiteProject",     &SiteProject::entityType,      &SiteProject::factory,      &SiteProject::defaultReturnFields);
+}
 
 // *****************************************************************************
-typedef std::vector<SG::SiteProject *> SiteProjectPtrs;
+SiteShotgun::~SiteShotgun()
+{
+    // Nothing
+}
 
-}; // End namespace SG
+} // End namespace SG

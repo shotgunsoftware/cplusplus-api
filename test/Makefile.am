@@ -1,7 +1,6 @@
 
 check_PROGRAMS = simpletest \
-                 listProjects \
-                 testSiteProject
+                 listProjects 
 
 
 AM_CPPFLAGS = -I$(top_srcdir)/lib @XMLRPC_CFLAGS@
@@ -14,11 +13,6 @@ listProjects_SOURCES = listProjects.cpp
 listProjects_LDADD = -L$(top_builddir)/lib/Shotgun -lShotgun @XMLRPC_LDADD@
 listProjects_LDFLAGS = @XMLRPC_LDFLAGS@
 
-testSiteProject_SOURCES = testSiteProject.cpp
-testSiteProject_LDADD = -L$(top_builddir)/lib/Shotgun -lShotgun @XMLRPC_LDADD@
-testSiteProject_LDFLAGS = @XMLRPC_LDFLAGS@
-
 
 TESTS = simpletest \
-        listProjects \
-        testSiteProject
+        listProjects 

@@ -3,10 +3,32 @@
 
 * Change Entity.m_sg from Shotgun* to Shotgun&, set in initializer
 
-* Handle date/time fields correctly.  Need to take into account timezone,
-  etc.  I believe shotgun stores date/times internally as UTC, so convert
-  (correctly!) to/from local time (or other if specified).
+* Handle date/time fields correctly. Need to take into account timezone,
+  etc. Shotgun stores date/times internally as UTC, so convert (correctly!) 
+  to/from local time (or other if specified).
+
+  Currently, "xmlrpc_c::value_datetime" class manipulates the global time
+  zone variables, which makes the conversion from/to local time incorrect
+  (with the difference between local time and UTC). 
+
+  There is a Shotgun::setTimeZoneEnv() function which seems to do the trick
+  by setting the "TZ" time zone environment varible. But it is not recommended
+  and not being used right now.
 
 * Make the python plugin build process better--get rid of configure.py
 
+* In "/example/python/plugin/sip/_siteshotgun.sip", it is currently using
+  "%Include" directive instead of "%Import" for importing the "_shotgun" 
+  module. 
+
+  "%Import" should have been the better way of importing the specification 
+  of another module. The sip-generated cpp code compiles without any problem. 
+  However, the "_siteshotgun" module doesn't seem to contain anything when 
+  it is imported into Python.
+
+  "%Include" includes all the contents of "_shotgun.sip". It works, but
+  it regenerates all the cpp file related to "_shotgun" module and they will
+  be built again for creating "_siteshotgun" module. This might not be a 
+  big deal. It is just annoying that the code from "_shotgun.sip" will be
+  built again whenever there is a need for be-build for "_siteshotgun".
 

@@ -5,16 +5,6 @@ Shotgun C++ / Python API
 http://github.com/shotgunsoftware/cplusplus-api
 
 
-*************************************************
-
-                    WARNING
-
-The API is not yet stable.  This library isn't
-ready to be used in a production environment yet.
-
-*************************************************
-
-
 Background
 ----------
 
@@ -24,8 +14,8 @@ data in Shotgun, almost all of which are written in Python.
 
 We wanted an object-oriented framework for adding "business logic" to Shotgun. 
 That is, we wanted to work with Shotgun's entities in an object-oriented
-fashion, and extend them add useful behavior that was meaningful to our shop. 
-From this desire, an extensive Python library grew.  
+fashion, and extend them by adding useful behavior that was meaningful to 
+our shop.  From this desire, an extensive Python library grew.  
 
 Thought it was a very successful first-gen API, unfortunately, there wasn't a
 good separation between the object/entity interface, and a lot of
@@ -34,7 +24,7 @@ provide a C++ interface either.
 
 This library is a ground-up rewrite, with the following design goals:
 
-    - C++ core and a thin Python wrapper, posible to extend to other languages.
+    - C++ core and a thin Python wrapper, possible to extend to other languages.
 
     - Clean separation between the object/entity representation and any
       business logic.
@@ -61,5 +51,33 @@ Building
     check' skips the tests, but you can still run them manually with a URL on
     the command line.
 
+  * --with-authenticate-name
+    Specify an authentication "script_name" when transfering Shotgun data. It
+    corresponds to "Script Name" on Shotgun's [Admin] > [Scripts] page. It is
+    recommended that the default value is set when building the library. If not, 
+    it can be set within the end-user application when the Shotgun class object 
+    is instantiated.
+
+  * --with-authenticate-key
+    Specify an authentication "script_key" when transfering Shotgun data. It
+    corresponds to "Application Key" on Shotgun's [Admin] > [Scripts] page. It is
+    recommended that the default value is set when building the library. If not, 
+    it can be set within the end-user application when the Shotgun class object 
+    is instantiated.
+
   * --enable-python
     Turning this on will also build the sip-based Python interface.  
+
+  * --with-pic --disable-shared
+    These flags are recommended for building the sip-based Python module. Linking
+    against the dynamic C++ lib will cause Python not be able to catch the exceptions  
+    that are defined in C++ API.
+
+
+
+Testing
+-------
+
+  * Make sure to include the path of the sip-based Python module to PYTHONPATH.
+
+

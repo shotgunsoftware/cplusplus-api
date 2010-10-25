@@ -1,7 +1,5 @@
 %Module _shotgun 0
 
-%Plugin _shotgun
-
 %Include exceptions.sip
 %Include mappedTypes.sip
 
@@ -32,6 +30,3 @@
 
 %Include NoteMixin.sip
 %Include TaskMixin.sip
-
-%Include SiteShotgun.sip
-%Include SiteProject.sip

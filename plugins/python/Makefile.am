@@ -1,8 +1,7 @@
 
 SUBDIRS = test
 
-EXTRA_DIST = configure.py               \
-             sip/_shotgun.sip           \
+SIP_SOURCE = sip/_shotgun.sip           \
              sip/exceptions.sip         \
              sip/mappedTypes.sip        \
              sip/List.sip               \
@@ -11,7 +10,6 @@ EXTRA_DIST = configure.py               \
              sip/SortBy.sip             \
              sip/Fields.sip             \
              sip/Asset.sip              \
-             sip/DeliveryItem.sip       \
              sip/Delivery.sip           \
              sip/Element.sip            \
              sip/Entity.sip             \
@@ -32,6 +30,8 @@ EXTRA_DIST = configure.py               \
              sip/Task.sip               \
              sip/Version.sip
 
+EXTRA_DIST = configure.py $(SIP_SOURCE)
+
 BUILT_SOURCES = _shotgun.so
 
 # Export these so they can be picked up by ./configure.py
@@ -40,7 +40,7 @@ export XMLRPC_LDFLAGS
 export XMLRPC_LDADD
 export DEFS
 
-_shotgun.so: 
+_shotgun.so: configure.py $(SIP_SOURCE)
 	mkdir -p src
 	./configure.py
 	make -C src

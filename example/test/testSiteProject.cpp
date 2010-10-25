@@ -33,10 +33,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <iostream>
 #include <stdexcept>
 
-#include <Shotgun/types.h>
-#include <Shotgun/exceptions.h>
-#include <Shotgun/SiteShotgun.h>
-#include <Shotgun/SiteProject.h>
+#include <SiteShotgun/SiteShotgun.h>
+#include <SiteShotgun/SiteProject.h>
 
 using namespace SG;
 
@@ -68,28 +66,23 @@ int main( int argc, char **argv )
 
     if(shotgunURL == "")
     {
-        std::cerr << "No default Shotgun URL specified to configure.  Skipping test."
-                  << std::endl;
+        std::cerr << "No default Shotgun URL specified to configure.  Skipping test." << std::endl;
         exit(0);
     }
 
     if(authName == "")
     {
         std::cerr << std::endl
-                  << "No default Shotgun authentication script_name specified to configure."
-                  << std::endl
-                  << "It corresponds to \"Script Name\" on the [Admin] > [Scripts] page.  Skipping test."
-                  << std::endl;
+                  << "No default Shotgun authentication script_name specified to configure." << std::endl
+                  << "It corresponds to \"Script Name\" on the [Admin] > [Scripts] page.  Skipping test." << std::endl;
         exit(0);
     }
 
     if(authKey == "")
     {
         std::cerr << std::endl
-                  << "No default Shotgun authentication script_key specified to configure."
-                  << std::endl
-                  << "It corresponds to \"Application Key\" on the [Admin] > [Scripts] page.  Skipping test."
-                  << std::endl;
+                  << "No default Shotgun authentication script_key specified to configure." << std::endl
+                  << "It corresponds to \"Application Key\" on the [Admin] > [Scripts] page.  Skipping test." << std::endl;
         exit(0);
     }
 

@@ -33,10 +33,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <iostream>
 #include <vector>
 
-#include <Shotgun/Method.h>
-#include <Shotgun/Entity.h>
-#include <Shotgun/Shotgun.h>
-#include <Shotgun/SiteProject.h>
+#include <SiteShotgun/SiteProject.h>
 
 namespace SG {
 

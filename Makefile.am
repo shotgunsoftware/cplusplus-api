@@ -1,7 +1,7 @@
 
 ACLOCAL_AMFLAGS=-I config/m4
 
-SUBDIRS = lib plugins test doc
+SUBDIRS = lib plugins test doc example
 
 EXTRA_DIST = TODO
 

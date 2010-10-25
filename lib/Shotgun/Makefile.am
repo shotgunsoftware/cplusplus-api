@@ -33,9 +33,7 @@ libShotgun_la_SOURCES = Asset.cpp               \
 			Fields.cpp              \
 			types.cpp               \
 			exceptions.cpp          \
-			utils.cpp               \
-                        SiteShotgun.cpp         \
-                        SiteProject.cpp
+			utils.cpp
 
 include_HEADERS = Asset.h                       \
 	          Delivery.h                    \
@@ -64,6 +62,4 @@ include_HEADERS = Asset.h                       \
 	          Fields.h                      \
 	          types.h                       \
 	          exceptions.h                  \
-	          utils.h                       \
-                  SiteShotgun.h                 \
-                  SiteProject.h
+	          utils.h

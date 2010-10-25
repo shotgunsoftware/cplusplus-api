@@ -188,5 +188,12 @@ AC_CONFIG_FILES([Makefile
                  plugins/python/test/Makefile
                  test/Makefile
                  doc/Makefile
+                 example/Makefile
+                 example/lib/Makefile
+                 example/lib/SiteShotgun/Makefile
+                 example/test/Makefile
+                 example/plugins/Makefile
+                 example/plugins/python/Makefile
+                 example/plugins/python/test/Makefile
                 ])
 AC_OUTPUT
