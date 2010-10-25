@@ -5,6 +5,7 @@ Shotgun C++ / Python API
 http://github.com/shotgunsoftware/cplusplus-api
 
 
+
 Background
 ----------
 
@@ -45,39 +46,53 @@ Building
     http://xmlrpc-c.sourceforge.net/  Make sure the xmlrpc-c-config binary is in
     your path so configure can find it.
 
-  * --with-default-url
-    Specify a URL to use by default when creating a Shotgun instance (you can
-    always override it at runtime).  If you don't give it a default URL, 'make
-    check' skips the tests, but you can still run them manually with a URL on
-    the command line.
+  * Run "bootstrap" first to generate a "configure" file
 
-  * --with-authenticate-name
-    Specify an authentication "script_name" when transfering Shotgun data. It
-    corresponds to "Script Name" on Shotgun's [Admin] > [Scripts] page. It is
-    recommended that the default value is set when building the library. If not, 
-    it can be set within the end-user application when the Shotgun class object 
-    is instantiated.
+  * configure
 
-  * --with-authenticate-key
-    Specify an authentication "script_key" when transfering Shotgun data. It
-    corresponds to "Application Key" on Shotgun's [Admin] > [Scripts] page. It is
-    recommended that the default value is set when building the library. If not, 
-    it can be set within the end-user application when the Shotgun class object 
-    is instantiated.
+      --with-default-url
+      Specify a URL to use by default when creating a Shotgun instance (you can
+      always override it at runtime).  If you don't give it a default URL, 'make
+      check' skips the tests, but you can still run them manually with a URL on
+      the command line.
 
-  * --enable-python
-    Turning this on will also build the sip-based Python interface.  
+      --with-authenticate-name
+      Specify an authentication "script_name" when transfering Shotgun data. It
+      corresponds to "Script Name" on Shotgun's [Admin] > [Scripts] page. It is
+      recommended that the default value is set when building the library. If not, 
+      it can be set within the end-user application when the Shotgun class object 
+      is instantiated.
 
-  * --with-pic --disable-shared
-    These flags are recommended for building the sip-based Python module. Linking
-    against the dynamic C++ lib will cause Python not be able to catch the exceptions  
-    that are defined in C++ API.
+      --with-authenticate-key
+      Specify an authentication "script_key" when transfering Shotgun data. It
+      corresponds to "Application Key" on Shotgun's [Admin] > [Scripts] page. 
+      It is recommended that the default value is set when building the library. 
+      If not, it can be set within the end-user application when the Shotgun class 
+      object is instantiated.
+
+      --enable-python
+      Turning this on will also build the sip-based Python interface.  
+
+      --with-pic --disable-shared
+      These flags are recommended for building the sip-based Python module. 
+      Linking against the dynamic C++ lib will cause Python not be able to catch 
+      the exceptions that are defined in C++ API.
+
+  * make 
+
+  * make install
 
 
 
 Testing
 -------
 
-  * Make sure to include the path of the sip-based Python module to PYTHONPATH.
+  * Make sure to include the paths of the sip-based Python modules to PYTHONPATH
+    before doing any Python tests.
+
+      - $(TOP_DIR)/plugins/python/          (shotgun module)
+      - $(TOP_DIR)/example/plugins/python   (siteshotgun module)
+
+  * make check - To check on the test programs
 
 

@@ -30,7 +30,7 @@ SIP_SOURCE = sip/_shotgun.sip           \
              sip/Task.sip               \
              sip/Version.sip
 
-EXTRA_DIST = configure.py $(SIP_SOURCE)
+EXTRA_DIST = configure.py $(SIP_SOURCE) shotgun.py
 
 BUILT_SOURCES = _shotgun.so
 

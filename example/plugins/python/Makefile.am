@@ -5,7 +5,7 @@ SIP_SOURCE = sip/_siteshotgun.sip       \
              sip/SiteProject.sip        \
              sip/SiteShotgun.sip 
 
-EXTRA_DIST = siteconfigure.py $(SIP_SOURCE)
+EXTRA_DIST = siteconfigure.py $(SIP_SOURCE) siteshotgun.py
 
 BUILT_SOURCES = _siteshotgun.so
 

@@ -3,7 +3,7 @@ ACLOCAL_AMFLAGS=-I config/m4
 
 SUBDIRS = lib plugins test doc example
 
-EXTRA_DIST = TODO
+EXTRA_DIST = TODO bootstrap
 
 #
 # Auto-generate ChangeLog from the git log
