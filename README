@@ -38,6 +38,40 @@ This library is a ground-up rewrite, with the following design goals:
       attributes.
 
 
+Directory hierarchy
+-------------------
+
+  * Source code and "Makefile.am" are omitted:
+
+        |-- AUTHORS
+        |-- COPYING
+        |-- ChangeLog
+        |-- INSTALL
+        |-- Makefile.am
+        |-- NEWS
+        |-- README
+        |-- TODO
+        |-- bootstrap                   // Autoconf script that generates the configure file
+        |-- configure.ac
+        |-- lib                         // Cplusplus lib source
+        |   `-- Shotgun
+        |       |-- *.cpp
+        |       `-- *.h
+        |-- test                        // Cplusplus lib tests
+        |   `-- *.cpp
+        |-- plugins
+        |   `-- python
+        |       |-- configure.py        // SIP configuration script used to generate SIP .cpp source
+        |       |-- shotgun.py          // Python wrapper module that strips off namespaces
+        |       |-- sip                 // SIP source
+        |       |   |-- *.sip
+        |       |   `-- _shotgun.sip
+        |       `-- test                // Python module tests
+        |           `-- *.py
+        |-- doc                         // Where the Doxygen configuration file and the generated HTML files live
+        |   `-- config.dox
+        `-- example                     // Example source code on how to derive a site-specific Shotgun library
+
 
 Building
 --------
@@ -82,6 +116,31 @@ Building
 
   * make install
 
+
+Examples
+--------
+
+  * The /example/ directory contains sample source code on how to derive a 
+    site-specific Shotgun library from the main library. The structure in
+    this directory mirrors the one in the main library. Here is a hierarchical
+    representation of the directory (source code and "Makefile.am" are omitted):
+
+        example
+        |-- lib
+        |   `-- SiteShotgun                 // Site-specific cplusplus lib source
+        |       |-- *.cpp
+        |       `-- *.h
+        |-- test                            // Site-specific cplusplus lib tests
+        |   `-- *.cpp
+        `-- plugins
+            `-- python
+                |-- siteconfigure.py        // Site-specific SIP configuration script used to generate SIP .cpp source
+                |-- siteshotgun.py          // Site-specific Python wrapper module that strips off namespaces
+                |-- sip                     // Site-specific SIP source
+                |   |-- *.sip
+                |   `-- _siteshotgun.sip
+                `-- test                    // Site-specific Python module tests
+                    `-- *.py
 
 
 Testing

@@ -56,7 +56,7 @@ protected:
 // *****************************************************************************
 // Can't specialize each typedef as:
 //    typedef SG::CustomEntity<1> CustomEntity01;
-//    typedef SG::CustomEntity<2> CustomEntity01;
+//    typedef SG::CustomEntity<2> CustomEntity02;
 //    ...
 // But the following syntax works somehow.
 // *****************************************************************************
