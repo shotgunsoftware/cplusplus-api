@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 #
 
-AC_INIT(Shotgun, 0.0.0)
+AC_INIT(Shotgun, 1.0.beta)
 AC_CONFIG_AUX_DIR([config])
 AC_CANONICAL_HOST
 AC_CONFIG_MACRO_DIR([config/m4])
