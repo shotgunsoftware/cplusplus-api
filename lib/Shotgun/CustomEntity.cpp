@@ -30,21 +30,4 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-namespace SiteSG {
-
-// *****************************************************************************
-class SiteShotgun : SG::Shotgun
-{
-%TypeHeaderCode
-    #include <SiteShotgun/SiteShotgun.h>
-%End
-
-public:
-    // -------------------------------------------------------------------------
-    SiteShotgun(const std::string &serverURL = SG_DEFAULT_URL,
-                const std::string &authName = SG_AUTHENTICATION_NAME,
-                const std::string &authKey = SG_AUTHENTICATION_KEY);
-    virtual ~SiteShotgun();
-};
-
-}; // End namespace SiteSG
+#include <Shotgun/CustomEntity.h>

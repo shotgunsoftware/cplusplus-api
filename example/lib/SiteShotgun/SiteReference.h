@@ -30,38 +30,38 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __SITEPROJECT_H__
-#define __SITEPROJECT_H__
+#ifndef __SITEREFERENCE_H__
+#define __SITEREFERENCE_H__
 
-#include <Shotgun/Project.h>
+#include <Shotgun/CustomEntity.h>
 
 namespace SiteSG {
 
 // *****************************************************************************
-/// \class SiteProject
+/// \class SiteReference
 /// This is an example on how to derive from one of the basic Shotgun entity 
 /// classes. It differs from any of the basic Shotgun entity classes in that 
 /// it needs to be registered separately before use. All the basic Shotgun 
 /// entity classes defined in this library will be registered when an instance 
 /// of the Shotgun class object is created.
-class SiteProject : public SG::Project
+class SiteReference : public SG::CustomEntity02
 {
     friend class SiteShotgun;
  
 public:
     // -------------------------------------------------------------------------
     /// A copy constructor.
-    SiteProject(const SiteProject &ref);
+    SiteReference(const SiteReference &ref);
 
     /// A destructor that does nothing.
-    virtual ~SiteProject();
+    virtual ~SiteReference();
 
     // -------------------------------------------------------------------------
-    /// The string representation of SiteProject entity type.
-    static std::string entityType() { return std::string("Project"); }
+    /// The string representation of SiteReference entity type.
+    static std::string entityType() { return SG::CustomEntity02::getEntityType(); }
 
-    /// The string representation of SiteProject class type.
-    static std::string classType() { return std::string("SiteProject"); }
+    /// The string representation of SiteReference class type.
+    static std::string classType() { return std::string("SiteReference"); }
 
     // -------------------------------------------------------------------------
     /// Returns the namespace of the class. It is needed in SIP-wrapped python to
@@ -70,24 +70,23 @@ public:
 
     // -------------------------------------------------------------------------
     /// These are site-specific convenience functions
-    virtual const std::string sgName() const { return getAttrValueAsString("name"); }
     virtual const std::string sgCode() const { return getAttrValueAsString("code"); }
 
     // -------------------------------------------------------------------------
-    SiteProject &operator=(const SiteProject &that)
+    SiteReference &operator=(const SiteReference &that)
     {
         if (this != &that)
         {
-            SG::Project::operator=(that);
+            SG::CustomEntity02::operator=(that);
         }
 
         return *this;
     }
 
     // -------------------------------------------------------------------------
-    friend std::ostream& operator<<(std::ostream &output, const SiteProject &siteProject)
+    friend std::ostream& operator<<(std::ostream &output, const SiteReference &siteReference)
     {
-        output << siteProject.str();
+        output << siteReference.str();
         return output;
     }
 
@@ -97,27 +96,27 @@ protected:
     ///
     /// \param sg - instantiated Shotgun object pointer
     /// \param attrs - raw attribute map for a Shotgun entity
-    SiteProject(SG::Shotgun *sg, const xmlrpc_c::value &attrs);
+    SiteReference(SG::Shotgun *sg, const xmlrpc_c::value &attrs);
 
     // -------------------------------------------------------------------------
-    /// A SiteProject entity factory function.
+    /// A SiteReference entity factory function.
     ///
     /// \param sg - instantiated Shotgun object pointer
     /// \param attrs - raw attribute map for a Shotgun entity
-    /// \return a newly-created SiteProject * as its base Entity * type
-    static SG::Entity *factory(SG::Shotgun *sg, const xmlrpc_c::value &attrs) { return new SiteProject(sg, attrs); }
+    /// \return a newly-created SiteReference * as its base Entity * type
+    static SG::Entity *factory(SG::Shotgun *sg, const xmlrpc_c::value &attrs) { return new SiteReference(sg, attrs); }
 
     // -------------------------------------------------------------------------
     /// Builds a list of default "return_fields" which are the attributes
-    /// exposed to the users when a SiteProject entity is created or searched.
+    /// exposed to the users when a SiteReference entity is created or searched.
     ///
     /// \return a list of default "return_fields" name strings
     static SG::List defaultReturnFields();
 };
 
 // *****************************************************************************
-typedef std::vector<SiteProject *> SiteProjectPtrs;
+typedef std::vector<SiteReference *> SiteReferencePtrs;
 
 } // End namespace SiteSG
 
-#endif    // End #ifdef __SITEPROJECT_H__
+#endif    // End #ifdef __SITEREFERENCE_H__

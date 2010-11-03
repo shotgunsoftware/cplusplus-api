@@ -59,6 +59,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Group.h>
 #include <Shotgun/Note.h>
 #include <Shotgun/Playlist.h>
+#include <Shotgun/CustomEntity.h>
 
 namespace SG {
 

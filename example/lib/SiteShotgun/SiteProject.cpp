@@ -35,11 +35,11 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <SiteShotgun/SiteProject.h>
 
-namespace SG {
+namespace SiteSG {
 
 // *****************************************************************************
-SiteProject::SiteProject(Shotgun *sg, const xmlrpc_c::value &attrs)
-    : Project(sg, attrs)
+SiteProject::SiteProject(SG::Shotgun *sg, const xmlrpc_c::value &attrs)
+    : SG::Project(sg, attrs)
 {
     m_classType = "SiteProject";
 }
@@ -58,10 +58,10 @@ SiteProject::~SiteProject()
 }
 
 // *****************************************************************************
-List SiteProject::defaultReturnFields()
+SG::List SiteProject::defaultReturnFields()
 {
     return Project::defaultReturnFields()
                .append("created_by");
 }
 
-} // End namespace SG
+} // End namespace SiteSG

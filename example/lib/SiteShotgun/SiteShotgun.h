@@ -35,12 +35,12 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <Shotgun/Shotgun.h>
 
-namespace SG {
+namespace SiteSG {
 
 // *****************************************************************************
 /// \class SiteShotgun
 /// This is an example on how to derive from the Shotgun class.
-class SiteShotgun : public Shotgun
+class SiteShotgun : public SG::Shotgun
 {
 public:
     // -------------------------------------------------------------------------
@@ -53,6 +53,6 @@ public:
     virtual ~SiteShotgun();
 };
 
-} // End namespace SG
+} // End namespace SiteSG
 
 #endif    // End #ifdef __SITESHOTGUN_H__

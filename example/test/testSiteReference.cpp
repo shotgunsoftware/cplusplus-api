@@ -35,6 +35,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <SiteShotgun/SiteShotgun.h>
 #include <SiteShotgun/SiteProject.h>
+#include <SiteShotgun/SiteReference.h>
 
 using namespace SiteSG;
 
@@ -95,17 +96,16 @@ int main( int argc, char **argv )
         SiteShotgun sg(shotgunURL, authName, authKey);
 
         std::cout << std::endl << "**************************** findEntities ****************************" << std::endl;
-        SiteProjectPtrs siteProjects = sg.findEntities<SiteProject>();
-        for( size_t p = 0; p < siteProjects.size(); ++p )
+        SiteReferencePtrs siteReferences = sg.findEntities<SiteReference>(SG::FilterBy(), 5);
+        for( size_t p = 0; p < siteReferences.size(); ++p )
         {
-            std::cout << *(siteProjects[p]) << std::endl;
+            std::cout << *(siteReferences[p]) << std::endl;
 
-            // These are SiteProject-specific convenience functions.
-            std::cout << siteProjects[p]->sgName() << std::endl;
-            std::cout << siteProjects[p]->sgCode() << std::endl;
+            // These are SiteReference-specific convenience functions.
+            std::cout << siteReferences[p]->sgCode() << std::endl;
 
             std::cout << "-------------------" << std::endl;
-            delete siteProjects[p];
+            delete siteReferences[p];
         }
     }
     catch (const SG::SgError & e)

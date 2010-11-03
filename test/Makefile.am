@@ -1,6 +1,7 @@
 
 check_PROGRAMS = simpletest \
-                 listProjects 
+                 listProjects \
+                 testCustomEntity
 
 
 AM_CPPFLAGS = -I$(top_srcdir)/lib @XMLRPC_CFLAGS@
@@ -13,6 +14,11 @@ listProjects_SOURCES = listProjects.cpp
 listProjects_LDADD = -L$(top_builddir)/lib/Shotgun -lShotgun @XMLRPC_LDADD@
 listProjects_LDFLAGS = @XMLRPC_LDFLAGS@
 
+testCustomEntity_SOURCES = testCustomEntity.cpp
+testCustomEntity_LDADD = -L$(top_builddir)/lib/Shotgun -lShotgun @XMLRPC_LDADD@
+testCustomEntity_LDFLAGS = @XMLRPC_LDFLAGS@
+
 
 TESTS = simpletest \
-        listProjects 
+        listProjects \
+        testCustomEntity

@@ -3,6 +3,7 @@ SUBDIRS = test
 
 SIP_SOURCE = sip/_siteshotgun.sip       \
              sip/SiteProject.sip        \
+             sip/SiteReference.sip      \
              sip/SiteShotgun.sip 
 
 EXTRA_DIST = siteconfigure.py $(SIP_SOURCE) siteshotgun.py

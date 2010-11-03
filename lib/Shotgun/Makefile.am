@@ -26,6 +26,7 @@ libShotgun_la_SOURCES = Asset.cpp               \
 			TaskMixin.cpp           \
 			HumanUser.cpp           \
 			Version.cpp             \
+			CustomEntity.cpp        \
 			FilterBy.cpp            \
 			SortBy.cpp              \
 			List.cpp                \
@@ -55,6 +56,7 @@ include_HEADERS = Asset.h                       \
 	          TaskMixin.h                   \
 	          HumanUser.h                   \
 	          Version.h                     \
+	          CustomEntity.h                \
 	          FilterBy.h                    \
 	          SortBy.h                      \
 	          List.h                        \

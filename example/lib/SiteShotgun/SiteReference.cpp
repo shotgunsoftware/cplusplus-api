@@ -30,21 +30,38 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
+#include <iostream>
+#include <vector>
+
+#include <SiteShotgun/SiteReference.h>
+
 namespace SiteSG {
 
 // *****************************************************************************
-class SiteShotgun : SG::Shotgun
+SiteReference::SiteReference(SG::Shotgun *sg, const xmlrpc_c::value &attrs)
+    : SG::CustomEntity02(sg, attrs)
 {
-%TypeHeaderCode
-    #include <SiteShotgun/SiteShotgun.h>
-%End
+    m_classType = "SiteReference";
+}
 
-public:
-    // -------------------------------------------------------------------------
-    SiteShotgun(const std::string &serverURL = SG_DEFAULT_URL,
-                const std::string &authName = SG_AUTHENTICATION_NAME,
-                const std::string &authKey = SG_AUTHENTICATION_KEY);
-    virtual ~SiteShotgun();
-};
+// *****************************************************************************
+SiteReference::SiteReference(const SiteReference &ref)
+    : SG::CustomEntity02(ref.m_sg, *ref.m_attrs)
+{
+    m_classType = "SiteReference";
+}
 
-}; // End namespace SiteSG
+// *****************************************************************************
+SiteReference::~SiteReference()
+{
+    // Nothing
+}
+
+// *****************************************************************************
+SG::List SiteReference::defaultReturnFields()
+{
+    return SG::CustomEntity02::defaultReturnFields()
+               .append("created_by");
+}
+
+} // End namespace SiteSG

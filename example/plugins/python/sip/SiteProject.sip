@@ -30,7 +30,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-namespace SG {
+namespace SiteSG {
 
 // *****************************************************************************
 class SiteProject : SG::Project
@@ -41,7 +41,7 @@ class SiteProject : SG::Project
 
 public:
     // -------------------------------------------------------------------------
-    SiteProject(const SG::SiteProject &ref);
+    SiteProject(const SiteSG::SiteProject &ref);
     virtual ~SiteProject();
 
     // -------------------------------------------------------------------------
@@ -50,14 +50,14 @@ public:
 
     // -------------------------------------------------------------------------
     // These are site-specific convenience functions
-    virtual const std::string sgName();
-    virtual const std::string sgCode();
+    virtual const std::string sgName() throw(SG::SgError);
+    virtual const std::string sgCode() throw(SG::SgError);
 
 protected:
     SiteProject(SG::Shotgun *sg, const xmlrpc_c::value &attrs);
 };
 
 // *****************************************************************************
-typedef std::vector<SG::SiteProject *> SiteProjectPtrs;
+typedef std::vector<SiteSG::SiteProject *> SiteProjectPtrs;
 
-}; // End namespace SG
+}; // End namespace SiteSG

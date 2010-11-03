@@ -100,6 +100,10 @@ public:
     /// Returns the string representation of the entity.
     const std::string str() const { return toStdString(*m_attrs); }
 
+    /// Returns the namespace of the class. It is needed in SIP-wrapped python to 
+    /// correctly downcast to sub-class.
+    virtual const std::string namespaceStr() const { return std::string("SG"); }
+
     // -------------------------------------------------------------------------
     /*!
      This returns a mini link of the entity. It looks like this:

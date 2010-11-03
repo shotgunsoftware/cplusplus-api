@@ -34,8 +34,9 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <SiteShotgun/SiteShotgun.h>
 #include <SiteShotgun/SiteProject.h>
+#include <SiteShotgun/SiteReference.h>
 
-namespace SG {
+namespace SiteSG {
 
 // *****************************************************************************
 SiteShotgun::SiteShotgun(const std::string &serverURL,
@@ -45,6 +46,7 @@ SiteShotgun::SiteShotgun(const std::string &serverURL,
 {
     // Register the site-specific classes
     registerClass("SiteProject",     &SiteProject::entityType,      &SiteProject::factory,      &SiteProject::defaultReturnFields);
+    registerClass("SiteReference",   &SiteReference::entityType,    &SiteReference::factory,    &SiteReference::defaultReturnFields);
 }
 
 // *****************************************************************************
@@ -53,4 +55,4 @@ SiteShotgun::~SiteShotgun()
     // Nothing
 }
 
-} // End namespace SG
+} // End namespace SiteSG

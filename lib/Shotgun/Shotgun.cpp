@@ -88,6 +88,29 @@ Shotgun::Shotgun(const std::string &serverURL,
     registerClass("Shot",         &Shot::entityType,         &Shot::factory,         &Shot::defaultReturnFields);
     registerClass("Task",         &Task::entityType,         &Task::factory,         &Task::defaultReturnFields);
     registerClass("Version",      &Version::entityType,      &Version::factory,      &Version::defaultReturnFields);
+
+    // Currently Shotgun has 20 different CustomEntity types available, such as
+    // CustomEntity01, CustomEntity02, ..., CustomEntity20. Register all of them.
+    registerClass(CustomEntity<1>::classType(),  &CustomEntity<1>::entityType,  &CustomEntity<1>::factory,  &CustomEntity<1>::defaultReturnFields);
+    registerClass(CustomEntity<2>::classType(),  &CustomEntity<2>::entityType,  &CustomEntity<2>::factory,  &CustomEntity<2>::defaultReturnFields);
+    registerClass(CustomEntity<3>::classType(),  &CustomEntity<3>::entityType,  &CustomEntity<3>::factory,  &CustomEntity<3>::defaultReturnFields);
+    registerClass(CustomEntity<4>::classType(),  &CustomEntity<4>::entityType,  &CustomEntity<4>::factory,  &CustomEntity<4>::defaultReturnFields);
+    registerClass(CustomEntity<5>::classType(),  &CustomEntity<5>::entityType,  &CustomEntity<5>::factory,  &CustomEntity<5>::defaultReturnFields);
+    registerClass(CustomEntity<6>::classType(),  &CustomEntity<6>::entityType,  &CustomEntity<6>::factory,  &CustomEntity<6>::defaultReturnFields);
+    registerClass(CustomEntity<7>::classType(),  &CustomEntity<7>::entityType,  &CustomEntity<7>::factory,  &CustomEntity<7>::defaultReturnFields);
+    registerClass(CustomEntity<8>::classType(),  &CustomEntity<8>::entityType,  &CustomEntity<8>::factory,  &CustomEntity<8>::defaultReturnFields);
+    registerClass(CustomEntity<9>::classType(),  &CustomEntity<9>::entityType,  &CustomEntity<9>::factory,  &CustomEntity<9>::defaultReturnFields);
+    registerClass(CustomEntity<10>::classType(), &CustomEntity<10>::entityType, &CustomEntity<10>::factory, &CustomEntity<10>::defaultReturnFields);
+    registerClass(CustomEntity<11>::classType(), &CustomEntity<11>::entityType, &CustomEntity<11>::factory, &CustomEntity<11>::defaultReturnFields);
+    registerClass(CustomEntity<12>::classType(), &CustomEntity<12>::entityType, &CustomEntity<12>::factory, &CustomEntity<12>::defaultReturnFields);
+    registerClass(CustomEntity<13>::classType(), &CustomEntity<13>::entityType, &CustomEntity<13>::factory, &CustomEntity<13>::defaultReturnFields);
+    registerClass(CustomEntity<14>::classType(), &CustomEntity<14>::entityType, &CustomEntity<14>::factory, &CustomEntity<14>::defaultReturnFields);
+    registerClass(CustomEntity<15>::classType(), &CustomEntity<15>::entityType, &CustomEntity<15>::factory, &CustomEntity<15>::defaultReturnFields);
+    registerClass(CustomEntity<16>::classType(), &CustomEntity<16>::entityType, &CustomEntity<16>::factory, &CustomEntity<16>::defaultReturnFields);
+    registerClass(CustomEntity<17>::classType(), &CustomEntity<17>::entityType, &CustomEntity<17>::factory, &CustomEntity<17>::defaultReturnFields);
+    registerClass(CustomEntity<18>::classType(), &CustomEntity<18>::entityType, &CustomEntity<18>::factory, &CustomEntity<18>::defaultReturnFields);
+    registerClass(CustomEntity<19>::classType(), &CustomEntity<19>::entityType, &CustomEntity<19>::factory, &CustomEntity<19>::defaultReturnFields);
+    registerClass(CustomEntity<20>::classType(), &CustomEntity<20>::entityType, &CustomEntity<20>::factory, &CustomEntity<20>::defaultReturnFields);
 }
 
 // *****************************************************************************
@@ -102,13 +125,9 @@ void Shotgun::registerClass(const std::string &classType,
                             const FactoryFunc &factoryFunc,
                             const DefaultReturnFieldsFunc &defaultReturnFieldsFunc)
 {
-#if 0
-    m_classRegistry[classType] = RegistryFuncPair(factoryFunc, defaultReturnFieldsFunc);
-#else
     m_classRegistry[classType].entityTypeFunc = entityTypeFunc;
     m_classRegistry[classType].factoryFunc = factoryFunc;
     m_classRegistry[classType].defaultReturnFieldsFunc = defaultReturnFieldsFunc;
-#endif
 }
 
 // *****************************************************************************

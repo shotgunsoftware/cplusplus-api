@@ -40,9 +40,9 @@ class Entity
 %End
 
 %ConvertToSubClassCode
-    // Downcast to subclass - the "SG" namespace needs to be included 
+    // Downcast to subclass - the class' namespace needs to be included 
 
-    std::string classType = "SG::" + sipCpp->classType();
+    std::string classType = sipCpp->namespaceStr() + "::" + sipCpp->classType();
     sipType = sipFindType(classType.c_str());
 %End
 

@@ -28,5 +28,7 @@
 %Include Task.sip
 %Include Version.sip
 
+%Include CustomEntity.sip
+
 %Include NoteMixin.sip
 %Include TaskMixin.sip

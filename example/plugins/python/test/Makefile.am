@@ -1,8 +1,8 @@
 
-EXTRA_DIST = testSiteProject.py
+EXTRA_DIST = testSiteProject.py testSiteReference.py
 
 TESTS_ENVIRONMENT = PYTHONPATH="$(top_srcdir)/example/plugins/python:$(PYTHONPATH)" \
                     LD_LIBRARY_PATH="$(top_builddir)/example/lib/SiteShotgun/.libs:$(LD_LIBRARY_PATH)" \
                     DYLD_LIBRARY_PATH="$(top_builddir)/example/lib/SiteShotgun/.libs:$(DYLD_LIBRARY_PATH)"
 
-TESTS = testSiteProject.py
+TESTS = testSiteProject.py testSiteReference.py

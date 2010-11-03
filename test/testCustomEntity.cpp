@@ -33,10 +33,14 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <iostream>
 #include <stdexcept>
 
-#include <SiteShotgun/SiteShotgun.h>
-#include <SiteShotgun/SiteProject.h>
+#include <Shotgun/types.h>
+#include <Shotgun/exceptions.h>
+#include <Shotgun/Shotgun.h>
+#include <Shotgun/FilterBy.h>
+#include <Shotgun/Dict.h>
+#include <Shotgun/Fields.h>
 
-using namespace SiteSG;
+using namespace SG;
 
 int main( int argc, char **argv )
 {
@@ -92,23 +96,38 @@ int main( int argc, char **argv )
 
     try
     {
-        SiteShotgun sg(shotgunURL, authName, authKey);
+        Shotgun sg(shotgunURL, authName, authKey);
 
-        std::cout << std::endl << "**************************** findEntities ****************************" << std::endl;
-        SiteProjectPtrs siteProjects = sg.findEntities<SiteProject>();
-        for( size_t p = 0; p < siteProjects.size(); ++p )
+        // --------------------------------------------------------------------
+        // If any of the following CustomEntity type is disabled, you'll get
+        // an exception error saying:
+        //
+        //     SgError: SgEntityXmlrpcError: API read() invalid/missing string entity 'type'
+        //
+        // In order to enable the entity in Shotgun, go to [Admin] -> [Site Preferences],
+        // click the arrow on the left of the CustomEntity that to be enabled,
+        // and check [Yes, use custom entity**].
+        // --------------------------------------------------------------------
+
+        std::cout << std::endl << "**************************** findEntities CustomEntity01 ****************************" << std::endl;
+        CustomEntity01Ptrs customEntities1 = sg.findEntities<CustomEntity01>(FilterBy(), 5);
+        for( size_t i = 0; i < customEntities1.size(); ++i )
         {
-            std::cout << *(siteProjects[p]) << std::endl;
+            std::cout << customEntities1[i]->sgProjectCode() << " : "
+                      << customEntities1[i]->getAttrValueAsString("code") << std::endl;
+            delete customEntities1[i];
+        }
 
-            // These are SiteProject-specific convenience functions.
-            std::cout << siteProjects[p]->sgName() << std::endl;
-            std::cout << siteProjects[p]->sgCode() << std::endl;
-
-            std::cout << "-------------------" << std::endl;
-            delete siteProjects[p];
+        std::cout << std::endl << "**************************** findEntities CustomEntity02 ****************************" << std::endl;
+        CustomEntity02Ptrs customEntities2 = sg.findEntities<CustomEntity02>(FilterBy(), 5);
+        for( size_t i = 0; i < customEntities2.size(); ++i )
+        {
+            std::cout << customEntities2[i]->sgProjectCode() << " : "
+                      << customEntities2[i]->getAttrValueAsString("code") << std::endl;
+            delete customEntities2[i];
         }
     }
-    catch (const SG::SgError & e)
+    catch (const SgError & e)
     {
         std::cerr << "SgError: " << e.what() << std::endl;
         return -1;

@@ -28,7 +28,8 @@ SIP_SOURCE = sip/_shotgun.sip           \
              sip/Shot.sip               \
              sip/TaskMixin.sip          \
              sip/Task.sip               \
-             sip/Version.sip
+             sip/Version.sip            \
+             sip/CustomEntity.sip
 
 EXTRA_DIST = configure.py $(SIP_SOURCE) shotgun.py
 
