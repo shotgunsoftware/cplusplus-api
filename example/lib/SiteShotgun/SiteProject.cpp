@@ -46,7 +46,7 @@ SiteProject::SiteProject(SG::Shotgun *sg, const xmlrpc_c::value &attrs)
 
 // *****************************************************************************
 SiteProject::SiteProject(const SiteProject &ref)
-    : Project(ref.m_sg, *ref.m_attrs)
+    : SG::Project(ref.m_sg, *ref.m_attrs)
 {
     m_classType = "SiteProject";
 }
@@ -60,7 +60,7 @@ SiteProject::~SiteProject()
 // *****************************************************************************
 SG::List SiteProject::defaultReturnFields()
 {
-    return Project::defaultReturnFields()
+    return SG::Project::defaultReturnFields()
                .append("created_by");
 }
 
