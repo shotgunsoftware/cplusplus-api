@@ -30,8 +30,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __ASSET_H__
-#define __ASSET_H__
+#ifndef __SG_ASSET_H__
+#define __SG_ASSET_H__
 
 #include <string>
 
@@ -109,4 +109,4 @@ typedef std::vector<Asset *> AssetPtrs;
 
 } // End namespace SG
 
-#endif    // End #ifdef __ASSET_H__
+#endif    // End #ifdef __SG_ASSET_H__

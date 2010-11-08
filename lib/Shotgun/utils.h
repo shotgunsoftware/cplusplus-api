@@ -30,8 +30,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __UTILS_H__
-#define __UTILS_H__
+#ifndef __SG_UTILS_H__
+#define __SG_UTILS_H__
 
 #include <string>
 
@@ -45,6 +45,6 @@ std::string toupper(const std::string& s);
 
 }  //  End namespace SG
 
-#endif    // End #ifdef __UTILS_H__
+#endif    // End #ifdef __SG_UTILS_H__
 
 

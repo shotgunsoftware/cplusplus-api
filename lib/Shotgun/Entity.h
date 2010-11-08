@@ -30,8 +30,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __ENTITY_H__
-#define __ENTITY_H__
+#ifndef __SG_ENTITY_H__
+#define __SG_ENTITY_H__
 
 #include <iostream>
 #include <string>
@@ -659,4 +659,4 @@ typedef std::vector<Entity *> EntityPtrs;
 
 } // End namespace SG
 
-#endif    // End #ifdef __ENTITY_H__
+#endif    // End #ifdef __SG_ENTITY_H__

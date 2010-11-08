@@ -30,8 +30,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __GROUP_H__
-#define __GROUP_H__
+#ifndef __SG_GROUP_H__
+#define __SG_GROUP_H__
 
 #include <string>
 
@@ -107,4 +107,4 @@ typedef std::vector<Group *> GroupPtrs;
 
 } // End namespace SG
 
-#endif    // End #ifdef __GROUP_H__
+#endif    // End #ifdef __SG_GROUP_H__

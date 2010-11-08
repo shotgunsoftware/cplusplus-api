@@ -30,8 +30,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __TASK_MIXIN_H__
-#define __TASK_MIXIN_H__
+#ifndef __SG_TASK_MIXIN_H__
+#define __SG_TASK_MIXIN_H__
 
 #include <string>
 
@@ -100,4 +100,4 @@ protected:
 
 } // End namespace SG
 
-#endif    // End #ifdef __TASK_MIXIN_H__
+#endif    // End #ifdef __SG_TASK_MIXIN_H__

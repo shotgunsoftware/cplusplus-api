@@ -30,8 +30,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __DELIVERY_H__
-#define __DELIVERY_H__
+#ifndef __SG_DELIVERY_H__
+#define __SG_DELIVERY_H__
 
 #include <string>
 
@@ -107,4 +107,4 @@ typedef std::vector<Delivery *> DeliveryPtrs;
 
 } // End namespace SG
 
-#endif    // End #ifdef __DELIVERY_H__
+#endif    // End #ifdef __SG_DELIVERY_H__

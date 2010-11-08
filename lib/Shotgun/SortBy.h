@@ -30,8 +30,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __SORTBY_H__
-#define __SORTBY_H__
+#ifndef __SG_SORTBY_H__
+#define __SG_SORTBY_H__
 
 #include <string>
 
@@ -135,4 +135,4 @@ protected:
 
 } // End namespace SG
 
-#endif    // End #ifdef __SORTBY_H__
+#endif    // End #ifdef __SG_SORTBY_H__

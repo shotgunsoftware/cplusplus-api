@@ -30,8 +30,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __METHOD_H__
-#define __METHOD_H__
+#ifndef __SG_METHOD_H__
+#define __SG_METHOD_H__
 
 #include <cstdlib>
 #include <string>
@@ -152,4 +152,4 @@ protected:
 
 } // End namespace SG
 
-#endif    // End #ifdef __METHOD_H__
+#endif    // End #ifdef __SG_METHOD_H__

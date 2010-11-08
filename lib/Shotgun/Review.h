@@ -30,8 +30,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __REVIEW_H__
-#define __REVIEW_H__
+#ifndef __SG_REVIEW_H__
+#define __SG_REVIEW_H__
 
 #include <string>
 
@@ -107,4 +107,4 @@ typedef std::vector<Review *> ReviewPtrs;
 
 } // End namespace SG
 
-#endif    // End #ifdef __REVIEW_H__
+#endif    // End #ifdef __SG_REVIEW_H__

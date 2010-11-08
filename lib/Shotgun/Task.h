@@ -30,8 +30,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __TASK_H__
-#define __TASK_H__
+#ifndef __SG_TASK_H__
+#define __SG_TASK_H__
 
 #include <string>
 
@@ -107,4 +107,4 @@ typedef std::vector<Task *> TaskPtrs;
 
 } // End namespace SG
 
-#endif    // End #ifdef __TASK_H__
+#endif    // End #ifdef __SG_TASK_H__

@@ -30,8 +30,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __NOTE_MIXIN_H__
-#define __NOTE_MIXIN_H__
+#ifndef __SG_NOTE_MIXIN_H__
+#define __SG_NOTE_MIXIN_H__
 
 #include <string>
 
@@ -84,4 +84,4 @@ protected:
 
 } // End namespace SG
 
-#endif    // End #ifdef __NOTE_MIXIN_H__
+#endif    // End #ifdef __SG_NOTE_MIXIN_H__

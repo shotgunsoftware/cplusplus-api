@@ -30,8 +30,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __VERSION_H__
-#define __VERSION_H__
+#ifndef __SG_VERSION_H__
+#define __SG_VERSION_H__
 
 #include <string>
 
@@ -108,4 +108,4 @@ typedef std::vector<Version *> VersionPtrs;
 
 } // End namespace SG
 
-#endif    // End #ifdef __VERSION_H__
+#endif    // End #ifdef __SG_VERSION_H__

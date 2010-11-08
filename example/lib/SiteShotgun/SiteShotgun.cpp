@@ -42,7 +42,7 @@ namespace SiteSG {
 SiteShotgun::SiteShotgun(const std::string &serverURL,
                          const std::string &authName,
                          const std::string &authKey)
-    : Shotgun(serverURL, authName, authKey)
+    : SG::Shotgun(serverURL, authName, authKey)
 {
     // Register the site-specific classes
     registerClass("SiteProject",     &SiteProject::entityType,      &SiteProject::factory,      &SiteProject::defaultReturnFields);

@@ -30,8 +30,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __LIST_H__
-#define __LIST_H__
+#ifndef __SG_LIST_H__
+#define __SG_LIST_H__
 
 #include <string>
 
@@ -164,4 +164,4 @@ const T List::value(const int index) const
 
 } // End namespace SG
 
-#endif    // End #ifdef __LIST_H__
+#endif    // End #ifdef __SG_LIST_H__

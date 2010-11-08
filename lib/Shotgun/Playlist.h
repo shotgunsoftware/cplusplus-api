@@ -30,8 +30,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __PLAYLIST_H__
-#define __PLAYLIST_H__
+#ifndef __SG_PLAYLIST_H__
+#define __SG_PLAYLIST_H__
 
 #include <Shotgun/Entity.h>
 
@@ -105,4 +105,4 @@ typedef std::vector<Playlist *> PlaylistPtrs;
 
 } // End namespace SG
 
-#endif    // End #ifdef __PLAYLIST_H__
+#endif    // End #ifdef __SG_PLAYLIST_H__

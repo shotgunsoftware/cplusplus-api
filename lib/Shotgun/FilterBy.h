@@ -30,8 +30,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __FILTERBY_H__
-#define __FILTERBY_H__
+#ifndef __SG_FILTERBY_H__
+#define __SG_FILTERBY_H__
 
 #include <string>
 
@@ -196,4 +196,4 @@ FilterBy &FilterBy::Or(const std::string &path,
 
 } // End namespace SG
 
-#endif    // End #ifdef __FILTERBY_H__
+#endif    // End #ifdef __SG_FILTERBY_H__

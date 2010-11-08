@@ -30,8 +30,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __SHOT_H__
-#define __SHOT_H__
+#ifndef __SG_SHOT_H__
+#define __SG_SHOT_H__
 
 #include <string>
 
@@ -109,4 +109,4 @@ typedef std::vector<Shot *> ShotPtrs;
 
 } // End namespace SG
 
-#endif    // End #ifdef __SHOT_H__
+#endif    // End #ifdef __SG_SHOT_H__

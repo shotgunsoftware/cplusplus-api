@@ -30,8 +30,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __TYPE_H__
-#define __TYPE_H__
+#ifndef __SG_TYPES_H__
+#define __SG_TYPES_H__
 
 #include <iostream>
 #include <map>
@@ -124,4 +124,4 @@ std::ostream &operator<<(std::ostream& output, const std::vector<xmlrpc_c::value
 std::ostream &operator<<(std::ostream& output, const SG::Strings &strs);
 std::ostream &operator<<(std::ostream& output, const SG::MethodSignatures &sigs);
 
-#endif    // End #ifdef __TYPE_H__
+#endif    // End #ifdef __SG_TYPES_H__

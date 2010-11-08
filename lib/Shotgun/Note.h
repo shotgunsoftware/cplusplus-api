@@ -30,8 +30,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __NOTE_H__
-#define __NOTE_H__
+#ifndef __SG_NOTE_H__
+#define __SG_NOTE_H__
 
 #include <string>
 
@@ -107,4 +107,4 @@ typedef std::vector<Note *> NotePtrs;
 
 } // End namespace SG
 
-#endif    // End #ifdef __NOTE_H__
+#endif    // End #ifdef __SG_NOTE_H__

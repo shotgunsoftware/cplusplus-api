@@ -30,8 +30,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __SEQUENCE_H__
-#define __SEQUENCE_H__
+#ifndef __SG_SEQUENCE_H__
+#define __SG_SEQUENCE_H__
 
 #include <string>
 
@@ -107,4 +107,4 @@ typedef std::vector<Sequence *> SequencePtrs;
 
 } // End namespace SG
 
-#endif    // End #ifdef __SEQUENCE_H__
+#endif    // End #ifdef __SG_SEQUENCE_H__

@@ -30,8 +30,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __ELEMENT_H__
-#define __ELEMENT_H__
+#ifndef __SG_ELEMENT_H__
+#define __SG_ELEMENT_H__
 
 #include <string>
 
@@ -107,4 +107,4 @@ typedef std::vector<Element *> ElementPtrs;
 
 } // End namespace SG
 
-#endif    // End #ifdef __ELEMENT_H__
+#endif    // End #ifdef __SG_ELEMENT_H__

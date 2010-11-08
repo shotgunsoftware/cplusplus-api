@@ -30,8 +30,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __SHOTGUN_H__
-#define __SHOTGUN_H__
+#ifndef __SG_SHOTGUN_H__
+#define __SG_SHOTGUN_H__
 
 #include <exception>
 #include <string>
@@ -453,4 +453,4 @@ bool Shotgun::deleteEntity(const int id)
 // *****************************************************************************
 } // End namespace SG
 
-#endif    // End #ifdef __SHOTGUN_H__
+#endif    // End #ifdef __SG_SHOTGUN_H__

@@ -30,8 +30,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __EXCEPTIONS_H__
-#define __EXCEPTIONS_H__
+#ifndef __SG_EXCEPTIONS_H__
+#define __SG_EXCEPTIONS_H__
 
 #include <Shotgun/types.h>
 
@@ -319,4 +319,4 @@ public:
 
 } // End namespace SG
 
-#endif    // End #ifdef __EXCEPTIONS_H__
+#endif    // End #ifdef __SG_EXCEPTIONS_H__

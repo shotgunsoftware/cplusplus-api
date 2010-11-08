@@ -30,8 +30,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __USER_H__
-#define __USER_H__
+#ifndef __SG_USER_H__
+#define __SG_USER_H__
 
 #include <Shotgun/Entity.h>
 
@@ -105,4 +105,4 @@ typedef std::vector<HumanUser *> HumanUserPtrs;
 
 } // End namespace SG
 
-#endif    // End #ifdef __USER_H__
+#endif    // End #ifdef __SG_USER_H__

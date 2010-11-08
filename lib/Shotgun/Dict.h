@@ -30,8 +30,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __DICT_H__
-#define __DICT_H__
+#ifndef __SG_DICT_H__
+#define __SG_DICT_H__
 
 #include <string>
 
@@ -183,4 +183,4 @@ const T Dict::value(const std::string &key) const
 
 } // End namespace SG
 
-#endif    // End #ifdef __DICT_H__
+#endif    // End #ifdef __SG_DICT_H__

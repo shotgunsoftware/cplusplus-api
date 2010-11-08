@@ -30,8 +30,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __FIELDS_H__
-#define __FIELDS_H__
+#ifndef __SG_FIELDS_H__
+#define __SG_FIELDS_H__
 
 #include <string>
 
@@ -157,4 +157,4 @@ Fields &Fields::append(const std::string &fieldName,
 
 } // End namespace SG
 
-#endif    // End #ifdef __FIELDS_H__
+#endif    // End #ifdef __SG_FIELDS_H__

@@ -30,8 +30,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef __CUSTOMENTITY_H__
-#define __CUSTOMENTITY_H__
+#ifndef __SG_CUSTOMENTITY_H__
+#define __SG_CUSTOMENTITY_H__
 
 #include <string>
 #include <sstream>
@@ -213,4 +213,4 @@ typedef std::vector<CustomEntity20 *> CustomEntity20Ptrs;
 
 } // End namespace SG
 
-#endif    // End #ifdef __CUSTOMENTITY_H__
+#endif    // End #ifdef __SG_CUSTOMENTITY_H__
