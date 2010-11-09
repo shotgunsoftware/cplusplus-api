@@ -608,9 +608,9 @@ const T Entity::getAttrValue(const std::string &attrName,
 template <class T>
 const T *Entity::getAttrValueAsEntity(const std::string &attrName) const
 {
-    Entity *entity = getAttrValueAsEntity(attrName);
+    const Entity *entity = getAttrValueAsEntity(attrName);
 
-    if (T *t = dynamic_cast<T *>(entity))
+    if (const T *t = dynamic_cast<const T *>(entity))
     {
         return t;
     }
@@ -626,9 +626,9 @@ const T *Entity::getAttrValueAsEntity(Shotgun *sg,
                                       const std::string &attrName,
                                       const Dict &attrsMap)
 {
-    Entity *entity = Entity::getAttrValueAsEntity(sg, attrName, attrsMap);
+    const Entity *entity = Entity::getAttrValueAsEntity(sg, attrName, attrsMap);
 
-    if (T *t = dynamic_cast<T *>(entity))
+    if (const T *t = dynamic_cast<const T *>(entity))
     {
         return t;
     }
