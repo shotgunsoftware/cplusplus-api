@@ -286,8 +286,8 @@ public:
     // -------------------------------------------------------------------------
     // This member function can't take a default value because it has the same 
     // type as the attrsMap, and therefore creates an ambiguous overload.
-    //const Dict getAttrValueAsDict(const std::string &attrName, 
-    //                              const Dict &defaultVal) const;
+    //virtual const Dict getAttrValueAsDict(const std::string &attrName, 
+    //                                      const Dict &defaultVal) const;
 
     /// Gets an attribute's value from the entity's raw attribute map and returns
     /// as a Dict type. If it fails, use the given default value.
@@ -374,6 +374,28 @@ public:
     static const std::string getAttrValueAsUserLogin(Shotgun *sg,
                                                      const std::string &attrName,
                                                      const Dict &attrsMap);
+
+    // -------------------------------------------------------------------------
+    /// Gets an attribute's value from the entity's raw attribute map and returns
+    /// as a quicktime URL. If it fails, throw an exception.
+    virtual const std::string getAttrValueAsQtURL(const std::string &attrName) const;
+
+    /// Gets an attribute's value from the given attribute map and returns
+    /// as a quicktime URL. If it fails, throw an exception.
+    static const std::string getAttrValueAsQtURL(const std::string &attrName,
+                                                 const Dict &attrsMap);
+
+    // -------------------------------------------------------------------------
+    /// Gets an attribute's value from the entity's raw attribute map and returns
+    /// as a quicktime path. If it fails, throw an exception.
+    virtual const std::string getAttrValueAsQtPath(const std::string &attrName,
+                                                   const std::string &sgAttachmentURL) const;
+
+    /// Gets an attribute's value from the given attribute map and returns
+    /// as a quicktime path. If it fails, throw an exception.
+    static const std::string getAttrValueAsQtPath(const std::string &attrName,
+                                                  const std::string &sgAttachmentURL,
+                                                  const Dict &attrsMap);
 
     // -------------------------------------------------------------------------
     /// Updates an entity's attribute(s) by the given "fields" data.

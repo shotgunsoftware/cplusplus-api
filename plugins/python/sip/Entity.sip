@@ -99,6 +99,18 @@ public:
                                                      const SG::Dict &attrsMap) throw(SG::SgError);
 
     // ------------------------------------------------------------------------
+    virtual const std::string getAttrValueAsQtURL(const std::string &attrName) const throw(SG::SgError);
+    static const std::string getAttrValueAsQtURL(const std::string &attrName,
+                                                 const SG::Dict &attrsMap) throw(SG::SgError);
+
+    // ------------------------------------------------------------------------
+    virtual const std::string getAttrValueAsQtPath(const std::string &attrName,
+                                                   const std::string &sgAttachmentURL) const throw(SG::SgError);
+    static const std::string getAttrValueAsQtPath(const std::string &attrName,
+                                                  const std::string &sgAttachmentURL,
+                                                  const SG::Dict &attrsMap) throw(SG::SgError);
+
+    // ------------------------------------------------------------------------
     virtual void setAttrValue(const SG::Fields &fields) throw(SG::SgError); 
 
     // ------------------------------------------------------------------------

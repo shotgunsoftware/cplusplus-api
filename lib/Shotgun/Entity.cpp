@@ -939,4 +939,52 @@ const std::string Entity::getAttrValueAsUserLogin(Shotgun *sg,
     }
 }
 
+// *****************************************************************************
+const std::string Entity::getAttrValueAsQtURL(const std::string &attrName) const 
+{
+    Dict qt = getAttrValueAsDict(attrName);
+
+    return qt.value<std::string>("url");
+}
+
+// *****************************************************************************
+// static
+const std::string Entity::getAttrValueAsQtURL(const std::string &attrName,
+                                              const Dict &attrsMap) 
+{
+    Dict qt = getAttrValueAsDict(attrName, attrsMap);
+
+    return qt.value<std::string>("url");
+}
+
+// *****************************************************************************
+const std::string Entity::getAttrValueAsQtPath(const std::string &attrName,
+                                               const std::string &sgAttachmentURL) const 
+{
+    std::string qtURL = getAttrValueAsQtURL(attrName);
+
+    if (qtURL.find(sgAttachmentURL) == 0)
+    {
+        qtURL.replace(0, sgAttachmentURL.length(), "");  
+
+        return qtURL;
+    }
+}
+
+// *****************************************************************************
+// static
+const std::string Entity::getAttrValueAsQtPath(const std::string &attrName,
+                                               const std::string &sgAttachmentURL,
+                                               const Dict &attrsMap) 
+{
+    std::string qtURL = getAttrValueAsQtURL(attrName, attrsMap);
+
+    if (qtURL.find(sgAttachmentURL) == 0)
+    {
+        qtURL.replace(0, sgAttachmentURL.length(), "");  
+
+        return qtURL;
+    }
+}
+
 } // End namespace SG
