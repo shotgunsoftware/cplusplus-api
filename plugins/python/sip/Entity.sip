@@ -81,16 +81,28 @@ public:
                                                 const SG::Dict &attrsMap) throw(SG::SgError);
 
     // ------------------------------------------------------------------------
-    virtual const SG::Entity *getAttrValueAsEntity(const std::string &attrName) const throw(SG::SgError) /Factory/;
-    static const SG::Entity *getAttrValueAsEntity(SG::Shotgun *sg,
-                                                  const std::string &attrName,
-                                                  const SG::Dict &attrsMap) throw(SG::SgError) /Factory/;
+    virtual SG::Entity *getAttrValueAsEntity(const std::string &attrName) const throw(SG::SgError) /Factory/;
+    static SG::Entity *getAttrValueAsEntity(SG::Shotgun *sg,
+                                            const std::string &attrName,
+                                            const SG::Dict &attrsMap) throw(SG::SgError) /Factory/;
+    virtual SG::Entity *getAttrValueAsEntity(const std::string &attrName,
+                                             const std::string &entityClassType) const throw(SG::SgError) /Factory/;
+    static SG::Entity *getAttrValueAsEntity(SG::Shotgun *sg,
+                                            const std::string &attrName,
+                                            const std::string &entityClassType,
+                                            const SG::Dict &attrsMap) throw(SG::SgError) /Factory/;
 
     // ------------------------------------------------------------------------
-    virtual const std::vector<SG::Entity *> getAttrValueAsEntities(const std::string &attrName) const throw(SG::SgError) /Factory/;
-    static const std::vector<SG::Entity *> getAttrValueAsEntities(SG::Shotgun *sg,
-                                                                  const std::string &attrName,
-                                                                  const SG::Dict &attrsMap) throw(SG::SgError) /Factory/;
+    virtual std::vector<SG::Entity *> getAttrValueAsEntities(const std::string &attrName) const throw(SG::SgError) /Factory/;
+    static std::vector<SG::Entity *> getAttrValueAsEntities(SG::Shotgun *sg,
+                                                            const std::string &attrName,
+                                                            const SG::Dict &attrsMap) throw(SG::SgError) /Factory/;
+    virtual std::vector<SG::Entity *> getAttrValueAsEntities(const std::string &attrName,
+                                                             const std::string &entityClassType) const throw(SG::SgError) /Factory/;
+    static std::vector<SG::Entity *> getAttrValueAsEntities(SG::Shotgun *sg,
+                                                            const std::string &attrName,
+                                                            const std::string &entityClassType,
+                                                            const SG::Dict &attrsMap) throw(SG::SgError) /Factory/;
 
     // ------------------------------------------------------------------------
     virtual const std::string getAttrValueAsUserLogin(const std::string &attrName) const throw(SG::SgError);

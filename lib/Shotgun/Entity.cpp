@@ -811,16 +811,16 @@ const Strings Entity::getAttrValueAsTags(const std::string &attrName,
 }
 
 // *****************************************************************************
-const Entity *Entity::getAttrValueAsEntity(const std::string &attrName) const
+Entity *Entity::getAttrValueAsEntity(const std::string &attrName) const
 {
     Dict entity = getAttrValueAsDict(attrName);
 
     if (!entity.empty())
     {
         int id = getAttrValueAsInt("id", entity);
-        std::string type = getAttrValueAsString("type", entity);
+        std::string entityType = getAttrValueAsString("type", entity);
 
-        return m_sg->findEntity(type,
+        return m_sg->findEntity(entityType,
                                 FilterBy("id", "is", id));
     }
     else
@@ -831,18 +831,68 @@ const Entity *Entity::getAttrValueAsEntity(const std::string &attrName) const
 
 // *****************************************************************************
 // static
-const Entity *Entity::getAttrValueAsEntity(Shotgun *sg, 
-                                           const std::string &attrName,
-                                           const Dict &attrsMap)
+Entity *Entity::getAttrValueAsEntity(Shotgun *sg, 
+                                     const std::string &attrName,
+                                     const Dict &attrsMap)
 {
     Dict entity = getAttrValueAsDict(attrName, attrsMap);
 
     if (!entity.empty())
     {
         int id = getAttrValueAsInt("id", entity);
-        std::string type = getAttrValueAsString("type", entity);
+        std::string entityType = getAttrValueAsString("type", entity);
 
-        return sg->findEntity(type,
+        return sg->findEntity(entityType,
+                              FilterBy("id", "is", id));
+    }
+    else
+    {
+        throw SgEntityNotFoundError("\"" + attrName + "\"");
+    }
+}
+// *****************************************************************************
+Entity *Entity::getAttrValueAsEntity(const std::string &attrName,
+                                     const std::string &entityClassType) const
+{
+    Dict entity = getAttrValueAsDict(attrName);
+
+    if (!entity.empty())
+    {
+        int id = getAttrValueAsInt("id", entity);
+        //std::string entityType = getAttrValueAsString("type", entity);
+
+        // NOTE: entityClassType can be different from entityType if the 
+        // class (e.g. "Show") is derived from one of the primary entity 
+        // classes (e.g. "Project"). So pass "entityClassType" to the
+        // findEntity(..) function.
+        return m_sg->findEntity(entityClassType,
+                                FilterBy("id", "is", id));
+    }
+    else
+    {
+        throw SgEntityNotFoundError("\"" + attrName + "\"");
+    }
+}
+
+// *****************************************************************************
+// static
+Entity *Entity::getAttrValueAsEntity(Shotgun *sg, 
+                                     const std::string &attrName,
+                                     const std::string &entityClassType,
+                                     const Dict &attrsMap)
+{
+    Dict entity = getAttrValueAsDict(attrName, attrsMap);
+
+    if (!entity.empty())
+    {
+        int id = getAttrValueAsInt("id", entity);
+        //std::string entityType = getAttrValueAsString("type", entity);
+
+        // NOTE: entityClassType can be different from entityType if the 
+        // class (e.g. "Show") is derived from one of the primary entity 
+        // classes (e.g. "Project"). So pass "entityClassType" to the
+        // findEntity(..) function.
+        return sg->findEntity(entityClassType,
                               FilterBy("id", "is", id));
     }
     else
@@ -852,7 +902,7 @@ const Entity *Entity::getAttrValueAsEntity(Shotgun *sg,
 }
 
 // *****************************************************************************
-const EntityPtrs Entity::getAttrValueAsEntities(const std::string &attrName) const
+EntityPtrs Entity::getAttrValueAsEntities(const std::string &attrName) const
 {
     EntityPtrs entities;
 
@@ -864,9 +914,9 @@ const EntityPtrs Entity::getAttrValueAsEntities(const std::string &attrName) con
         if (!entity.empty())
         {
             int id = getAttrValueAsInt("id", entity);
-            std::string type = getAttrValueAsString("type", entity);
+            std::string entityType = getAttrValueAsString("type", entity);
 
-            entities.push_back(m_sg->findEntity(type,
+            entities.push_back(m_sg->findEntity(entityType,
                                                 FilterBy("id", "is", id)));
         }
     }
@@ -876,9 +926,9 @@ const EntityPtrs Entity::getAttrValueAsEntities(const std::string &attrName) con
 
 // *****************************************************************************
 // static
-const EntityPtrs Entity::getAttrValueAsEntities(Shotgun *sg, 
-                                                const std::string &attrName,
-                                                const Dict &attrsMap)
+EntityPtrs Entity::getAttrValueAsEntities(Shotgun *sg, 
+                                          const std::string &attrName,
+                                          const Dict &attrsMap)
 {
     EntityPtrs entities;
 
@@ -890,9 +940,59 @@ const EntityPtrs Entity::getAttrValueAsEntities(Shotgun *sg,
         if (!entity.empty())
         {
             int id = getAttrValueAsInt("id", entity);
-            std::string type = getAttrValueAsString("type", entity);
+            std::string entityType = getAttrValueAsString("type", entity);
 
-            entities.push_back(sg->findEntity(type,
+            entities.push_back(sg->findEntity(entityType,
+                                              FilterBy("id", "is", id)));
+        }
+    }
+
+    return entities;
+}
+// *****************************************************************************
+EntityPtrs Entity::getAttrValueAsEntities(const std::string &attrName,
+                                          const std::string &entityClassType) const
+{
+    EntityPtrs entities;
+
+    List entityList = getAttrValueAsList(attrName);
+    for (size_t i = 0; i < entityList.size(); i++)
+    {
+        Dict entity = Dict(entityList[i]);
+
+        if (!entity.empty())
+        {
+            int id = getAttrValueAsInt("id", entity);
+            //std::string entityType = getAttrValueAsString("type", entity);
+
+            entities.push_back(m_sg->findEntity(entityClassType,
+                                                FilterBy("id", "is", id)));
+        }
+    }
+
+    return entities;
+}
+
+// *****************************************************************************
+// static
+EntityPtrs Entity::getAttrValueAsEntities(Shotgun *sg, 
+                                          const std::string &attrName,
+                                          const std::string &entityClassType,
+                                          const Dict &attrsMap)
+{
+    EntityPtrs entities;
+
+    List entityList = getAttrValueAsList(attrName, attrsMap);
+    for (size_t i = 0; i < entityList.size(); i++)
+    {
+        Dict entity = Dict(entityList[i]);
+
+        if (!entity.empty())
+        {
+            int id = getAttrValueAsInt("id", entity);
+            //std::string entityType = getAttrValueAsString("type", entity);
+
+            entities.push_back(sg->findEntity(entityClassType,
                                               FilterBy("id", "is", id)));
         }
     }
@@ -903,8 +1003,8 @@ const EntityPtrs Entity::getAttrValueAsEntities(Shotgun *sg,
 // *****************************************************************************
 const std::string Entity::getAttrValueAsUserLogin(const std::string &attrName) const 
 {
-    const Entity *entity = getAttrValueAsEntity(attrName);
-    if (const HumanUser *user = dynamic_cast<const HumanUser *>(entity))
+    Entity *entity = getAttrValueAsEntity(attrName, "HumanUser");
+    if (HumanUser *user = dynamic_cast<HumanUser *>(entity))
     {
         std::string login = user->getAttrValueAsString("login");
         delete entity;
@@ -924,8 +1024,8 @@ const std::string Entity::getAttrValueAsUserLogin(Shotgun *sg,
                                                   const std::string &attrName,
                                                   const Dict &attrsMap) 
 {
-    const Entity *entity = getAttrValueAsEntity(sg, attrName, attrsMap);
-    if (const HumanUser *user = dynamic_cast<const HumanUser *>(entity))
+    Entity *entity = getAttrValueAsEntity(sg, attrName, "HumanUser", attrsMap);
+    if (HumanUser *user = dynamic_cast<HumanUser *>(entity))
     {
         std::string login = user->getAttrValueAsString("login");
         delete entity;
