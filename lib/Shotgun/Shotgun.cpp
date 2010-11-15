@@ -73,44 +73,44 @@ Shotgun::Shotgun(const std::string &serverURL,
     //setTimeZoneEnv();
 
     // Register the classes
-    registerClass("Asset",        &Asset::entityType,        &Asset::factory,        &Asset::defaultReturnFields);
-    registerClass("Delivery",     &Delivery::entityType,     &Delivery::factory,     &Delivery::defaultReturnFields);
-    registerClass("Element",      &Element::entityType,      &Element::factory,      &Element::defaultReturnFields);
-    registerClass("Group",        &Group::entityType,        &Group::factory,        &Group::defaultReturnFields);
-    registerClass("HumanUser",    &HumanUser::entityType,    &HumanUser::factory,    &HumanUser::defaultReturnFields);
-    registerClass("Note",         &Note::entityType,         &Note::factory,         &Note::defaultReturnFields);
-    registerClass("Playlist",     &Playlist::entityType,     &Playlist::factory,     &Playlist::defaultReturnFields);
-    registerClass("Project",      &Project::entityType,      &Project::factory,      &Project::defaultReturnFields);
-    registerClass("PublishEvent", &PublishEvent::entityType, &PublishEvent::factory, &PublishEvent::defaultReturnFields);
-    registerClass("Review",       &Review::entityType,       &Review::factory,       &Review::defaultReturnFields);
-    registerClass("ReviewItem",   &ReviewItem::entityType,   &ReviewItem::factory,   &ReviewItem::defaultReturnFields);
-    registerClass("Sequence",     &Sequence::entityType,     &Sequence::factory,     &Sequence::defaultReturnFields);
-    registerClass("Shot",         &Shot::entityType,         &Shot::factory,         &Shot::defaultReturnFields);
-    registerClass("Task",         &Task::entityType,         &Task::factory,         &Task::defaultReturnFields);
-    registerClass("Version",      &Version::entityType,      &Version::factory,      &Version::defaultReturnFields);
+    registerClass("Asset",        &Asset::factory,        &Asset::defaultReturnFields);
+    registerClass("Delivery",     &Delivery::factory,     &Delivery::defaultReturnFields);
+    registerClass("Element",      &Element::factory,      &Element::defaultReturnFields);
+    registerClass("Group",        &Group::factory,        &Group::defaultReturnFields);
+    registerClass("HumanUser",    &HumanUser::factory,    &HumanUser::defaultReturnFields);
+    registerClass("Note",         &Note::factory,         &Note::defaultReturnFields);
+    registerClass("Playlist",     &Playlist::factory,     &Playlist::defaultReturnFields);
+    registerClass("Project",      &Project::factory,      &Project::defaultReturnFields);
+    registerClass("PublishEvent", &PublishEvent::factory, &PublishEvent::defaultReturnFields);
+    registerClass("Review",       &Review::factory,       &Review::defaultReturnFields);
+    registerClass("ReviewItem",   &ReviewItem::factory,   &ReviewItem::defaultReturnFields);
+    registerClass("Sequence",     &Sequence::factory,     &Sequence::defaultReturnFields);
+    registerClass("Shot",         &Shot::factory,         &Shot::defaultReturnFields);
+    registerClass("Task",         &Task::factory,         &Task::defaultReturnFields);
+    registerClass("Version",      &Version::factory,      &Version::defaultReturnFields);
 
     // Currently Shotgun has 20 different CustomEntity types available, such as
     // CustomEntity01, CustomEntity02, ..., CustomEntity20. Register all of them.
-    registerClass(CustomEntity<1>::classType(),  &CustomEntity<1>::entityType,  &CustomEntity<1>::factory,  &CustomEntity<1>::defaultReturnFields);
-    registerClass(CustomEntity<2>::classType(),  &CustomEntity<2>::entityType,  &CustomEntity<2>::factory,  &CustomEntity<2>::defaultReturnFields);
-    registerClass(CustomEntity<3>::classType(),  &CustomEntity<3>::entityType,  &CustomEntity<3>::factory,  &CustomEntity<3>::defaultReturnFields);
-    registerClass(CustomEntity<4>::classType(),  &CustomEntity<4>::entityType,  &CustomEntity<4>::factory,  &CustomEntity<4>::defaultReturnFields);
-    registerClass(CustomEntity<5>::classType(),  &CustomEntity<5>::entityType,  &CustomEntity<5>::factory,  &CustomEntity<5>::defaultReturnFields);
-    registerClass(CustomEntity<6>::classType(),  &CustomEntity<6>::entityType,  &CustomEntity<6>::factory,  &CustomEntity<6>::defaultReturnFields);
-    registerClass(CustomEntity<7>::classType(),  &CustomEntity<7>::entityType,  &CustomEntity<7>::factory,  &CustomEntity<7>::defaultReturnFields);
-    registerClass(CustomEntity<8>::classType(),  &CustomEntity<8>::entityType,  &CustomEntity<8>::factory,  &CustomEntity<8>::defaultReturnFields);
-    registerClass(CustomEntity<9>::classType(),  &CustomEntity<9>::entityType,  &CustomEntity<9>::factory,  &CustomEntity<9>::defaultReturnFields);
-    registerClass(CustomEntity<10>::classType(), &CustomEntity<10>::entityType, &CustomEntity<10>::factory, &CustomEntity<10>::defaultReturnFields);
-    registerClass(CustomEntity<11>::classType(), &CustomEntity<11>::entityType, &CustomEntity<11>::factory, &CustomEntity<11>::defaultReturnFields);
-    registerClass(CustomEntity<12>::classType(), &CustomEntity<12>::entityType, &CustomEntity<12>::factory, &CustomEntity<12>::defaultReturnFields);
-    registerClass(CustomEntity<13>::classType(), &CustomEntity<13>::entityType, &CustomEntity<13>::factory, &CustomEntity<13>::defaultReturnFields);
-    registerClass(CustomEntity<14>::classType(), &CustomEntity<14>::entityType, &CustomEntity<14>::factory, &CustomEntity<14>::defaultReturnFields);
-    registerClass(CustomEntity<15>::classType(), &CustomEntity<15>::entityType, &CustomEntity<15>::factory, &CustomEntity<15>::defaultReturnFields);
-    registerClass(CustomEntity<16>::classType(), &CustomEntity<16>::entityType, &CustomEntity<16>::factory, &CustomEntity<16>::defaultReturnFields);
-    registerClass(CustomEntity<17>::classType(), &CustomEntity<17>::entityType, &CustomEntity<17>::factory, &CustomEntity<17>::defaultReturnFields);
-    registerClass(CustomEntity<18>::classType(), &CustomEntity<18>::entityType, &CustomEntity<18>::factory, &CustomEntity<18>::defaultReturnFields);
-    registerClass(CustomEntity<19>::classType(), &CustomEntity<19>::entityType, &CustomEntity<19>::factory, &CustomEntity<19>::defaultReturnFields);
-    registerClass(CustomEntity<20>::classType(), &CustomEntity<20>::entityType, &CustomEntity<20>::factory, &CustomEntity<20>::defaultReturnFields);
+    registerClass("CustomEntity01",  &CustomEntity01::factory,  &CustomEntity01::defaultReturnFields);
+    registerClass("CustomEntity02",  &CustomEntity02::factory,  &CustomEntity02::defaultReturnFields);
+    registerClass("CustomEntity03",  &CustomEntity03::factory,  &CustomEntity03::defaultReturnFields);
+    registerClass("CustomEntity04",  &CustomEntity04::factory,  &CustomEntity04::defaultReturnFields);
+    registerClass("CustomEntity05",  &CustomEntity05::factory,  &CustomEntity05::defaultReturnFields);
+    registerClass("CustomEntity06",  &CustomEntity06::factory,  &CustomEntity06::defaultReturnFields);
+    registerClass("CustomEntity07",  &CustomEntity07::factory,  &CustomEntity07::defaultReturnFields);
+    registerClass("CustomEntity08",  &CustomEntity08::factory,  &CustomEntity08::defaultReturnFields);
+    registerClass("CustomEntity09",  &CustomEntity09::factory,  &CustomEntity09::defaultReturnFields);
+    registerClass("CustomEntity10",  &CustomEntity10::factory,  &CustomEntity10::defaultReturnFields);
+    registerClass("CustomEntity11",  &CustomEntity11::factory,  &CustomEntity11::defaultReturnFields);
+    registerClass("CustomEntity12",  &CustomEntity12::factory,  &CustomEntity12::defaultReturnFields);
+    registerClass("CustomEntity13",  &CustomEntity13::factory,  &CustomEntity13::defaultReturnFields);
+    registerClass("CustomEntity14",  &CustomEntity14::factory,  &CustomEntity14::defaultReturnFields);
+    registerClass("CustomEntity15",  &CustomEntity15::factory,  &CustomEntity15::defaultReturnFields);
+    registerClass("CustomEntity16",  &CustomEntity16::factory,  &CustomEntity16::defaultReturnFields);
+    registerClass("CustomEntity17",  &CustomEntity17::factory,  &CustomEntity17::defaultReturnFields);
+    registerClass("CustomEntity18",  &CustomEntity18::factory,  &CustomEntity18::defaultReturnFields);
+    registerClass("CustomEntity19",  &CustomEntity19::factory,  &CustomEntity19::defaultReturnFields);
+    registerClass("CustomEntity20",  &CustomEntity20::factory,  &CustomEntity20::defaultReturnFields);
 }
 
 // *****************************************************************************
@@ -120,29 +120,27 @@ Shotgun::~Shotgun()
 }
 
 // *****************************************************************************
-void Shotgun::registerClass(const std::string &classType,
-                            const EntityTypeFunc &entityTypeFunc,
+void Shotgun::registerClass(const std::string &entityType,
                             const FactoryFunc &factoryFunc,
                             const DefaultReturnFieldsFunc &defaultReturnFieldsFunc)
 {
-    m_classRegistry[classType].entityTypeFunc = entityTypeFunc;
-    m_classRegistry[classType].factoryFunc = factoryFunc;
-    m_classRegistry[classType].defaultReturnFieldsFunc = defaultReturnFieldsFunc;
+    m_classRegistry[entityType].factoryFunc = factoryFunc;
+    m_classRegistry[entityType].defaultReturnFieldsFunc = defaultReturnFieldsFunc;
 }
 
 // *****************************************************************************
-EntityPtrs Shotgun::entityFactoryFind(const std::string &classType, 
+EntityPtrs Shotgun::entityFactoryFind(const std::string &entityType, 
                                       Dict &findMap,
                                       const int limit)
 {
     EntityPtrs entities;
 
     // Find the registered functions for the given type of class.
-    ClassRegistry::iterator foundRegistryIter = m_classRegistry.find(classType);
+    ClassRegistry::iterator foundRegistryIter = m_classRegistry.find(entityType);
 
     if (foundRegistryIter == m_classRegistry.end())
     {
-        throw SgEntityClassNotRegisteredError(classType);
+        throw SgEntityNotRegisteredError(entityType);
     }
 
     // The set of registered functions 
@@ -173,13 +171,13 @@ EntityPtrs Shotgun::entityFactoryFind(const std::string &classType,
     findMap.add("return_fields", returnFields);
 
     // If the findMap already has a "type" field, override it with the
-    // entityType that corresponds to the given "classType" to ensure 
-    // the type will not conflict with the factory function.
+    // given entityType to ensure that the type will not conflict with 
+    // the factory function.
     if (findMap.find("type"))
     {
         findMap.erase("type");
     }
-    findMap.add("type", (*(registryFuncs.entityTypeFunc))());
+    findMap.add("type", entityType);
 
     // Find the shotgun entities by the findMap
     List xmlrpcFindResult = Entity::findSGEntities(this, findMap, limit); 
@@ -194,14 +192,14 @@ EntityPtrs Shotgun::entityFactoryFind(const std::string &classType,
 }
 
 // *****************************************************************************
-Entity *Shotgun::entityFactoryCreate(const std::string &classType, Dict &createMap)
+Entity *Shotgun::entityFactoryCreate(const std::string &entityType, Dict &createMap)
 {
     // Find the registered functions for the given type of class.
-    ClassRegistry::iterator foundRegistryIter = m_classRegistry.find(classType);
+    ClassRegistry::iterator foundRegistryIter = m_classRegistry.find(entityType);
 
     if (foundRegistryIter == m_classRegistry.end())
     {
-        throw SgEntityClassNotRegisteredError(classType);
+        throw SgEntityNotRegisteredError(entityType);
     }
 
     // The set of registered functions 
@@ -232,13 +230,13 @@ Entity *Shotgun::entityFactoryCreate(const std::string &classType, Dict &createM
     createMap.add("return_fields", returnFields);
 
     // If the createMap already has a "type" field, override it with the
-    // entityType that corresponds to the given "classType" to ensure the 
-    // type will not conflict with the factory function.
+    // given entityType to ensure that the type will not conflict with 
+    // the factory function.
     if (createMap.find("type"))
     {
         createMap.erase("type");
     }
-    createMap.add("type", (*(registryFuncs.entityTypeFunc))());
+    createMap.add("type", entityType);
 
     // Create the shotgun entity by the createMap
     xmlrpc_c::value xmlrpcCreateResult = Entity::createSGEntity(this, createMap); 
@@ -250,23 +248,23 @@ Entity *Shotgun::entityFactoryCreate(const std::string &classType, Dict &createM
     }
     else
     {
-        throw SgEntityCreateError(classType);
+        throw SgEntityCreateError(entityType);
     }
 }
 
 // *****************************************************************************
-Entity *Shotgun::createEntity(const std::string &classType,
+Entity *Shotgun::createEntity(const std::string &entityType,
                               const Dict &data,
                               const List &extraReturnFields)
 {
     Dict createMap = Entity::buildCreateMap(data,
                                             extraReturnFields);
 
-    return this->entityFactoryCreate(classType, createMap);
+    return this->entityFactoryCreate(entityType, createMap);
 }
  
 // *****************************************************************************
-Entity *Shotgun::findEntity(const std::string &classType,
+Entity *Shotgun::findEntity(const std::string &entityType,
                             const FilterBy &filterList,
                             const List &extraReturnFields,
                             const bool retiredOnly,
@@ -278,19 +276,19 @@ Entity *Shotgun::findEntity(const std::string &classType,
                                         1, // limit
                                         order);
 
-    EntityPtrs entities = this->entityFactoryFind(classType, findMap, 1);
+    EntityPtrs entities = this->entityFactoryFind(entityType, findMap, 1);
     if (entities.size() > 0)
     {
         return entities[0];
     }
     else
     {
-        throw SgEntityNotFoundError(classType);
+        throw SgEntityNotFoundError(entityType);
     }
 }
 
 // *****************************************************************************
-EntityPtrs Shotgun::findEntities(const std::string &classType,
+EntityPtrs Shotgun::findEntities(const std::string &entityType,
                                  const FilterBy &filterList,
                                  const int limit,
                                  const List &extraReturnFields,
@@ -303,24 +301,13 @@ EntityPtrs Shotgun::findEntities(const std::string &classType,
                                         limit,
                                         order);
 
-    return this->entityFactoryFind(classType, findMap, limit);
+    return this->entityFactoryFind(entityType, findMap, limit);
 }
 
 // *****************************************************************************
-bool Shotgun::deleteEntity(const std::string &classType, const int id)
+bool Shotgun::deleteEntity(const std::string &entityType, const int id)
 {
-    // Find the registered functions for the given type of class.
-    ClassRegistry::iterator foundRegistryIter = m_classRegistry.find(classType);
-
-    if (foundRegistryIter == m_classRegistry.end())
-    {
-        throw SgEntityClassNotRegisteredError(classType);
-    }
-
-    // The set of registered functions 
-    RegistryFuncs registryFuncs = (*foundRegistryIter).second;
-
-    return Entity::deleteSGEntity(this, (*(registryFuncs.entityTypeFunc))(), id);
+    return Entity::deleteSGEntity(this, entityType, id);
 }
 
 // *****************************************************************************

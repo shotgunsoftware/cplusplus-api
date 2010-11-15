@@ -64,6 +64,8 @@ public:
     // ------------------------------------------------------------------------
     const std::string entityType() const;
     const std::string classType() const;
+    virtual const std::string namespaceStr() const;
+
     const xmlrpc_c::value &attrs() const;
     const std::string str() const;
     const SG::Dict asLink() const;
@@ -85,23 +87,11 @@ public:
     static SG::Entity *getAttrValueAsEntity(SG::Shotgun *sg,
                                             const std::string &attrName,
                                             const SG::Dict &attrsMap) throw(SG::SgError) /Factory/;
-    virtual SG::Entity *getAttrValueAsEntity(const std::string &attrName,
-                                             const std::string &entityClassType) const throw(SG::SgError) /Factory/;
-    static SG::Entity *getAttrValueAsEntity(SG::Shotgun *sg,
-                                            const std::string &attrName,
-                                            const std::string &entityClassType,
-                                            const SG::Dict &attrsMap) throw(SG::SgError) /Factory/;
 
     // ------------------------------------------------------------------------
     virtual std::vector<SG::Entity *> getAttrValueAsEntities(const std::string &attrName) const throw(SG::SgError) /Factory/;
     static std::vector<SG::Entity *> getAttrValueAsEntities(SG::Shotgun *sg,
                                                             const std::string &attrName,
-                                                            const SG::Dict &attrsMap) throw(SG::SgError) /Factory/;
-    virtual std::vector<SG::Entity *> getAttrValueAsEntities(const std::string &attrName,
-                                                             const std::string &entityClassType) const throw(SG::SgError) /Factory/;
-    static std::vector<SG::Entity *> getAttrValueAsEntities(SG::Shotgun *sg,
-                                                            const std::string &attrName,
-                                                            const std::string &entityClassType,
                                                             const SG::Dict &attrsMap) throw(SG::SgError) /Factory/;
 
     // ------------------------------------------------------------------------

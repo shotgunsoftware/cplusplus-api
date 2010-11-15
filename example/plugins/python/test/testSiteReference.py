@@ -5,9 +5,9 @@ from siteshotgun import *
 
 try:
     if len(sys.argv) > 1:
-        sg = SiteShotgun(sys.argv[1])
+        sg = SiteShotgunWrapper(sys.argv[1])
     else:
-        sg = SiteShotgun()
+        sg = SiteShotgunWrapper()
 
     #################################################################
     # Find all the SiteReference entities

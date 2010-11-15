@@ -44,9 +44,18 @@ SiteShotgun::SiteShotgun(const std::string &serverURL,
                          const std::string &authKey)
     : SG::Shotgun(serverURL, authName, authKey)
 {
-    // Register the site-specific classes
-    registerClass("SiteProject",     &SiteProject::entityType,      &SiteProject::factory,      &SiteProject::defaultReturnFields);
-    registerClass("SiteReference",   &SiteReference::entityType,    &SiteReference::factory,    &SiteReference::defaultReturnFields);
+    // ------------------------------------------------------------------------
+    // Register the site-specific classes. This either creates a new registry
+    // entry or overrides an existing one that has the same shotgun entity type.
+    //
+    // For example, "SiteReference" entity is actually of "CustomEntity02" type
+    // inside Shotgun. The re-registration of "CustomEntity02" entity will have 
+    // the correct factory function return a "SiteReference" class object instead 
+    // of a "CustomEntity02" class object.
+    // ------------------------------------------------------------------------
+
+    registerClass("Project",          &SiteProject::factory,      &SiteProject::defaultReturnFields);
+    registerClass("CustomEntity02",   &SiteReference::factory,    &SiteReference::defaultReturnFields);
 }
 
 // *****************************************************************************

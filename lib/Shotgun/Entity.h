@@ -87,6 +87,14 @@ public:
     virtual const std::string sgProjectCode() const { return getProjectCode(); }
 
     // -------------------------------------------------------------------------
+    /// Returns the de-referenced entity's raw attribute map.
+    const xmlrpc_c::value &attrs() const { return *m_attrs; }
+
+    // -------------------------------------------------------------------------
+    /// Returns the string representation of the entity.
+    const std::string str() const { return toStdString(*m_attrs); }
+
+    // -------------------------------------------------------------------------
     /// Returns the string representation of the entity type.
     const std::string entityType() const { return m_entityType; }
 
@@ -94,12 +102,7 @@ public:
     /// Returns the string representation of the entity class type.
     const std::string classType() const { return m_classType; }
 
-    /// Returns the de-referenced entity's raw attribute map.
-    const xmlrpc_c::value &attrs() const { return *m_attrs; }
-
-    /// Returns the string representation of the entity.
-    const std::string str() const { return toStdString(*m_attrs); }
-
+    // -------------------------------------------------------------------------
     /// Returns the namespace of the class. It is needed in SIP-wrapped python to 
     /// correctly downcast to sub-class.
     virtual const std::string namespaceStr() const { return std::string("SG"); }
@@ -316,31 +319,13 @@ public:
 
     // -------------------------------------------------------------------------
     /// Gets an attribute's value from the entity's raw attribute map and returns
-    /// as a Shotgun Entity *. The embedded type of the returned entity is as its
-    /// original type associated with the attribute. If it fails, throw an exception.
+    /// as a Shotgun Entity *. If it fails, throw an exception.
     virtual Entity *getAttrValueAsEntity(const std::string &attrName) const;
 
     /// Gets an attribute's value from the given attribute map and returns
-    /// as a Shotgun Entity *. The embedded type of the returned entity is as its
-    /// original type associated with the attribute. If it fails, throw an exception.
+    /// as a Shotgun Entity *. If it fails, throw an exception.
     static Entity *getAttrValueAsEntity(Shotgun *sg,
                                         const std::string &attrName,
-                                        const Dict &attrsMap);
-
-    /// Gets an attribute's value from the entity's raw attribute map and returns
-    /// as a Shotgun Entity *. The embedded type of the returned entity is as
-    /// the given entityClassType which can be either the original type associated 
-    /// with the attribute or a derived type.
-    virtual Entity *getAttrValueAsEntity(const std::string &attrName,
-                                         const std::string &entityClassType) const;
-
-    /// Gets an attribute's value from the given attribute map and returns
-    /// as a Shotgun Entity *. The embedded type of the returned entity is as
-    /// the given entityClassType which can be either the original type associated 
-    /// with the attribute or a derived type.
-    static Entity *getAttrValueAsEntity(Shotgun *sg,
-                                        const std::string &attrName,
-                                        const std::string &entityClassType,
                                         const Dict &attrsMap);
 
     /// A template function that gets an attribute's value from the entity's 
@@ -360,34 +345,12 @@ public:
     // -------------------------------------------------------------------------
     /// Gets an attribute's value from the entity's raw attribute map and returns
     /// as an array of Shotgun Entity *. The size of the result can be zero.
-    /// The embedded type of the returned entities is as the original type
-    /// associated with the attribute.
     virtual std::vector<Entity *> getAttrValueAsEntities(const std::string &attrName) const;
 
     /// Gets an attribute's value from the given attribute map and returns
     /// as an array of Shotgun Entity *. The size of the result can be zero.
-    /// The embedded type of the returned entities is as the original type
-    /// associated with the attribute.
     static std::vector<Entity *> getAttrValueAsEntities(Shotgun *sg,
                                                         const std::string &attrName,
-                                                        const Dict &attrsMap);
-
-    /// Gets an attribute's value from the entity's raw attribute map and returns
-    /// as an array of Shotgun Entity *. The size of the result can be zero.
-    /// The embedded type of the returned entities is as the given entityClassType
-    /// which can be either the original type associated with the attribute or a
-    /// derived type.
-    virtual std::vector<Entity *> getAttrValueAsEntities(const std::string &attrName,
-                                                         const std::string &entityClassType) const;
-
-    /// Gets an attribute's value from the given attribute map and returns
-    /// as an array of Shotgun Entity *. The size of the result can be zero.
-    /// The embedded type of the returned entities is as the given entityClassType
-    /// which can be either the original type associated with the attribute or a
-    /// derived type.
-    static std::vector<Entity *> getAttrValueAsEntities(Shotgun *sg,
-                                                        const std::string &attrName,
-                                                        const std::string &entityClassType,
                                                         const Dict &attrsMap);
 
     /// A template function that gets an attribute's value from the entity's 
@@ -648,7 +611,7 @@ const T Entity::getAttrValue(const std::string &attrName,
 template <class T>
 T *Entity::getAttrValueAsEntity(const std::string &attrName) const
 {
-    Entity *entity = getAttrValueAsEntity(attrName, T::classType());
+    Entity *entity = getAttrValueAsEntity(attrName);
 
     if (T *t = dynamic_cast<T *>(entity))
     {
@@ -663,12 +626,11 @@ T *Entity::getAttrValueAsEntity(const std::string &attrName) const
 // *****************************************************************************
 template <class T>
 T *Entity::getAttrValueAsEntity(Shotgun *sg,
-                                      const std::string &attrName,
-                                      const Dict &attrsMap)
+                                const std::string &attrName,
+                                const Dict &attrsMap)
 {
     Entity *entity = Entity::getAttrValueAsEntity(sg, 
                                                   attrName, 
-                                                  T::classType(), 
                                                   attrsMap);
 
     if (T *t = dynamic_cast<T *>(entity))

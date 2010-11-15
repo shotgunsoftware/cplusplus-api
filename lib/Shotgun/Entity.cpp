@@ -390,7 +390,7 @@ const xmlrpc_c::value Entity::getAttrValue(const std::string &attrName) const
     // and it has already been retrieved at this point.
     // ------------------------------------------------------------------
     // Add attrName to the list of return fields
-    Entity *entity = m_sg->findEntity(m_classType,
+    Entity *entity = m_sg->findEntity(m_entityType,
                                       FilterBy("id", "is", sgId()),
                                       List(attrName));
 
@@ -850,56 +850,6 @@ Entity *Entity::getAttrValueAsEntity(Shotgun *sg,
         throw SgEntityNotFoundError("\"" + attrName + "\"");
     }
 }
-// *****************************************************************************
-Entity *Entity::getAttrValueAsEntity(const std::string &attrName,
-                                     const std::string &entityClassType) const
-{
-    Dict entity = getAttrValueAsDict(attrName);
-
-    if (!entity.empty())
-    {
-        int id = getAttrValueAsInt("id", entity);
-        //std::string entityType = getAttrValueAsString("type", entity);
-
-        // NOTE: entityClassType can be different from entityType if the 
-        // class (e.g. "Show") is derived from one of the primary entity 
-        // classes (e.g. "Project"). So pass "entityClassType" to the
-        // findEntity(..) function.
-        return m_sg->findEntity(entityClassType,
-                                FilterBy("id", "is", id));
-    }
-    else
-    {
-        throw SgEntityNotFoundError("\"" + attrName + "\"");
-    }
-}
-
-// *****************************************************************************
-// static
-Entity *Entity::getAttrValueAsEntity(Shotgun *sg, 
-                                     const std::string &attrName,
-                                     const std::string &entityClassType,
-                                     const Dict &attrsMap)
-{
-    Dict entity = getAttrValueAsDict(attrName, attrsMap);
-
-    if (!entity.empty())
-    {
-        int id = getAttrValueAsInt("id", entity);
-        //std::string entityType = getAttrValueAsString("type", entity);
-
-        // NOTE: entityClassType can be different from entityType if the 
-        // class (e.g. "Show") is derived from one of the primary entity 
-        // classes (e.g. "Project"). So pass "entityClassType" to the
-        // findEntity(..) function.
-        return sg->findEntity(entityClassType,
-                              FilterBy("id", "is", id));
-    }
-    else
-    {
-        throw SgEntityNotFoundError("\"" + attrName + "\"");
-    }
-}
 
 // *****************************************************************************
 EntityPtrs Entity::getAttrValueAsEntities(const std::string &attrName) const
@@ -949,61 +899,11 @@ EntityPtrs Entity::getAttrValueAsEntities(Shotgun *sg,
 
     return entities;
 }
-// *****************************************************************************
-EntityPtrs Entity::getAttrValueAsEntities(const std::string &attrName,
-                                          const std::string &entityClassType) const
-{
-    EntityPtrs entities;
-
-    List entityList = getAttrValueAsList(attrName);
-    for (size_t i = 0; i < entityList.size(); i++)
-    {
-        Dict entity = Dict(entityList[i]);
-
-        if (!entity.empty())
-        {
-            int id = getAttrValueAsInt("id", entity);
-            //std::string entityType = getAttrValueAsString("type", entity);
-
-            entities.push_back(m_sg->findEntity(entityClassType,
-                                                FilterBy("id", "is", id)));
-        }
-    }
-
-    return entities;
-}
-
-// *****************************************************************************
-// static
-EntityPtrs Entity::getAttrValueAsEntities(Shotgun *sg, 
-                                          const std::string &attrName,
-                                          const std::string &entityClassType,
-                                          const Dict &attrsMap)
-{
-    EntityPtrs entities;
-
-    List entityList = getAttrValueAsList(attrName, attrsMap);
-    for (size_t i = 0; i < entityList.size(); i++)
-    {
-        Dict entity = Dict(entityList[i]);
-
-        if (!entity.empty())
-        {
-            int id = getAttrValueAsInt("id", entity);
-            //std::string entityType = getAttrValueAsString("type", entity);
-
-            entities.push_back(sg->findEntity(entityClassType,
-                                              FilterBy("id", "is", id)));
-        }
-    }
-
-    return entities;
-}
 
 // *****************************************************************************
 const std::string Entity::getAttrValueAsUserLogin(const std::string &attrName) const 
 {
-    Entity *entity = getAttrValueAsEntity(attrName, "HumanUser");
+    Entity *entity = getAttrValueAsEntity(attrName);
     if (HumanUser *user = dynamic_cast<HumanUser *>(entity))
     {
         std::string login = user->getAttrValueAsString("login");
@@ -1024,7 +924,7 @@ const std::string Entity::getAttrValueAsUserLogin(Shotgun *sg,
                                                   const std::string &attrName,
                                                   const Dict &attrsMap) 
 {
-    Entity *entity = getAttrValueAsEntity(sg, attrName, "HumanUser", attrsMap);
+    Entity *entity = getAttrValueAsEntity(sg, attrName, attrsMap);
     if (HumanUser *user = dynamic_cast<HumanUser *>(entity))
     {
         std::string login = user->getAttrValueAsString("login");

@@ -269,9 +269,9 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 };
 
 // *******************************************************************
-// SG::SgEntityClassNotRegisteredError
+// SG::SgEntityNotRegisteredError
 // *******************************************************************
-%Exception SG::SgEntityClassNotRegisteredError(SIP_Exception) /PyName=SgEntityClassNotRegisteredError/
+%Exception SG::SgEntityNotRegisteredError(SIP_Exception) /PyName=SgEntityNotRegisteredError/
 {
 %TypeHeaderCode
 #include <Shotgun/exceptions.h>
@@ -280,7 +280,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         const char *detail = sipExceptionRef.what();
 
         SIP_BLOCK_THREADS
-        PyErr_SetString(sipException_SG_SgEntityClassNotRegisteredError, detail);
+        PyErr_SetString(sipException_SG_SgEntityNotRegisteredError, detail);
         SIP_UNBLOCK_THREADS
 %End
 };

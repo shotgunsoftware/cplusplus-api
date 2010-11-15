@@ -64,9 +64,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace SG {
 
 // *****************************************************************************
-/// Defines a function pointer to a Shotgun entity's entityType() function.
-typedef std::string (*EntityTypeFunc)();
-
 /// Defines a function pointer to a Shotgun entity's factory() function.
 typedef Entity* (*FactoryFunc)(Shotgun *, const xmlrpc_c::value &);
 
@@ -76,7 +73,6 @@ typedef List (*DefaultReturnFieldsFunc) ();
 /// Defines a struct container to hold the function pointers.
 typedef struct 
 { 
-    EntityTypeFunc entityTypeFunc;
     FactoryFunc factoryFunc;
     DefaultReturnFieldsFunc defaultReturnFieldsFunc;
 
@@ -147,8 +143,7 @@ public:
     /// Registers a class with the specified type. It creates a class registry
     /// that maps a class' string type with its static factory() function and 
     /// static defaultReturnFields() function.
-    void registerClass(const std::string &classType,
-                       const EntityTypeFunc &entityTypeFunc,
+    void registerClass(const std::string &entityType,
                        const FactoryFunc &factoryFunc,
                        const DefaultReturnFieldsFunc &defaultReturnFieldsFunc);
 
@@ -311,11 +306,11 @@ protected:
     /// This factory function creates an array of entity object pointers which 
     /// link to the existing Shotgun entities. The size of the array can be 0. 
     ///
-    /// \param classType - entity type string.
+    /// \param entityType - entity type string.
     /// \param findMap - filter map for finding the entities.
     /// \param limit - upper limit on the number of entities returned.
     /// \return an array of entities.
-    EntityPtrs entityFactoryFind(const std::string &classType, 
+    EntityPtrs entityFactoryFind(const std::string &entityType, 
                                  Dict &findMap,
                                  const int limit = 0);
 
@@ -323,11 +318,11 @@ protected:
     /// This factory function creates an entity object pointer which links to 
     /// a newly-created Shotgun entity.
     ///
-    /// \param classType - entity type string.
+    /// \param entityType - entity type string.
     /// \param data - a data map that contains the fields' name and value to set
     ///               for the new entity.
     /// \return a new entity.
-    Entity *entityFactoryCreate(const std::string &classType, Dict &data);
+    Entity *entityFactoryCreate(const std::string &entityType, Dict &data);
 
     // -------------------------------------------------------------------------
     std::string m_serverURL; ///< The server URL string.
@@ -355,7 +350,7 @@ template <class T>
 T *Shotgun::createEntity(const Dict &data,
                          const List &extraReturnFields)
 {
-    Entity *entity = createEntity(T::classType(),
+    Entity *entity = createEntity(T::entityType(),
                                   data,
                                   extraReturnFields);
 
@@ -376,7 +371,7 @@ T *Shotgun::findEntity(const FilterBy &filterList,
                        const bool retiredOnly,
                        const SortBy &order)
 {
-    Entity *entity = findEntity(T::classType(),
+    Entity *entity = findEntity(T::entityType(),
                                 filterList,
                                 extraReturnFields,
                                 retiredOnly,
@@ -399,7 +394,7 @@ const Dict Shotgun::findEntityAsLink(const FilterBy &filterList,
                                      const bool retiredOnly,
                                      const SortBy &order)
 {
-    Entity *entity = findEntity(T::classType(),
+    Entity *entity = findEntity(T::entityType(),
                                 filterList,
                                 extraReturnFields,
                                 retiredOnly,
@@ -419,7 +414,7 @@ std::vector<T *> Shotgun::findEntities(const FilterBy &filterList,
                                        const bool retiredOnly,
                                        const SortBy &order)
 {
-    EntityPtrs entities = findEntities(T::classType(),
+    EntityPtrs entities = findEntities(T::entityType(),
                                        filterList,
                                        limit,
                                        extraReturnFields,
@@ -447,7 +442,7 @@ std::vector<T *> Shotgun::findEntities(const FilterBy &filterList,
 template <class T>
 bool Shotgun::deleteEntity(const int id)
 {
-    return Entity::deleteSGEntity(this, T::classType(), id);
+    return Entity::deleteSGEntity(this, T::entityType(), id);
 }
 
 // *****************************************************************************

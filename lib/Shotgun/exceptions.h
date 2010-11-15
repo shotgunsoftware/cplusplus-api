@@ -186,12 +186,12 @@ public:
 
 // *****************************************************************************
 /// This exception is throw if a given type of entity is not registered.
-class SgEntityClassNotRegisteredError : public SgEntityError
+class SgEntityNotRegisteredError : public SgEntityError
 {
 public:
-    SgEntityClassNotRegisteredError(const std::string &entityType);
+    SgEntityNotRegisteredError(const std::string &entityType);
 
-    virtual ~SgEntityClassNotRegisteredError() throw() {}
+    virtual ~SgEntityNotRegisteredError() throw() {}
 };
 
 // *****************************************************************************
