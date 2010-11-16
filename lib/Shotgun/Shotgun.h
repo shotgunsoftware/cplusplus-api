@@ -442,7 +442,7 @@ std::vector<T *> Shotgun::findEntities(const FilterBy &filterList,
 template <class T>
 bool Shotgun::deleteEntity(const int id)
 {
-    return Entity::deleteSGEntity(this, T::entityType(), id);
+    return deleteEntity(T::entityType(), id);
 }
 
 // *****************************************************************************
