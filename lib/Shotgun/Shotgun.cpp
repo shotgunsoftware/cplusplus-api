@@ -51,12 +51,8 @@ Shotgun::Shotgun(const std::string &serverURL,
                  const std::string &authKey)
     : m_serverURL(serverURL),
       m_authName(authName),
-      m_authKey(authKey),
-      m_client(NULL)
+      m_authKey(authKey)
 {
-    // Client
-    m_client = new xmlrpc_c::client_xml(&m_transport);
-
     if (m_serverURL == "")
     {
         throw SgServerURLNotSetError();
@@ -116,7 +112,7 @@ Shotgun::Shotgun(const std::string &serverURL,
 // *****************************************************************************
 Shotgun::~Shotgun()
 {
-    delete m_client;
+    // Nothing
 }
 
 // *****************************************************************************

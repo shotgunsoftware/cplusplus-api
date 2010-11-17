@@ -96,7 +96,6 @@ class Shotgun
 public:
     // -------------------------------------------------------------------------
     /// A constructor that 
-    ///    - creates a XML-RPC client pointer.
     ///    - sets authentication info.
     ///    - sets the correct "TZ" time zone environment variable.
     ///    - registers the entity classes.
@@ -113,12 +112,8 @@ public:
             const std::string &authName = SG_AUTHENTICATION_NAME,
             const std::string &authKey = SG_AUTHENTICATION_KEY);
 
-    /// A destructor that deletes the XML-RPC client pointer.
+    /// A destructor that does nothing.
     virtual ~Shotgun();
-
-    // -------------------------------------------------------------------------
-    /// Returns the XML-RPC client pointer.
-    xmlrpc_c::client_xml *client() const { return m_client; }
 
     /// Returns the server URL string.
     const std::string &serverURL() const { return m_serverURL; }
@@ -335,9 +330,6 @@ private:
     /// Set the "TZ" environment varible which is used by some datetime-related
     /// calls to find the correct local time zone
     void setTimeZoneEnv(); 
-
-    xmlrpc_c::clientXmlTransport_curl m_transport; ///< The XML-RPC transport.
-    xmlrpc_c::client_xml *m_client; ///< The XML-RPC client.
 
     ClassRegistry m_classRegistry; ///< The class registry map.
 };

@@ -62,9 +62,11 @@ MethodSignatures &Method::signature()
     paramList.add(toXmlrpcValue(m_methodName));
 
     // RPC
+    xmlrpc_c::clientXmlTransport_curl transport; 
+    xmlrpc_c::client_xml client = xmlrpc_c::client_xml(&transport);
     xmlrpc_c::carriageParm_curl0 myCarriageParm(m_sg->serverURL());
     xmlrpc_c::rpcPtr myRpcP(sigMethodName, paramList);
-    myRpcP->call(&(*m_sg->client()), &myCarriageParm);    
+    myRpcP->call(&client, &myCarriageParm);    
     assert(myRpcP->isFinished());
 
     m_signatures.clear();
@@ -105,9 +107,11 @@ std::string &Method::help()
     paramList.add(toXmlrpcValue(m_methodName));
 
     // RPC
+    xmlrpc_c::clientXmlTransport_curl transport;
+    xmlrpc_c::client_xml client = xmlrpc_c::client_xml(&transport);
     xmlrpc_c::carriageParm_curl0 myCarriageParm(m_sg->serverURL());
     xmlrpc_c::rpcPtr myRpcP(helpMethodName, paramList);
-    myRpcP->call(&(*m_sg->client()), &myCarriageParm);
+    myRpcP->call(&client, &myCarriageParm);
     assert(myRpcP->isFinished());
 
     if (myRpcP->isSuccessful())
@@ -130,9 +134,12 @@ xmlrpc_c::value Method::call()
     xmlrpc_c::value output;
     
     xmlrpc_c::paramList paramList;
+
+    xmlrpc_c::clientXmlTransport_curl transport;
+    xmlrpc_c::client_xml client = xmlrpc_c::client_xml(&transport);
     xmlrpc_c::carriageParm_curl0 myCarriageParm(m_sg->serverURL());
     xmlrpc_c::rpcPtr myRpcP(m_methodName, paramList);
-    myRpcP->call(&(*m_sg->client()), &myCarriageParm);
+    myRpcP->call(&client, &myCarriageParm);
     assert(myRpcP->isFinished());
 
     if (myRpcP->isSuccessful())
@@ -152,7 +159,7 @@ xmlrpc_c::value Method::call()
 xmlrpc_c::value Method::call(const Dict &params)
 {
     // Here are two ways of doing the RPC call. They return the
-    // same result. The "m_sg->client()->call" seems very intuitive, but
+    // same result. The "client.call" seems very intuitive, but
     // the doc says that an ordinary client program does not use 
     // this method because it performs RPC via the methods of an
     // xmlrpc_c::rpc object.
@@ -170,15 +177,19 @@ xmlrpc_c::value Method::call(const Dict &params)
     paramList.add(toXmlrpcValue(params));
 
 #if 0
+    xmlrpc_c::clientXmlTransport_curl transport;
+    xmlrpc_c::client_xml client = xmlrpc_c::client_xml(&transport);
     xmlrpc_c::carriageParm_curl0 myCarriageParm(m_sg->serverURL());
     xmlrpc_c::rpcOutcome outcome;
 
-    m_sg->client()->call(&myCarriageParm, m_methodName, paramList, &outcome);
+    client.call(&myCarriageParm, m_methodName, paramList, &outcome);
     output = xmlrpc_c::value(outcome.getResult());
 #else
+    xmlrpc_c::clientXmlTransport_curl transport;
+    xmlrpc_c::client_xml client = xmlrpc_c::client_xml(&transport);
     xmlrpc_c::carriageParm_curl0 myCarriageParm(m_sg->serverURL());
     xmlrpc_c::rpcPtr myRpcP(m_methodName, paramList);
-    myRpcP->call(&(*m_sg->client()), &myCarriageParm);
+    myRpcP->call(&client, &myCarriageParm);
     assert(myRpcP->isFinished());
 
     if (myRpcP->isSuccessful())
