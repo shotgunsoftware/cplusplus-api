@@ -7,7 +7,7 @@
 #   import _siteshotgun
 #   try:
 #       sg = _siteshotgun.SiteSG.Shotgun("...")
-#   except _shotgun.SG.SgError, e:
+#   except _shotgun.SgError, e:
 #       print "SgError:", e
 #
 # After:
@@ -34,8 +34,14 @@
 #     is needed.
 # 
 # (2) In our current case, "_siteshotgun" and "_shotgun" use different namespaces,
-#     "SG" and "SiteSG", respectively. So we'll need to handle both "_shotgun.SG"
-#     and "_siteshotgun.SiteSG", which means both "Part1" and "Part2" are needed.
+#     "SG" and "SiteSG", respectively. And the base and the derived classes don't
+#     share the same name. If you want to remove the namespaces, you'll need to 
+#     handle both "_shotgun.SG" and "_siteshotgun.SiteSG", which means both "Part1" 
+#     and "Part2" are needed.
+#
+# (3) If "_siteshotgun" and "_shotgun" use different namespaces, and if any 
+#     of the base and the derived classes share the same name, DO NOT get rid 
+#     either of the namespaces. 
 ###############################################################################
 
 import _shotgun
