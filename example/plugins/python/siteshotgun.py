@@ -53,9 +53,9 @@ for (_sgClassName, _sgClass) in inspect.getmembers(_shotgun.SG,
                                                    inspect.isclass):
     globals()[_sgClassName] = _sgClass
 
-##########################
-# Part2: _siteshotgun.SG #
-##########################
+#############################
+# Part2: _siteshotgun.TipSG #
+#############################
 for (_sgClassName, _sgClass) in inspect.getmembers(_siteshotgun, 
                                                    inspect.isclass):
     globals()[_sgClassName] = _sgClass
