@@ -1,8 +1,7 @@
-
 ###############################################################################
 # Attempt to make some sense out of the namespaces sip generates
 #
-# Before: 
+# Before:
 #   import _shotgun
 #   import _siteshotgun
 #   try:
@@ -19,29 +18,30 @@
 #
 #
 # (1) In the case of "_siteshotgun" and "_shotgun" using the same namespace,
-#     SIP implements a C++ namespace as a single Python class - in this case 
+#     SIP implements a C++ namespace as a single Python class - in this case
 #     "_shotgun.SG".
 #
-#     It does not implement it as a separate class in each module. In other 
-#     words, in this case, it does not implement it as "_shotgun.SG" AND 
+#     It does not implement it as a separate class in each module. In other
+#     words, in this case, it does not implement it as "_shotgun.SG" AND
 #     "_siteshotgun.SG".
 #
-#     When the "_siteshotgun" module is imported the contents of the SG 
-#     namespace that it implements are added to the SG class in the "_shotgun" 
+#     When the "_siteshotgun" module is imported the contents of the SG
+#     namespace that it implements are added to the SG class in the "_shotgun"
 #     module.
 #
 #     Therefore, we need to import "_shotgun" module as well. But only "Part1"
 #     is needed.
-# 
+#
 # (2) In our current case, "_siteshotgun" and "_shotgun" use different namespaces,
-#     "SG" and "SiteSG", respectively. And the base and the derived classes don't
-#     share the same name. If you want to remove the namespaces, you'll need to 
-#     handle both "_shotgun.SG" and "_siteshotgun.SiteSG", which means both "Part1" 
+#     "SG" and "SiteSG", respectively. If no base class and its derived classe
+#     share the same name and you'd like to remove the namespaces, you'll need to
+#     handle both "_shotgun.SG" and "_siteshotgun.SiteSG", which means both "Part1"
 #     and "Part2" are needed.
 #
-# (3) If "_siteshotgun" and "_shotgun" use different namespaces, and if any 
-#     of the base and the derived classes share the same name, DO NOT get rid 
-#     either of the namespaces. 
+# (3) If "_siteshotgun" and "_shotgun" use different namespaces, and if any
+#     of the base and its derived class share the same name, "Part2" needs
+#     to be done AFTER "Part1" so that the derived class will override its
+#     base class in the globals() dictionary.
 ###############################################################################
 
 import _shotgun
