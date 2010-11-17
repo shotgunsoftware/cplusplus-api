@@ -64,7 +64,6 @@ public:
     // ------------------------------------------------------------------------
     const std::string entityType() const;
     const std::string classType() const;
-    virtual const std::string namespaceStr() const;
 
     const xmlrpc_c::value &attrs() const;
     const std::string str() const;
