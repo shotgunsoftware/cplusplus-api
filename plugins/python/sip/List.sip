@@ -41,8 +41,6 @@ class List
 
 public:
     List();
-    List(const SG::List &ref);
-    List(const std::vector<xmlrpc_c::value> &array);
 
     // ===================================================================
     // These SIP functions that have %MethodCode directive are not defined
@@ -56,9 +54,33 @@ public:
 %End
 
     // -------------------------------------------------------------------
+    List(const SG::Dict &value);
+%MethodCode
+    sipCpp = new SG::List(toXmlrpcValue(*a0));
+%End
+
+    // -------------------------------------------------------------------
+    List(const SG::List &value);
+%MethodCode
+    sipCpp = new SG::List(toXmlrpcValue(*a0));
+%End
+
+    // -------------------------------------------------------------------
     SG::List &append(const xmlrpc_c::value &value);
 %MethodCode
     sipRes = &sipCpp->append(*a0);
+%End
+   
+    // -------------------------------------------------------------------
+    SG::List &append(const SG::Dict &value);
+%MethodCode
+    sipRes = &sipCpp->append(toXmlrpcValue(*a0));
+%End
+   
+    // -------------------------------------------------------------------
+    SG::List &append(const SG::List &value);
+%MethodCode
+    sipRes = &sipCpp->append(toXmlrpcValue(*a0));
 %End
    
     // -------------------------------------------------------------------

@@ -41,8 +41,6 @@ class FilterBy
 
 public:
     FilterBy();
-    FilterBy(const SG::FilterBy &ref);
-    FilterBy(const SG::Dict &filters);
 
     // ===================================================================
     // These SIP functions that have %MethodCode directive are not defined 
@@ -106,6 +104,22 @@ public:
                      const xmlrpc_c::value &value);
 %MethodCode
     sipRes = &sipCpp->Or(*a0, *a1, *a2);
+%End
+
+    // -------------------------------------------------------------------
+    SG::FilterBy &Or(const std::string &path,
+                     const std::string &relation,
+                     const SG::Dict &value);
+%MethodCode
+    sipRes = &sipCpp->Or(*a0, *a1, toXmlrpcValue(*a2));
+%End
+
+    // -------------------------------------------------------------------
+    SG::FilterBy &Or(const std::string &path,
+                     const std::string &relation,
+                     const SG::List &value);
+%MethodCode
+    sipRes = &sipCpp->Or(*a0, *a1, toXmlrpcValue(*a2));
 %End
 
     // -------------------------------------------------------------------

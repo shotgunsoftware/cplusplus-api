@@ -41,9 +41,6 @@ class Dict
 
 public:
     Dict();
-    Dict(const SG::Dict &ref);
-    Dict(const std::map<std::string, xmlrpc_c::value> &map);
-    Dict(const xmlrpc_c::value &value);
 
     // ===================================================================
     // These SIP functions that have %MethodCode directive are not defined
@@ -57,9 +54,33 @@ public:
 %End
 
     // -------------------------------------------------------------------
+    Dict(const std::string &key, const SG::Dict &value);
+%MethodCode
+    sipCpp = new SG::Dict(*a0, toXmlrpcValue(*a1));
+%End
+
+    // -------------------------------------------------------------------
+    Dict(const std::string &key, const SG::List &value);
+%MethodCode
+    sipCpp = new SG::Dict(*a0, toXmlrpcValue(*a1));
+%End
+
+    // -------------------------------------------------------------------
     SG::Dict &add(const std::string &key, const xmlrpc_c::value &value);
 %MethodCode
     sipRes = &sipCpp->add(*a0, *a1);
+%End
+
+    // -------------------------------------------------------------------
+    SG::Dict &add(const std::string &key, const SG::Dict &value);
+%MethodCode
+    sipRes = &sipCpp->add(*a0, toXmlrpcValue(*a1));
+%End
+
+    // -------------------------------------------------------------------
+    SG::Dict &add(const std::string &key, const SG::List &value);
+%MethodCode
+    sipRes = &sipCpp->add(*a0, toXmlrpcValue(*a1));
 %End
 
     // -------------------------------------------------------------------

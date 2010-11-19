@@ -41,20 +41,37 @@ class Fields : SG::List
 
 public:
     Fields();
-    Fields(const SG::Fields &ref);
-    Fields(const std::vector<xmlrpc_c::value> &fields);
 
     // ===================================================================
     // These SIP functions that have %MethodCode directive are not defined
     // in C++. They are actually calling the C++ template functions. 
     // ===================================================================
 
+    // -------------------------------------------------------------------
     Fields(const std::string &fieldName,
            const xmlrpc_c::value &fieldValue,
            const std::string &multiEntityUpdateMode = "",
            const SG::Dict &parentEntity = SG::Dict());
 %MethodCode
     sipCpp = new SG::Fields(*a0, *a1, *a2, *a3);
+%End
+
+    // -------------------------------------------------------------------
+    Fields(const std::string &fieldName,
+           const SG::Dict &fieldValue,
+           const std::string &multiEntityUpdateMode = "",
+           const SG::Dict &parentEntity = SG::Dict());
+%MethodCode
+    sipCpp = new SG::Fields(*a0, toXmlrpcValue(*a1), *a2, *a3);
+%End
+
+    // -------------------------------------------------------------------
+    Fields(const std::string &fieldName,
+           const SG::List &fieldValue,
+           const std::string &multiEntityUpdateMode = "",
+           const SG::Dict &parentEntity = SG::Dict());
+%MethodCode
+    sipCpp = new SG::Fields(*a0, toXmlrpcValue(*a1), *a2, *a3);
 %End
 
     // -------------------------------------------------------------------
@@ -65,6 +82,24 @@ public:
                        const SG::Dict &parentEntity = SG::Dict());
 %MethodCode
     sipRes = &sipCpp->append(*a0, *a1, *a2, *a3);
+%End
+
+    // -------------------------------------------------------------------
+    SG::Fields &append(const std::string &fieldName,
+                       const SG::Dict &fieldValue,
+                       const std::string &multiEntityUpdateMode = "",
+                       const SG::Dict &parentEntity = SG::Dict());
+%MethodCode
+    sipRes = &sipCpp->append(*a0, toXmlrpcValue(*a1), *a2, *a3);
+%End
+
+    // -------------------------------------------------------------------
+    SG::Fields &append(const std::string &fieldName,
+                       const SG::List &fieldValue,
+                       const std::string &multiEntityUpdateMode = "",
+                       const SG::Dict &parentEntity = SG::Dict());
+%MethodCode
+    sipRes = &sipCpp->append(*a0, toXmlrpcValue(*a1), *a2, *a3);
 %End
 
     // -------------------------------------------------------------------

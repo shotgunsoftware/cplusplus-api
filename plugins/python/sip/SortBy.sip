@@ -41,8 +41,6 @@ class SortBy
 
 public:
     SortBy();
-    SortBy(const SG::SortBy &ref);
-    SortBy(const SG::List &sorts);
 
     SortBy(const std::string &fieldName,
            const std::string &direction = "asc");
