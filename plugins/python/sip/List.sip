@@ -54,33 +54,9 @@ public:
 %End
 
     // -------------------------------------------------------------------
-    List(const SG::Dict &value);
-%MethodCode
-    sipCpp = new SG::List(toXmlrpcValue(*a0));
-%End
-
-    // -------------------------------------------------------------------
-    List(const SG::List &value);
-%MethodCode
-    sipCpp = new SG::List(toXmlrpcValue(*a0));
-%End
-
-    // -------------------------------------------------------------------
     SG::List &append(const xmlrpc_c::value &value);
 %MethodCode
     sipRes = &sipCpp->append(*a0);
-%End
-   
-    // -------------------------------------------------------------------
-    SG::List &append(const SG::Dict &value);
-%MethodCode
-    sipRes = &sipCpp->append(toXmlrpcValue(*a0));
-%End
-   
-    // -------------------------------------------------------------------
-    SG::List &append(const SG::List &value);
-%MethodCode
-    sipRes = &sipCpp->append(toXmlrpcValue(*a0));
 %End
    
     // -------------------------------------------------------------------

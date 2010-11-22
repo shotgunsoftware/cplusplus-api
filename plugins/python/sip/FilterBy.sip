@@ -56,43 +56,11 @@ public:
 %End
 
     // -------------------------------------------------------------------
-    FilterBy(const std::string &path,
-             const std::string &relation,
-             const SG::Dict &value);
-%MethodCode
-    sipCpp = new SG::FilterBy(*a0, *a1, toXmlrpcValue(*a2));
-%End
-
-    // -------------------------------------------------------------------
-    FilterBy(const std::string &path,
-             const std::string &relation,
-             const SG::List &value);
-%MethodCode
-    sipCpp = new SG::FilterBy(*a0, *a1, toXmlrpcValue(*a2));
-%End
-
-    // -------------------------------------------------------------------
     SG::FilterBy &And(const std::string &path,
                       const std::string &relation,
                       const xmlrpc_c::value &value);
 %MethodCode
     sipRes = &sipCpp->And(*a0, *a1, *a2);
-%End
-
-    // -------------------------------------------------------------------
-    SG::FilterBy &And(const std::string &path,
-                      const std::string &relation,
-                      const SG::Dict &value);
-%MethodCode
-    sipRes = &sipCpp->And(*a0, *a1, toXmlrpcValue(*a2));
-%End
-
-    // -------------------------------------------------------------------
-    SG::FilterBy &And(const std::string &path,
-                      const std::string &relation,
-                      const SG::List &value);
-%MethodCode
-    sipRes = &sipCpp->And(*a0, *a1, toXmlrpcValue(*a2));
 %End
 
     // -------------------------------------------------------------------
@@ -104,22 +72,6 @@ public:
                      const xmlrpc_c::value &value);
 %MethodCode
     sipRes = &sipCpp->Or(*a0, *a1, *a2);
-%End
-
-    // -------------------------------------------------------------------
-    SG::FilterBy &Or(const std::string &path,
-                     const std::string &relation,
-                     const SG::Dict &value);
-%MethodCode
-    sipRes = &sipCpp->Or(*a0, *a1, toXmlrpcValue(*a2));
-%End
-
-    // -------------------------------------------------------------------
-    SG::FilterBy &Or(const std::string &path,
-                     const std::string &relation,
-                     const SG::List &value);
-%MethodCode
-    sipRes = &sipCpp->Or(*a0, *a1, toXmlrpcValue(*a2));
 %End
 
     // -------------------------------------------------------------------

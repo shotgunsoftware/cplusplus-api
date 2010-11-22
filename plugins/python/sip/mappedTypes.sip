@@ -171,6 +171,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <xmlrpc-c/base.hpp>
 #include <time.h>
 #include <datetime.h>
+#include <Shotgun/List.h>
+#include <Shotgun/Dict.h>
 %End
 
 %ConvertFromTypeCode
@@ -277,6 +279,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 PyLong_Check(sipPy) ||
                 PyString_Check(sipPy) ||
                 PyDateTime_Check(sipPy) ||
+                sipCanConvertToType(sipPy, sipType_SG_List, SIP_NOT_NONE) ||
+                sipCanConvertToType(sipPy, sipType_SG_Dict, SIP_NOT_NONE) ||
                 sipCanConvertToType(sipPy, sipType_std_vector_27000100xmlrpc_c_value, SIP_NOT_NONE) ||
                 sipCanConvertToType(sipPy, sipType_std_map_27000100std_string_27000100xmlrpc_c_value, SIP_NOT_NONE) ||
                 (sipPy == Py_None));
@@ -331,6 +335,44 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
         *sipCppPtr = new xmlrpc_c::value(xmlrpc_c::value_datetime(time_t(utcTime)));
         return 1;
+    }
+    else if (sipCanConvertToType(sipPy, sipType_SG_List, SIP_NOT_NONE))
+    {
+        int state;
+        SG::List *list = reinterpret_cast<SG::List *>(
+                             sipConvertToType( sipPy,
+                                               sipType_SG_List,
+                                               sipTransferObj,
+                                               SIP_NOT_NONE,
+                                               &state,
+                                               sipIsErr));
+        if (*sipIsErr)
+        {
+            sipReleaseType(list, sipType_SG_List, state);
+            return 0;
+        }
+
+        *sipCppPtr = new xmlrpc_c::value(xmlrpc_c::value_array(list->value()));
+        return sipGetState(sipTransferObj);
+    }
+    else if (sipCanConvertToType(sipPy, sipType_SG_Dict, SIP_NOT_NONE))
+    {
+        int state;
+        SG::Dict *dict = reinterpret_cast<SG::Dict *>(
+                             sipConvertToType( sipPy,
+                                               sipType_SG_Dict,
+                                               sipTransferObj,
+                                               SIP_NOT_NONE,
+                                               &state,
+                                               sipIsErr));
+        if (*sipIsErr)
+        {
+            sipReleaseType(dict, sipType_SG_Dict, state);
+            return 0;
+        }
+
+        *sipCppPtr = new xmlrpc_c::value(xmlrpc_c::value_struct(dict->value()));
+        return sipGetState(sipTransferObj);
     }
     else if (sipCanConvertToType(sipPy, sipType_std_vector_27000100xmlrpc_c_value, SIP_NOT_NONE))
     {

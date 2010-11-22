@@ -57,24 +57,6 @@ public:
 %End
 
     // -------------------------------------------------------------------
-    Fields(const std::string &fieldName,
-           const SG::Dict &fieldValue,
-           const std::string &multiEntityUpdateMode = "",
-           const SG::Dict &parentEntity = SG::Dict());
-%MethodCode
-    sipCpp = new SG::Fields(*a0, toXmlrpcValue(*a1), *a2, *a3);
-%End
-
-    // -------------------------------------------------------------------
-    Fields(const std::string &fieldName,
-           const SG::List &fieldValue,
-           const std::string &multiEntityUpdateMode = "",
-           const SG::Dict &parentEntity = SG::Dict());
-%MethodCode
-    sipCpp = new SG::Fields(*a0, toXmlrpcValue(*a1), *a2, *a3);
-%End
-
-    // -------------------------------------------------------------------
     // Add one field
     SG::Fields &append(const std::string &fieldName,
                        const xmlrpc_c::value &fieldValue,
@@ -82,24 +64,6 @@ public:
                        const SG::Dict &parentEntity = SG::Dict());
 %MethodCode
     sipRes = &sipCpp->append(*a0, *a1, *a2, *a3);
-%End
-
-    // -------------------------------------------------------------------
-    SG::Fields &append(const std::string &fieldName,
-                       const SG::Dict &fieldValue,
-                       const std::string &multiEntityUpdateMode = "",
-                       const SG::Dict &parentEntity = SG::Dict());
-%MethodCode
-    sipRes = &sipCpp->append(*a0, toXmlrpcValue(*a1), *a2, *a3);
-%End
-
-    // -------------------------------------------------------------------
-    SG::Fields &append(const std::string &fieldName,
-                       const SG::List &fieldValue,
-                       const std::string &multiEntityUpdateMode = "",
-                       const SG::Dict &parentEntity = SG::Dict());
-%MethodCode
-    sipRes = &sipCpp->append(*a0, toXmlrpcValue(*a1), *a2, *a3);
 %End
 
     // -------------------------------------------------------------------
