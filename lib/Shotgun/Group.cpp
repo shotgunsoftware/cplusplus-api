@@ -65,7 +65,8 @@ List Group::defaultReturnFields()
            .append("project")
            .append("created_at")
            .append("updated_at")
-           .append("code");
+           .append("code")
+           .append("users");
 }
 
 } // End namespace SG
