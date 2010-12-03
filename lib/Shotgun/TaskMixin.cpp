@@ -150,7 +150,7 @@ Task *TaskMixin::addTask(const std::string &taskName,
 
             Dict attrsMap = Dict("project", projectAsLink)
                             .add("content", taskName)
-                            .add("sg_system_task_type", taskType) // This field seems no longer exist
+                            //.add("sg_system_task_type", taskType) // This field seems no longer exist
                             .add("milestone", taskMilestone)
                             .add("entity", entity->asLink());
 
