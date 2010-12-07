@@ -178,7 +178,7 @@ Task *TaskMixin::addTask(const std::string &taskName,
             }
 
             // taskStartDate
-                if (taskStartDate != "")
+            if (taskStartDate != "")
             {
                 if (taskStartDate == "now")
                 {

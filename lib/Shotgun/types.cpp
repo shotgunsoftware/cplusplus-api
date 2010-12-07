@@ -518,7 +518,7 @@ std::string currDateStr()
     // Convert to a time string
     struct tm *timeInfo = localtime(&rawTime);
     char timeStr[10];
-    strftime(timeStr, 10, "%Y-%m-%d", timeInfo);
+    strftime(timeStr, 20, "%Y-%m-%d", timeInfo);
 
     return std::string(timeStr);
 }
