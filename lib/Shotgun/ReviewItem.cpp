@@ -65,15 +65,7 @@ List ReviewItem::defaultReturnFields()
            .append("project")
            .append("created_at")
            .append("updated_at")
-           .append("code")
-           .append("sg_version")
-           .append("sg_link")
-           .append("sg_review")
-           .append("sg_purpose")
-           .append("sg_order")
-           .append("sg_reviewed_by")
-           .append("sg_date_reviewed")
-           .append("sg_approved_");
+           .append("code");
 }
 
 } // End namespace SG

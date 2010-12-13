@@ -66,13 +66,7 @@ List PublishEvent::defaultReturnFields()
            .append("project")
            .append("created_at")
            .append("updated_at")
-           .append("code")
-           .append("sg_file")
-           .append("sg_preview_hd_qt")
-           .append("sg_preview_qt")
-           .append("sg_rev")
-           .append("sg_resolution")
-           .append("sg_type");
+           .append("code");
 }
 
 } // End namespace SG

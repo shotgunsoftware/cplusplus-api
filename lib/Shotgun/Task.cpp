@@ -73,9 +73,7 @@ List Task::defaultReturnFields()
            .append("entity")
            .append("milestone")
            .append("start_date")
-           .append("sg_status_list")
-           //.append("sg_system_task_type") // Seems no longer exist
-           .append("sg_view_order");
+           .append("sg_status_list");
 }
 
 } // End namespace SG

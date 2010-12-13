@@ -61,7 +61,7 @@ SiteProject::~SiteProject()
 SG::List SiteProject::defaultReturnFields()
 {
     return SG::Project::defaultReturnFields()
-               .append("created_by");
+               .append("code");
 }
 
 } // End namespace SiteSG

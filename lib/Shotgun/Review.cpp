@@ -67,16 +67,7 @@ List Review::defaultReturnFields()
            .append("project")
            .append("created_at")
            .append("updated_at")
-           .append("code")
-           .append("sg_review_type")
-           .append("sg_review_media")
-           .append("sg_review_date_sent")
-           .append("sg_review_sent_to")
-           .append("sg_review_date_reviewed")
-           .append("sg_review_reviewed_by")
-           .append("sg_review_disclaimers")
-           .append("sg_review_tipsupe_notes")
-           .append("sg_review_client_notes");
+           .append("code");
 }
 
 } // End namespace SG

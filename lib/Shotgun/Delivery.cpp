@@ -66,15 +66,7 @@ List Delivery::defaultReturnFields()
            .append("project")
            .append("created_at")
            .append("updated_at")
-           .append("title")
-           .append("sg_delivery_data_size")
-           .append("sg_delivery_notes")
-           .append("sg_delivery_path")
-           .append("sg_delivery_staged_path")
-           .append("sg_delivery_status")
-           .append("sg_delivery_type")
-           .append("sg_wrangler")
-           .append("sg_wrangler_notes");
+           .append("sg_delivery_type");
 }
 
 } // End namespace SG

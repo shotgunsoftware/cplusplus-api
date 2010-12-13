@@ -68,10 +68,8 @@ List HumanUser::defaultReturnFields()
            .append("updated_at")
            .append("name")
            .append("admin")
-           .append("sg_department")
            .append("email")
            .append("login")
-           .append("sg_role")
            .append("permission_rule_set");
 }
 

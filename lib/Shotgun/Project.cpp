@@ -72,17 +72,7 @@ List Project::defaultReturnFields()
            .append("project")
            .append("created_at")
            .append("updated_at")
-           .append("name")
-           .append("code")
-           .append("sg_status")
-           .append("sg_archive_watcher")
-           .append("sg_pub_stills_watcher")
-           .append("sg_generate_shot_aliases")
-           .append("sg_send_dailies_notices")
-           .append("sg_polish_shot_notifications")
-           .append("sg_report_storage_information")
-           .append("sg_default_start_frame")
-           .append("sg_ms_project_schedule");
+           .append("name");
 }
 
 } // End namespace SG
