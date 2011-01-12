@@ -115,6 +115,9 @@ public:
     virtual void setAttrValue(const SG::Fields &fields) throw(SG::SgError); 
 
     // ------------------------------------------------------------------------
+    virtual void clearAttrValue(const std::string &attrName) throw(SG::SgError); 
+
+    // ------------------------------------------------------------------------
     SIP_PYOBJECT __str__();
 %MethodCode
     sipRes = PyString_FromString(sipCpp->str().c_str());

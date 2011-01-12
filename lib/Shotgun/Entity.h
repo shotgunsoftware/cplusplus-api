@@ -405,6 +405,10 @@ public:
     virtual void setAttrValue(const Fields &fields); 
 
     // -------------------------------------------------------------------------
+    /// Clears an entity's attribute and set it to "nil".
+    virtual void clearAttrValue(const std::string &attrName); 
+
+    // -------------------------------------------------------------------------
     Entity &operator=(const Entity &that)
     {
         if (this != &that)

@@ -500,6 +500,61 @@ void Entity::setAttrValue(const Fields &fields)
 }
 
 // *****************************************************************************
+void Entity::clearAttrValue(const std::string &attrName)
+{
+    // This involves two steps:
+    // (1) Update the Shotgun records
+    // (2) Update the attribute that is already in m_attrs
+
+    Fields fields = Fields(attrName, xmlrpc_c::value_nil());
+
+    try
+    {
+        // -------------------------------------------------------------------------
+        // Update the Shotgun records - update all the fields in one call
+        xmlrpc_c::value result = updateSGEntity(m_sg,
+                                                m_entityType,
+                                                sgId(),
+                                                fields);
+
+        // -------------------------------------------------------------------------
+        // Update the attrbutes if they are already in m_attrs. If not there, don't 
+        // add them to m_attrs.
+        if (m_attrs->type() != xmlrpc_c::value::TYPE_NIL)
+        {
+            Dict attrMap = Dict(*m_attrs);
+            bool updated = false;
+        
+            try
+            {
+                if (attrMap.find(attrName))
+                {
+                    attrMap.erase(attrName);
+                    attrMap.add(attrName, xmlrpc_c::value_nil());
+
+                    updated = true;
+                }
+            }
+            catch (SgDictKeyNotFoundError)
+            {
+                // Do nothing
+            }
+
+            // Update the m_attrs as a whole
+            if (updated)
+            {
+                delete m_attrs;
+                m_attrs = new xmlrpc_c::value(xmlrpc_c::value_struct(attrMap.value()));
+            }
+        }
+    }
+    catch (SgEntityXmlrpcError &error)
+    {
+        throw SgAttrSetValueError(fields, error.what());
+    }
+}
+
+// *****************************************************************************
 const int Entity::getAttrValueAsInt(const std::string &attrName) const
 {
     return getAttrValue<int>(attrName);
