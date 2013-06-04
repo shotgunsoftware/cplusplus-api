@@ -36,12 +36,12 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <cstdlib>
 #include <string>
 
-#include <xmlrpc-c/girerr.hpp>
-#include <xmlrpc-c/base.hpp>
-#include <xmlrpc-c/client.hpp>
-#include <xmlrpc-c/client_transport.hpp>
-
-#include <Shotgun/types.h>
+//#include <curlpp/curlpp.hpp>
+//#include <curlpp/Easy.hpp>
+//#include <curlpp/Options.hpp>
+#include <json/json.h>
+#include <curl/curl.h>
+#include <Shotgun/config.h>
 #include <Shotgun/exceptions.h>
 
 namespace SG {
@@ -106,7 +106,7 @@ class Shotgun;
 
  In this Shotgun library, only the CRUD functions (create, read, update, delete) are used.
 */
-class Method
+class SG_API Method
 {
     friend class Shotgun;
 
@@ -120,27 +120,26 @@ protected:
     /// A destructor that does nothing.
     virtual ~Method();
 
+	// Creates the default curl request
+	/*std::auto_ptr<curlpp::Easy> createRequest();*/
+
 public:
     /// Returns the name of the Shotgun API function.
     const std::string &methodName() const { return m_methodName; }
 
-    /// Returns the signature of the Shotgun API function.
-    /// It throws a SgEntityXmlrpcError exception if the XML-RPC call fails.
-    MethodSignatures &signature(); 
-
     /// Returns the usage of the Shotgun API function.
-    /// It throws a SgEntityXmlrpcError exception if the XML-RPC call fails.
-    std::string &help();
+    /// It throws a SgEntityJsonrpcError exception if the XML-RPC call fails.
+    std::string serverCapabilities();
 
     /// Calls the Shotgun API function without any argument.
-    /// It throws a SgEntityXmlrpcError exception if the XML-RPC call fails.
+    /// It throws a SgEntityJsonrpcError exception if the XML-RPC call fails.
     /// \return a struct as the result.
-    xmlrpc_c::value call();
+	Json::Value call();
 
     /// Calls the Shotgun API function with a struct of arguments.
-    /// It throws a SgEntityXmlrpcError exception if the XML-RPC call fails.
+    /// It throws a SgEntityJsonrpcError exception if the XML-RPC call fails.
     /// \return a struct as the result.
-    xmlrpc_c::value call(const Dict &params);
+	Json::Value call(const Dict &params);
 
 protected:
     Shotgun *m_sg; ///< The instantiated Shotgun object pointer.

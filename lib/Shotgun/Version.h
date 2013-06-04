@@ -35,6 +35,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <string>
 
+#include <Shotgun/config.h>
 #include <Shotgun/Entity.h>
 #include <Shotgun/NoteMixin.h>
 
@@ -42,7 +43,7 @@ namespace SG {
 
 // *****************************************************************************
 /// \class Version
-class Version : public Entity, public NoteMixin
+class SG_API Version : public Entity, public NoteMixin
 {
     friend class Shotgun;
     
@@ -85,7 +86,7 @@ protected:
     ///
     /// \param sg - instantiated Shotgun object pointer
     /// \param attrs - raw attribute map for a Shotgun entity
-    Version(Shotgun *sg, const xmlrpc_c::value &attrs);
+    Version(Shotgun *sg, const Json::Value &attrs);
 
     // -------------------------------------------------------------------------
     /// A Version entity factory function.
@@ -93,7 +94,7 @@ protected:
     /// \param sg - instantiated Shotgun object pointer
     /// \param attrs - raw attribute map for a Shotgun entity
     /// \return a newly-created Version * as its base Entity * type
-    static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Version(sg, attrs); }
+    static Entity *factory(Shotgun *sg, const Json::Value &attrs) { return new Version(sg, attrs); }
 
     // -------------------------------------------------------------------------
     /// Builds a list of default "return_fields" which are the attributes

@@ -35,6 +35,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <string>
 
+#include <Shotgun/config.h>
 #include <Shotgun/types.h>
 #include <Shotgun/List.h>
 #include <Shotgun/Dict.h>
@@ -65,7 +66,7 @@ namespace SG {
  </pre>
  \endhtmlonly
 */
-class Fields : public List
+class SG_API Fields : public List
 {
 public:
     // -------------------------------------------------------------------------
@@ -75,8 +76,10 @@ public:
     /// A copy constructor.
     Fields(const Fields &ref);
 
-    /// A constructor that takes a std::vector<xmlrpc_c::value>.
-    Fields(const std::vector<xmlrpc_c::value> &fields);
+    /// A constructor that takes a std::vector<Json::Value>.
+    Fields(const std::vector<Json::Value> &fields);
+
+	Fields(const Json::Value &fields);
 
     /// A template constructor that adds one field to the "fields" list.
     template <typename T>
@@ -99,7 +102,7 @@ public:
 
     // -------------------------------------------------------------------------
     /// Returns the std::vector container for the "fields" list.
-    const std::vector<xmlrpc_c::value> &fields() const { return value(); }
+    const std::vector<Json::Value> &fields() const;
 
     // -------------------------------------------------------------------------
     Fields &operator=(const Fields &that)
@@ -150,7 +153,7 @@ Fields &Fields::append(const std::string &fieldName,
         field.add("parent_entity", parentEntity);
     }
 
-    m_value.push_back(toXmlrpcValue(field));
+    m_value->push_back(toJsonrpcValue(field));
 
     return *this;
 }

@@ -58,6 +58,7 @@ Shotgun::Shotgun(const std::string &serverURL,
         throw SgServerURLNotSetError();
     }
 
+	m_serverURL = m_serverURL + "/api3/json";
     // Authetication info comes from Shotgun Admin->Scripts pages.
     // Not all of the Shotgun methods require authentication info.
     m_authMap.clear();
@@ -130,7 +131,7 @@ EntityPtrs Shotgun::entityFactoryFind(const std::string &entityType,
                                       const int limit)
 {
     EntityPtrs entities;
-
+    
     // Find the registered functions for the given type of class.
     ClassRegistry::iterator foundRegistryIter = m_classRegistry.find(entityType);
 
@@ -141,13 +142,13 @@ EntityPtrs Shotgun::entityFactoryFind(const std::string &entityType,
 
     // The set of registered functions 
     RegistryFuncs registryFuncs = (*foundRegistryIter).second;
-
+    
     // ------------------------------------------------------------------------
     // If the given findMap already has a "return_fields", merge its contents 
     // with the poupulated default return Fields of the given entity type. 
     // Shotgun will ignore the duplicated fields when it returns the search result. 
     // To update the findMap's "return_fields", erase it first since the 
-    // xmlrpc_c::value type can't be reassigned once it's been instantiated. 
+    // Json::Value type can't be reassigned once it's been instantiated. 
     // ------------------------------------------------------------------------
 
     // Populate the default return fields and add the extra return fields
@@ -174,16 +175,16 @@ EntityPtrs Shotgun::entityFactoryFind(const std::string &entityType,
         findMap.erase("type");
     }
     findMap.add("type", entityType);
-
+    
     // Find the shotgun entities by the findMap
-    List xmlrpcFindResult = Entity::findSGEntities(this, findMap, limit); 
+    List jsonrpcFindResult = Entity::findSGEntities(this, findMap, limit); 
     
     // Create entity class object.
-    for (size_t i = 0; i < xmlrpcFindResult.size(); i++)
+    for (size_t i = 0; i < jsonrpcFindResult.size(); i++)
     {
-        entities.push_back((*(registryFuncs.factoryFunc))(this, xmlrpcFindResult[i]));
+        entities.push_back((*(registryFuncs.factoryFunc))(this, jsonrpcFindResult[i]));
     }
-
+    
     return entities;
 }
 
@@ -206,7 +207,7 @@ Entity *Shotgun::entityFactoryCreate(const std::string &entityType, Dict &create
     // with the poupulated default return fields of the given entity type. 
     // Shotgun will ignore the duplicated fields when it returns the search result. 
     // To update the createMap's "return_fields", erase it first since the 
-    // xmlrpc_c::value type can't be reassigned once it's been instantiated. 
+    // Json::Value type can't be reassigned once it's been instantiated. 
     // ------------------------------------------------------------------------
 
     // Populate the default return fields and add the extra return fields
@@ -235,12 +236,12 @@ Entity *Shotgun::entityFactoryCreate(const std::string &entityType, Dict &create
     createMap.add("type", entityType);
 
     // Create the shotgun entity by the createMap
-    xmlrpc_c::value xmlrpcCreateResult = Entity::createSGEntity(this, createMap); 
+    Json::Value jsonrpcCreateResult = Entity::createSGEntity(this, createMap); 
     
     // Create entity class object.
-    if (xmlrpcCreateResult.type() != xmlrpc_c::value::TYPE_NIL)
+    if (!jsonrpcCreateResult.isNull())
     {
-        return (*(registryFuncs.factoryFunc))(this, xmlrpcCreateResult);
+        return (*(registryFuncs.factoryFunc))(this, jsonrpcCreateResult);
     }
     else
     {
@@ -296,7 +297,7 @@ EntityPtrs Shotgun::findEntities(const std::string &entityType,
                                         retiredOnly,
                                         limit,
                                         order);
-
+    
     return this->entityFactoryFind(entityType, findMap, limit);
 }
 
@@ -307,27 +308,27 @@ bool Shotgun::deleteEntity(const std::string &entityType, const int id)
 }
 
 // *****************************************************************************
-void Shotgun::setTimeZoneEnv()
-{
-    time_t rawTime;
-    struct tm *localTime;
-
-    // These calls are necessary to get the updated values for the external
-    // time zone variables that contain the correct local time zone info.
-    time(&rawTime);
-    localTime = localtime(&rawTime);
-
-    char envValue[80];
-    if (daylight)
-    {
-        sprintf(envValue, "%s%d%s", tzname[0], timezone/3600, tzname[1]);
-    }
-    else
-    {
-        sprintf(envValue, "%s%d", tzname[0], timezone/3600);
-    }
-
-    setenv("TZ", envValue, 1);
-}
+//void Shotgun::setTimeZoneEnv()
+//{
+//    time_t rawTime;
+//    struct tm *localTime;
+//
+//    // These calls are necessary to get the updated values for the external
+//    // time zone variables that contain the correct local time zone info.
+//    time(&rawTime);
+//    localTime = localtime(&rawTime);
+//
+//    char envValue[80];
+//    if (daylight)
+//    {
+//        sprintf(envValue, "%s%d%s", tzname[0], timezone/3600, tzname[1]);
+//    }
+//    else
+//    {
+//        sprintf(envValue, "%s%d", tzname[0], timezone/3600);
+//    }
+//
+//    setenv("TZ", envValue, 1);
+//}
     
 } // End namespace SG

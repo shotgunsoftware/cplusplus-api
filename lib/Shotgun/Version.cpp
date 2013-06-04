@@ -39,11 +39,11 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace SG {
 
 // *****************************************************************************
-Version::Version(Shotgun *sg, const xmlrpc_c::value &attrs)
+Version::Version(Shotgun *sg, const Json::Value &attrs)
     : Entity(sg), NoteMixin()
 {
     m_entityType = m_classType = "Version";
-    m_attrs = new xmlrpc_c::value(attrs);
+    m_attrs = new Json::Value(attrs);
 }
 
 // *****************************************************************************
@@ -51,7 +51,7 @@ Version::Version(const Version &ref)
     : Entity(ref.m_sg)
 {
     m_entityType = m_classType = "Version";
-    m_attrs = new xmlrpc_c::value(*ref.m_attrs);
+    m_attrs = new Json::Value(*ref.m_attrs);
 }
 
 // *****************************************************************************

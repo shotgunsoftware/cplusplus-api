@@ -35,13 +35,14 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <string>
 
+#include <Shotgun/config.h>
 #include <Shotgun/Entity.h>
 
 namespace SG {
 
 // *****************************************************************************
 /// \class Sequence
-class Sequence : public Entity
+class SG_API Sequence : public Entity
 {
     friend class Shotgun;
  
@@ -84,7 +85,7 @@ protected:
     ///
     /// \param sg - instantiated Shotgun object pointer
     /// \param attrs - raw attribute map for a Shotgun entity
-    Sequence(Shotgun *sg, const xmlrpc_c::value &attrs);
+    Sequence(Shotgun *sg, const Json::Value &attrs);
 
     // -------------------------------------------------------------------------
     /// A Sequence entity factory function.
@@ -92,7 +93,7 @@ protected:
     /// \param sg - instantiated Shotgun object pointer
     /// \param attrs - raw attribute map for a Shotgun entity
     /// \return a newly-created Sequence * as its base Entity * type
-    static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Sequence(sg, attrs); }
+    static Entity *factory(Shotgun *sg, const Json::Value &attrs) { return new Sequence(sg, attrs); }
 
     // -------------------------------------------------------------------------
     /// Builds a list of default "return_fields" which are the attributes

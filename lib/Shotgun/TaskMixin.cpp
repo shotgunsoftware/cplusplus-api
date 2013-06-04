@@ -107,8 +107,7 @@ Task *TaskMixin::getNextIncompleteMilestoneTask()
         if (milestones[i]->getAttrValueAsString("sg_status_list") != "cmpt")
         {
             // Yes, consider it
-            if (next < 0 or 
-                milestones[next]->getAttrValueAsString("due_date") > milestones[i]->getAttrValueAsString("due_date"))
+            if (next < 0 || milestones[next]->getAttrValueAsString("due_date") > milestones[i]->getAttrValueAsString("due_date"))
             {
                 next = i;
             }

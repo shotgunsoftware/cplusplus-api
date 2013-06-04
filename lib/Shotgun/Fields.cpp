@@ -45,14 +45,22 @@ Fields::Fields(const Fields &ref) : List(ref.m_value)
 }
 
 // *****************************************************************************
-Fields::Fields(const std::vector<xmlrpc_c::value> &fields) : List(fields)
+Fields::Fields(const std::vector<Json::Value> &fields) : List(fields)
 {
 }
 
+Fields::Fields(const Json::Value &fields) : List(fields)
+{
+}
+
+const std::vector<Json::Value> &Fields::fields() const 
+{ 
+    return value(); 
+}
 // *****************************************************************************
 Fields &Fields::extend(const Fields &that)
 {
-    m_value.insert(m_value.end(), that.m_value.begin(), that.m_value.end());
+    m_value->insert(m_value->end(), that.m_value->begin(), that.m_value->end());
 
     return *this;
 }

@@ -41,469 +41,479 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/SortBy.h>
 #include <Shotgun/Fields.h>
 
-extern char *tzname[2];
-extern long timezone;
-extern int daylight;
+//extern char *tzname[2];
+//extern long timezone;
+//extern int daylight;
 
 namespace SG {
 
 // *****************************************************************************
-std::string xmlrpcValueTypeStr(const xmlrpc_c::value::type_t xmlrpcType)
+std::string jsonrpcValueTypeStr(const Json::ValueType jsonrpcType)
 {
-    switch (xmlrpcType)
+    switch (jsonrpcType)
     {
-        case xmlrpc_c::value::TYPE_INT:
+		case Json::intValue:
             return std::string("TYPE_INT");
-        case xmlrpc_c::value::TYPE_BOOLEAN:
+		case Json::booleanValue:
             return std::string("TYPE_BOOLEAN");
-        case xmlrpc_c::value::TYPE_DOUBLE:
+		case Json::realValue:
             return std::string("TYPE_DOUBLE");
-        case xmlrpc_c::value::TYPE_DATETIME:
-            return std::string("TYPE_DATETIME");
-        case xmlrpc_c::value::TYPE_STRING:
+        //case Json::Value::TYPE_DATETIME:
+        //    return std::string("TYPE_DATETIME");
+		case Json::stringValue:
             return std::string("TYPE_STRING");
-        case xmlrpc_c::value::TYPE_BYTESTRING:
-            return std::string("TYPE_BYTESTRING");
-        case xmlrpc_c::value::TYPE_ARRAY:
+        //case Json::Value::TYPE_BYTESTRING:
+        //    return std::string("TYPE_BYTESTRING");
+		case Json::arrayValue:
             return std::string("TYPE_ARRAY");
-        case xmlrpc_c::value::TYPE_STRUCT:
-            return std::string("TYPE_STRUCT");
-        case xmlrpc_c::value::TYPE_C_PTR:
-            return std::string("TYPE_C_PTR");
-        case xmlrpc_c::value::TYPE_NIL:
-            return std::string("TYPE_NIL");
-        case xmlrpc_c::value::TYPE_DEAD:
+		case Json::objectValue:
+            return std::string("TYPE_OBJECT");
+        //case Json::Value::TYPE_C_PTR:
+        //    return std::string("TYPE_C_PTR");
+		case Json::nullValue:
+            return std::string("TYPE_NULL");
+        //case Json::Value::TYPE_DEAD:
         default:
             return std::string("TYPE_DEAD");
     }
 }
 
 // *****************************************************************************
-xmlrpc_c::value toXmlrpcValue(const char *in)
+Json::Value toJsonrpcValue(const char *in)
 {
-    return xmlrpc_c::value(xmlrpc_c::value_string(std::string(in)));
+    return Json::Value(in);
 }
 
 // *****************************************************************************
-xmlrpc_c::value toXmlrpcValue(const std::string &in)
+Json::Value toJsonrpcValue(const std::string &in)
 {
-    return xmlrpc_c::value(xmlrpc_c::value_string(in));
+    return Json::Value(in);
 }
 
 // *****************************************************************************
-xmlrpc_c::value toXmlrpcValue(const int &in)
+Json::Value toJsonrpcValue(const int &in)
 {
-    return xmlrpc_c::value(xmlrpc_c::value_int(in));
+	return Json::Value(in);
 }
 
 // *****************************************************************************
-xmlrpc_c::value toXmlrpcValue(const double &in)
+Json::Value toJsonrpcValue(const double &in)
 {
-    return xmlrpc_c::value(xmlrpc_c::value_double(in));
+    return Json::Value(in);
 }
 
 // *****************************************************************************
-xmlrpc_c::value toXmlrpcValue(const bool &in)
+Json::Value toJsonrpcValue(const bool &in)
 {
-    return xmlrpc_c::value(xmlrpc_c::value_boolean(in));
+    return Json::Value(in);
 }
 
 // *****************************************************************************
-xmlrpc_c::value toXmlrpcValue(const time_t &in)
+//Json::Value toJsonrpcValue(const time_t &in)
+//{
+//    return Json::Value(in);
+//}
+
+// *****************************************************************************
+//Json::Value toJsonrpcValue(const struct tm &in)
+//{
+//    // This converts the local time to UTC time
+//    time_t time = mktime((struct tm *)&in);
+//
+//    return Json::Value(time);
+//}
+
+// *****************************************************************************
+Json::Value toJsonrpcValue(const std::vector<Json::Value> &in)
 {
-    return xmlrpc_c::value(xmlrpc_c::value_datetime(in));
+	Json::Value val(Json::arrayValue);
+	for(std::vector<Json::Value>::const_iterator itr = in.begin(); itr != in.end(); ++itr)
+		val.append(*itr);
+    return val;
 }
 
 // *****************************************************************************
-xmlrpc_c::value toXmlrpcValue(const struct tm &in)
+Json::Value toJsonrpcValue(const std::map<std::string, Json::Value> &in)
 {
-    // This converts the local time to UTC time
-    time_t time = mktime((struct tm *)&in);
-
-    return xmlrpc_c::value(xmlrpc_c::value_datetime(time));
+	Json::Value val(Json::objectValue);
+	for(std::map<std::string, Json::Value>::const_iterator itr = in.begin(); itr != in.end(); ++itr)
+		val[(*itr).first] = (*itr).second;
+    return val;
 }
 
 // *****************************************************************************
-xmlrpc_c::value toXmlrpcValue(const std::vector<xmlrpc_c::value> &in)
+Json::Value toJsonrpcValue(const Strings &in)
 {
-    return xmlrpc_c::value(xmlrpc_c::value_array(in));
-}
-
-// *****************************************************************************
-xmlrpc_c::value toXmlrpcValue(const std::map<std::string, xmlrpc_c::value> &in)
-{
-    return xmlrpc_c::value(xmlrpc_c::value_struct(in));
-}
-
-// *****************************************************************************
-xmlrpc_c::value toXmlrpcValue(const Strings &in)
-{
-    std::vector<xmlrpc_c::value> strArray;
+    std::vector<Json::Value> strArray;
    
     for (size_t i = 0; i < in.size(); i++)
     {
-        strArray.push_back(toXmlrpcValue(in[i]));
+        strArray.push_back(toJsonrpcValue(in[i]));
     }
-
-    return xmlrpc_c::value(xmlrpc_c::value_array(strArray));
+	
+    return toJsonrpcValue(strArray);
 }
 
 // *****************************************************************************
-xmlrpc_c::value toXmlrpcValue(const MethodSignatures &in)
+Json::Value toJsonrpcValue(const MethodSignatures &in)
 {
-    std::vector<xmlrpc_c::value> strArray;
+    std::vector<Json::Value> strArray;
    
     for (size_t i = 0; i < in.size(); i++)
     {
-        strArray.push_back(toXmlrpcValue(in[i]));
+        strArray.push_back(toJsonrpcValue(in[i]));
     }
 
-    return xmlrpc_c::value(xmlrpc_c::value_array(strArray));
+    return toJsonrpcValue(strArray);
 }
 
 // *****************************************************************************
-xmlrpc_c::value toXmlrpcValue(const List &in)
+Json::Value toJsonrpcValue(const List &in)
 {
-    return xmlrpc_c::value(xmlrpc_c::value_array(in.value()));
+	Json::Value out(Json::arrayValue);
+	for(std::vector<Json::Value>::const_iterator itr = in.value().begin(); itr != in.value().end(); ++itr)
+		out.append(*itr);
+    return out;
 }
 
 // *****************************************************************************
-xmlrpc_c::value toXmlrpcValue(const Dict &in)
+Json::Value toJsonrpcValue(const Dict &in)
 {
-    return xmlrpc_c::value(xmlrpc_c::value_struct(in.value()));
+	Json::Value out(Json::objectValue);
+	for(std::map<std::string, Json::Value>::const_iterator itr = in.value().begin(); itr != in.value().end(); ++itr)
+		out[(*itr).first] = (*itr).second;
+    return out;
 }
 
 // *****************************************************************************
-xmlrpc_c::value toXmlrpcValue(const FilterBy &in)
+Json::Value toJsonrpcValue(const FilterBy &in)
 {
-    return toXmlrpcValue(in.filters());
+    return toJsonrpcValue(in.filters());
 }
 
 // *****************************************************************************
-xmlrpc_c::value toXmlrpcValue(const SortBy &in)
+Json::Value toJsonrpcValue(const SortBy &in)
 {
-    return toXmlrpcValue(in.sorts());
+    return toJsonrpcValue(in.sorts());
 }
 
 // *****************************************************************************
-xmlrpc_c::value toXmlrpcValue(const Fields &in)
+Json::Value toJsonrpcValue(const Fields &in)
 {
-    return toXmlrpcValue(in.fields());
+    return toJsonrpcValue(in.fields());
 }
 
 // *****************************************************************************
-xmlrpc_c::value toXmlrpcValue(const xmlrpc_c::value &in)
+Json::Value toJsonrpcValue(const Json::Value &in)
 {
     return in;
 }
 
 // *****************************************************************************
-void fromXmlrpcValue(const xmlrpc_c::value &value, char *out)
+void fromJsonrpcValue(const Json::Value &value, char *out)
 {
-    if (value.type() == xmlrpc_c::value::TYPE_STRING)
+	if (value.isString())
     {
-        out = strdup((std::string(xmlrpc_c::value_string(value))).c_str());
+        out = _strdup(value.asCString());
     }
-    else if (value.type() == xmlrpc_c::value::TYPE_NIL)
+	else if (value.isNull())
     {
-        throw SgXmlrpcValueIsNilError();
+        throw SgJsonrpcValueIsNilError();
     }
     else
     {
-        throw SgXmlrpcValueTypeError(value,
-                                     xmlrpc_c::value::TYPE_STRING,
+        throw SgJsonrpcValueTypeError(value,
+									 Json::stringValue,
                                      value.type());
     }
 }
 
 // *****************************************************************************
-void fromXmlrpcValue(const xmlrpc_c::value &value, std::string &out)
+void fromJsonrpcValue(const Json::Value &value, std::string &out)
 {
-    if (value.type() == xmlrpc_c::value::TYPE_STRING)
+	if (value.isString())
     {
-        out = std::string(xmlrpc_c::value_string(value));
+		out = value.asString();
     }
-    else if (value.type() == xmlrpc_c::value::TYPE_NIL)
+    else if (value.isNull())
     {
-        throw SgXmlrpcValueIsNilError();
+        throw SgJsonrpcValueIsNilError();
     }
     else
     {
-        throw SgXmlrpcValueTypeError(value,
-                                     xmlrpc_c::value::TYPE_STRING,
+        throw SgJsonrpcValueTypeError(value,
+                                     Json::stringValue,
                                      value.type());
     }
 }
 
 // *****************************************************************************
-void fromXmlrpcValue(const xmlrpc_c::value &value, int &out)
+void fromJsonrpcValue(const Json::Value &value, int &out)
 {
-    if (value.type() == xmlrpc_c::value::TYPE_INT)
+	if (value.isInt())
     {
-        out = int(xmlrpc_c::value_int(value));
+		out = value.asInt();
     }
-    else if (value.type() == xmlrpc_c::value::TYPE_NIL)
+    else if (value.isNull())
     {
-        throw SgXmlrpcValueIsNilError();
+        throw SgJsonrpcValueIsNilError();
     }
     else
     {
-        throw SgXmlrpcValueTypeError(value,
-                                     xmlrpc_c::value::TYPE_INT,
+        throw SgJsonrpcValueTypeError(value,
+									 Json::intValue,
                                      value.type());
     }
 }
 
 // *****************************************************************************
-void fromXmlrpcValue(const xmlrpc_c::value &value, double &out)
+void fromJsonrpcValue(const Json::Value &value, double &out)
 {
-    if (value.type() == xmlrpc_c::value::TYPE_DOUBLE)
+	if (value.isDouble())
     {
-        out = double(xmlrpc_c::value_double(value));
+		out = value.asDouble();
     }
-    else if (value.type() == xmlrpc_c::value::TYPE_NIL)
+    else if (value.isNull())
     {
-        throw SgXmlrpcValueIsNilError();
+        throw SgJsonrpcValueIsNilError();
     }
     else
     {
-        throw SgXmlrpcValueTypeError(value,
-                                     xmlrpc_c::value::TYPE_DOUBLE,
+        throw SgJsonrpcValueTypeError(value,
+                                     Json::realValue,
                                      value.type());
     }
 }
 
 // *****************************************************************************
-void fromXmlrpcValue(const xmlrpc_c::value &value, bool &out)
+void fromJsonrpcValue(const Json::Value &value, bool &out)
 {
-    if (value.type() == xmlrpc_c::value::TYPE_BOOLEAN)
+	if (value.isBool())
     {
-        out = bool(xmlrpc_c::value_boolean(value));
+		out = value.asBool();
     }
-    else if (value.type() == xmlrpc_c::value::TYPE_NIL)
+    else if (value.isNull())
     {
-        throw SgXmlrpcValueIsNilError();
+        throw SgJsonrpcValueIsNilError();
     }
     else
     {
-        throw SgXmlrpcValueTypeError(value,
-                                     xmlrpc_c::value::TYPE_BOOLEAN,
+        throw SgJsonrpcValueTypeError(value,
+                                     Json::booleanValue,
                                      value.type());
     }
 }
 
 // *****************************************************************************
-void fromXmlrpcValue(const xmlrpc_c::value &value, time_t &out)
+//void fromJsonrpcValue(const Json::Value &value, time_t &out)
+//{
+//    if (value.type() == Json::Value::TYPE_DATETIME)
+//    {
+//        out = time_t(Json::Value_datetime(value));
+//    }
+//    else if (value.type() == Json::Value::TYPE_NIL)
+//    {
+//        throw SgJsonrpcValueIsNilError();
+//    }
+//    else
+//    {
+//        throw SgJsonrpcValueTypeError(value,
+//                                     Json::Value::TYPE_DATETIME,
+//                                     value.type());
+//    }
+//}
+
+// *****************************************************************************
+//void fromJsonrpcValue(const Json::Value &value, struct tm &out)
+//{
+//    if (value.type() == Json::Value::TYPE_DATETIME)
+//    {
+//        time_t t = time_t(Json::Value_datetime(value));
+//
+//        // This converts the UTC time to local time
+//        out = *(localtime(&t));
+//    }
+//    else if (value.type() == Json::Value::TYPE_NIL)
+//    {
+//        throw SgJsonrpcValueIsNilError();
+//    }
+//    else
+//    {
+//        throw SgJsonrpcValueTypeError(value,
+//                                     Json::Value::TYPE_DATETIME,
+//                                     value.type());
+//    }
+//}
+
+// *****************************************************************************
+void fromJsonrpcValue(const Json::Value &value, std::vector<Json::Value> &out)
 {
-    if (value.type() == xmlrpc_c::value::TYPE_DATETIME)
+	if (value.isArray())
     {
-        out = time_t(xmlrpc_c::value_datetime(value));
+		for( Json::ValueIterator itr = value.begin(); itr != value.end(); itr++ )
+		{
+			out.push_back(itr.key());
+		}
     }
-    else if (value.type() == xmlrpc_c::value::TYPE_NIL)
+	else if (value.isNull())
     {
-        throw SgXmlrpcValueIsNilError();
+        throw SgJsonrpcValueIsNilError();
     }
     else
     {
-        throw SgXmlrpcValueTypeError(value,
-                                     xmlrpc_c::value::TYPE_DATETIME,
+        throw SgJsonrpcValueTypeError(value,
+									 Json::arrayValue,
                                      value.type());
     }
 }
 
 // *****************************************************************************
-void fromXmlrpcValue(const xmlrpc_c::value &value, struct tm &out)
+void fromJsonrpcValue(const Json::Value &value, std::map<std::string, Json::Value> &out)
 {
-    if (value.type() == xmlrpc_c::value::TYPE_DATETIME)
+	if (value.isObject())
     {
-        time_t t = time_t(xmlrpc_c::value_datetime(value));
-
-        // This converts the UTC time to local time
-        out = *(localtime(&t));
+        for (Json::ValueIterator itr = value.begin(); itr != value.end(); itr++ )
+			out[itr.memberName()] = itr.key();
     }
-    else if (value.type() == xmlrpc_c::value::TYPE_NIL)
+	else if (value.isNull())
     {
-        throw SgXmlrpcValueIsNilError();
+        throw SgJsonrpcValueIsNilError();
     }
     else
     {
-        throw SgXmlrpcValueTypeError(value,
-                                     xmlrpc_c::value::TYPE_DATETIME,
+        throw SgJsonrpcValueTypeError(value,
+									 Json::objectValue,
                                      value.type());
     }
 }
 
 // *****************************************************************************
-void fromXmlrpcValue(const xmlrpc_c::value &value, std::vector<xmlrpc_c::value> &out)
+void fromJsonrpcValue(const Json::Value &value, Strings &out)
 {
-    if (value.type() == xmlrpc_c::value::TYPE_ARRAY)
-    {
-        out = (xmlrpc_c::value_array(value)).vectorValueValue();
-    }
-    else if (value.type() == xmlrpc_c::value::TYPE_NIL)
-    {
-        throw SgXmlrpcValueIsNilError();
-    }
-    else
-    {
-        throw SgXmlrpcValueTypeError(value,
-                                     xmlrpc_c::value::TYPE_ARRAY,
-                                     value.type());
-    }
-}
-
-// *****************************************************************************
-void fromXmlrpcValue(const xmlrpc_c::value &value, std::map<std::string, xmlrpc_c::value> &out)
-{
-    if (value.type() == xmlrpc_c::value::TYPE_STRUCT)
-    {
-        out = std::map<std::string, xmlrpc_c::value>(xmlrpc_c::value_struct(value));
-    }
-    else if (value.type() == xmlrpc_c::value::TYPE_NIL)
-    {
-        throw SgXmlrpcValueIsNilError();
-    }
-    else
-    {
-        throw SgXmlrpcValueTypeError(value,
-                                     xmlrpc_c::value::TYPE_STRUCT,
-                                     value.type());
-    }
-}
-
-// *****************************************************************************
-void fromXmlrpcValue(const xmlrpc_c::value &value, Strings &out)
-{
-    if (value.type() == xmlrpc_c::value::TYPE_ARRAY)
-    {
-        std::vector<xmlrpc_c::value> array = (xmlrpc_c::value_array(value)).vectorValueValue();
-        
+	if (value.isArray())
+    {   
         Strings strings;
-        for (size_t i = 0; i < array.size(); i++)
+		for (Json::ValueIterator itr = value.begin(); itr != value.end(); itr++)
         {
-            if (array[i].type() == xmlrpc_c::value::TYPE_STRING)
+            if (itr.key().isString())
             {
-                strings.push_back(std::string(xmlrpc_c::value_string(array[i])));
+				strings.push_back(itr.key().asString());
             }
             else
             {
-                throw SgXmlrpcValueTypeError(array[i],
-                                             xmlrpc_c::value::TYPE_STRING,
-                                             array[i].type());
+				throw SgJsonrpcValueTypeError(itr.key(), Json::stringValue, itr.key().type());
             }
         }
 
         out = strings;
     }
-    else if (value.type() == xmlrpc_c::value::TYPE_NIL)
+    else if (value.isNull())
     {
-        throw SgXmlrpcValueIsNilError();
+        throw SgJsonrpcValueIsNilError();
     }
     else
     {
-        throw SgXmlrpcValueTypeError(value,
-                                     xmlrpc_c::value::TYPE_ARRAY,
-                                     value.type());
+        throw SgJsonrpcValueTypeError(value, Json::arrayValue, value.type());
     }
 }
 
 // *****************************************************************************
-void fromXmlrpcValue(const xmlrpc_c::value &value, List &out)
+void fromJsonrpcValue(const Json::Value &value, List &out)
 {
-    if (value.type() == xmlrpc_c::value::TYPE_ARRAY)
+	if (value.isArray())
     {
-        out = List((xmlrpc_c::value_array(value)).vectorValueValue());
+        out = List(value);
     }
-    else if (value.type() == xmlrpc_c::value::TYPE_NIL)
+    else if (value.isNull())
     {
-        throw SgXmlrpcValueIsNilError();
+        throw SgJsonrpcValueIsNilError();
     }
     else
     {
-        throw SgXmlrpcValueTypeError(value,
-                                     xmlrpc_c::value::TYPE_ARRAY,
+        throw SgJsonrpcValueTypeError(value,
+                                     Json::arrayValue,
                                      value.type());
     }
 }
 
 // *****************************************************************************
-void fromXmlrpcValue(const xmlrpc_c::value &value, Dict &out)
+void fromJsonrpcValue(const Json::Value &value, Dict &out)
 {
-    if (value.type() == xmlrpc_c::value::TYPE_STRUCT)
+	if (value.isObject())
     {
-        out = Dict(std::map<std::string, xmlrpc_c::value>(xmlrpc_c::value_struct(value)));
+        out = Dict(value);
     }
-    else if (value.type() == xmlrpc_c::value::TYPE_NIL)
+	else if (value.isNull())
     {
-        throw SgXmlrpcValueIsNilError();
+        throw SgJsonrpcValueIsNilError();
     }
     else
     {
-        throw SgXmlrpcValueTypeError(value,
-                                     xmlrpc_c::value::TYPE_STRUCT,
+        throw SgJsonrpcValueTypeError(value,
+									 Json::objectValue,
                                      value.type());
     }
 }
 
 // *****************************************************************************
-void fromXmlrpcValue(const xmlrpc_c::value &value, FilterBy &out)
+void fromJsonrpcValue(const Json::Value &value, FilterBy &out)
 {
-    if (value.type() == xmlrpc_c::value::TYPE_STRUCT)
+	if (value.isObject())
     {
-        out = FilterBy(Dict(std::map<std::string, xmlrpc_c::value>(xmlrpc_c::value_struct(value))));
+        out = FilterBy(Dict(value));
     }
-    else if (value.type() == xmlrpc_c::value::TYPE_NIL)
+	else if (value.isNull())
     {
-        throw SgXmlrpcValueIsNilError();
+        throw SgJsonrpcValueIsNilError();
     }
     else
     {
-        throw SgXmlrpcValueTypeError(value,
-                                     xmlrpc_c::value::TYPE_STRUCT,
+        throw SgJsonrpcValueTypeError(value,
+									 Json::objectValue,
                                      value.type());
     }
 }
 
 // *****************************************************************************
-void fromXmlrpcValue(const xmlrpc_c::value &value, SortBy &out)
+void fromJsonrpcValue(const Json::Value &value, SortBy &out)
 {
-    if (value.type() == xmlrpc_c::value::TYPE_ARRAY)
+	if (value.isArray())
     {
-        out = SortBy(List((xmlrpc_c::value_array(value)).vectorValueValue()));
+        out = SortBy(List(value));
     }
-    else if (value.type() == xmlrpc_c::value::TYPE_NIL)
+    else if (value.isNull())
     {
-        throw SgXmlrpcValueIsNilError();
+        throw SgJsonrpcValueIsNilError();
     }
     else
     {
-        throw SgXmlrpcValueTypeError(value,
-                                     xmlrpc_c::value::TYPE_ARRAY,
+        throw SgJsonrpcValueTypeError(value,
+                                     Json::arrayValue,
                                      value.type());
     }
 }
 
 // *****************************************************************************
-void fromXmlrpcValue(const xmlrpc_c::value &value, Fields &out)
+void fromJsonrpcValue(const Json::Value &value, Fields &out)
 {
-    if (value.type() == xmlrpc_c::value::TYPE_ARRAY)
+	if (value.isArray())
     {
-        out = Fields((xmlrpc_c::value_array(value)).vectorValueValue());
+        out = Fields(value);
     }
-    else if (value.type() == xmlrpc_c::value::TYPE_NIL)
+    else if (value.isNull())
     {
-        throw SgXmlrpcValueIsNilError();
+        throw SgJsonrpcValueIsNilError();
     }
     else
     {
-        throw SgXmlrpcValueTypeError(value,
-                                     xmlrpc_c::value::TYPE_ARRAY,
+        throw SgJsonrpcValueTypeError(value,
+                                     Json::arrayValue,
                                      value.type());
     }
 }
 
 // *****************************************************************************
-void fromXmlrpcValue(const xmlrpc_c::value &value, xmlrpc_c::value &out)
+void fromJsonrpcValue(const Json::Value &value, Json::Value &out)
 {
     out = value;
 }
@@ -530,166 +540,58 @@ std::string currDateStr()
 std::string toStdString(const int val)
 {
     char str[1024];
-    sprintf(str, "%d", val);
+    sprintf_s(str, "%d", val);
     return std::string(str);
 }
 
 std::string toStdString(const bool val)
 {
     char str[1024];
-    sprintf(str, "%d", val);
+    sprintf_s(str, "%d", val);
     return std::string(str);
 }
 
 std::string toStdString(const double val)
 {
     char str[1024];
-    sprintf(str, "%f", val);
+    sprintf_s(str, "%f", val);
     return std::string(str);
 }
 
 std::string toStdString(const time_t val)
 {
     char str[1024];
-    sprintf(str, "%u", val);
+    sprintf_s(str, "%u", val);
     return std::string(str);
 }
 
-std::string toStdString(const struct tm &val)
+//std::string toStdString(const struct tm &val)
+//{
+//    return std::string(asctime_s(&val));
+//}
+
+std::string toStdString(const Json::Value &value)
 {
-    return std::string(asctime(&val));
+	return value.toStyledString();
 }
 
-std::string toStdString(const xmlrpc_c::value &value)
+std::string toStdString(const std::map<std::string, Json::Value> &map)
 {
-    static int depth = 0;
+	Json::Value val;
+	for(std::map<std::string, Json::Value>::const_iterator itr = map.begin(); itr != map.end(); ++itr)
+		val[(*itr).first] = (*itr).second;
+	
+	return toStdString(val);
+}
+
+// *****************************************************************************
+std::string toStdString(const std::vector<Json::Value> &arr)
+{
+	Json::Value val(Json::arrayValue);
+	for(std::vector<Json::Value>::const_iterator itr = arr.begin(); itr != arr.end(); ++itr)
+		val.append(*itr);
     
-    std::string output;
-    char str[1024];
-
-    if (value.type() == xmlrpc_c::value::TYPE_INT)
-    { 
-        sprintf(str, "%d", int(xmlrpc_c::value_int(value)));
-        output = str;
-    }
-    else if (value.type() == xmlrpc_c::value::TYPE_BOOLEAN)
-    {
-        sprintf(str, "%d", bool(xmlrpc_c::value_boolean(value)));
-        output = str;
-    }
-    else if (value.type() == xmlrpc_c::value::TYPE_DOUBLE)
-    {
-        sprintf(str, "%f", double(xmlrpc_c::value_double(value)));
-        output = str;
-    }
-    else if (value.type() == xmlrpc_c::value::TYPE_DATETIME)
-    {
-        sprintf(str, "%u", time_t(xmlrpc_c::value_datetime(value)));
-        output = str;
-    }
-    else if (value.type() == xmlrpc_c::value::TYPE_STRING)
-    {
-        output = "\"" + std::string(xmlrpc_c::value_string(value)) + "\"";
-    }
-    else if (value.type() == xmlrpc_c::value::TYPE_BYTESTRING)
-    {
-        sprintf(str, "%u", (xmlrpc_c::value_bytestring(value)).length());
-        output = str;
-    }
-    else if (value.type() == xmlrpc_c::value::TYPE_ARRAY)
-    {
-        std::string whitespace = "    ";
-        std::string indent;
-        std::string indent2;
-        for (size_t l = 0; l < depth; l++)
-        {
-            indent += whitespace;
-        }
-        indent2 = indent + whitespace;
-        depth++;
-        
-        // This helps save the current recursive state
-        size_t old_depth = depth;
-
-        output = "\n" + indent + "[\n";
-
-        std::vector<xmlrpc_c::value> array = xmlrpc_c::value_array(value).vectorValueValue();
-        for (size_t i = 0; i < array.size(); i++)
-        {
-            if (i == (array.size() - 1))
-            {
-                output += indent2 + toStdString(array[i]) + "\n";
-            }
-            else
-            {
-                output += indent2 + toStdString(array[i]) + ", \n";
-            }
-
-            // This restores the current recursive state
-            depth = old_depth;
-        }
-
-        depth = old_depth - 1;
-
-        output += indent + "]";
-    }
-    else if (value.type() == xmlrpc_c::value::TYPE_STRUCT)
-    {
-        std::string whitespace = "    ";
-        std::string indent;
-        std::string indent2;
-        for (size_t l = 0; l < depth; l++)
-        {
-            indent += whitespace;
-        }
-        indent2 = indent + whitespace;
-        depth++;
-
-        // This helps save the current recursive state
-        size_t old_depth = depth;
-
-        output = "\n" + indent + "{\n";
-
-        std::map<std::string, xmlrpc_c::value> map = std::map<std::string, xmlrpc_c::value>(xmlrpc_c::value_struct(value));
-        size_t count = 0;
-        for (std::map<std::string, xmlrpc_c::value>::const_iterator mIter = map.begin(); mIter != map.end(); mIter++)
-        {
-            count++;
-            if (count == map.size())
-            {
-                output += indent2 + "\"" + (*mIter).first + "\" : " + toStdString((*mIter).second) + "\n";
-            }
-            else
-            {
-                output += indent2 + "\"" + (*mIter).first + "\" : " + toStdString((*mIter).second) + ", \n";
-            }
-
-            // This restores the current recursive state
-            depth = old_depth;
-        }
-
-        depth = old_depth - 1;
-
-        output += indent + "}";
-    }
-    else if (value.type() == xmlrpc_c::value::TYPE_NIL)
-    {
-        output = "nil";
-    }
-
-    return output;
-}
-
-// *****************************************************************************
-std::string toStdString(const std::map<std::string, xmlrpc_c::value> &map)
-{
-    return toStdString(xmlrpc_c::value_struct(map));
-}
-
-// *****************************************************************************
-std::string toStdString(const std::vector<xmlrpc_c::value> &array)
-{
-    return toStdString(xmlrpc_c::value_array(array));
+	return toStdString(val);
 }
 
 // *****************************************************************************
@@ -733,30 +635,30 @@ std::string toStdString(const SG::MethodSignatures &sigs)
 }
 
 // *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const xmlrpc_c::value &value)
+std::ostream &operator<<(std::ostream& output, const Json::Value &value)
 {
     output << toStdString(value);
     return output;
 }
 
 // *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const struct tm &time)
-{
-    output << toStdString(time);
-    return output;
-}
+//std::ostream &operator<<(std::ostream& output, const struct tm &time)
+//{
+//    output << toStdString(time);
+//    return output;
+//}
 
 // *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const std::map<std::string, xmlrpc_c::value> &map)
+std::ostream &operator<<(std::ostream& output, const std::map<std::string, Json::Value> &map)
 {
     output << toStdString(map);
     return output;
 }
 
 // *****************************************************************************
-std::ostream &operator<<(std::ostream& output, const std::vector<xmlrpc_c::value> &array)
+std::ostream &operator<<(std::ostream& output, const std::vector<Json::Value> &arr)
 {
-    output << toStdString(array);
+    output << toStdString(arr);
     return output;
 }
 

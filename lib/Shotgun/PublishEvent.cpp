@@ -37,11 +37,11 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace SG {
 
 // *****************************************************************************
-PublishEvent::PublishEvent(Shotgun *sg, const xmlrpc_c::value &attrs)
+PublishEvent::PublishEvent(Shotgun *sg, const Json::Value &attrs)
     : Entity(sg)
 {
     m_entityType = m_classType = "PublishEvent";
-    m_attrs = new xmlrpc_c::value(attrs);
+    m_attrs = new Json::Value(attrs);
 }
 
 
@@ -50,7 +50,7 @@ PublishEvent::PublishEvent(const PublishEvent &ref)
     : Entity(ref.m_sg)
 {
     m_entityType = m_classType = "PublishEvent";
-    m_attrs = new xmlrpc_c::value(*ref.m_attrs);
+    m_attrs = new Json::Value(*ref.m_attrs);
 }
 
 // *****************************************************************************

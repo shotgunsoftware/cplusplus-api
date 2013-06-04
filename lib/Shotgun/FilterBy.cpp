@@ -35,8 +35,9 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace SG {
 
 // *****************************************************************************
-FilterBy::FilterBy() : m_filters(Dict())
+FilterBy::FilterBy()
 {
+    m_filters = new Dict();
 }
 
 // *****************************************************************************
@@ -45,15 +46,49 @@ FilterBy::FilterBy(const FilterBy &ref) : m_filters(ref.m_filters)
 }
 
 // *****************************************************************************
-FilterBy::FilterBy(const Dict &filters) : m_filters(filters)
+FilterBy::FilterBy(const Dict &filters)
 {
+    m_filters = new Dict(filters);
+}
+
+// *****************************************************************************
+FilterBy &FilterBy::And(const FilterBy &that) 
+{ 
+    return op("and", that); 
+}
+
+// *****************************************************************************
+FilterBy &FilterBy::Or(const FilterBy &that) 
+{ 
+    return op("or", that); 
+}
+
+// *****************************************************************************
+const Dict &FilterBy::filters() const 
+{ 
+    return *m_filters; 
+}
+
+const bool FilterBy::empty() const
+{ 
+    return m_filters->empty(); 
+}
+
+// *****************************************************************************
+unsigned int FilterBy::size() { 
+    return m_filters->size(); 
+}
+
+// *****************************************************************************
+void FilterBy::clear() { 
+    m_filters->clear(); 
 }
 
 // *****************************************************************************
 FilterBy &FilterBy::op(const std::string &logicOperator,
                        const std::string &path,
                        const std::string &relation,
-                       const xmlrpc_c::value &value)
+                       const Json::Value &value)
 {
     // -------------------------------------------------------------------
     // The new simple condition
@@ -62,9 +97,9 @@ FilterBy &FilterBy::op(const std::string &logicOperator,
 
     // The value has to be converted to an array
     List valueList;
-    if (value.type() == xmlrpc_c::value::TYPE_ARRAY)
+	if (value.isArray())
     {
-        fromXmlrpcValue(value, valueList);
+        fromJsonrpcValue(value, valueList);
     }
     else
     {
@@ -75,7 +110,7 @@ FilterBy &FilterBy::op(const std::string &logicOperator,
     // -------------------------------------------------------------------
     // Add the new simple condition to the conditions list
     List conditions;
-    if (!m_filters.empty()) 
+    if (!m_filters->empty()) 
     {
         // The Original m_filters map now becomes a condition
         conditions.append(m_filters);
@@ -84,9 +119,9 @@ FilterBy &FilterBy::op(const std::string &logicOperator,
 
     // -------------------------------------------------------------------
     // Update the filters
-    m_filters.clear();
-    m_filters.add("logical_operator", logicOperator)
-             .add("conditions", conditions);
+    m_filters->clear();
+    m_filters->add("logical_operator", logicOperator)
+              .add("conditions", conditions);
 
     return *this;
 }
@@ -101,9 +136,9 @@ FilterBy &FilterBy::op(const std::string &logicOperator,
 
     // -------------------------------------------------------------------
     // Update the filters
-    m_filters.clear();
-    m_filters.add("logical_operator", logicOperator)
-             .add("conditions", conditions);
+    m_filters->clear();
+    (*m_filters).add("logical_operator", logicOperator)
+                .add("conditions", conditions);
 
     return *this;
 }

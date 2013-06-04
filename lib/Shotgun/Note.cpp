@@ -37,11 +37,11 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace SG {
 
 // *****************************************************************************
-Note::Note(Shotgun *sg, const xmlrpc_c::value &attrs)
+Note::Note(Shotgun *sg, const Json::Value &attrs)
     : Entity(sg)
 {
     m_entityType = m_classType = "Note";
-    m_attrs = new xmlrpc_c::value(attrs);
+    m_attrs = new Json::Value(attrs);
 }
 
 // *****************************************************************************
@@ -49,7 +49,7 @@ Note::Note(const Note &ref)
     : Entity(ref.m_sg)
 {
     m_entityType = m_classType = "Note";
-    m_attrs = new xmlrpc_c::value(*ref.m_attrs);
+    m_attrs = new Json::Value(*ref.m_attrs);
 }
 
 // *****************************************************************************

@@ -35,6 +35,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <string>
 
+#include <Shotgun/config.h>
 #include <Shotgun/types.h>
 #include <Shotgun/List.h>
 #include <Shotgun/Dict.h>
@@ -72,7 +73,7 @@ namespace SG {
  </pre>  
  \endhtmlonly
 */
-class FilterBy
+class SG_API FilterBy
 {
 public:
     // -------------------------------------------------------------------------
@@ -100,7 +101,7 @@ public:
 
     // -------------------------------------------------------------------------
     /// A logic "and" function that adds one general condition to the "filters".
-    FilterBy &And(const FilterBy &that) { return op("and", that); }
+    FilterBy &And(const FilterBy &that);
 
     // -------------------------------------------------------------------------
     /// A template logic "or" function that adds one condition to the "filters".
@@ -111,27 +112,27 @@ public:
     
     // -------------------------------------------------------------------------
     /// A logic "or" function that adds one general condition to the "filters".
-    FilterBy &Or(const FilterBy &that) { return op("or", that); }
+    FilterBy &Or(const FilterBy &that);
 
     // -------------------------------------------------------------------------
     /// Returns the "filters" dict.
-    const Dict &filters() const { return m_filters; }
+    const Dict &filters() const;
 
     // -------------------------------------------------------------------------
     /// Returns whether the "filters" dict is empty.
-    const bool empty() const { return m_filters.empty(); }
+    const bool empty() const;
 
     // -------------------------------------------------------------------------
     /// Returns the size of the "filters" dict.
-    const int size() const { return m_filters.size(); }
+	unsigned int size();
 
     // -------------------------------------------------------------------------
     /// Returns the string representation of the FilterBy class.
-    const std::string str() const { return m_filters.str(); }
+    const std::string str() const { return m_filters->str(); }
 
     // -------------------------------------------------------------------------
     /// Removes all the contents from the "filters" dict.
-    void clear() { m_filters.clear(); }
+    void clear();
 
     // -------------------------------------------------------------------------
     FilterBy &operator=(const FilterBy &that)
@@ -157,14 +158,14 @@ protected:
     FilterBy &op(const std::string &logicOperator,
                  const std::string &path,
                  const std::string &relation,
-                 const xmlrpc_c::value &value);
+                 const Json::Value &value);
 
     // -------------------------------------------------------------------------
     /// Adds a general condition to the "filters" with a specified logic operator.
     FilterBy &op(const std::string &logicOperator,
                  const FilterBy &that);
 
-    Dict m_filters; ///< The "filters" dict.
+    Dict *m_filters; ///< The "filters" dict.
 };
 
 // *****************************************************************************
@@ -173,7 +174,8 @@ FilterBy::FilterBy(const std::string &path,
                    const std::string &relation,
                    const T &value)
 {
-     op("and", path, relation, toXmlrpcValue(value));      
+     m_filters = new Dict();
+     op("and", path, relation, toJsonrpcValue(value));      
 }
 
 // *****************************************************************************
@@ -182,7 +184,7 @@ FilterBy &FilterBy::And(const std::string &path,
                         const std::string &relation,
                         const T &value)
 {
-    return op("and", path, relation, toXmlrpcValue(value));
+    return op("and", path, relation, toJsonrpcValue(value));
 }
 
 // *****************************************************************************
@@ -191,7 +193,7 @@ FilterBy &FilterBy::Or(const std::string &path,
                        const std::string &relation,
                        const T &value)
 {
-    return op("or", path, relation, toXmlrpcValue(value));
+    return op("or", path, relation, toJsonrpcValue(value));
 }
 
 } // End namespace SG

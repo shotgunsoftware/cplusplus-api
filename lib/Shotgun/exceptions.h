@@ -33,6 +33,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef __SG_EXCEPTIONS_H__
 #define __SG_EXCEPTIONS_H__
 
+#include <Shotgun/config.h>
 #include <Shotgun/types.h>
 
 namespace SG {
@@ -44,11 +45,12 @@ class Fields;
 // *****************************************************************************
 /// This is a very basic Shotgun exception that can be used to throw any error.
 /// We suggest to derive from it and create more specific exceptions.
-class SgError : public std::exception
+class SG_API SgError : public std::exception
 {
 public:
-    SgError(const std::string &msg = "") { m_msg = msg; }
-    SgError(const char *msg = "") { m_msg = msg; }
+	SgError() : m_msg("") {}
+    SgError(const std::string &msg) { m_msg = msg; }
+    SgError(const char *msg) { m_msg = msg; }
 
     virtual ~SgError() throw() {}
 
@@ -63,7 +65,7 @@ protected:
 
 // *****************************************************************************
 /// This exception is thrown if Shotgun server URL is not set.
-class SgServerURLNotSetError : public SgError
+class SG_API SgServerURLNotSetError : public SgError
 {
 public:
     SgServerURLNotSetError();
@@ -74,18 +76,19 @@ public:
 // *****************************************************************************
 /// "SgAttrError" is nothing more than it's base class, "SgError". It is just an 
 /// extra container for the attribute-specific exceptions.
-class SgAttrError : public SgError
+class SG_API SgAttrError : public SgError
 {
 public:
-    SgAttrError(const std::string &msg = "") : SgError(msg) {}
-    SgAttrError(const char *msg = "") : SgError(msg) {}
+	SgAttrError() : SgError("") {}
+    SgAttrError(const std::string &msg) : SgError(msg) {}
+    SgAttrError(const char *msg) : SgError(msg) {}
 
     virtual ~SgAttrError() throw() {}
 };
 
 // *****************************************************************************
 /// This exception is thrown if the given attribute does not exist.
-class SgAttrNotFoundError : public SgAttrError
+class SG_API SgAttrNotFoundError : public SgAttrError
 {
 public:
     SgAttrNotFoundError(const std::string &attrName);
@@ -96,12 +99,12 @@ public:
 // *****************************************************************************
 /// This exception is thrown if the attribute has a different type from the
 /// one expected.
-class SgAttrTypeError : public SgAttrError
+class SG_API SgAttrTypeError : public SgAttrError
 {
 public:
     SgAttrTypeError(const std::string &attrName,
-                    const xmlrpc_c::value::type_t wrongType,
-                    const xmlrpc_c::value::type_t correctType);
+                    const Json::ValueType wrongType,
+                    const Json::ValueType correctType);
     SgAttrTypeError(const std::string &attrName,
                     const std::string &msg = "");
 
@@ -111,7 +114,7 @@ public:
 // *****************************************************************************
 /// This exception is thrown if the attribute does not have a valid value.
 /// It is usually caused by a nil value on Shotgun side.
-class SgAttrValueError : public SgAttrError
+class SG_API SgAttrValueError : public SgAttrError
 {
 public:
     SgAttrValueError(const std::string &attrName);
@@ -122,7 +125,7 @@ public:
 // *****************************************************************************
 /// This exception is thrown if an entity link is missing a required field, 
 /// such as "id" or "type".
-class SgAttrLinkError : public SgAttrError
+class SG_API SgAttrLinkError : public SgAttrError
 {
 public:
     SgAttrLinkError(const Dict &link);
@@ -133,7 +136,7 @@ public:
 
 // *****************************************************************************
 /// This exception is thrown if setting attribute value(s) for an entity fails.
-class SgAttrSetValueError : public SgAttrError
+class SG_API SgAttrSetValueError : public SgAttrError
 {
 public:
     SgAttrSetValueError(const Fields &fields,
@@ -144,7 +147,7 @@ public:
 
 // *****************************************************************************
 /// This exception is thrown if the attribute map is empty.
-class SgEmptyAttrMapError : public SgAttrError
+class SG_API SgEmptyAttrMapError : public SgAttrError
 {
 public:
     SgEmptyAttrMapError();
@@ -155,28 +158,29 @@ public:
 // *****************************************************************************
 /// "SgEntityError" is nothing more than it's base class, "SgError". It is just 
 /// an extra container for the entity-specific exceptions.
-class SgEntityError : public SgError
+class SG_API SgEntityError : public SgError
 {
 public:
-    SgEntityError(const std::string &msg = "") : SgError(msg) {}
-    SgEntityError(const char *msg = "") : SgError(msg) {}
+	SgEntityError() : SgError("") {}
+    SgEntityError(const std::string &msg) : SgError(msg) {}
+    SgEntityError(const char *msg) : SgError(msg) {}
 
     virtual ~SgEntityError() throw() {}
 };
 
 // *****************************************************************************
 /// This exception is thrown if a XML-RPC call fails.
-class SgEntityXmlrpcError : public SgEntityError
+class SG_API SgEntityJsonrpcError : public SgEntityError
 {
 public:
-    SgEntityXmlrpcError(const std::string &msg);
+    SgEntityJsonrpcError(const std::string &msg);
 
-    virtual ~SgEntityXmlrpcError() throw() {}
+    virtual ~SgEntityJsonrpcError() throw() {}
 };
 
 // *****************************************************************************
 /// This exception is thrown if an entity is not found in Shotgun.
-class SgEntityNotFoundError : public SgEntityError
+class SG_API SgEntityNotFoundError : public SgEntityError
 {
 public:
     SgEntityNotFoundError(const std::string &entityType = "" );
@@ -186,7 +190,7 @@ public:
 
 // *****************************************************************************
 /// This exception is throw if a given type of entity is not registered.
-class SgEntityNotRegisteredError : public SgEntityError
+class SG_API SgEntityNotRegisteredError : public SgEntityError
 {
 public:
     SgEntityNotRegisteredError(const std::string &entityType);
@@ -197,7 +201,7 @@ public:
 // *****************************************************************************
 /// This exception is thrown if dynamic_casting to a specified type of entity
 /// fails.
-class SgEntityDynamicCastError : public SgEntityError
+class SG_API SgEntityDynamicCastError : public SgEntityError
 {
 public:
     SgEntityDynamicCastError(const std::string &castType);
@@ -207,7 +211,7 @@ public:
 
 // *****************************************************************************
 /// This exception is thrown if creating a new entity fails.
-class SgEntityCreateError : public SgEntityError
+class SG_API SgEntityCreateError : public SgEntityError
 {
 public:
     SgEntityCreateError(const std::string &err);
@@ -217,55 +221,57 @@ public:
 
 // *****************************************************************************
 /// "SgXmlrpcValueError" is nothing more than it's base class, "SgError". It is 
-/// just an extra container for the xmlrpc_c::value related exceptions.
-class SgXmlrpcValueError : public SgError
+/// just an extra container for the Json::Value related exceptions.
+class SG_API SgJsonrpcValueError : public SgError
 {
 public:
-    SgXmlrpcValueError(const std::string &msg = "") : SgError(msg) {}
-    SgXmlrpcValueError(const char *msg = "") : SgError(msg) {}
+	SgJsonrpcValueError() : SgError("") {}
+    SgJsonrpcValueError(const std::string &msg) : SgError(msg) {}
+    SgJsonrpcValueError(const char *msg) : SgError(msg) {}
 
-    virtual ~SgXmlrpcValueError() throw() {}
+    virtual ~SgJsonrpcValueError() throw() {}
 };
 
 // *****************************************************************************
-/// This exception is thrown if an instantiated xmlrpc_c::value has a different
+/// This exception is thrown if an instantiated Json::Value has a different
 /// type than expected.
-class SgXmlrpcValueTypeError : public SgXmlrpcValueError
+class SG_API SgJsonrpcValueTypeError : public SgJsonrpcValueError
 {
 public:
-    SgXmlrpcValueTypeError(const xmlrpc_c::value &value,
-                           const xmlrpc_c::value::type_t wrongType,
-                           const xmlrpc_c::value::type_t correctType);
+    SgJsonrpcValueTypeError(const Json::Value &value,
+                           const Json::ValueType wrongType,
+                           const Json::ValueType correctType);
 
-    virtual ~SgXmlrpcValueTypeError() throw() {}
+    virtual ~SgJsonrpcValueTypeError() throw() {}
 };
 
 // *****************************************************************************
-/// This exception is thrown if the xmlrpc_c::value is of TYPE_NIL, i.e. 
+/// This exception is thrown if the Json::Value is of TYPE_NIL, i.e. 
 /// non-existent.
-class SgXmlrpcValueIsNilError : public SgXmlrpcValueError
+class SG_API SgJsonrpcValueIsNilError : public SgJsonrpcValueError
 {
 public:
-    SgXmlrpcValueIsNilError();
+    SgJsonrpcValueIsNilError();
 
-    virtual ~SgXmlrpcValueIsNilError() throw() {}
+    virtual ~SgJsonrpcValueIsNilError() throw() {}
 };
 
 // *****************************************************************************
 /// "SgListError" is nothing more than it's base class, "SgError". It is 
 /// just an extra container for the List class related exceptions.
-class SgListError : public SgError
+class SG_API SgListError : public SgError
 {
 public:
-    SgListError(const std::string &msg = "") : SgError(msg) {}
-    SgListError(const char *msg = "") : SgError(msg) {}
+	SgListError() : SgError("") {}
+    SgListError(const std::string &msg) : SgError(msg) {}
+    SgListError(const char *msg) : SgError(msg) {}
 
     virtual ~SgListError() throw() {}
 };
 
 // *****************************************************************************
 /// This exception is thrown if the index of a List is out of range.
-class SgListIndexOutOfRangeError : public SgListError
+class SG_API SgListIndexOutOfRangeError : public SgListError
 {
 public:
     SgListIndexOutOfRangeError(const int index,
@@ -276,11 +282,11 @@ public:
 };
 
 // *****************************************************************************
-/// This exception is thrown if a xmlrpc_c::value can't be converted to a List.
-class SgListConversionError : public SgListError
+/// This exception is thrown if a Json::Value can't be converted to a List.
+class SG_API SgListConversionError : public SgListError
 {
 public:
-    SgListConversionError(const xmlrpc_c::value &value);
+    SgListConversionError(const Json::Value &value);
 
     virtual ~SgListConversionError() throw() {}
 };
@@ -288,18 +294,19 @@ public:
 // *****************************************************************************
 /// "SgDictError" is nothing more than it's base class, "SgError". It is 
 /// just an extra container for the Dict class related exceptions.
-class SgDictError : public SgError
+class SG_API SgDictError : public SgError
 {
 public:
-    SgDictError(const std::string &msg = "") : SgError(msg) {}
-    SgDictError(const char *msg = "") : SgError(msg) {}
+	SgDictError() : SgError("") {}
+    SgDictError(const std::string &msg) : SgError(msg) {}
+    SgDictError(const char *msg) : SgError(msg) {}
 
     virtual ~SgDictError() throw() {}
 };
 
 // *****************************************************************************
 /// This exception is thrown if the given key does not exist in a Dict.
-class SgDictKeyNotFoundError : public SgDictError
+class SG_API SgDictKeyNotFoundError : public SgDictError
 {
 public:
     SgDictKeyNotFoundError(const std::string &key);
@@ -308,11 +315,11 @@ public:
 };
 
 // *****************************************************************************
-/// This exception is thrown if a xmlrpc_c::value can't be converted to a Dict.
-class SgDictConversionError : public SgDictError
+/// This exception is thrown if a Json::Value can't be converted to a Dict.
+class SG_API SgDictConversionError : public SgDictError
 {
 public:
-    SgDictConversionError(const xmlrpc_c::value &value);
+    SgDictConversionError(const Json::Value &value);
 
     virtual ~SgDictConversionError() throw() {}
 };

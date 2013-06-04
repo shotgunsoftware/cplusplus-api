@@ -35,8 +35,9 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace SG {
 
 // *****************************************************************************
-List::List() : m_value(std::vector<xmlrpc_c::value>())
+List::List()
 {
+    m_value = new std::vector<Json::Value>();
 }
 
 // *****************************************************************************
@@ -45,33 +46,61 @@ List::List(const List &ref) : m_value(ref.m_value)
 }
 
 // *****************************************************************************
-List::List(const std::vector<xmlrpc_c::value> &array) : m_value(array)
+List::List(const std::vector<Json::Value> &array)
 {
+    m_value = new std::vector<Json::Value>(array);
+}
+
+List::List(const Json::Value &value)
+{
+	std::vector<Json::Value> *out = new std::vector<Json::Value>();
+	for(Json::ValueIterator itr = value.begin(); itr != value.end(); itr++)
+		out->push_back(value[itr.index()]);
+	m_value = out;
 }
 
 // *****************************************************************************
 List &List::extend(const List &that)
 {
-    m_value.insert(m_value.end(), that.m_value.begin(), that.m_value.end());
+    m_value->insert(m_value->end(), that.m_value->begin(), that.m_value->end());
 
     return *this;
 }
 
 // *****************************************************************************
-const xmlrpc_c::value List::value(const int index) const
+const Json::Value List::value(const int index) const
 {
-    if (index >= 0 && index < m_value.size())
+    if (index >= 0 && index < m_value->size())
     {
-        return m_value[index];
+        return (*m_value)[index];
     }
     else
     {
-        throw SgListIndexOutOfRangeError(index, 0, m_value.size());
+        throw SgListIndexOutOfRangeError(index, 0, m_value->size());
     }
 }
 
+const std::vector<Json::Value> &List::value() const 
+{ 
+    return *m_value; 
+}
+
+const int List::size() const 
+{ 
+    return m_value->size(); 
+}
+
+const bool List::empty() const 
+{ 
+    return m_value->empty(); 
+}
+
+void List::clear() 
+{ 
+    m_value->clear(); 
+}
 // *****************************************************************************
-const xmlrpc_c::value List::operator[](const int index) const
+const Json::Value List::operator[](const int index) const
 {
     return value(index);
 }
@@ -79,13 +108,13 @@ const xmlrpc_c::value List::operator[](const int index) const
 // *****************************************************************************
 void List::erase(const int index)
 {
-    m_value.erase(m_value.begin() + index);
+    m_value->erase(m_value->begin() + index);
 }
 
 // *****************************************************************************
 void List::erase(const int first, const int last)
 {
-    m_value.erase(m_value.begin() + first, m_value.begin() + last);
+    m_value->erase(m_value->begin() + first, m_value->begin() + last);
 }
 
 } // End namespace SG

@@ -37,6 +37,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <string>
 #include <utility>
 
+#include <Shotgun/config.h>
+
 #include <Shotgun/types.h>
 #include <Shotgun/exceptions.h>
 #include <Shotgun/FilterBy.h>
@@ -65,7 +67,7 @@ namespace SG {
 
 // *****************************************************************************
 /// Defines a function pointer to a Shotgun entity's factory() function.
-typedef Entity* (*FactoryFunc)(Shotgun *, const xmlrpc_c::value &);
+typedef Entity* (*FactoryFunc)(Shotgun *, const Json::Value &);  
 
 /// Defines a function pointer to a Shotgun entity's defaultReturnFields() function.
 typedef List (*DefaultReturnFieldsFunc) ();
@@ -91,7 +93,7 @@ class NoteMixin;
 /// A Shotgun class is the main drive of this library. It initiates the connection
 /// with the Shotgun server. All access to Shotgun data must go through a Shotgun 
 /// class object.
-class Shotgun
+class SG_API Shotgun
 {
 public:
     // -------------------------------------------------------------------------
@@ -108,9 +110,9 @@ public:
     /// \param authKey - authentication "script_key" which corresponds to 
     ///                  "Application Key" on the [Admin] > [Scripts] page.
     ///
-    Shotgun(const std::string &serverURL = SG_DEFAULT_URL,
-            const std::string &authName = SG_AUTHENTICATION_NAME,
-            const std::string &authKey = SG_AUTHENTICATION_KEY);
+    Shotgun(const std::string &serverURL = "",
+            const std::string &authName = "",
+            const std::string &authKey = "");
 
     /// A destructor that does nothing.
     virtual ~Shotgun();
@@ -329,7 +331,7 @@ private:
     // -------------------------------------------------------------------------
     /// Set the "TZ" environment varible which is used by some datetime-related
     /// calls to find the correct local time zone
-    void setTimeZoneEnv(); 
+    //void setTimeZoneEnv(); 
 
     ClassRegistry m_classRegistry; ///< The class registry map.
 };

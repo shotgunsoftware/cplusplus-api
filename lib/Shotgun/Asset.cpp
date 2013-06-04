@@ -37,11 +37,11 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace SG {
 
 // *****************************************************************************
-Asset::Asset(Shotgun *sg, const xmlrpc_c::value &attrs)
+Asset::Asset(Shotgun *sg, const Json::Value &attrs)
     : Entity(sg), TaskMixin(), NoteMixin()
 {
     m_entityType = m_classType = "Asset";
-    m_attrs = new xmlrpc_c::value(attrs);
+    m_attrs = new Json::Value(attrs);
 }
 
 // *****************************************************************************
@@ -49,7 +49,7 @@ Asset::Asset(const Asset &ref)
     : Entity(ref.m_sg)
 {
     m_entityType = m_classType = "Asset";
-    m_attrs = new xmlrpc_c::value(*ref.m_attrs);
+    m_attrs = new Json::Value(*ref.m_attrs);
 }
 
 // *****************************************************************************

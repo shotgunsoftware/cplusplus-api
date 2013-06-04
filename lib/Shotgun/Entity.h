@@ -36,6 +36,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <iostream>
 #include <string>
 
+#include <Shotgun/config.h>
 #include <Shotgun/types.h>
 #include <Shotgun/exceptions.h>
 #include <Shotgun/Method.h>
@@ -53,18 +54,18 @@ class NoteMixin;
 
 // *****************************************************************************
 /// \class Entity
-class Entity
+class SG_API Entity
 {
 public:
     // -------------------------------------------------------------------------
     /// A destructor that deletes the entity's raw attribute map which is of 
-    /// (xmlrpc_c::value *) type.
+    /// (Json::Value *) type.
     virtual ~Entity();
 
     // -------------------------------------------------------------------------
     /// Returns the Shotgun class instance.
-    const Shotgun *sg() const { return m_sg; }
-    Shotgun *sg() { return m_sg; }
+    const Shotgun *sg() const;
+    Shotgun *sg();
 
     // -------------------------------------------------------------------------
     // These are the few common attributes shared by all entities
@@ -72,11 +73,11 @@ public:
     /// Returns an entity's id.
     virtual const int sgId() const { return getAttrValueAsInt("id"); }
 
-    /// Returns the UTC time when the entity was created.
-    virtual const time_t sgDateCreated() const { return getAttrValueAsUTCtime("created_at"); }
+    ///// Returns the UTC time when the entity was created.
+    //virtual const time_t sgDateCreated() const { return getAttrValueAsUTCtime("created_at"); }
 
-    /// Returns the UTC time when the entity was last updated.
-    virtual const time_t sgDateUpdated() const { return getAttrValueAsUTCtime("updated_at"); }
+    ///// Returns the UTC time when the entity was last updated.
+    //virtual const time_t sgDateUpdated() const { return getAttrValueAsUTCtime("updated_at"); }
 
     /// Returns the project name associated with the current entity. It will be
     /// reimplemented for the Project entity.
@@ -88,19 +89,19 @@ public:
 
     // -------------------------------------------------------------------------
     /// Returns the de-referenced entity's raw attribute map.
-    const xmlrpc_c::value &attrs() const { return *m_attrs; }
+    const Json::Value &attrs() const;
 
     // -------------------------------------------------------------------------
     /// Returns the string representation of the entity.
-    const std::string str() const { return toStdString(*m_attrs); }
+    const std::string str() const;
 
     // -------------------------------------------------------------------------
     /// Returns the string representation of the entity type.
-    const std::string entityType() const { return m_entityType; }
+    const std::string entityType() const;
 
     // -------------------------------------------------------------------------
     /// Returns the string representation of the entity class type.
-    const std::string classType() const { return m_classType; }
+    const std::string classType() const;
 
     // -------------------------------------------------------------------------
     /// Returns the namespace of the class. It is needed in SIP-wrapped python to 
@@ -128,15 +129,15 @@ public:
     const std::string linkEntityType(const std::string &linkName) const;
     
     // -------------------------------------------------------------------------
-    /// Gets an attribute's value. It returns as a generic xmlrpc_c::value type.
+    /// Gets an attribute's value. It returns as a generic Json::Value type.
     /// It checks the entity's raw attribute map first. If the attribute exists,
     /// returns its value. Otherwise, do a fresh search in Shotgun and try to
     /// fetch the value directly from Shotgun.
-    virtual const xmlrpc_c::value getAttrValue(const std::string &attrName) const;
+    virtual const Json::Value getAttrValue(const std::string &attrName) const;
 
     /// Gets an attribute's value from a given attribute map and returns the 
-    /// result as a generic xmlrpc_c::value type.
-    static const xmlrpc_c::value getAttrValue(const std::string &attrName, 
+    /// result as a generic Json::Value type.
+    static const Json::Value getAttrValue(const std::string &attrName, 
                                               const Dict &attrsMap);
 
     // -------------------------------------------------------------------------
@@ -202,47 +203,47 @@ public:
                                              const Dict &attrsMap,
                                              const double defaultVal);
 
-    // -------------------------------------------------------------------------
-    /// Gets an attribute's value from the entity's raw attribute map and returns
-    /// as a time_t type (UTC time). If it fails, throw an exception.
-    virtual const time_t getAttrValueAsUTCtime(const std::string &attrName) const;
+    ////// -------------------------------------------------------------------------
+    /////// Gets an attribute's value from the entity's raw attribute map and returns
+    /////// as a time_t type (UTC time). If it fails, throw an exception.
+    ////virtual const time_t getAttrValueAsUTCtime(const std::string &attrName) const;
 
-    /// Gets an attribute's value from the entity's raw attribute map and returns
-    /// as a time_t type (UTC time). If it fails, use the given default value.
-    virtual const time_t getAttrValueAsUTCtime(const std::string &attrName, 
-                                               const time_t defaultVal) const;
+    /////// Gets an attribute's value from the entity's raw attribute map and returns
+    /////// as a time_t type (UTC time). If it fails, use the given default value.
+    //virtual const time_t getAttrValueAsUTCtime(const std::string &attrName, 
+    //                                           const time_t defaultVal) const;
 
-    /// Gets an attribute's value from the given attribute map and returns
-    /// as a time_t type (UTC time). If it fails, throw an exception.
-    static const time_t getAttrValueAsUTCtime(const std::string &attrName, 
-                                              const Dict &attrsMap);
+    /////// Gets an attribute's value from the given attribute map and returns
+    /////// as a time_t type (UTC time). If it fails, throw an exception.
+    //static const time_t getAttrValueAsUTCtime(const std::string &attrName, 
+    //                                          const Dict &attrsMap);
 
-    /// Gets an attribute's value from the given attribute map and returns
-    /// as a time_t type (UTC time). If it fails, use the given default value.
-    static const time_t getAttrValueAsUTCtime(const std::string &attrName, 
-                                              const Dict &attrsMap,
-                                              const time_t defaultVal);
+    /////// Gets an attribute's value from the given attribute map and returns
+    /////// as a time_t type (UTC time). If it fails, use the given default value.
+    //static const time_t getAttrValueAsUTCtime(const std::string &attrName, 
+    //                                          const Dict &attrsMap,
+    //                                          const time_t defaultVal);
 
-    // -------------------------------------------------------------------------
-    /// Gets an attribute's value from the entity's raw attribute map and returns
-    /// as a struct tm type (local time). If it fails, throw an exception.
-    virtual const struct tm getAttrValueAsLocaltime(const std::string &attrName) const;
+    ////// -------------------------------------------------------------------------
+    /////// Gets an attribute's value from the entity's raw attribute map and returns
+    /////// as a struct tm type (local time). If it fails, throw an exception.
+    //virtual const struct tm getAttrValueAsLocaltime(const std::string &attrName) const;
 
-    /// Gets an attribute's value from the entity's raw attribute map and returns
-    /// as a struct tm type (local time). If it fails, use the given default value.
-    virtual const struct tm getAttrValueAsLocaltime(const std::string &attrName, 
-                                                    const struct tm &defaultVal) const;
+    /////// Gets an attribute's value from the entity's raw attribute map and returns
+    /////// as a struct tm type (local time). If it fails, use the given default value.
+    //virtual const struct tm getAttrValueAsLocaltime(const std::string &attrName, 
+    //                                                const struct tm &defaultVal) const;
 
-    /// Gets an attribute's value from the given attribute map and returns
-    /// as a struct tm type (local time). If it fails, throw an exception.
-    static const struct tm getAttrValueAsLocaltime(const std::string &attrName, 
-                                                   const Dict &attrsMap);
+    /////// Gets an attribute's value from the given attribute map and returns
+    /////// as a struct tm type (local time). If it fails, throw an exception.
+    //static const struct tm getAttrValueAsLocaltime(const std::string &attrName, 
+    //                                               const Dict &attrsMap);
 
-    /// Gets an attribute's value from the given attribute map and returns
-    /// as a struct tm type (local time). If it fails, use the given default value.
-    static const struct tm getAttrValueAsLocaltime(const std::string &attrName, 
-                                                   const Dict &attrsMap,
-                                                   const struct tm &defaultVal);
+    /////// Gets an attribute's value from the given attribute map and returns
+    /////// as a struct tm type (local time). If it fails, use the given default value.
+    //static const struct tm getAttrValueAsLocaltime(const std::string &attrName, 
+    //                                               const Dict &attrsMap,
+    //                                               const struct tm &defaultVal);
 
     // -------------------------------------------------------------------------
     /// Gets an attribute's value from the entity's raw attribute map and returns
@@ -418,7 +419,7 @@ public:
             m_classType = that.m_classType;
 
             delete m_attrs;
-            m_attrs = new xmlrpc_c::value(*(that.m_attrs));
+            m_attrs = new Json::Value(*(that.m_attrs));
         }
 
         return *this;
@@ -431,21 +432,21 @@ protected:
 
     // -------------------------------------------------------------------------
     /// Creates a new Shotgun entity by the given data map and returns the
-    /// result as raw xmlrpc_c::value struct.
-    static xmlrpc_c::value createSGEntity(Shotgun *sg, const Dict &createMap);
+    /// result as raw Json::Value struct.
+    static Json::Value createSGEntity(Shotgun *sg, const Dict &createMap);
 
     /// Finds a list of Shotgun entities that match the search map. Each of
-    /// the entity is as raw xmlrpc_c::value struct.
+    /// the entity is as raw Json::Value struct.
     static List findSGEntities(Shotgun *sg, 
                                Dict &findMap,
                                const int limit = 0);
 
     /// Updates the attribute(s) of an existing Shotgun entity and returns the
-    /// updated entity as raw xmlrpc_c::value struct.
-    static xmlrpc_c::value updateSGEntity(Shotgun *sg,
-                                          const std::string &entityType,
-                                          const int entityId,
-                                          const Fields &fieldsToUpdate);
+    /// updated entity as raw Json::Value struct.
+    static Json::Value updateSGEntity(Shotgun *sg,
+                                      const std::string &entityType,
+                                      const int entityId,
+                                      const Fields &fieldsToUpdate);
 
     /// Deletes an existing Shotgun entity
     static bool deleteSGEntity(Shotgun *sg, 
@@ -497,11 +498,11 @@ protected:
     // -------------------------------------------------------------------------
     /// The result of a method call is a struct. This convenience function 
     /// is to extract a list of raw Shotgun entities from the result struct.
-    static List getFindResultEntityList(xmlrpc_c::value &rawResult);
+    static List getFindResultEntityList(Json::Value &rawResult);
 
     /// This convenience function gets the paging info from the raw result 
     /// of the method calls
-    static Dict getResultPagingInfo(xmlrpc_c::value &rawResult);
+    static Dict getResultPagingInfo(Json::Value &rawResult);
 
     /// Validate an entity link and see if it contains the required fields, 
     /// such as "type", "id".
@@ -518,30 +519,21 @@ protected:
     Shotgun *m_sg; ///< The instantiated Shotgun class object.
     std::string m_entityType; ///< The string representation of the entity type.
     std::string m_classType; ///< The string representation of the entity class type.
-
-    // This has to be an pointer since xmlrpc_c::value will not allow the
-    // assignment of an already-instantiated xmlrpc_c::value. For details,
-    // see: http://xmlrpc-c.sourceforge.net/doc/libxmlrpc++.html
-    xmlrpc_c::value *m_attrs;
+    
+    Json::Value *m_attrs;
 };
 
 // *****************************************************************************
 template <typename T>
 const T Entity::getAttrValue(const std::string &attrName) const
 {
-    T result;
+    T result = T();
 
-    xmlrpc_c::value genericResult = getAttrValue(attrName);
-
-    try
-    {
-        fromXmlrpcValue(genericResult, result);
-    }
-    catch (SgXmlrpcValueTypeError &error)
-    {
-        throw SgAttrTypeError(attrName,
-                              error.what());
-    }
+    Json::Value genericResult = getAttrValue(attrName);
+    if(genericResult.isNull())
+        return result;
+    else
+        fromJsonrpcValue(genericResult, result);
 
     return result;
 }
@@ -552,17 +544,12 @@ const T Entity::getAttrValue(const std::string &attrName,
                              const T defaultVal) const
 {
     T result;
-
-    xmlrpc_c::value genericResult = getAttrValue(attrName);
-
-    try
-    {
-        fromXmlrpcValue(genericResult, result);
-    }
-    catch (SgXmlrpcValueTypeError &error)
-    {
-        result = defaultVal;
-    }
+   
+    Json::Value genericResult = getAttrValue(attrName);
+    if(genericResult.isNull())
+        return defaultVal;
+    else
+        fromJsonrpcValue(genericResult, result);
 
     return result;
 }
@@ -572,19 +559,13 @@ template <typename T>
 const T Entity::getAttrValue(const std::string &attrName,
                              const Dict &attrsMap)
 {
-    T result;
+    T result = T();
 
-    xmlrpc_c::value genericResult = getAttrValue(attrName, attrsMap);
-
-    try
-    {
-        fromXmlrpcValue(genericResult, result);
-    }
-    catch (SgXmlrpcValueTypeError &error)
-    {
-        throw SgAttrTypeError(attrName,
-                              error.what());
-    }
+    Json::Value genericResult = getAttrValue(attrName, attrsMap);
+    if(genericResult.isNull())
+        return result;
+    else
+        fromJsonrpcValue(genericResult, result);
 
     return result;
 }
@@ -597,16 +578,11 @@ const T Entity::getAttrValue(const std::string &attrName,
 {
     T result;
 
-    xmlrpc_c::value genericResult = getAttrValue(attrName, attrsMap);
-
-    try
-    {
-        fromXmlrpcValue(genericResult, result);
-    }
-    catch (SgXmlrpcValueTypeError &error)
-    {
-        result = defaultVal;
-    }
+    Json::Value genericResult = getAttrValue(attrName, attrsMap);
+    if(genericResult.isNull())
+        return defaultVal;
+    else
+        fromJsonrpcValue(genericResult, result);
 
     return result;
 }

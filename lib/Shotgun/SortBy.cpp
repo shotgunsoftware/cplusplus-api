@@ -35,8 +35,9 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace SG {
 
 // *****************************************************************************
-SortBy::SortBy() : m_sorts(List())
+SortBy::SortBy()
 {
+    m_sorts = new List();
 }
 
 // *****************************************************************************
@@ -45,16 +46,36 @@ SortBy::SortBy(const SortBy &ref) : m_sorts(ref.m_sorts)
 }
 
 // *****************************************************************************
-SortBy::SortBy(const List &sorts) : m_sorts(sorts)
+SortBy::SortBy(const List &sorts)
 {
+    m_sorts = new List(sorts);
+}
+
+const List &SortBy::sorts() const
+{ 
+    return *m_sorts; 
+}
+
+const bool SortBy::empty() const 
+{ 
+    return m_sorts->empty(); 
+}
+
+const int SortBy::size() const 
+{ 
+    return m_sorts->size(); 
+}
+
+void SortBy::clear() 
+{ 
+    m_sorts->clear(); 
 }
 
 // *****************************************************************************
 SortBy &SortBy::then(const std::string &fieldName,
                      const std::string &direction)
 {
-    m_sorts.append(Dict("field_name", fieldName)
-                   .add("direction", direction));
+    m_sorts->append(Dict("field_name", fieldName).add("direction", direction));
 
     return *this;
 }
@@ -62,7 +83,7 @@ SortBy &SortBy::then(const std::string &fieldName,
 // *****************************************************************************
 SortBy &SortBy::then(const SortBy &that)
 {
-    m_sorts.extend(that.sorts());
+    m_sorts->extend(that.sorts());
 
     return *this;
 }

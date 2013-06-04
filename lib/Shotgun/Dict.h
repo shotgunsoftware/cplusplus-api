@@ -35,6 +35,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <string>
 
+#include <Shotgun/config.h>
 #include <Shotgun/types.h>
 #include <Shotgun/exceptions.h>
 
@@ -42,9 +43,9 @@ namespace SG {
 
 // *****************************************************************************
 /// \class Dict
-/// A Dict class is basically a wrapper around a std::map<std::string, xmlrpc_c::value> 
+/// A Dict class is basically a wrapper around a std::map<std::string, Json::Value> 
 /// container. 
-class Dict
+class SG_API Dict
 {
 public:
     // -------------------------------------------------------------------------
@@ -55,13 +56,13 @@ public:
     Dict(const Dict &ref);
 
     /// A constructor that takes a std::map.
-    Dict(const std::map<std::string, xmlrpc_c::value> &map);
+    Dict(const std::map<std::string, Json::Value> &map);
 
     /// A constructor that should only be used within the Shotgun lib.
-    /// It checks whether the input is a xmlrpc_c::value::TYPE_STRUCT type.
+	/// It checks whether the input is a Json::Value::objectValue type.
     /// If so, it converts the input to the std::map container. Otherwise, it 
     /// throws an exception.
-    Dict(const xmlrpc_c::value &value);
+    Dict(const Json::Value &Value);
 
     /// A template constructor that takes a (key, value) pair, and add
     /// that pair to the std::map container.
@@ -80,30 +81,30 @@ public:
 
     // -------------------------------------------------------------------------
     /// Returns the value of a given key. The return value is of type, 
-    /// xmlrpc_c::value. It should only be called within the Shotgun lib.
-    const xmlrpc_c::value value(const std::string &key) const;
+    /// Json::Value. It should only be called within the Shotgun lib.
+	const Json::Value value(const std::string &key) const;
 
     // -------------------------------------------------------------------------
     /// This [] operator that returns the value of a given key. The return 
-    /// value is of type, xmlrpc_c::value. It should only be called within 
+    /// value is of type, Json::Value. It should only be called within 
     /// the Shotgun lib.
-    const xmlrpc_c::value operator[](const std::string &key) const;
+	const Json::Value operator[](const std::string &key) const;
 
     // -------------------------------------------------------------------------
     /// Returns the std::map container that the Dict class wraps around.
-    const std::map<std::string, xmlrpc_c::value> &value() const { return m_value; }
+    const std::map<std::string, Json::Value> &value() const; 
 
     // -------------------------------------------------------------------------
     /// Returns whether the std::map container is empty.
-    const bool empty() const { return m_value.empty(); }
+    const bool empty() const;
 
     // -------------------------------------------------------------------------
     /// Returns the size of the std::map container.
-    const int size() const { return m_value.size(); }
+	const int size();
 
     // -------------------------------------------------------------------------
     /// Returns the string representation of the Dict class.
-    const std::string str() const { return toStdString(m_value); }
+    const std::string str() const { return toStdString(*m_value); }
 
     // -------------------------------------------------------------------------
     /// Returns whether a given key exists.
@@ -111,7 +112,7 @@ public:
 
     // -------------------------------------------------------------------------
     /// Removes all the contents from the std::map container, leaving it with a size of 0.
-    void clear() { m_value.clear(); }
+    void clear();
 
     // -------------------------------------------------------------------------
     /// Removes a single element with the given key from the std::map container.
@@ -136,13 +137,14 @@ public:
     }
 
 protected:
-    std::map<std::string, xmlrpc_c::value> m_value; ///< The std::map container.
+	std::map<std::string, Json::Value> *m_value; ///< The std::map container.
 };
 
 // *****************************************************************************
 template <typename T>
 Dict::Dict(const std::string &key, const T &value)
 {
+     m_value = new std::map<std::string, Json::Value>();
      add<T>(key, value);      
 }
 
@@ -151,9 +153,9 @@ template <typename T>
 Dict &Dict::add(const std::string &key, const T &value)
 {
     // Remove the (key, value) pair first if the key is found since 
-    // xmlrpc_c::value type can't be reassigned once it's instantiated.
+    // Json::Value type can't be reassigned once it's instantiated.
     erase(key);
-    m_value[key] = toXmlrpcValue(value);
+    (*m_value)[key] = toJsonrpcValue(value);
 
     return *this;
 }
@@ -162,17 +164,17 @@ Dict &Dict::add(const std::string &key, const T &value)
 template <typename  T>
 const T Dict::value(const std::string &key) const
 {
-    std::map<std::string, xmlrpc_c::value>::const_iterator foundIter = m_value.find(key);
-    if (foundIter != m_value.end())
+	std::map<std::string, Json::Value>::const_iterator foundIter = m_value->find(key);
+    if (foundIter != m_value->end())
     {
         T outVal;
-        fromXmlrpcValue((*foundIter).second, outVal);
+        fromJsonrpcValue((*foundIter).second, outVal);
         return outVal;
 
 #if 0
-        // The template function doesn't work since xmlrpc_c::value has to be casted to a
-        // specific derived xmlrpc_c::value type first, which the compiler doesn't like.
-        return fromXmlrpcValue<T>(value);
+        // The template function doesn't work since Json::Value has to be casted to a
+        // specific derived Json::Value type first, which the compiler doesn't like.
+        return fromJsonrpcValue<T>(value);
 #endif
     }
     else

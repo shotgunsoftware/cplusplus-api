@@ -35,13 +35,14 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <string>
 
+#include <Shotgun/config.h>
 #include <Shotgun/Entity.h>
 
 namespace SG {
 
 // *****************************************************************************
 /// \class Group
-class Group : public Entity
+class SG_API Group : public Entity
 {
     friend class Shotgun;
  
@@ -84,7 +85,7 @@ protected:
     ///
     /// \param sg - instantiated Shotgun object pointer
     /// \param attrs - raw attribute map for a Shotgun entity
-    Group(Shotgun *sg, const xmlrpc_c::value &attrs);
+    Group(Shotgun *sg, const Json::Value &attrs);
 
     // -------------------------------------------------------------------------
     /// A Group entity factory function.
@@ -92,7 +93,7 @@ protected:
     /// \param sg - instantiated Shotgun object pointer
     /// \param attrs - raw attribute map for a Shotgun entity
     /// \return a newly-created Group * as its base Entity * type
-    static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Group(sg, attrs); }
+    static Entity *factory(Shotgun *sg, const Json::Value &attrs) { return new Group(sg, attrs); }
 
     // -------------------------------------------------------------------------
     /// Builds a list of default "return_fields" which are the attributes

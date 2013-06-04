@@ -33,13 +33,14 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef __SG_HUMAN_USER_H__
 #define __SG_HUMAN_USER_H__
 
+#include <Shotgun/config.h>
 #include <Shotgun/Entity.h>
 
 namespace SG {
 
 // *****************************************************************************
 /// \class HumanUser
-class HumanUser : public Entity
+class SG_API HumanUser : public Entity
 {
     friend class Shotgun;
  
@@ -82,7 +83,7 @@ protected:
     ///
     /// \param sg - instantiated Shotgun object pointer
     /// \param attrs - raw attribute map for a Shotgun entity
-    HumanUser(Shotgun *sg, const xmlrpc_c::value &attrs);
+    HumanUser(Shotgun *sg, const Json::Value &attrs);
 
     // -------------------------------------------------------------------------
     /// A HumanUser entity factory function.
@@ -90,7 +91,7 @@ protected:
     /// \param sg - instantiated Shotgun object pointer
     /// \param attrs - raw attribute map for a Shotgun entity
     /// \return a newly-created HumanUser * as its base Entity * type
-    static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new HumanUser(sg, attrs); }
+    static Entity *factory(Shotgun *sg, const Json::Value &attrs) { return new HumanUser(sg, attrs); }
 
     // -------------------------------------------------------------------------
     /// Builds a list of default "return_fields" which are the attributes

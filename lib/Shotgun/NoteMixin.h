@@ -35,6 +35,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <string>
 
+#include <Shotgun/config.h>
 #include <Shotgun/Note.h>
 
 namespace SG {
@@ -44,7 +45,7 @@ namespace SG {
 /// A NoteMixin class is used as "add-on"s to any entity class that shares a
 /// common set of Note-related functions. The entity class needs to derive
 /// from the NoteMixin class.
-class NoteMixin
+class SG_API NoteMixin
 {
 public:
     // -------------------------------------------------------------------------

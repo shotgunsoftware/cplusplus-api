@@ -37,6 +37,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <Shotgun/Method.h>
 #include <Shotgun/Shotgun.h>
 
+
 namespace SG {
 
 // *****************************************************************************
@@ -52,111 +53,106 @@ Method::~Method()
     // Nothing
 }
 
-// *****************************************************************************
-MethodSignatures &Method::signature()
-{
-    std::string sigMethodName = std::string("system.methodSignature");
+//std::auto_ptr<curlpp::Easy> Method::createRequest()
+//{
+//	std::auto_ptr<curlpp::Easy> request(new curlpp::Easy);
+//	
+//	std::list<std::string> header;
+//	header.push_back("content-type: application/json; charset=utf-8");
+//	header.push_back("connection : keep-alive");
+//	header.push_back("user-agent : shotgun-json");
+//	header.push_back("Authorization : Basic ");
+//	
+//	request->setOpt<curlpp::options::Url>(m_sg->serverURL());
+//	request->setOpt(new curlpp::options::SslVerifyPeer(FALSE));
+//	request->setOpt(new curlpp::options::HttpHeader(header));
+//	request->setOpt(new curlpp::options::FollowLocation(TRUE));
+//
+//	return request;
+//}
 
+size_t write_data(void *ptr, size_t size, size_t nmemb, void *stream)
+{
+    std::string buf = std::string(static_cast<char *>(ptr), size * nmemb);
+    std::stringstream *response = static_cast<std::stringstream *>(stream);
+    response->write(buf.c_str(), (std::streamsize)buf.size());
+    return size * nmemb;
+}
+
+// *****************************************************************************
+std::string Method::serverCapabilities()
+{
     // Prepare the parameters
-    xmlrpc_c::paramList paramList;
-    paramList.add(toXmlrpcValue(m_methodName));
+	Json::Value root;
+	Json::Value params(Json::arrayValue);
 
-    // RPC
-    xmlrpc_c::clientXmlTransport_curl transport; 
-    xmlrpc_c::client_xml client = xmlrpc_c::client_xml(&transport);
-    xmlrpc_c::carriageParm_curl0 myCarriageParm(m_sg->serverURL());
-    xmlrpc_c::rpcPtr myRpcP(sigMethodName, paramList);
-    myRpcP->call(&client, &myCarriageParm);    
-    assert(myRpcP->isFinished());
+    root["method_name"] = "info";
+	root.append(params);
+	
+	Json::StyledWriter writer;
+	std::string data = writer.write(root);
 
-    m_signatures.clear();
-
-    if (myRpcP->isSuccessful())
-    {
-        xmlrpc_c::value_array const sigs = xmlrpc_c::value_array(myRpcP->getResult());
-
-        for (size_t i = 0; i < sigs.size(); i++)
-        {
-            xmlrpc_c::value_array sig = xmlrpc_c::value_array(sigs.vectorValueValue()[i]);
-            MethodSignature oneSig;
-            for (size_t j = 0; j < sig.size(); j++)
-            {
-                std::string arg = xmlrpc_c::value_string(sig.vectorValueValue()[j]);
-                oneSig.push_back(arg);
-            }
-     
-            m_signatures.push_back(oneSig);
-        }
-    }
-    else
-    {
-        xmlrpc_c::fault const fault = myRpcP->getFault();
-        throw SgEntityXmlrpcError(fault.getDescription());
-    }
-
-    return m_signatures;
+ //   std::auto_ptr<curlpp::Easy> request = createRequest();
+	//request->setOpt(new curlpp::options::PostFields(data));
+	//std::stringstream response;
+	//request->setOpt(new curlpp::options::WriteStream(&response));
+	//
+	//try{
+	//	request->perform();
+	//	return response.str();
+ //   } catch (curlpp::UnknowException & e) {
+ //       std::cout << "Unknown Exception: " << e.what() << std::endl;
+ //   } catch (curlpp::RuntimeError & e) {
+ //       std::cout << "Runtime Exception: " << e.what() << std::endl;
+ //   } catch (curlpp::LogicError & e) {
+ //       std::cout << "Logic Exception: " << e.what() << std::endl;
+ //   }
+	
+	return std::string("failed");
 }
 
+
 // *****************************************************************************
-std::string &Method::help()
+Json::Value Method::call()
 {
-    std::string helpMethodName = std::string("system.methodHelp");
+	// Prepare the parameters
+	Json::Value root;
+	Json::Value params(Json::arrayValue);
 
-    // Prepare the parameters
-    xmlrpc_c::paramList paramList;
-    paramList.add(toXmlrpcValue(m_methodName));
+    root["method_name"] = m_methodName;
+	root.append(params);
 
-    // RPC
-    xmlrpc_c::clientXmlTransport_curl transport;
-    xmlrpc_c::client_xml client = xmlrpc_c::client_xml(&transport);
-    xmlrpc_c::carriageParm_curl0 myCarriageParm(m_sg->serverURL());
-    xmlrpc_c::rpcPtr myRpcP(helpMethodName, paramList);
-    myRpcP->call(&client, &myCarriageParm);
-    assert(myRpcP->isFinished());
+	
+	
+	Json::StyledWriter writer;
+	std::string data = writer.write(root);
 
-    if (myRpcP->isSuccessful())
-    {
-        m_help = std::string(xmlrpc_c::value_string(myRpcP->getResult()));
-    }
-    else
-    {
-        xmlrpc_c::fault const fault = myRpcP->getFault();
-        throw SgEntityXmlrpcError(fault.getDescription());
-    }
-
-    return m_help;
-}
-
-
-// *****************************************************************************
-xmlrpc_c::value Method::call()
-{
-    xmlrpc_c::value output;
-    
-    xmlrpc_c::paramList paramList;
-
-    xmlrpc_c::clientXmlTransport_curl transport;
-    xmlrpc_c::client_xml client = xmlrpc_c::client_xml(&transport);
-    xmlrpc_c::carriageParm_curl0 myCarriageParm(m_sg->serverURL());
-    xmlrpc_c::rpcPtr myRpcP(m_methodName, paramList);
-    myRpcP->call(&client, &myCarriageParm);
-    assert(myRpcP->isFinished());
-
-    if (myRpcP->isSuccessful())
-    {
-        output = xmlrpc_c::value(myRpcP->getResult());
-    }
-    else
-    {
-        xmlrpc_c::fault const fault = myRpcP->getFault();
-        throw SgEntityXmlrpcError(fault.getDescription());
-    }
-
-    return output;
+ //   std::auto_ptr<curlpp::Easy> request = createRequest();
+	//request->setOpt(new curlpp::options::PostFields(data));
+	//
+	//std::stringstream response;
+	//request->setOpt(new curlpp::options::WriteStream(&response));
+	//std::cout << response << std::endl;
+	//try{
+	//	request->perform();
+	//	Json::Reader reader;
+	//	Json::Value output;
+	//	reader.parse(response, output);
+	//	return output;
+ //   } catch (curlpp::UnknowException & e) {
+ //       std::cout << "Unknown Exception: " << e.what() << std::endl;
+ //   } catch (curlpp::RuntimeError & e) {
+ //       std::cout << "Runtime Exception: " << e.what() << std::endl;
+	//	throw SgJsonrpcValueError(e.what());
+ //   } catch (curlpp::LogicError & e) {
+ //       std::cout << "Logic Exception: " << e.what() << std::endl;
+ //   }
+	
+	return Json::Value();
 }
 
 // *****************************************************************************
-xmlrpc_c::value Method::call(const Dict &params)
+Json::Value Method::call(const Dict &params)
 {
     // Here are two ways of doing the RPC call. They return the
     // same result. The "client.call" seems very intuitive, but
@@ -168,41 +164,47 @@ xmlrpc_c::value Method::call(const Dict &params)
     // the execution status of the RPC. Has it been started yet? 
     // Has it finished? Has an error prevented the RPC from executing? 
 
-    xmlrpc_c::value output;
+	// Prepare the parameters
+	Json::Value c_params(Json::arrayValue);
+	c_params.append(toJsonrpcValue(m_sg->authMap()));
+	c_params.append(toJsonrpcValue(params));
     
-    xmlrpc_c::paramList paramList;
+	Json::Value root;
+    root["method_name"] = m_methodName;
+    root["params"] = c_params;
+	
+	std::cout << root << std::endl;
 
-    // Add the authentication info and the arguments to the parameter list
-    paramList.add(toXmlrpcValue(m_sg->authMap()));
-    paramList.add(toXmlrpcValue(params));
+    CURL *curl;
+    curl = curl_easy_init();
+    curl_easy_setopt(curl, CURLOPT_URL, m_sg->serverURL().c_str());
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, FALSE);
 
-#if 0
-    xmlrpc_c::clientXmlTransport_curl transport;
-    xmlrpc_c::client_xml client = xmlrpc_c::client_xml(&transport);
-    xmlrpc_c::carriageParm_curl0 myCarriageParm(m_sg->serverURL());
-    xmlrpc_c::rpcOutcome outcome;
+    struct curl_slist *slist=NULL;
+    slist = curl_slist_append(slist, "content-type: application/json; charset=utf-8");
+    slist = curl_slist_append(slist, "connection : keep-alive");
+    slist = curl_slist_append(slist, "user-agent : shotgun-json");
+    slist = curl_slist_append(slist, "Authorization : Basic ");
+    
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, slist);
+    curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, TRUE);
+    
+	Json::StyledWriter writer;
+	std::string data = writer.write(root);
+    curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 1);
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data.c_str());
+	
+    std::stringstream response;
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
 
-    client.call(&myCarriageParm, m_methodName, paramList, &outcome);
-    output = xmlrpc_c::value(outcome.getResult());
-#else
-    xmlrpc_c::clientXmlTransport_curl transport;
-    xmlrpc_c::client_xml client = xmlrpc_c::client_xml(&transport);
-    xmlrpc_c::carriageParm_curl0 myCarriageParm(m_sg->serverURL());
-    xmlrpc_c::rpcPtr myRpcP(m_methodName, paramList);
-    myRpcP->call(&client, &myCarriageParm);
-    assert(myRpcP->isFinished());
-
-    if (myRpcP->isSuccessful())
-    {
-        output = xmlrpc_c::value(myRpcP->getResult());
-    }
-    else
-    {
-        xmlrpc_c::fault const fault = myRpcP->getFault();
-        throw SgEntityXmlrpcError(fault.getDescription());
-    }
-#endif
-
+    CURLcode res = curl_easy_perform(curl);
+    Json::Reader reader;
+	Json::Value output;
+	bool success = reader.parse(response.str(), output);
+    curl_easy_cleanup(curl);
+	curl_slist_free_all(slist);
+	
     return output;
 }
 

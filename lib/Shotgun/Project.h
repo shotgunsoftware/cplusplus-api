@@ -33,13 +33,14 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef __SG_PROJECT_H__
 #define __SG_PROJECT_H__
 
+#include <Shotgun/config.h>
 #include <Shotgun/Entity.h>
 
 namespace SG {
 
 // *****************************************************************************
 /// \class Project
-class Project : public Entity
+class SG_API Project : public Entity
 {
     friend class Shotgun;
  
@@ -58,7 +59,7 @@ public:
 
     /// Overrides for base Entity class methods that don't work correctly 
     /// for Project entity type.
-    virtual const std::string sgProjectCode() const { return getAttrValueAsString("code"); }
+    virtual const std::string sgProjectCode() const { return getAttrValueAsString("sg_code"); }
 
     // -------------------------------------------------------------------------
     /// The string representation of Project entity type.
@@ -91,7 +92,7 @@ protected:
     ///
     /// \param sg - instantiated Shotgun object pointer
     /// \param attrs - raw attribute map for a Shotgun entity
-    Project(Shotgun *sg, const xmlrpc_c::value &attrs);
+    Project(Shotgun *sg, const Json::Value &attrs);
 
     // -------------------------------------------------------------------------
     /// A Project entity factory function.
@@ -99,7 +100,7 @@ protected:
     /// \param sg - instantiated Shotgun object pointer
     /// \param attrs - raw attribute map for a Shotgun entity
     /// \return a newly-created Project * as its base Entity * type
-    static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Project(sg, attrs); }
+    static Entity *factory(Shotgun *sg, const Json::Value &attrs) { return new Project(sg, attrs); }
 
     // -------------------------------------------------------------------------
     /// Builds a list of default "return_fields" which are the attributes

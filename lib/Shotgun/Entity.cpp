@@ -57,14 +57,50 @@ Entity::~Entity()
 }
 
 // *****************************************************************************
-xmlrpc_c::value Entity::createSGEntity(Shotgun *sg, const Dict &createMap)
+const Shotgun *Entity::sg() const
+{ 
+    return m_sg; 
+}
+
+// *****************************************************************************
+Shotgun *Entity::sg() 
+{ 
+    return m_sg; 
+}
+
+// *****************************************************************************
+const Json::Value &Entity::attrs() const 
+{ 
+    return *m_attrs; 
+}
+
+// *****************************************************************************
+const std::string Entity::str() const 
+{ 
+    return toStdString(*m_attrs); 
+}
+
+// *****************************************************************************
+const std::string Entity::entityType() const 
+{ 
+    return m_entityType; 
+}
+
+// *****************************************************************************
+const std::string Entity::classType() const 
+{ 
+    return m_classType; 
+}
+
+// *****************************************************************************
+Json::Value Entity::createSGEntity(Shotgun *sg, const Dict &createMap)
 {
     Method *md = sg->method("create");
 
-    xmlrpc_c::value rawResult = md->call(createMap); 
-    xmlrpc_c::value results;
+    Json::Value rawResult = md->call(createMap); 
+    Json::Value results;
 
-    if (rawResult.type() != xmlrpc_c::value::TYPE_NIL)
+	if (!rawResult.isNull())
     {
         results = getAttrValue("results", Dict(rawResult));
     }
@@ -80,12 +116,12 @@ List Entity::findSGEntities(Shotgun *sg,
     Method *md = sg->method("read");
 
     List entityList;
-
+    
     bool done = false;
     while (!done)
     {
         // Returns a struct - so convert it to an array of entities
-        xmlrpc_c::value rawResult = md->call(findMap);
+        Json::Value rawResult = md->call(findMap);
 
         List entities = Entity::getFindResultEntityList(rawResult);
 
@@ -134,7 +170,7 @@ List Entity::findSGEntities(Shotgun *sg,
 }
 
 // *****************************************************************************
-xmlrpc_c::value Entity::updateSGEntity(Shotgun *sg, 
+Json::Value Entity::updateSGEntity(Shotgun *sg, 
                                        const std::string &entityType, 
                                        const int entityId,
                                        const Fields &fieldsToUpdate)
@@ -145,10 +181,10 @@ xmlrpc_c::value Entity::updateSGEntity(Shotgun *sg,
                      .add("id", entityId)
                      .add("fields", fieldsToUpdate);
 
-    xmlrpc_c::value rawResult = md->call(updateMap); 
-    xmlrpc_c::value results;
+    Json::Value rawResult = md->call(updateMap); 
+    Json::Value results;
 
-    if (rawResult.type() != xmlrpc_c::value::TYPE_NIL)
+	if (!rawResult.isNull())
     {
         results = getAttrValue("results",
                                Dict(rawResult));
@@ -167,17 +203,17 @@ bool Entity::deleteSGEntity(Shotgun *sg,
     Dict deleteMap = Dict("type", entityType)
                      .add("id", entityId);
 
-    xmlrpc_c::value rawResult = md->call(deleteMap); 
+    Json::Value rawResult = md->call(deleteMap); 
 
     return getAttrValueAsBool("results", Dict(rawResult));
 }
 
 // *****************************************************************************
-List Entity::getFindResultEntityList(xmlrpc_c::value &rawResult)
+List Entity::getFindResultEntityList(Json::Value &rawResult)
 {
     List entityList;
 
-    if (rawResult.type() != xmlrpc_c::value::TYPE_NIL)
+    if (!rawResult.isNull())
     {
         Dict results = getAttrValueAsDict("results", Dict(rawResult));
         entityList = getAttrValueAsList("entities", results);
@@ -187,11 +223,11 @@ List Entity::getFindResultEntityList(xmlrpc_c::value &rawResult)
 }
 
 // *****************************************************************************
-Dict Entity::getResultPagingInfo(xmlrpc_c::value &rawResult)
+Dict Entity::getResultPagingInfo(Json::Value &rawResult)
 {
     Dict pagingInfoMap;
 
-    if (rawResult.type() != xmlrpc_c::value::TYPE_NIL)
+    if (!rawResult.isNull())
     {
         Dict results = getAttrValueAsDict("results", Dict(rawResult));
         pagingInfoMap = getAttrValueAsDict("paging_info", results);
@@ -233,6 +269,7 @@ const std::string Entity::getProjectCode() const
     std::string projectName = getAttrValueAsString("name", projectMap);
 
     Project *project = m_sg->findEntity<Project>(FilterBy("name", "is", projectName));
+    std::cout << "In Entity" << std::endl;
     return project->getAttrValueAsString("code");
 }
 
@@ -268,7 +305,7 @@ Dict Entity::buildCreateMap( const Dict &data,
     // -------------------------------------------------------------------
     // "fields"
     List fields;
-    for(std::map<std::string, xmlrpc_c::value>::const_iterator dataIter = data.value().begin(); dataIter != data.value().end(); ++dataIter)
+    for(std::map<std::string, Json::Value>::const_iterator dataIter = data.value().begin(); dataIter != data.value().end(); ++dataIter)
     {
         fields.append(Dict("field_name", (*dataIter).first)
                       .add("value", (*dataIter).second));
@@ -305,8 +342,7 @@ Dict Entity::buildFindMap(const FilterBy &filterList,
     else
     {
         // The "logic_operator" is required, so give some default value       
-        findMap.add("filters", Dict("logical_operator", "and")
-                               .add("conditions", List()));
+        findMap.add("filters", Dict("logical_operator", "and").add("conditions", List()));
     }
 
     // -------------------------------------------------------------------
@@ -365,13 +401,13 @@ Dict Entity::buildFindMap(const FilterBy &filterList,
 }
 
 // *****************************************************************************
-const xmlrpc_c::value Entity::getAttrValue(const std::string &attrName) const
+const Json::Value Entity::getAttrValue(const std::string &attrName) const
 {
     Dict attrMap;
 
     // First check to see if the attrName exists in m_attrs, which contains a
     // list of default return fields for this entity type. 
-    if (m_attrs->type() != xmlrpc_c::value::TYPE_NIL)
+	if (m_attrs->type() != Json::nullValue)
     {
         attrMap = Dict(*m_attrs);
 
@@ -409,7 +445,7 @@ const xmlrpc_c::value Entity::getAttrValue(const std::string &attrName) const
 
 // *****************************************************************************
 // static
-const xmlrpc_c::value Entity::getAttrValue(const std::string &attrName, 
+const Json::Value Entity::getAttrValue(const std::string &attrName, 
                                            const Dict &attrsMap)
 {
     if (!attrsMap.empty())
@@ -441,7 +477,7 @@ void Entity::setAttrValue(const Fields &fields)
     {
         // -------------------------------------------------------------------------
         // Update the Shotgun records - update all the fields in one call
-        xmlrpc_c::value result = updateSGEntity(m_sg,
+        Json::Value result = updateSGEntity(m_sg,
                                                 m_entityType,
                                                 sgId(),
                                                 fields);
@@ -449,7 +485,7 @@ void Entity::setAttrValue(const Fields &fields)
         // -------------------------------------------------------------------------
         // Update the attrbutes if they are already in m_attrs. If not there, don't 
         // add them to m_attrs.
-        if (m_attrs->type() != xmlrpc_c::value::TYPE_NIL)
+		if (m_attrs->type() != Json::nullValue)
         {
             Dict attrMap = Dict(*m_attrs);
             bool updated = false;
@@ -469,7 +505,7 @@ void Entity::setAttrValue(const Fields &fields)
                     //     std::string fieldName = field.operator[]<std::string>("field_name");
                     //     std::string fieldName = field.value<std::string>("field_name");
                     //
-                    //     xmlrpc_c::value fieldValue = field["value"];
+                    //     Json::Value fieldValue = field["value"];
                     // ------------------------------------------------------------
                     std::string fieldName = field.value<std::string>("field_name");
                     if (attrMap.find(fieldName))
@@ -489,11 +525,11 @@ void Entity::setAttrValue(const Fields &fields)
             if (updated)
             {
                 delete m_attrs;
-                m_attrs = new xmlrpc_c::value(xmlrpc_c::value_struct(attrMap.value()));
+				m_attrs = new Json::Value(toJsonrpcValue(attrMap));
             }
         }
     }
-    catch (SgEntityXmlrpcError &error)
+    catch (SgEntityJsonrpcError &error)
     {
         throw SgAttrSetValueError(fields, error.what());
     }
@@ -506,13 +542,13 @@ void Entity::clearAttrValue(const std::string &attrName)
     // (1) Update the Shotgun records
     // (2) Update the attribute that is already in m_attrs
 
-    Fields fields = Fields(attrName, xmlrpc_c::value_nil());
+    Fields fields = Fields(attrName, Json::Value());
 
     try
     {
         // -------------------------------------------------------------------------
         // Update the Shotgun records - update all the fields in one call
-        xmlrpc_c::value result = updateSGEntity(m_sg,
+        Json::Value result = updateSGEntity(m_sg,
                                                 m_entityType,
                                                 sgId(),
                                                 fields);
@@ -520,7 +556,7 @@ void Entity::clearAttrValue(const std::string &attrName)
         // -------------------------------------------------------------------------
         // Update the attrbutes if they are already in m_attrs. If not there, don't 
         // add them to m_attrs.
-        if (m_attrs->type() != xmlrpc_c::value::TYPE_NIL)
+		if (m_attrs->type() != Json::nullValue)
         {
             Dict attrMap = Dict(*m_attrs);
             bool updated = false;
@@ -530,7 +566,7 @@ void Entity::clearAttrValue(const std::string &attrName)
                 if (attrMap.find(attrName))
                 {
                     attrMap.erase(attrName);
-                    attrMap.add(attrName, xmlrpc_c::value_nil());
+                    attrMap.add(attrName, Json::Value());
 
                     updated = true;
                 }
@@ -544,11 +580,11 @@ void Entity::clearAttrValue(const std::string &attrName)
             if (updated)
             {
                 delete m_attrs;
-                m_attrs = new xmlrpc_c::value(xmlrpc_c::value_struct(attrMap.value()));
+				m_attrs = new Json::Value(toJsonrpcValue(attrMap));
             }
         }
     }
-    catch (SgEntityXmlrpcError &error)
+    catch (SgEntityJsonrpcError &error)
     {
         throw SgAttrSetValueError(fields, error.what());
     }
@@ -644,65 +680,65 @@ const double Entity::getAttrValueAsDouble(const std::string &attrName,
     return getAttrValue<double>(attrName, attrsMap, defaultVal);
 }
 
-// *****************************************************************************
-const time_t Entity::getAttrValueAsUTCtime(const std::string &attrName) const
-{
-    return getAttrValue<time_t>(attrName);
-}
-
-// *****************************************************************************
-const time_t Entity::getAttrValueAsUTCtime(const std::string &attrName, 
-                                           const time_t defaultVal) const
-{
-    return getAttrValue<time_t>(attrName, defaultVal);
-}
-
-// *****************************************************************************
-// static
-const time_t Entity::getAttrValueAsUTCtime(const std::string &attrName, 
-                                           const Dict &attrsMap)
-{
-    return getAttrValue<time_t>(attrName, attrsMap);
-}
-
-// *****************************************************************************
-// static
-const time_t Entity::getAttrValueAsUTCtime(const std::string &attrName, 
-                                           const Dict &attrsMap,
-                                           const time_t defaultVal)
-{
-    return getAttrValue<time_t>(attrName, attrsMap, defaultVal);
-}
-
-// *****************************************************************************
-const struct tm Entity::getAttrValueAsLocaltime(const std::string &attrName) const
-{
-    return getAttrValue<struct tm>(attrName);
-}
-
-// *****************************************************************************
-const struct tm Entity::getAttrValueAsLocaltime(const std::string &attrName, 
-                                                const struct tm &defaultVal) const
-{
-    return getAttrValue<struct tm>(attrName, defaultVal);
-}
-
-// *****************************************************************************
-// static
-const struct tm Entity::getAttrValueAsLocaltime(const std::string &attrName, 
-                                                const Dict &attrsMap)
-{
-    return getAttrValue<struct tm>(attrName, attrsMap);
-}
-
-// *****************************************************************************
-// static
-const struct tm Entity::getAttrValueAsLocaltime(const std::string &attrName, 
-                                                const Dict &attrsMap,
-                                                const struct tm &defaultVal)
-{
-    return getAttrValue<struct tm>(attrName, attrsMap, defaultVal);
-}
+////// *****************************************************************************
+//const time_t Entity::getAttrValueAsUTCtime(const std::string &attrName) const
+//{
+//    return getAttrValue<time_t>(attrName);
+//}
+//
+////// *****************************************************************************
+//const time_t Entity::getAttrValueAsUTCtime(const std::string &attrName, 
+//                                           const time_t defaultVal) const
+//{
+//    return getAttrValue<time_t>(attrName, defaultVal);
+//}
+//
+////// *****************************************************************************
+////// static
+//const time_t Entity::getAttrValueAsUTCtime(const std::string &attrName, 
+//                                           const Dict &attrsMap)
+//{
+//    return getAttrValue<time_t>(attrName, attrsMap);
+//}
+//
+////// *****************************************************************************
+////// static
+//const time_t Entity::getAttrValueAsUTCtime(const std::string &attrName, 
+//                                           const Dict &attrsMap,
+//                                           const time_t defaultVal)
+//{
+//    return getAttrValue<time_t>(attrName, attrsMap, defaultVal);
+//}
+////
+////// *****************************************************************************
+//const struct tm Entity::getAttrValueAsLocaltime(const std::string &attrName) const
+//{
+//    return getAttrValue<struct tm>(attrName);
+//}
+//
+////// *****************************************************************************
+//const struct tm Entity::getAttrValueAsLocaltime(const std::string &attrName, 
+//                                                const struct tm &defaultVal) const
+//{
+//    return getAttrValue<struct tm>(attrName, defaultVal);
+//}
+//
+////// *****************************************************************************
+////// static
+//const struct tm Entity::getAttrValueAsLocaltime(const std::string &attrName, 
+//                                                const Dict &attrsMap)
+//{
+//    return getAttrValue<struct tm>(attrName, attrsMap);
+//}
+//
+////// *****************************************************************************
+////// static
+//const struct tm Entity::getAttrValueAsLocaltime(const std::string &attrName, 
+//                                                const Dict &attrsMap,
+//                                                const struct tm &defaultVal)
+//{
+//    return getAttrValue<struct tm>(attrName, attrsMap, defaultVal);
+//}
 
 // *****************************************************************************
 const std::string Entity::getAttrValueAsString(const std::string &attrName) const 
@@ -792,19 +828,19 @@ const Strings Entity::getAttrValueAsTags(const std::string &attrName) const
 {
     Strings tags;
 
-    xmlrpc_c::value genericResult = getAttrValue(attrName);
+    Json::Value genericResult = getAttrValue(attrName);
 
-    if (genericResult.type() == xmlrpc_c::value::TYPE_ARRAY)
+	if (genericResult.isArray())
     {
         List list;
-        fromXmlrpcValue(genericResult, list);
+        fromJsonrpcValue(genericResult, list);
     
         for (size_t i = 0; i < list.size(); i++)
         {
-            if (list[i].type() == xmlrpc_c::value::TYPE_STRUCT)
+			if (list[i].isObject())
             {
                 Dict dict;
-                fromXmlrpcValue(list[i], dict);
+                fromJsonrpcValue(list[i], dict);
 
                 try
                 {
@@ -815,9 +851,9 @@ const Strings Entity::getAttrValueAsTags(const std::string &attrName) const
                     // Do nothing
                 }
             }
-            else if (list[i].type() == xmlrpc_c::value::TYPE_STRING)
+			else if (list[i].isString())
             {
-                tags.push_back(std::string(xmlrpc_c::value_string(list[i])));
+				tags.push_back(list[i].asString());
             }
         }
     }
@@ -832,19 +868,19 @@ const Strings Entity::getAttrValueAsTags(const std::string &attrName,
 {
     Strings tags;
 
-    xmlrpc_c::value genericResult = getAttrValue(attrName, attrsMap);
+    Json::Value genericResult = getAttrValue(attrName, attrsMap);
 
-    if (genericResult.type() == xmlrpc_c::value::TYPE_ARRAY)
+	if (genericResult.isArray())
     {
         List list;
-        fromXmlrpcValue(genericResult, list);
+        fromJsonrpcValue(genericResult, list);
 
         for (size_t i = 0; i < list.size(); i++)
         {
-            if (list[i].type() == xmlrpc_c::value::TYPE_STRUCT)
+			if (list[i].isObject())
             {
                 Dict dict;
-                fromXmlrpcValue(list[i], dict);
+                fromJsonrpcValue(list[i], dict);
 
                 try
                 {
@@ -855,9 +891,9 @@ const Strings Entity::getAttrValueAsTags(const std::string &attrName,
                     // Do nothing
                 }
             }
-            else if (list[i].type() == xmlrpc_c::value::TYPE_STRING)
+			else if (list[i].isString())
             {
-                tags.push_back(std::string(xmlrpc_c::value_string(list[i])));
+				tags.push_back(list[i].asString());
             }
         }
     }
@@ -1024,6 +1060,8 @@ const std::string Entity::getAttrValueAsQtPath(const std::string &attrName,
 
         return qtURL;
     }
+
+	return qtURL;
 }
 
 // *****************************************************************************
@@ -1040,6 +1078,8 @@ const std::string Entity::getAttrValueAsQtPath(const std::string &attrName,
 
         return qtURL;
     }
+
+	return qtURL;
 }
 
 } // End namespace SG

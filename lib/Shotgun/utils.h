@@ -34,6 +34,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define __SG_UTILS_H__
 
 #include <string>
+#include <algorithm>
 
 namespace SG {
 

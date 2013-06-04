@@ -37,6 +37,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <sstream>
 #include <iomanip>
 
+#include <Shotgun/config.h>
 #include <Shotgun/Entity.h>
 #include <Shotgun/Shotgun.h>
 
@@ -88,7 +89,7 @@ protected:
     ///
     /// \param sg - instantiated Shotgun object pointer
     /// \param attrs - raw attribute map for a Shotgun entity
-    CustomEntity(Shotgun *sg, const xmlrpc_c::value &attrs);
+    CustomEntity(Shotgun *sg, const Json::Value &attrs);
 
     // -------------------------------------------------------------------------
     /// A CustomEntity<ID> entity factory function. 
@@ -96,7 +97,7 @@ protected:
     /// \param sg - instantiated Shotgun object pointer
     /// \param attrs - raw attribute map for a Shotgun entity
     /// \return a newly-created CustomEntity<ID> * as its base Entity * type
-    static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs);
+    static Entity *factory(Shotgun *sg, const Json::Value &attrs);
 
     // -------------------------------------------------------------------------
     /// Builds a list of default "return_fields" which are the attributes 
@@ -112,14 +113,14 @@ protected:
 
 // *****************************************************************************
 template <int ID>
-CustomEntity<ID>::CustomEntity(Shotgun *sg, const xmlrpc_c::value &attrs)
+CustomEntity<ID>::CustomEntity(Shotgun *sg, const Json::Value &attrs)
     : Entity(sg)
 {
     m_entityType = m_classType = CustomEntity<ID>::getEntityType();
 
-    if (attrs.type() != xmlrpc_c::value::TYPE_NIL)
+	if (!attrs.isNull())
     {
-        m_attrs = new xmlrpc_c::value(attrs);
+        m_attrs = new Json::Value(attrs);
     }
 }
 
@@ -129,7 +130,7 @@ CustomEntity<ID>::CustomEntity(const CustomEntity<ID> &ref)
     : Entity(ref.m_sg)
 {
     m_entityType = m_classType = CustomEntity<ID>::getEntityType();
-    m_attrs = new xmlrpc_c::value(*ref.m_attrs);
+    m_attrs = new Json::Value(*ref.m_attrs);
 }
 
 // *****************************************************************************
@@ -141,7 +142,7 @@ CustomEntity<ID>::~CustomEntity()
 
 // *****************************************************************************
 template <int ID>
-Entity *CustomEntity<ID>::factory(Shotgun *sg, const xmlrpc_c::value &attrs) 
+Entity *CustomEntity<ID>::factory(Shotgun *sg, const Json::Value &attrs) 
 { 
     return new CustomEntity<ID>(sg, attrs); 
 }

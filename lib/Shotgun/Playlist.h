@@ -33,13 +33,14 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef __SG_PLAYLIST_H__
 #define __SG_PLAYLIST_H__
 
+#include <Shotgun/config.h>
 #include <Shotgun/Entity.h>
 
 namespace SG {
 
 // *****************************************************************************
 /// \class Playlist
-class Playlist : public Entity
+class SG_API Playlist : public Entity
 {
     friend class Shotgun;
  
@@ -82,7 +83,7 @@ protected:
     ///
     /// \param sg - instantiated Shotgun object pointer
     /// \param attrs - raw attribute map for a Shotgun entity
-    Playlist(Shotgun *sg, const xmlrpc_c::value &attrs);
+    Playlist(Shotgun *sg, const Json::Value &attrs);
 
     // -------------------------------------------------------------------------
     /// A Playlist entity factory function.
@@ -90,7 +91,7 @@ protected:
     /// \param sg - instantiated Shotgun object pointer
     /// \param attrs - raw attribute map for a Shotgun entity
     /// \return a newly-created Playlist * as its base Entity * type
-    static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Playlist(sg, attrs); }
+    static Entity *factory(Shotgun *sg, const Json::Value &attrs) { return new Playlist(sg, attrs); }
 
     // -------------------------------------------------------------------------
     /// Builds a list of default "return_fields" which are the attributes

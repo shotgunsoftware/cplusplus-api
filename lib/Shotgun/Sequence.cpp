@@ -38,11 +38,11 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace SG {
 
 // *****************************************************************************
-Sequence::Sequence(Shotgun *sg, const xmlrpc_c::value &attrs)
+Sequence::Sequence(Shotgun *sg, const Json::Value &attrs)
     : Entity(sg)
 {
     m_entityType = m_classType = "Sequence";
-    m_attrs = new xmlrpc_c::value(attrs);
+    m_attrs = new Json::Value(attrs);
 }
 
 // *****************************************************************************
@@ -50,7 +50,7 @@ Sequence::Sequence(const Sequence &ref)
     : Entity(ref.m_sg)
 {
     m_entityType = m_classType = "Sequence";
-    m_attrs = new xmlrpc_c::value(*ref.m_attrs);
+    m_attrs = new Json::Value(*ref.m_attrs);
 }
 
 // *****************************************************************************

@@ -35,6 +35,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <string>
 
+#include <Shotgun/config.h>
 #include <Shotgun/Entity.h>
 #include <Shotgun/TaskMixin.h>
 #include <Shotgun/NoteMixin.h>
@@ -43,7 +44,7 @@ namespace SG {
 
 // *****************************************************************************
 /// \class Shot
-class Shot : public Entity, public TaskMixin, public NoteMixin
+class SG_API Shot : public Entity, public TaskMixin, public NoteMixin
 {
     friend class Shotgun;
  
@@ -86,7 +87,7 @@ protected:
     ///
     /// \param sg - instantiated Shotgun object pointer
     /// \param attrs - raw attribute map for a Shotgun entity
-    Shot(Shotgun *sg, const xmlrpc_c::value &attrs);
+    Shot(Shotgun *sg, const Json::Value &attrs);
 
     // -------------------------------------------------------------------------
     /// A Shot entity factory function.
@@ -94,7 +95,7 @@ protected:
     /// \param sg - instantiated Shotgun object pointer
     /// \param attrs - raw attribute map for a Shotgun entity
     /// \return a newly-created Shot * as its base Entity * type
-    static Entity *factory(Shotgun *sg, const xmlrpc_c::value &attrs) { return new Shot(sg, attrs); }
+    static Entity *factory(Shotgun *sg, const Json::Value &attrs) { return new Shot(sg, attrs); }
 
     // -------------------------------------------------------------------------
     /// Builds a list of default "return_fields" which are the attributes

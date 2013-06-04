@@ -35,7 +35,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 namespace SG {
 
 // *****************************************************************************
-Dict::Dict() : m_value(std::map<std::string, xmlrpc_c::value>())
+Dict::Dict() : m_value(new std::map<std::string, Json::Value>())
 {
 }
 
@@ -45,16 +45,19 @@ Dict::Dict(const Dict &ref) : m_value(ref.m_value)
 }
 
 // *****************************************************************************
-Dict::Dict(const std::map<std::string, xmlrpc_c::value> &map) : m_value(map)
+Dict::Dict(const std::map<std::string, Json::Value> &map)
 {
+	m_value = new std::map<std::string, Json::Value>(map);
 }
 
 // *****************************************************************************
-Dict::Dict(const xmlrpc_c::value &value)
+Dict::Dict(const Json::Value &value)
 {
-    if (value.type() == xmlrpc_c::value::TYPE_STRUCT)
+	if (value.isObject())
     {
-        m_value = std::map<std::string, xmlrpc_c::value>(xmlrpc_c::value_struct(value));
+        m_value = new std::map<std::string, Json::Value>();
+		for (Json::ValueIterator itr = value.begin(); itr != value.end(); itr++ )
+			(*m_value)[itr.memberName()] = Json::Value(value[itr.memberName()]);
     }
     else
     {
@@ -63,10 +66,10 @@ Dict::Dict(const xmlrpc_c::value &value)
 }
 
 // *****************************************************************************
-const xmlrpc_c::value Dict::value(const std::string &key) const
+const Json::Value Dict::value(const std::string &key) const
 {
-    std::map<std::string, xmlrpc_c::value>::const_iterator foundIter = m_value.find(key);
-    if (foundIter != m_value.end())
+    std::map<std::string, Json::Value>::const_iterator foundIter = m_value->find(key);
+    if (foundIter != m_value->end())
     {
         return (*foundIter).second;
     }
@@ -76,17 +79,22 @@ const xmlrpc_c::value Dict::value(const std::string &key) const
     }
 }
 
+const std::map<std::string, Json::Value> &Dict::value() const
+{ 
+    return *m_value; 
+}
+
 // *****************************************************************************
-const xmlrpc_c::value Dict::operator[](const std::string &key) const
+const Json::Value Dict::operator[](const std::string &key) const
 {
     return value(key);
 }
- 
+
 // *****************************************************************************
 const bool Dict::find(const std::string &key) const
 {
-    std::map<std::string, xmlrpc_c::value>::const_iterator foundIter = m_value.find(key);
-    if (foundIter != m_value.end())
+    std::map<std::string, Json::Value>::const_iterator foundIter = m_value->find(key);
+    if (foundIter != m_value->end())
     {
         return true;
     }
@@ -97,9 +105,23 @@ const bool Dict::find(const std::string &key) const
 // *****************************************************************************
 Dict &Dict::erase(const std::string &key)
 {
-    m_value.erase(key);
+    m_value->erase(key);
 
     return *this;
 }
 
+const int Dict::size()
+{ 
+    return m_value->size(); 
+}
+
+void Dict::clear() 
+{ 
+    m_value->clear(); 
+}
+
+const bool Dict::empty() const 
+{ 
+    return m_value->empty(); 
+}
 } // End namespace SG

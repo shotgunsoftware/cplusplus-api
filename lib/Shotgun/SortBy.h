@@ -35,6 +35,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <string>
 
+#include <Shotgun/config.h>
 #include <Shotgun/types.h>
 #include <Shotgun/List.h>
 #include <Shotgun/Dict.h>
@@ -62,7 +63,7 @@ namespace SG {
  \endhtmlonly
 */
 
-class SortBy
+class SG_API SortBy
 {
 public:
     // -------------------------------------------------------------------------
@@ -79,6 +80,7 @@ public:
     SortBy(const std::string &fieldName,
            const std::string &direction = "asc")
     {
+         m_sorts = new List();
          then(fieldName, direction);      
     }
 
@@ -93,23 +95,23 @@ public:
 
     // -------------------------------------------------------------------------
     /// Returns the "sorts" list.
-    const List &sorts() const { return m_sorts; }
+    const List &sorts() const;
 
     // -------------------------------------------------------------------------
     /// Returns whether the "sorts" list is empty.
-    const bool empty() const { return m_sorts.empty(); }
+    const bool empty() const;
 
     // -------------------------------------------------------------------------
     /// Returns the size of the "sorts" list.
-    const int size() const { return m_sorts.size(); }
+    const int size() const;
 
     // -------------------------------------------------------------------------
     /// Returns the string representation of the SortBy class.
-    const std::string str() const { return m_sorts.str(); }
+    const std::string str() const { return m_sorts->str(); }
 
     // -------------------------------------------------------------------------
     /// Removes all the contents from the "sorts" list.
-    void clear() { m_sorts.clear(); }
+    void clear();
 
     // -------------------------------------------------------------------------
     SortBy &operator=(const SortBy &that)
@@ -130,7 +132,7 @@ public:
     }
 
 protected:
-    List m_sorts; ///< The "sorts" list.
+    List *m_sorts; ///< The "sorts" list.
 };
 
 } // End namespace SG

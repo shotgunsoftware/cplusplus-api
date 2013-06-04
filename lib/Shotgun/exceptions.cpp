@@ -30,10 +30,10 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -----------------------------------------------------------------------------
 */
 
-#include <exceptions.h>
-#include <Dict.h>
-#include <List.h>
-#include <Fields.h>
+#include <Shotgun/exceptions.h>
+#include <Shotgun/Dict.h>
+#include <Shotgun/List.h>
+#include <Shotgun/Fields.h>
 
 namespace SG {
 
@@ -53,13 +53,13 @@ SgAttrNotFoundError::SgAttrNotFoundError(const std::string &attrName)
 
 // *****************************************************************************
 SgAttrTypeError::SgAttrTypeError(const std::string &attrName,
-                                 const xmlrpc_c::value::type_t wrongType,
-                                 const xmlrpc_c::value::type_t correctType) 
+                                 const Json::ValueType wrongType,
+                                 const Json::ValueType correctType) 
     : SgAttrError("SgAttrTypeError: ")
 {
     m_msg += "Attribute, '" + attrName + ", ";
-    m_msg += "is not of '" + xmlrpcValueTypeStr(wrongType) + "'. ";
-    m_msg += "It is of '" + xmlrpcValueTypeStr(correctType) + "'.";
+    m_msg += "is not of '" + jsonrpcValueTypeStr(wrongType) + "'. ";
+    m_msg += "It is of '" + jsonrpcValueTypeStr(correctType) + "'.";
 }
 
 // *****************************************************************************
@@ -106,8 +106,8 @@ SgEmptyAttrMapError::SgEmptyAttrMapError()
 }
 
 // *****************************************************************************
-SgEntityXmlrpcError::SgEntityXmlrpcError(const std::string &msg) 
-    : SgEntityError("SgEntityXmlrpcError: ") 
+SgEntityJsonrpcError::SgEntityJsonrpcError(const std::string &msg) 
+    : SgEntityError("SgEntityJsonrpcError: ") 
 {
     m_msg += msg;
 }
@@ -148,19 +148,19 @@ SgEntityCreateError::SgEntityCreateError(const std::string &err)
 }
 
 // *****************************************************************************
-SgXmlrpcValueTypeError::SgXmlrpcValueTypeError(const xmlrpc_c::value &value,
-                                               const xmlrpc_c::value::type_t wrongType,
-                                               const xmlrpc_c::value::type_t correctType) 
-    : SgXmlrpcValueError("SgXmlrpcValueTypeError: ")
+SgJsonrpcValueTypeError::SgJsonrpcValueTypeError(const Json::Value &value,
+                                               const Json::ValueType wrongType,
+                                               const Json::ValueType correctType) 
+    : SgJsonrpcValueError("SgJsonrpcValueTypeError: ")
 {
     m_msg += toStdString(value) + ", ";
-    m_msg += "is not of '" + xmlrpcValueTypeStr(wrongType) + "'. ";
-    m_msg += "It is of '" + xmlrpcValueTypeStr(correctType) + "'.";
+    m_msg += "is not of '" + jsonrpcValueTypeStr(wrongType) + "'. ";
+    m_msg += "It is of '" + jsonrpcValueTypeStr(correctType) + "'.";
 }
 
 // *****************************************************************************
-SgXmlrpcValueIsNilError::SgXmlrpcValueIsNilError()
-    : SgXmlrpcValueError("SgXmlrpcValueIsNilError: ")
+SgJsonrpcValueIsNilError::SgJsonrpcValueIsNilError()
+    : SgJsonrpcValueError("SgJsonrpcValueIsNilError: ")
 {
     m_msg += "the value is nil (non-existent)";
 }
@@ -176,10 +176,10 @@ SgListIndexOutOfRangeError::SgListIndexOutOfRangeError(const int index,
 }
 
 // *****************************************************************************
-SgListConversionError::SgListConversionError(const xmlrpc_c::value &value)
+SgListConversionError::SgListConversionError(const Json::Value &value)
     : SgListError("SgListConversionError: ")
 {
-    m_msg += "xmlrpc_c::value, " + toStdString(value) + ", is not an array type. Failed to convert it to List type";
+    m_msg += "Json::Value, " + toStdString(value) + ", is not an array type. Failed to convert it to List type";
 }
 
 // *****************************************************************************
@@ -190,10 +190,10 @@ SgDictKeyNotFoundError::SgDictKeyNotFoundError(const std::string &key)
 }
 
 // *****************************************************************************
-SgDictConversionError::SgDictConversionError(const xmlrpc_c::value &value)
+SgDictConversionError::SgDictConversionError(const Json::Value &value)
     : SgDictError("SgDictConversionError: ")
 {
-    m_msg += "xmlrpc_c::value, " + toStdString(value) + ", is not a struct type. Failed to convert it to Dict type";
+    m_msg += "Json::Value, " + toStdString(value) + ", is not a struct type. Failed to convert it to Dict type";
 }
 
 } // End namespace SG

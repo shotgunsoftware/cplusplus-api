@@ -35,6 +35,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <string>
 
+#include <Shotgun/config.h>
 #include <Shotgun/Task.h>
 
 namespace SG {
@@ -44,7 +45,7 @@ namespace SG {
 /// A TaskMixin class is used as "add-on"s to any entity class that shares a
 /// common set of Task-related functions. The entity class needs to derive
 /// from the TaskMixin class.
-class TaskMixin
+class SG_API TaskMixin
 {
 public:
     // -------------------------------------------------------------------------

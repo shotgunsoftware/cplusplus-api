@@ -36,7 +36,10 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <iostream>
 #include <map>
 
-#include <xmlrpc-c/base.hpp>
+#include <json/json.h>
+
+#include <Shotgun/config.h>
+
 
 namespace SG {
 
@@ -52,49 +55,49 @@ typedef Strings MethodSignature;
 typedef std::vector<MethodSignature> MethodSignatures;
 
 // *****************************************************************************
-/// Returns the string representation of "xmlrpc_c::value::type_t" type.
-std::string xmlrpcValueTypeStr(const xmlrpc_c::value::type_t xmlrpcType);
+/// Returns the string representation of "Json::Value::type_t" type.
+std::string jsonrpcValueTypeStr(const Json::ValueType jsonrpcType);
 
 // *****************************************************************************
-// Converts a particular data type to xmlrpc_c::value type.
-xmlrpc_c::value toXmlrpcValue(const char *in);
-xmlrpc_c::value toXmlrpcValue(const std::string &in);
-xmlrpc_c::value toXmlrpcValue(const int &in);
-xmlrpc_c::value toXmlrpcValue(const double &in);
-xmlrpc_c::value toXmlrpcValue(const bool &in);
-xmlrpc_c::value toXmlrpcValue(const time_t &in);
-xmlrpc_c::value toXmlrpcValue(const struct tm &in);
-xmlrpc_c::value toXmlrpcValue(const std::vector<xmlrpc_c::value> &in);
-xmlrpc_c::value toXmlrpcValue(const std::map<std::string, xmlrpc_c::value> &in);
-xmlrpc_c::value toXmlrpcValue(const Strings &in);
-xmlrpc_c::value toXmlrpcValue(const MethodSignatures &in);
-xmlrpc_c::value toXmlrpcValue(const List &in);
-xmlrpc_c::value toXmlrpcValue(const Dict &in);
-xmlrpc_c::value toXmlrpcValue(const FilterBy &in);
-xmlrpc_c::value toXmlrpcValue(const SortBy &in);
-xmlrpc_c::value toXmlrpcValue(const Fields &in);
-xmlrpc_c::value toXmlrpcValue(const xmlrpc_c::value &in);
+// Converts a particular data type to Json::Value type.
+Json::Value toJsonrpcValue(const char *in);
+Json::Value toJsonrpcValue(const std::string &in);
+Json::Value toJsonrpcValue(const int &in);
+Json::Value toJsonrpcValue(const double &in);
+Json::Value toJsonrpcValue(const bool &in);
+//Json::Value toJsonrpcValue(const time_t &in);
+//Json::Value toJsonrpcValue(const struct tm &in);
+Json::Value toJsonrpcValue(const std::vector<Json::Value> &in);
+Json::Value toJsonrpcValue(const std::map<std::string, Json::Value> &in);
+Json::Value toJsonrpcValue(const Strings &in);
+Json::Value toJsonrpcValue(const MethodSignatures &in);
+Json::Value toJsonrpcValue(const List &in);
+Json::Value toJsonrpcValue(const Dict &in);
+Json::Value toJsonrpcValue(const FilterBy &in);
+Json::Value toJsonrpcValue(const SortBy &in);
+Json::Value toJsonrpcValue(const Fields &in);
+Json::Value toJsonrpcValue(const Json::Value &in);
 
 // *****************************************************************************
-// Converts a xmlrpc_c::value type to a specified data type.
-// The template approach won't work since xmlrpc_c::value has to be casted to a
-// specific derived xmlrpc_c::value type first, which the compiler doesn't like.
-void fromXmlrpcValue(const xmlrpc_c::value &value, char *out);
-void fromXmlrpcValue(const xmlrpc_c::value &value, std::string &out);
-void fromXmlrpcValue(const xmlrpc_c::value &value, int &out);
-void fromXmlrpcValue(const xmlrpc_c::value &value, double &out);
-void fromXmlrpcValue(const xmlrpc_c::value &value, bool &out);
-void fromXmlrpcValue(const xmlrpc_c::value &value, time_t &out);
-void fromXmlrpcValue(const xmlrpc_c::value &value, struct tm &out);
-void fromXmlrpcValue(const xmlrpc_c::value &value, std::vector<xmlrpc_c::value> &out);
-void fromXmlrpcValue(const xmlrpc_c::value &value, std::map<std::string, xmlrpc_c::value> &out);
-void fromXmlrpcValue(const xmlrpc_c::value &value, Strings &out); 
-void fromXmlrpcValue(const xmlrpc_c::value &value, List &out);
-void fromXmlrpcValue(const xmlrpc_c::value &value, Dict &out);
-void fromXmlrpcValue(const xmlrpc_c::value &value, FilterBy &out);
-void fromXmlrpcValue(const xmlrpc_c::value &value, SortBy &out);
-void fromXmlrpcValue(const xmlrpc_c::value &value, Fields &out);
-void fromXmlrpcValue(const xmlrpc_c::value &value, xmlrpc_c::value &out);
+// Converts a Json::Value type to a specified data type.
+// The template approach won't work since Json::Value has to be casted to a
+// specific derived Json::Value type first, which the compiler doesn't like.
+void fromJsonrpcValue(const Json::Value &value, char *out);
+void fromJsonrpcValue(const Json::Value &value, std::string &out);
+void fromJsonrpcValue(const Json::Value &value, int &out);
+void fromJsonrpcValue(const Json::Value &value, double &out);
+void fromJsonrpcValue(const Json::Value &value, bool &out);
+//void fromJsonrpcValue(const Json::Value &value, time_t &out);
+//void fromJsonrpcValue(const Json::Value &value, struct tm &out);
+void fromJsonrpcValue(const Json::Value &value, std::vector<Json::Value> &out);
+void fromJsonrpcValue(const Json::Value &value, std::map<std::string, Json::Value> &out);
+void fromJsonrpcValue(const Json::Value &value, Strings &out); 
+void fromJsonrpcValue(const Json::Value &value, List &out);
+void fromJsonrpcValue(const Json::Value &value, Dict &out);
+void fromJsonrpcValue(const Json::Value &value, FilterBy &out);
+void fromJsonrpcValue(const Json::Value &value, SortBy &out);
+void fromJsonrpcValue(const Json::Value &value, Fields &out);
+void fromJsonrpcValue(const Json::Value &value, Json::Value &out);
 
 // *****************************************************************************
 /// Utility function - returns a string representation of the current date.
@@ -109,18 +112,18 @@ std::string currDateStr();
 std::string toStdString(const int val);
 std::string toStdString(const bool val);
 std::string toStdString(const double val);
-std::string toStdString(const time_t val);
-std::string toStdString(const struct tm &val);
-std::string toStdString(const xmlrpc_c::value &value);
-std::string toStdString(const std::vector<xmlrpc_c::value> &array);
-std::string toStdString(const std::map<std::string, xmlrpc_c::value> &map);
+//std::string toStdString(const time_t val);
+//std::string toStdString(const struct tm &val);
+std::string toStdString(const Json::Value &value);
+std::string toStdString(const std::vector<Json::Value> &a);
+std::string toStdString(const std::map<std::string, Json::Value> &map);
 std::string toStdString(const SG::Strings &strs);
 std::string toStdString(const SG::MethodSignatures &sigs);
 
-std::ostream &operator<<(std::ostream& output, const xmlrpc_c::value &value);
+std::ostream &operator<<(std::ostream& output, const Json::Value &value);
 std::ostream &operator<<(std::ostream& output, const struct tm &time);
-std::ostream &operator<<(std::ostream& output, const std::map<std::string, xmlrpc_c::value> &map);
-std::ostream &operator<<(std::ostream& output, const std::vector<xmlrpc_c::value> &array);
+std::ostream &operator<<(std::ostream& output, const std::map<std::string, Json::Value> &map);
+std::ostream &operator<<(std::ostream& output, const std::vector<Json::Value> &array);
 std::ostream &operator<<(std::ostream& output, const SG::Strings &strs);
 std::ostream &operator<<(std::ostream& output, const SG::MethodSignatures &sigs);
 

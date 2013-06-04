@@ -35,6 +35,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <string>
 
+#include <Shotgun/config.h>
 #include <Shotgun/types.h>
 #include <Shotgun/exceptions.h>
 
@@ -42,9 +43,9 @@ namespace SG {
 
 // *****************************************************************************
 /// \class List
-/// A List class is basically a wrapper around a std::vector<xmlrpc_c::value> 
+	/// A List class is basically a wrapper around a std::vector<Json::Value> 
 /// container. 
-class List
+class SG_API List
 {
 public:
     // -------------------------------------------------------------------------
@@ -54,13 +55,16 @@ public:
     /// A copy constructor.
     List(const List &ref);
 
-    /// A constructor that takes a std::vector<xmlrpc_c::value>.
-    List(const std::vector<xmlrpc_c::value> &array);
-
+	/// A constructor that takes a std::vector<Json::Value>.
+	List(const std::vector<Json::Value> &array);
+	
+	List(const Json::Value &value);
+    
     /// A template construtor that adds an element to the std::vector container.
     template <typename T>
     List(const T &value)
     {
+         m_value = new std::vector<Json::Value>();
          append(value);      
     }
 
@@ -69,8 +73,7 @@ public:
     template <typename T>
     List &append(const T &value)
     {
-        m_value.push_back(toXmlrpcValue(value));
-
+        (*m_value).push_back(toJsonrpcValue(value));
         return *this;
     }
     
@@ -87,34 +90,34 @@ public:
     // -------------------------------------------------------------------------
     /// Returns the value of an element with the given index. This function 
     /// should only be used within the Shotgun lib
-    const xmlrpc_c::value value(const int index) const;
+	const Json::Value value(const int index) const;
     
     // -------------------------------------------------------------------------
     /// Returns the value of an element with the given index. The value is of
-    /// type, xmlrpc_c::value. This function should only be used within the 
+    /// type, Json::Value. This function should only be used within the 
     /// Shotgun lib.
-    const xmlrpc_c::value operator[](const int index) const;
+	const Json::Value operator[](const int index) const;
 
     // -------------------------------------------------------------------------
     /// Returns the std::vector container that the List class wraps around.
-    const std::vector<xmlrpc_c::value> &value() const { return m_value; }
+	const std::vector<Json::Value> &value() const;
 
     // -------------------------------------------------------------------------
     /// Returns whether the std::vector container is empty.
-    const bool empty() const { return m_value.empty(); }
+    const bool empty() const;
 
     // -------------------------------------------------------------------------
     /// Returns the size of the std::vector container.
-    const int size() const { return m_value.size(); }
+    const int size() const;
 
     // -------------------------------------------------------------------------
     /// Returns the string representation of the List class. 
-    const std::string str() const { return toStdString(m_value); }
+    const std::string str() const { return toStdString(*m_value); }
 
     // -------------------------------------------------------------------------
     /// Removes all the contents from the std::vector container, leaving it with 
     /// a size of 0.
-    void clear() { m_value.clear(); }
+    void clear();
 
     // -------------------------------------------------------------------------
     /// Removes a single element with the given index from the std::vector container.
@@ -143,22 +146,22 @@ public:
     }
 
 protected:
-    std::vector<xmlrpc_c::value> m_value; ///< The std::vector container.
+	std::vector<Json::Value> *m_value; ///< The std::vector container.
 };
 
 // *****************************************************************************
 template <typename T>
 const T List::value(const int index) const
 {
-    if (index >= 0 && index < m_value.size())
+    if (index >= 0 && index < m_value->size())
     {
         T outVal;
-        fromXmlrpcValue(m_value[index], outVal);
+        fromJsonrpcValue((*m_value)[index], outVal);
         return outVal;
     }
     else
     {
-        throw SgListIndexOutOfRangeError(index, 0, m_value.size());
+        throw SgListIndexOutOfRangeError(index, 0, m_value->size());
     }
 }
 
